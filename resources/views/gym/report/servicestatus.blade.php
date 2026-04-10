@@ -1,0 +1,547 @@
+@extends('layout.app1')
+@section('title')
+@endsection
+@section('content')
+    @can('Service-Status')
+        <div class="app-content content">
+            <section id="responsive-datatable">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <h3 class="card-title">Service Status Report</h3>
+                            </div>
+                            <div class="card-datatable">
+                                <div style="width:100%;">
+                                    <div style="width:98%; margin-left:1%; margin-top:2%;">
+                                        <div class="row">
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Select Date Range</label>
+                                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                                                    <i class="fa fa-calendar"></i>&nbsp;
+                                                    <span></span> <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Invoice Type</label>
+                                                    <div>
+                                                        <select class="selectpicker form-control" id="InvoiceType" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Invoice Type ({0})" onchange="invtypefn()">
+                                                        @foreach ($invtype as $invtype)
+                                                            <option value='"{{$invtype->ApplicationType}}"'>{{$invtype->ApplicationType}}</option>
+                                                        @endforeach              
+                                                        </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="invoicetype-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Service Status</label>
+                                                    <div>
+                                                        <select class="selectpicker form-control" id="ServiceStatus" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Service Status ({0})" onchange="servicestatusfn()">
+                                                            @foreach ($statuslists as $statuslists)
+                                                                <option value='"{{$statuslists->Status}}"'>{{$statuslists->Status}}</option>
+                                                            @endforeach               
+                                                        </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="servicest-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Services Name</label>
+                                                    <div>
+                                                        <select class="selectpicker form-control" id="Services" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Services ({0})" onchange="servicefn()">
+                                                            @foreach ($servicelist as $servicelist)
+                                                                <option value="{{$servicelist->id}}">{{$servicelist->ServiceName}}</option>
+                                                            @endforeach               
+                                                        </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="services-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Period</label>
+                                                <div>
+                                                    <select class="selectpicker form-control" id="Period" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Period ({0})" onchange="periodfn()">
+                                                        @foreach ($periodlist as $periodlist)
+                                                            <option value="{{$periodlist->id}}">{{$periodlist->PeriodName}}</option>
+                                                        @endforeach                 
+                                                    </select>
+                                                </div>
+                                                <span class="text-danger">
+                                                    <strong id="period-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">No. of Group</label>
+                                                    <div>
+                                                        <select class="selectpicker form-control" id="GroupCatagory" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Group Catagory ({0})" onchange="groupfn()">
+                                                            @foreach ($grouplist as $grouplist)
+                                                                <option value="{{$grouplist->id}}">{{$grouplist->GroupName}}</option>
+                                                            @endforeach                  
+                                                        </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="group-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Payment Term</label>
+                                                    <div>
+                                                        <select class="selectpicker form-control" id="PaymentTerm" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Payment Term ({0})" onchange="paymenttermfn()">
+                                                            @foreach ($ptermlist as $ptermlist)
+                                                                <option value="{{$ptermlist->id}}">{{$ptermlist->PaymentTermName}}</option>
+                                                            @endforeach                  
+                                                        </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="paymentterm-error"></strong>
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <div class="row" style="color: white;">
+                                                    .
+                                                </div>
+                                                <div class="row">
+                                                    <button id="reportbutton" type="button" class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i>    View</button>
+                                                    <div style="width: 1%;"></div>
+                                                    <div class="btn-group dropdown" id="exportdiv" style="display: none;">
+                                                        <button type="button" class="btn btn-info dropdown-toggle hide-arrow btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span>Print / Export </span><i class="fa fa-caret-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <button id="printtable" type="button" class="dropdown-item"><i class="fa fa-print" aria-hidden="true"></i>  Print</button>
+                                                            <button id="downloatoexcel" type="button"  class="dropdown-item"><i class="fa fa-file-excel" aria-hidden="true"></i> To Excel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </section>
+            <section id="responsive-datatable">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-datatable">
+                                <div style="width:100%;">
+                                     <div class="row" id="printable" style="display:none;">
+                                    <div class="col-xl-11 col-md-6 col-sm-12 mb-2">
+                                    </div>
+                                    <div class="col-xl-1 col-md-6 col-sm-12 mb-2">
+                                        <button type="button" class="btn btn-gradient-info btn-sm" style="color: white;display:none;"
+                                        onclick="printDiv('printable')" title="Print"><i data-feather='printer'></i></button>
+                                    </div>
+                                    <div class="col-xl-12 col-md-6 col-sm-12 mb-2">
+                                        <div style="width: 100%;">
+                                            <div class="table-responsive">
+                                               <table id="servicestatustbl" class="table" style="width: 100%;color:black;">
+                                                    <thead>
+                                                        <tr style="display: none;" id="compinfotr">
+                                                            <th colspan="12">
+                                                                <table id="headertables" class="headerTable" style="border-bottom: 1px solid black; margin-top:-60px;width:100%;"></table>
+                                                            </th>
+                                                        </tr>
+                                                        <tr id="daterangetr" style="display: none;">
+                                                            <th colspan="12">
+                                                                <h4><p style="text-align:center; margin:top:-10px;color:#00cfe8;font-family: 'Segoe UI', Verdana, Helvetica, Sans-Serif;"><b>Service Status Report</b></p></h4>
+                                                            </th>
+                                                        </tr>
+                                                        <tr class="titletr" style="display: none;">
+                                                            <th colspan="3" style="border: 1px solid black;"><label strong style="font-size: 14px;">Date Range</label></th>
+                                                            <th colspan="3" style="border: 1px solid black;"><label id="daterange" strong style="font-size: 14px;"></label></th>
+                                                            <th colspan="3" style="border: 1px solid black;"><label strong style="font-size: 14px;">Service Status</label></th>
+                                                            <th colspan="3" style="border: 1px solid black;"><label id="servicestatuslbls" strong style="font-size: 14px;"></label></th>
+                                                        </tr>
+                                                        <tr class="titletr" style="display: none;">
+                                                            <th colspan="3" style="border: 1px solid black;"><label strong style="font-size: 14px;">Invoice Type</label></th> 
+                                                            <th colspan="9" style="border: 1px solid black;"><label id="invoicetypelbl" strong style="font-size: 14px;"></label></th>                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="12" style="color:black; border-bottom-color: black;background-color:white;"></td>
+                                                        </tr>
+                                                        <tr style="color:white; border: 0.1px solid black;">
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Invoice Type</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">No. of Group</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">FS/ Doc, Invoice/ Ref #</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:10%;">Client Name</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:10%;">Client Phone</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Service Name</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Period</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Payment Term</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Start Date</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">End Date</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Service Status</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;width:8%;">Loyalty Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                    <tfoot></tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>	
+                    </div>
+                </div>
+            </section>
+        </div>
+    @endcan
+{{-- @endsection
+
+@section('scripts') --}}
+    <script type="text/javascript">
+        
+        $(".selectpicker").selectpicker({
+            noneSelectedText : 'Nothing selected'
+        });
+
+        $( document).ready(function() {
+            $('#exportdiv').hide();
+        });
+
+        var fr='';
+        var tr='';
+        $(function() {
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM DD, YYYY') + ' - ' + end.format('MMMM DD, YYYY'));
+            var from=start.format('YYYY-MM-DD');
+            var to=end.format('YYYY-MM-DD');
+            fr=from;
+            tr=to; 
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Last 3 Month': [moment().subtract(89, 'days'), moment()],
+                'Last 6 Month': [moment().subtract(179, 'days'), moment()],
+                'Last 12 Month': [moment().subtract(364, 'days'), moment()],
+                'Next 7 Days': [moment(),moment().add(6, 'days')],
+                'Next 30 Days': [moment(),moment().add(29, 'days')],
+                'Next Month': [moment().add(1, 'month').startOf('month'),moment().add(1, 'month').endOf('month')],
+                'Next 3 Month': [moment(),moment().add(89, 'days')],
+                'Next 6 Month': [moment(),moment().add(179, 'days')],
+                'Next 12 Month': [moment(),moment().add(364, 'days')],
+            }
+        }, cb);
+            cb(start, end);
+        });
+
+        $('#reportbutton').click(function()
+        {    
+            var invoicetype=$('#InvoiceType').val();
+            var services=$('#Services').val();
+            var period=$('#Period').val();
+            var groupcategory=$('#GroupCatagory').val();
+            var paymentterm=$('#PaymentTerm').val();
+            var servicestatus=$('#ServiceStatus').val(); 
+            var selectedservicest="";
+            var selectedinvtype="";
+            var servicelist="";
+            var periodlists="";
+            var grouplist="";
+            var paymenttermlist="";
+            if(servicestatus==''||invoicetype==''||services==''||period==''||groupcategory==''||paymentterm==''){
+                if(invoicetype==''){
+                    $('#invoicetype-error').html('Invoice type is required');
+                }
+                if(services==''){
+                    $('#services-error').html('Service is required');
+                }
+                if(period==''){
+                    $('#period-error').html('Period is required');
+                }
+                if(groupcategory==''){
+                    $('#group-error').html('Number of group is required');
+                }
+                if(paymentterm==''){
+                    $('#paymentterm-error').html('Payment term is required');
+                }
+                if(servicestatus==''){
+                    $('#servicest-error').html('Service status is required');
+                }
+                toastrMessage("error", "Please fill all required fields","Error");
+            }
+            else
+            {   
+                $("#ServiceStatus :selected").each(function() {
+                    selectedservicest+=this.text+" , ";
+                });
+                $("#InvoiceType :selected").each(function() {
+                    selectedinvtype+=this.text+" , ";
+                });
+                $('#daterange').html('<b>'+fr+'</b> to <b>'+tr+'</b>');
+                $('#servicestatuslbls').html('<b>'+selectedservicest+'</b>');
+                $('#invoicetypelbl').html('<b>'+selectedinvtype+'</b>');
+                var table = $("#servicestatustbl").DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    searching: true,
+                    info: true,
+                    responsive:true,
+                    searchHighlight: true,
+                        "pagingType": "simple",
+                        language: {
+                            search: '',
+                            searchPlaceholder: "Search here"
+                        },
+                        "dom": "<'row'<'col-lg-10 col-md-10 col-xs-8'f><'col-lg-2 col-md-2 col-xs-8'>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'i><'col-sm-12 col-md-3'p>>",
+                        ajax: {
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: '/servicestatusdata/'+ fr + '/' + tr + '/' + servicestatus+'/'+invoicetype,
+                            type: 'POST',
+                            data:{
+                                servicelist: $('#Services').val(),
+                                periodlists: $('#Period').val(),
+                                grouplist: $('#GroupCatagory').val(),
+                                paymenttermlist: $('#PaymentTerm').val(),
+                            },
+                        },
+                        buttons: true,
+                        ordering: false,
+                        paging: false,
+                        columns: [
+                            {
+                                data: "ApplicationType",
+                                name: "ApplicationType",
+                                width:"8%",
+                            },
+                            {
+                                data: "GroupName",
+                                name: "GroupName",
+                                width:"8%",
+                            },
+                            {
+                                data: "FsInvNumber",
+                                name: "FsInvNumber",
+                                width:"8%",
+                            },
+                            {
+                                data: "Name",
+                                name: "Name",
+                                width:"10%",
+                            },
+                            {
+                                data: "MemberPhone",
+                                name: "MemberPhone",
+                                width:"10%",
+                            },
+                                {
+                                data: "ServiceName",
+                                name: "ServiceName",
+                                width:"8%",
+                            },
+                            {
+                                data: "PeriodName",
+                                name: "PeriodName",
+                                width:"8%",
+                            },
+                            {
+                                data: "PaymentTermName",
+                                name: "PaymentTermName",
+                                width:"8%",
+                            },
+                            {
+                                data: "RegistrationDate",
+                                name: "RegistrationDate",
+                                width:"8%",
+                            },
+                            {
+                                data: "ExpiryDate",
+                                name: "ExpiryDate",
+                                width:"8%",
+                            },
+                            {
+                                data: "Status",
+                                name: "Status",
+                                width:"8%",
+                            },
+                             {
+                                data: "LoyalityStatus",
+                                name: "LoyalityStatus",
+                                width:"8%",
+                            },
+                        ],
+                        columnDefs: [
+                            {
+                                "width": "100%",
+                                targets: [0,1,2,3,4,5,6,7,8,9,10,11],
+                                createdCell: function (td, cellData, rowData, row, col){
+                                $(td).css('border', '0.1px solid black');
+                                $(td).css('color', 'black');
+                            }
+                        }],
+                        fixedHeader: {
+                            header: true,
+                            headerOffset: $('.header-navbar').outerHeight(),
+                            footer: true
+                        },
+                        order: [[10, 'asc'], [5, 'asc']],
+                        rowGroup: {
+                            startRender: function ( rows, group,level ) {
+                                var color =  'style="font-weight:bold;background:#f2f3f4;"';
+                                if(level===0){
+                                    return $('<tr ' + color + '>')
+                                    .append('<td colspan="12" style="text-align:center;border: 0.1px solid black; background:#ccc;"><b>Service Status : ' + group + ' </b></td></tr>')
+                                }
+                                else if(level===1){
+                                    return $('<tr ' + color + '>')
+                                    .append('<td colspan="12" style="text-align:left;border:0.1px solid;">Service Name : ' + group + '</td></tr>')
+                                }                
+                            },
+                            endRender: function ( rows, group,level ) {
+                                var intVal = function ( i ) {
+                                    return typeof i === 'string' ?
+                                        i.replace(/[\$,]/g, '')*1 :
+                                        typeof i === 'number' ?
+                                                i : 0;
+                                };
+                               
+                                var color = 'style="font-weight:bold;background:#f2f3f4;"';
+                                
+                            }, 
+                            dataSrc: ['Status','ServiceName']
+                        },
+                       
+                    });
+                    $('#exportdiv').show();
+                    $("#printable").show();   
+                    $('.fitreportfooter').show();
+            }
+        }); 
+
+        $('#printtable').click(function(){
+            var tr='<tr>'+
+                    '<td colspan="6" class="headerTitles" style="text-align:center;font-size:1.7rem;"><b>{{$compInfo->Name}}</b></td>'+
+                    '<td rowspan="4" style="float:right;width:150px;height:120px;"></td>'+
+                    '</tr>'+
+                    '<tr><td style="width:15%"><b>Tel:</b></td>'+
+                    '<td style="width:35%" colspan="2">{{$compInfo->Phone}},{{$compInfo->OfficePhone}}</td>'+
+                    '<td style="width:15%"><b>Website:</b></td>'+
+                    '<td style="width:35%" colspan="2">{{$compInfo->Website}}</td>'+
+                    '</tr>'+
+                    '<tr><td><b>Email:</b></td>'+
+                    '<td colspan="2">{{$compInfo->Email}}</td>'+
+                    '<td><b>Address:</b></td>'+
+                    '<td colspan="2">{{$compInfo->Address}}</td>'+
+                    '</tr>'+
+                    '<tr><td style="width:15%"><b>TIN No.:</b></td>'+
+                    '<td colspan="2">{{$compInfo->TIN}}</td>'+
+                    '<td><b>VAT No:</b></td>'+
+                    '<td colspan="2">{{$compInfo->VATReg}}</td>'+
+                    '</tr>';
+                    $("#headertables").append(tr);
+            $('#daterangetr').show();
+            $('.titletr').show();
+            $('#compinfotr').show();
+
+            let tbl = document.getElementById('servicestatustbl');
+            let footer = tbl.getElementsByTagName('tfoot')[0];
+            footer.style.display = 'table-row-group';
+            let header = tbl.getElementsByTagName('thead')[0];
+            header.style.display = 'table-row-group';
+            tbl.removeChild(footer);
+            tbl.appendChild(footer);
+    
+            var divToPrint=document.getElementById("servicestatustbl");
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'table th, table td {' +
+                'border:1px solid #000;' +
+                'padding:0.5em;' +
+                '}' +
+                '</style>';
+                htmlToPrint += divToPrint.outerHTML;
+                newWin= window.open("");
+                newWin.document.write(divToPrint.outerHTML);
+                newWin.print();
+                newWin.close();
+                
+            $('#compinfotr').hide();
+            $('#daterangetr').hide();
+            $('.titletr').hide();
+            $("#headertables").empty();
+        });
+
+        $("#downloatoexcel").click(function(){
+            $("#headertables").empty();
+            var datefrom=$('#date').val();
+            var dateto=$('#todate').val();
+            let tbl = document.getElementById('servicestatustbl');
+            let footer = tbl.getElementsByTagName('tfoot')[0];
+            footer.style.display = 'table-row-group';
+            tbl.removeChild(footer);
+            tbl.appendChild(footer);
+            $("#servicestatustbl").table2excel({
+            name: "Worksheet Name",
+            filename: "ServiceStatusReport", //do not include extension
+            fileext: ".xls" // file extension
+            });
+        });
+
+        function invtypefn(){
+            $('#invoicetype-error').html('');
+        }
+
+        function servicefn(){
+            $('#services-error').html('');
+        }
+
+        function periodfn(){
+            $('#period-error').html('');
+        }
+
+        function groupfn(){
+            $('#group-error').html('');
+        }
+
+        function paymenttermfn(){
+            $('#paymentterm-error').html('');
+        }
+
+        function paymenttypefn(){
+            $('#paymenttype-error').html('');
+        }
+
+        function servicestatusfn(){
+            $('#servicest-error').html('');
+        }
+
+        $(function () {
+            cardSection = $('#page-block');
+        });
+
+        function numformat(val){
+            while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+            }
+            return val;
+        }   
+    </script>
+@endsection

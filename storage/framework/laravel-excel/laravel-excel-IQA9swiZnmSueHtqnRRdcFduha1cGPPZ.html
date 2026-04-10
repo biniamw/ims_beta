@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+  <meta name="csrf-token" content="FzK18q6jlJ4MOzSLQMBeD1i7tM8HPVQ5ZxKsOg90">
+  <title></title>
+  <link rel="apple-touch-icon" href="http://127.0.0.1:8000/app-assets/images/ico/apple-icon-120.png">
+  <link rel="shortcut icon" type="image/x-icon" href="http://127.0.0.1:8000/app-assets/images/ico/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/fonts.css">
+  <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/pages/ui-feather.css">
+    <link rel="stylesheet" href="http://127.0.0.1:8000/app-assets/selectpicker/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="http://127.0.0.1:8000/app-assets/selectpicker/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/forms/spinner/jquery.bootstrap-touchspin.css">
+    <!-- BEGIN: Vendor CSS-->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.2/css/fixedHeader.dataTables.min.css">
+    <!-- END: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/pickers/pickadate/pickadate.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/forms/select/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/vendors/css/file-uploaders/dropzone.min.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/plugins/forms/form-file-uploader.css">
+    <link rel="stylesheet" href="http://127.0.0.1:8000/customcss/sweetalert2.min.css">
+    <link rel="stylesheet" href="http://127.0.0.1:8000/customcss/jquery-explr-1.4.css">
+  <!-- END: Vendor CSS-->
+
+  <!-- BEGIN: Theme CSS-->
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/bootstrap-extended.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/colors.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/components.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/themes/dark-layout.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/themes/bordered-layout.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/themes/semi-dark-layout.css">
+
+  <!-- BEGIN: Page CSS-->
+
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/plugins/forms/pickers/form-pickadate.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/fontawesome/css/fontawesome.min.css"/>
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/fontawesome/css/all.min.css"/>
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/toaster/toastr.css"/>
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/toaster/toastr.js"/>
+  <link rel="stylesheet" href="http://127.0.0.1:8000/customcss/quill.snow.css" />
+
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/pages/app-invoice.css">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/TableExport/3.2.5/css/tableexport.min.css">
+  <link href="jquery-explr-VERSION.css" rel="stylesheet">
+
+
+
+  <!-- END: Page CSS-->
+    
+
+    
+
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/customcss/daterangepicker.css" />
+
+  <!-- BEGIN: Custom CSS-->
+
+  <link href="http://127.0.0.1:8000/app-assets/css/multiselect.css" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/app-assets/css/core/menu/menu-types/vertical-menu.css">
+  
+
+  <style>
+
+    table.dataTable span.highlight {
+        background-color: #FFFF88; 
+    }
+    table.dataTable tbody tr.selected {
+        background-color: #E2E1E1; 
+    }
+
+    table.dataTable tbody tr.removezero {
+       display: none;
+    }
+
+    .display {
+        font-size: 12px;
+    }
+    .d-flex {
+        font-size: 13px;
+    }
+    .table {
+        font-size: 12px;
+    }
+
+    .dataTables_scrollBody::-webkit-scrollbar {
+        height:8px;
+        width:8px;
+    }
+    .dataTables_scrollBody::-webkit-scrollbar-track {
+        -webkit-box-shadow:inset 0 0 2px rgba(0,0,0,0.3); 
+        border-radius:5px;
+    }
+    .dataTables_scrollBody::-webkit-scrollbar-thumb:horizontal{
+        border-radius:5px;
+        height: 1px;
+        -webkit-box-shadow: inset 0 0 12px #82868b !important; 
+    }
+
+    .dataTables_scrollBody::-webkit-scrollbar-thumb:vertical{
+        border-radius:5px;
+        width: 1px;
+        overflow: hidden;
+        -webkit-box-shadow: inset 0 0 12px #82868b !important; 
+    }
+
+    .dataTables_scrollBody.scrollmenu a:hover {
+        background-color: #82868b;
+    }
+
+    .dataTables_scrollBody:hover {
+        overflow-x: scroll;
+        overflow-y: scroll;
+    }
+
+    .dataTables_scrollBody {
+        min-height: 250px !important;
+    }
+
+    .scroll::-webkit-scrollbar {
+        height:8px;
+    }
+    .scroll::-webkit-scrollbar-track {
+        -webkit-box-shadow:inset 0 0 2px rgba(0,0,0,0.3); 
+        border-radius:5px;
+    }
+    .scroll::-webkit-scrollbar-thumb:horizontal{
+        border-radius:5px;
+        height: 1px;
+        -webkit-box-shadow: inset 0 0 12px #82868b !important; 
+    }
+
+    .scroll.scrollmenu a:hover {
+        background-color: #82868b;
+    }
+
+    .scrdiv{
+        overflow: hidden;
+    }
+
+    .scrdiv:hover {
+        overflow-x: scroll;
+    }
+
+    .popover {
+        max-width: 1000px;
+        width: auto;
+    }
+
+    fieldset {
+        border: 0.5px solid #82868b !important;
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    fieldset legend {
+        color: #82868b !important;
+        padding: 5px 10px ;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        box-shadow: 0 0 0 1px white;
+        margin-left: 20px;
+    }
+
+    .appiddrp {
+        width: 80% !important;
+    }
+
+    .truncate {
+        max-width:130px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+@media  print{
+  body *{
+    visibility: hidden;
+  }
+
+  #saleReportDatatables, #saleReportDatatables *{
+    visibility: visible;
+  }
+}
+
+</style>
+<script>
+  window.Laravel = {"csrfToken":"FzK18q6jlJ4MOzSLQMBeD1i7tM8HPVQ5ZxKsOg90"};
+</script>
+<script>
+  window.Laravel.userId = 1
+
+</script>
+
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern menu-expanded pace-done footer-fixed navbar-sticky" data-open="click" data-menu="vertical-menu-modern" data-col="" id="page-block">
+    <!-- BEGIN: Header-->
+    <nav class="header-navbar navbar navbar-expand-lg align-items-center navbar-light navbar-shadow fixed-top" id="navbar">
+        <div class="navbar-container d-flex content">
+            <div class="bookmark-wrapper d-flex align-items-center">
+                <ul class="nav navbar-nav d-xl-none">
+                    <li class="nav-item"><a class="nav-link menu-toggle" href="javascript:void(0);"><i
+                                class="ficon" data-feather="menu"></i></a></li>
+                </ul>
+                <ul class="nav navbar-nav bookmark-icons">
+
+                </ul>
+                <ul class="nav navbar-nav">
+
+                </ul>
+            </div>
+            <div class="row justify-content-md-center" style="margin-left:1%;margin-right:auto;display:block;">
+                <h1 style="color:#7367f0"><b>Demiss Building Materials</b></h1>
+            </div>
+            <ul class="nav navbar-nav align-items-center ml-auto">
+                <div id="app">
+                    <example-component :userid="1" :unreads="[]"></example-component>
+                </div>
+                <a class="customizer-toggle d-flex align-items-center justify-content-center"
+                    href="javascript:void(0);"><i class="spinners" data-feather="settings"></i></a>
+                <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-style"><i class="ficon"
+                            data-feather="moon"></i></a></li>
+                <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link"
+                        id="dropdown-user" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="user-nav d-sm-flex d-none"><span
+                            class="user-name font-weight-bolder">SuperAdmin</span><span
+                            class="user-status"></span></div><span class="avatar"><img
+                            class="round"
+                            src="../../../../app-assets/images/portrait/small/default-profile-pic.jpg" alt="avatar"
+                            height="40" width="40"><span class="avatar-status-online"></span></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
+                        <a class="dropdown-item" href="profile"><i class="mr-50" data-feather="user"></i>Profile</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:8000/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="mr-50" data-feather="power"></i> Logout
+                        </a>
+
+                        <form id="logout-form" action="http://127.0.0.1:8000/logout" method="POST" class="d-none">
+                            <input type="hidden" name="_token" value="FzK18q6jlJ4MOzSLQMBeD1i7tM8HPVQ5ZxKsOg90">                        </form>
+
+                        
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <ul class="main-search-list-defaultlist d-none">
+        <li class="d-flex align-items-center"><a href="javascript:void(0);">
+                <h6 class="section-label mt-75 mb-0">Files</h6>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between w-100"
+                href="app-file-manager.html">
+                <div class="d-flex">
+                    <div class="mr-75"><img src="../../../app-assets/images/icons/xls.png" alt="png"
+                            height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">Two new item submitted</p><small
+                            class="text-muted">Marketing Manager</small>
+                    </div>
+                </div><small class="search-data-size mr-50 text-muted">&apos;17kb</small>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between w-100"
+                href="app-file-manager.html">
+                <div class="d-flex">
+                    <div class="mr-75"><img src="../../../app-assets/images/icons/jpg.png" alt="png"
+                            height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">52 JPG file Generated</p><small class="text-muted">FontEnd
+                            Developer</small>
+                    </div>
+                </div><small class="search-data-size mr-50 text-muted">&apos;11kb</small>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between w-100"
+                href="app-file-manager.html">
+                <div class="d-flex">
+                    <div class="mr-75"><img src="../../../app-assets/images/icons/pdf.png" alt="png"
+                            height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">25 PDF File Uploaded</p><small class="text-muted">Digital
+                            Marketing Manager</small>
+                    </div>
+                </div><small class="search-data-size mr-50 text-muted">&apos;150kb</small>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between w-100"
+                href="app-file-manager.html">
+                <div class="d-flex">
+                    <div class="mr-75"><img src="../../../app-assets/images/icons/doc.png" alt="png"
+                            height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">Anna_Strong.doc</p><small class="text-muted">Web
+                            Designer</small>
+                    </div>
+                </div><small class="search-data-size mr-50 text-muted">&apos;256kb</small>
+            </a></li>
+        <li class="d-flex align-items-center"><a href="javascript:void(0);">
+                <h6 class="section-label mt-75 mb-0">Members</h6>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between py-50 w-100"
+                href="app-user-view.html">
+                <div class="d-flex align-items-center">
+                    <div class="avatar mr-75"><img src="../../../app-assets/images/portrait/small/avatar-s-8.jpg"
+                            alt="png" height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">John Doe</p><small class="text-muted">UI designer</small>
+                    </div>
+                </div>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between py-50 w-100"
+                href="app-user-view.html">
+                <div class="d-flex align-items-center">
+                    <div class="avatar mr-75"><img src="../../../app-assets/images/portrait/small/avatar-s-1.jpg"
+                            alt="png" height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">Michal Clark</p><small class="text-muted">FontEnd
+                            Developer</small>
+                    </div>
+                </div>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between py-50 w-100"
+                href="app-user-view.html">
+                <div class="d-flex align-items-center">
+                    <div class="avatar mr-75"><img src="../../../app-assets/images/portrait/small/avatar-s-14.jpg"
+                            alt="png" height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">Milena Gibson</p><small class="text-muted">Digital
+                            Marketing Manager</small>
+                    </div>
+                </div>
+            </a></li>
+        <li class="auto-suggestion"><a class="d-flex align-items-center justify-content-between py-50 w-100"
+                href="app-user-view.html">
+                <div class="d-flex align-items-center">
+                    <div class="avatar mr-75"><img src="../../../app-assets/images/portrait/small/avatar-s-6.jpg"
+                            alt="png" height="32"></div>
+                    <div class="search-data">
+                        <p class="search-data-title mb-0">Anna Strong</p><small class="text-muted">Web
+                            Designer</small>
+                    </div>
+                </div>
+            </a></li>
+    </ul>
+    <ul class="main-search-list-defaultlist-other-list d-none">
+        <li class="auto-suggestion justify-content-between"><a
+                class="d-flex align-items-center justify-content-between w-100 py-50">
+                <div class="d-flex justify-content-start"><span class="mr-75"
+                        data-feather="alert-circle"></span><span>No results found.</span></div>
+            </a></li>
+
+
+    </ul>
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mr-auto"><a class="navbar-brand" href="/ims">
+                        <span class="brand-logo">
+
+                        </span>
+                        <h2 class="brand-text">IMS</h2>
+                    </a></li>
+                <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i
+                            class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i
+                            class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary"
+                            data-feather="disc" data-ticon="disc"></i></a></li>
+            </ul>
+        </div>
+        <div class="shadow-bottom"></div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                data-feather="shopping-bag"></i><span class="menu-title text-truncate"
+                                data-i18n="Sales & Marketing">Sales & Marketing</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="sales"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Sales">Sales</span></a>
+                                </li>
+                                                        <li>
+                                <a class="d-flex align-items-center" href="proforma"><i data-feather="circle"></i><span
+                                        class="menu-item text-truncate" data-i18n="Proforma">Proforma</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                data-feather="home"></i><span class="menu-title text-truncate"
+                                data-i18n="Inventory">Inventory</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="receiving"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="GoodsReceiving">Goods Receiving</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="requisition"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="StoreRequisition ">Store Requisition</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="transfer"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="StoreTransfer ">Store
+                                            Transfer</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="approver"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="StoreApprover">Store Approver</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="issue"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Issue">Store Issue</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="adjustment"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="StoreAdjustment">Store Adjustment</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="begining"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="StoreBegining">Store Begining</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="ending"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Ending">Ending</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="stockbalance"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="stockbalance">Store Balance</span></a>
+                                </li>
+                                                    </ul>
+                    </li>
+                                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="DS">D S</span><span class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="deadstock"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="DS I">DS I</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="dsbegining"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="DS Begining">DS Begining</span></a>
+                                </li>
+                                                                                        <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                                data-feather="file"></i><span class="menu-title text-truncate"
+                                                data-i18n="DS Report">DS Report</span><span
+                                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                    <ul class="menu-content">
+                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="dsgenpo"><span class="menu-item text-truncate" data-i18n="DS General PullOut Report">DS General PullOut Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsgenhi"><span class="menu-item text-truncate" data-i18n="DS General HandIn Report">DS General HandIn Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsmovement"><span class="menu-item text-truncate" data-i18n="DS Item Movement Report">DS Item Movement Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsbalance"><span class="menu-item text-truncate" data-i18n="DS Store Balance Report">DS Store Balance Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsvalue"><span class="menu-item text-truncate" data-i18n="DS Inventory Value Report">DS Inventory Value Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsitemrank"><span class="menu-item text-truncate" data-i18n="DS Rank By Item">DS Rank By Item</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dscusrank"><span class="menu-item text-truncate" data-i18n="DS Rank By Customer">DS Rank By Customer</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="dsfsn"><span class="menu-item text-truncate" data-i18n="DS FSN Analysis">DS FSN Analysis</span></a>
+                                            </li>
+                                                                                                                            <ul class="menu-content">
+                                                <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                                            data-feather="file"></i><span class="menu-title text-truncate"
+                                                            data-i18n="financialreport">DS P&L Report</span><span
+                                                            class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                                    <ul class="menu-content">
+                                                                                                                    <li>
+                                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/dsplreport"><i
+                                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                        data-i18n="DS PL General Report">DS P&L General</span></a>
+                                                            </li>
+                                                                                                                                                                            <li>
+                                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/dsplreportsum"><i
+                                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                        data-i18n="DS PL By POS">DS P&L By POS</span></a>
+                                                            </li>
+                                                                                                                                                                            <li>
+                                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/dsplreportcus"><i
+                                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                        data-i18n="DS PL By Customer">DS P&L By Customer</span></a>
+                                                            </li>
+                                                                                                                                                                            <li>
+                                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/dsplreportitm"><i
+                                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                        data-i18n="DS PL By Item">DS P&L By Item</span></a>
+                                                            </li>
+                                                                                                            </ul>
+                                            </ul>
+                                                                            </ul>
+                                </li>
+                             
+                        </ul>
+                    </li>
+                                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                data-feather='star'></i><span class="menu-title text-truncate"
+                                data-i18n="Utility">Utility</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="settlement"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Settlement">Settlement</span></a>
+                                </li>
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="closing"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Closing">Closing</span></a>
+                                </li>
+                        </ul>
+                    </li>
+                                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i data-feather='package'></i><span class="menu-title text-truncate"
+                                data-i18n="Fitness & Spa">Fitness & Spa</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="application"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Fitness Form">Fitness Form</span></a>
+                                </li>
+                                                        
+                        </ul>
+                    </li>
+                                                    <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                data-feather="menu"></i><span class="menu-title text-truncate"
+                                data-i18n="Registry">Registry</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                        <ul class="menu-content">
+                                                            <li>
+                                    <a class="d-flex align-items-center" href="category"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="Category">Category</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="uom"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="UOM">UOM</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="items"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="ItemService">Item/Service</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="customer"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Customer/Supplier">Customer/Supplier</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="store"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="Store">Store</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="brand" style="display:none;"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Brand & Model">Brand & Model</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="service"><i data-feather="circle"></i><span
+                                            class="menu-item text-truncate" data-i18n="Services">Services</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="membership"><i data-feather="circle"></i><span
+                                    class="menu-item text-truncate" data-i18n="Membership">Client</span></a>
+                                </li>
+                                                                                        <li>
+                                    <a class="d-flex align-items-center" href="employee"><i data-feather="circle"></i><span
+                                    class="menu-item text-truncate" data-i18n="Employee">Employee</span></a>
+                                </li>
+                                                    </ul>
+                    </li>
+                
+                                    <li class="nav-item">
+                        <a class="d-flex align-items-center" href="#"><i data-feather="book-open"></i><span
+                                class="menu-title text-truncate" data-i18n="Report">Report</span><span
+                                class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                                    <ul class="menu-content">
+                                <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                            data-feather="file"></i><span class="menu-title text-truncate"
+                                            data-i18n="salesreport">Purchase Report</span><span
+                                            class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                    <ul class="menu-content">
+                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/purchaseui"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="General Purchase">General Purchase</span></a>
+                                            </li>
+                                                                                                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="purchasebysupplierui"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="By Supplier">By Supplier</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="purchasebyitemui"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="By Item">By Item</span></a>
+                                            </li>
+                                                                            </ul>
+                            </ul>
+                        
+                                                    <ul class="menu-content">
+                                <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                            data-feather="file"></i><span class="menu-title text-truncate"
+                                            data-i18n="salesreport">Sales Report</span><span
+                                            class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                    <ul class="menu-content">
+                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="saleReport"
+                                                    style="display:none;"><i data-feather="circle"></i><span
+                                                        class="menu-item text-truncate" data-i18n="General Sales">General
+                                                        Sales</span></a>
+                                            </li>
+                                                                                                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="salebycustomer"
+                                                    style="display:none;"><i data-feather="circle"></i><span
+                                                        class="menu-item text-truncate" data-i18n="By Customer">By
+                                                        Customer</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="salebyitem"
+                                                    style="display:none;"><i data-feather="circle"></i><span
+                                                        class="menu-item text-truncate" data-i18n="By Item">By
+                                                        Item</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="witholdView"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="Sales Deduct">Sales Deduct</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/itemrank"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="Item Rank">Item Rank</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="http://127.0.0.1:8000/cusrank"><i
+                                                        data-feather="circle"></i><span class="menu-item text-truncate"
+                                                        data-i18n="Customer Rank">Customer Rank</span></a>
+                                            </li>
+                                                                            </ul>
+                                                                            <ul class="menu-content">
+                                            <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                                                        data-feather="file"></i><span class="menu-title text-truncate"
+                                                        data-i18n="financialreport">P&L Report</span><span
+                                                        class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                                                <ul class="menu-content">
+                                                                                                            <li>
+                                                            <a class="d-flex align-items-center" href="http://127.0.0.1:8000/plreport"><i
+                                                                    data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                    data-i18n="PL General Report">P&L General Report</span></a>
+                                                        </li>
+                                                                                                                                                                <li>
+                                                            <a class="d-flex align-items-center" href="http://127.0.0.1:8000/plreportsum"><i
+                                                                    data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                    data-i18n="PL By POS">P&L By POS</span></a>
+                                                        </li>
+                                                                                                                                                                <li>
+                                                            <a class="d-flex align-items-center" href="http://127.0.0.1:8000/plreportcus"><i
+                                                                    data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                    data-i18n="PL By Customer">P&L By Customer</span></a>
+                                                        </li>
+                                                                                                                                                                <li>
+                                                            <a class="d-flex align-items-center" href="http://127.0.0.1:8000/plreportitm"><i
+                                                                    data-feather="circle"></i><span class="menu-item text-truncate"
+                                                                    data-i18n="PL By Item">P&L By Item</span></a>
+                                                        </li>
+                                                                                                    </ul>
+                                        </ul>
+                                                                </ul>
+                        
+                                                    <ul class="menu-content">
+                                <li>
+                                    <a class="d-flex align-items-center" href="#"><i data-feather="file"></i><span
+                                            class="menu-item text-truncate" data-i18n="Inventory">Inventory
+                                            Report</span></a>
+                                    <ul class="menu-content">
+                                                                                    <li>
+                                                <a class="d-flex align-items-center" href="movementui"><span
+                                                        class="menu-item text-truncate" data-i18n="Item Movement">Item
+                                                        Movement</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="balanceui"><span
+                                                        class="menu-item text-truncate"
+                                                        data-i18n="Store Balance Report">Store Balance Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="value"><span
+                                                    class="menu-item text-truncate"
+                                                    data-i18n="Invetory Value Report">Inventory Value Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="reorder"><span
+                                                    class="menu-item text-truncate"
+                                                    data-i18n="Reorder Report">Reorder Report</span></a>
+                                            </li>
+                                                                                                                            <li>
+                                                <a class="d-flex align-items-center" href="fsn"><span
+                                                        class="menu-item text-truncate"
+                                                        data-i18n="FSN Analysis Report">FSN Analysis Report</span></a>
+                                            </li>
+                                                                            </ul>
+                                </li>
+                            </li>
+                        </ul>
+                                    </li>
+            
+
+                            <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                            data-feather='settings'></i><span class="menu-title text-truncate"
+                            data-i18n="Setting">Setting</span><span
+                            class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                    <ul class="menu-content">
+                                                    <li>
+                                <a class="d-flex align-items-center" href="setting"><i data-feather="circle"></i><span
+                                        class="menu-item text-truncate" data-i18n="General">General</span></a>
+                            </li>
+                                            </ul>
+                </li>
+                                        <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
+                            data-feather='users'></i><span class="menu-title text-truncate"
+                            data-i18n="Account">Account</span><span
+                            class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
+                    <ul class="menu-content">
+                                                    <li>
+                                <a class="d-flex align-items-center" href="/user"><i data-feather="circle"></i><span
+                                        class="menu-item text-truncate" data-i18n="Users">Users</span></a>
+                            </li>
+                                                                            <li>
+                                <a class="d-flex align-items-center" href="/role"><i data-feather="circle"></i><span
+                                        class="menu-item text-truncate" data-i18n="Role">Role</span></a>
+                            </li>
+                                            </ul>
+                </li>
+                        </ul>
+        </div>
+    </div>
+    <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div id="main-content">
+        <div class="app-content content">
+        <section id="responsive-datatable">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header border-bottom">
+                            <h3 class="card-title">Purchase By Supplier Report</h3>
+                        </div>
+                        <div class="card-datatable">
+                            <div style="width:100%;">
+                                <div style="width:100%;">
+                                    <div style="width:98%; margin-left:1%; margin-top:2%;">
+                                        <div class="row">
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Select Date Range</label>
+                                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                                                    <i class="fa fa-calendar"></i>&nbsp;
+                                                    <span></span> <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Supplier</label>
+                                                <div>
+                                                    <select class="selectpicker form-control" id="customer" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Suppliers ({0})" onchange="clearsupplierval()">
+                                                                                                                    <option value="34">CUS-000024 , Abdulfeta Jemal Mohammed , 0026727255 </option>
+                                                                                                                    <option value="64">CUS-000054 , ABK BUILDING MATERIAL TRADE , 0046353201 </option>
+                                                                                                                    <option value="88">CUS-000078 , ACCEPT TRADING PLC , 0058680968 </option>
+                                                                                                                    <option value="286">CUS-000276 , AYSHA ABRAR , 0028235172 </option>
+                                                                                                                    <option value="310">CUS-000300 , BAT Building  Material  Shop , 0008021570 </option>
+                                                                                                                    <option value="433">CUS-000423 , Bushu Electric and Building Material , 0063095499 </option>
+                                                                                                                    <option value="439">CUS-000429 , CAB Building &amp; Electric Material Shop , 0064527013 </option>
+                                                                                                                    <option value="515">CUS-000505 , Daniel Aimiro , 0024063162 </option>
+                                                                                                                    <option value="706">CUS-000696 , EXODOUS  B.M.S , 0007166869 </option>
+                                                                                                                    <option value="764">CUS-000754 , Finder Tools Trading , 0026813797 </option>
+                                                                                                                    <option value="770">CUS-000760 , chere Building Con.Material Trading , 0005933266 </option>
+                                                                                                                    <option value="860">CUS-000850 , Goh H/Mariam , 0000064313 </option>
+                                                                                                                    <option value="866">CUS-000856 , Gotam Trading , 0059481894 </option>
+                                                                                                                    <option value="1047">CUS-001037 , Kedja Hussein General Importer , 0002461655 </option>
+                                                                                                                    <option value="1089">CUS-001079 , Lakachew Ahadu , 0007064250 </option>
+                                                                                                                    <option value="1151">CUS-001141 , Maraki Building &amp; Electrical Material Trade , 0005787974 </option>
+                                                                                                                    <option value="1161">CUS-001151 , Mass Tools Building Material , 0000171138 </option>
+                                                                                                                    <option value="1183">CUS-001173 , Mehari W/Giorgis , 0013328668 </option>
+                                                                                                                    <option value="1219">CUS-001209 , Meseret Getachew , 0002257862 </option>
+                                                                                                                    <option value="1230">CUS-001220 , Mesud Abdela , 0002801299 </option>
+                                                                                                                    <option value="1268">CUS-001258 , MN Construction Trade , 0003988035 </option>
+                                                                                                                    <option value="1374">CUS-001364 , NUNA BUILDING &amp; ELECTRIC M.S , 0059323066 </option>
+                                                                                                                    <option value="1398">CUS-001388 , Oumer , 0007837166 </option>
+                                                                                                                    <option value="1454">CUS-001444 , Rediet Hailu Building Material Shop , 0010377286 </option>
+                                                                                                                    <option value="1542">CUS-001532 , SELAM GERMA , 0019480588 </option>
+                                                                                                                    <option value="1546">CUS-001536 , Selhadin Jemal Building Materials Shop , 0021647443 </option>
+                                                                                                                    <option value="1584">CUS-001574 , Shumbeza Assefa , 0003689367 </option>
+                                                                                                                    <option value="1620">CUS-001610 , Sofoniyas Kebede , 0004168022 </option>
+                                                                                                                    <option value="1940">CUS-002917 , Yostena Machinery &amp; Tools , 0017067965 </option>
+                                                                                                                    <option value="1977">CUS-001967 , Zewudu Zeberga , 0026698565 </option>
+                                                                                                                    <option value="1988">CUS-001978 , Zayin Star , 0015719750 </option>
+                                                                                                                    <option value="4044">CUS-002042 , Orange Tools Trading PLC , 0048317217 </option>
+                                                                                                                    <option value="4054">CUS-002052 , Meron Melese Shikur , 0048132869 </option>
+                                                                                                                    <option value="4058">CUS-002056 , Afework Sintayehu Wholesale of Materials , 0014246857 </option>
+                                                                                                                    <option value="4059">CUS-002057 , Afawushe Importer , 0008172819 </option>
+                                                                                                                    <option value="4070">CUS-002068 , Fikadu Wendemagegn , 0000640901 </option>
+                                                                                                                    <option value="4074">CUS-002072 , Tsehay Bereda Shikur , 0016866661 </option>
+                                                                                                                    <option value="4087">CUS-002085 , A.I.A PLC , 0000009541 </option>
+                                                                                                                    <option value="4115">CUS-002113 , Herenim Trading plc , 0070676373 </option>
+                                                                                                                    <option value="4118">CUS-002116 , AMAR MUKERWM RAHEMETO , 0065237613 </option>
+                                                                                                                    <option value="4138">CUS-002136 , MANALBISH TESEMA , 0000099203 </option>
+                                                                                                                    <option value="4161">CUS-002159 , Merema Jemal Building Material Retail Trade , 0056018466 </option>
+                                                                                                                    <option value="4163">CUS-002161 , Nfas Silk PAINT , 0000008532 </option>
+                                                                                                                    <option value="4192">CUS-002190 , BEST WAY INDUSTRIAL PLC , 0056985696 </option>
+                                                                                                                    <option value="4220">CUS-002218 , Tam building Materials shop , 0006370442 </option>
+                                                                                                                    <option value="4283">CUS-002281 , Desalign G/Michael Trading , 0001895201 </option>
+                                                                                                                    <option value="4623">CUS-002621 , Elgode Garment and Manufacturing PLC , 0047038241 </option>
+                                                                                                                    <option value="4826">CUS-002824 , T Wero Amba Trading Plc , 0055023180 </option>
+                                                                                                                    <option value="4879">CUS-002877 , Abdilsemed Redi Hassen Buliding Materal , 0067007106 </option>
+                                                                                                                    <option value="4923">CUS-002922 , Tek Safty  And Security PLC , 0013220595 </option>
+                                                                                                                    <option value="5088">CUS-003087 , HASSENA GENERAL TRADING , 0000345950 </option>
+                                                                                                                    <option value="5510">CUS-003509 , Asfaw Habta Boutique , 0000967855 </option>
+                                                                                                                    <option value="5669">CUS-003668 , EkramTemam Retail Trade Of Construction Materials , 0058631993 </option>
+                                                                                                                    <option value="5670">CUS-003669 , ABERA WORKY NEGIBO , 0005333396 </option>
+                                                                                                                    <option value="5679">CUS-003678 , HAJIH OMER ZEKERIYA (ZEKERIYA TRADING) , 0063101701 </option>
+                                                                                                                    <option value="5724">CUS-003723 , NETCO TRADING , 0002934551 </option>
+                                                                                                                    <option value="5731">CUS-003730 , Grace Electric and Building Material Shop , 0007938512 </option>
+                                                                          
+                                                    </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                        <strong id="customer-error"></strong>
+                                                    </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Store/Shop</label>
+                                                <div>
+                                                    <select class="selectpicker form-control" id="store" multiple="multiple" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Stores/Shop ({0})" onchange="clearstoreval()">
+                                                                                                                    <option value="3">Demiss Kolfe Local Store   </option>
+                                                                                                                    <option value="4">Demiss Kolfe Total Store   </option>
+                                                                                                                    <option value="6">Demiss Shop One   </option>
+                                                                                                                    <option value="7">Demiss Shop Two   </option>
+                                                                                                                    <option value="8">Demiss Lebu Total Store   </option>
+                                                                                                                    <option value="9">Demiss Piassa Shop   </option>
+                                                                        
+                                                    </select>
+                                                    </div>
+                                                    <span class="text-danger">
+                                                <strong id="pointofsale-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <label strong style="font-size: 14px;color">Payment Type</label>
+                                                <div>   
+                                                    <select class="selectpicker form-control" id="paymenttype" multiple="multiple" data-style="btn btn-outline-secondary waves-effect" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Payment Type ({0})" onchange="clearptype()">
+                                                        <option value='"Cash"'>Cash</option> 
+                                                        <option value='"Credit"'>Credit</option>                 
+                                                    </select>
+                                                </div>
+                                                <span class="text-danger">
+                                                    <strong id="paymenttype-error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2">
+                                                <div class="row" style="color:white;">
+                                                    .
+                                                </div>
+                                                <div class="row">
+                                                    <button id="reportbutton" type="button" class="btn btn-info btn-sm"><i data-feather='file-text'></i>  View</button>
+                                                    <div style="width: 1%;"></div>
+                                                    <div class="btn-group dropdown" id="exportdiv" style="display: none;">
+                                                        <button type="button" class="btn btn-info dropdown-toggle hide-arrow btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span>Print/Export</span><i class="fa fa-caret-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <button id="printtable" type="button" class="dropdown-item" ><i class="fa fa-print" aria-hidden="true"></i>  Print</button>
+                                                            <button id="downloatoexcel" type="button"  class="dropdown-item"><i class="fa fa-file-excel" aria-hidden="true"></i> To Excel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </section>
+         <section id="responsive-datatable">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-datatable">
+                                <div style="width:100%;">
+                                     <div class="row" id="printable" style="display:none;">
+                                    <div class="col-xl-11 col-md-6 col-sm-12 mb-2">
+                                    </div>
+                                    <div class="col-xl-1 col-md-6 col-sm-12 mb-2">
+                                        <button type="button" class="btn btn-gradient-info btn-sm" style="color: white;display:none;"
+                                        onclick="printDiv('printable')" title="Print"><i data-feather='printer'></i></button>
+                                    </div>
+                                    <div class="col-xl-12 col-md-6 col-sm-12 mb-2">
+                                        <div style="width: 100%;">
+                                            <div class="table-responsive">
+                                                <table id="spurchasetable" class="table" style="width: 100%;color:black;">
+                                                    <thead>
+                                                       <tr style="display: none;" id="compinfotr">
+                                                            <th colspan="11">
+                                                                <table id="headertables" class="headerTable" style="border-bottom: 1px solid black; margin-top:-60px;width:100%;"></table>
+                                                            </th>
+                                                        </tr>
+                                                        <tr id="daterangetr" style="display: none;">
+                                                            <th colspan="11">
+                                                                <h4><p style="text-align:center; margin:top:-10px;color:#00cfe8;font-family: 'Segoe UI', Verdana, Helvetica, Sans-Serif;"><b>Purchase By Supplier Report</b></p></h4>
+                                                            </th>
+                                                        </tr>
+                                                        <tr id="titletr" style="display: none;">
+                                                            <th colspan="2" style="border: 1px solid black;"><label strong style="font-size: 14px;">Date Range</label></th>
+                                                            <th colspan="3" style="border: 1px solid black;"><label id="daterange" strong style="font-size: 14px;"></label></th>
+                                                            <th colspan="2" style="border: 1px solid black;"><label strong style="font-size: 14px;">Store/Shop</label></th>
+                                                            <th colspan="4" style="border: 1px solid black;"><label id="selectedstorelbl" strong style="font-size: 14px;"></label></th>
+                                                        </tr>
+                                                        <tr id="paymenttr" style="display: none;">
+                                                            <th colspan="2" style="border: 1px solid black;"><label strong style="font-size: 14px;">Payment Type</label></th>
+                                                            <th colspan="3" style="border: 1px solid black;"><label id="paymenttypelbl" strong style="font-size: 14px;"></label></th>
+                                                            <th colspan="2" style="border: 1px solid black;"><label strong style="font-size: 14px;"></label></th>
+                                                            <th colspan="4" style="border: 1px solid black;"><label id="itemgrouphead" strong style="font-size: 14px;"></label></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="11" style="color:black; border-bottom-color: black;background-color:white;"></td>
+                                                        </tr>
+                                                        <tr style="color:black; border: 0.1px solid white;">
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Item Code</th>
+                                                            <th style="width:30%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Item Name</th>
+                                                            <th style="width:10%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Payment Type</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">UOM</th>
+                                                            <th style="width:10%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Store/Shop Name</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Quantity</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Unit Cost</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Sub Total</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Tax</th>
+                                                            <th style="width:5%;color:white; border: 0.1px solid white;background-color:#00cfe8;">Total Cost</th>
+                                                            <th style="color:white; border: 0.1px solid white;background-color:#00cfe8;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                    <tfoot>
+                                                        <tr></tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>	
+                    </div>
+                </div>
+            </section>
+     </div>
+       <!--Toast Start-->
+       <div class="toast align-items-center text-white bg-primary border-0" id="myToast" role="alert" style="position: absolute; top: 2%; right: 40%; z-index: 7000; border-radius:15px;">
+            <div class="toast-body">
+                <strong id="toast-massages"></strong>
+                <button type="button" class="ficon" data-feather="x" data-dismiss="toast">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+   <!--Toast End-->
+       </div>
+    <!-- END: Content-->
+
+    <div class="modal fade text-left" id="expirenotice" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Subscription Renew Notice</h4>
+                    <button type="button" class="close" onclick="closemodal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color: #e74a3b;text-align:center;">
+                    <label id="renewlbl" strong style="font-size: 26px;color:white;font-weight:bold;">Total Outstanding Amount</label>
+                </div>
+                <div class="modal-footer">
+                    <button id="closebuttonk" type="button" class="btn btn-danger" onclick="closemodal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN: Customizer-->
+    <div class="customizer d-none d-md-block">
+        <div class="customizer-content">
+            <!-- Customizer header -->
+            <div class="customizer-header px-2 pt-1 pb-0 position-relative">
+                <h4 class="mb-0">Theme Setting</h4>
+                <p class="m-0"></p>
+                <a class="customizer-close" href="javascript:void(0);"><i data-feather="x"></i></a>
+            </div>
+
+            <hr />
+
+            <!-- Styling & Text Direction -->
+            <div class="customizer-styling-direction px-2">
+                <p class="font-weight-bold">Skin</p>
+                <div class="d-flex">
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="skinlight" name="skinradio" class="custom-control-input layout-name"
+                            checked data-layout="" />
+                        <label class="custom-control-label" for="skinlight">Light</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="skinbordered" name="skinradio" class="custom-control-input layout-name"
+                            data-layout="bordered-layout" />
+                        <label class="custom-control-label" for="skinbordered">Bordered</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="skindark" name="skinradio" class="custom-control-input layout-name"
+                            data-layout="dark-layout" />
+                        <label class="custom-control-label" for="skindark">Dark</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="skinsemidark" name="skinradio" class="custom-control-input layout-name"
+                            data-layout="semi-dark-layout" />
+                        <label class="custom-control-label" for="skinsemidark">Semi Dark</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Menu -->
+            <div class="customizer-menu px-2">
+                <div id="customizer-menu-collapsible" class="d-flex">
+                    <p class="font-weight-bold mr-auto m-0">Menu Collapsed</p>
+                    <div class="custom-control custom-control-primary custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="collapse-sidebar-switch" />
+                        <label class="custom-control-label" for="collapse-sidebar-switch"></label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- Layout Width -->
+            <div class="customizer-footer px-2">
+                <p class="font-weight-bold">Layout Width</p>
+                <div class="d-flex">
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="layout-width-full" name="layoutWidth" class="custom-control-input"
+                            checked />
+                        <label class="custom-control-label" for="layout-width-full">Full Width</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="layout-width-boxed" name="layoutWidth" class="custom-control-input" />
+                        <label class="custom-control-label" for="layout-width-boxed">Boxed</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- Navbar -->
+            <div class="customizer-navbar px-2">
+                <div id="customizer-navbar-colors">
+                    <p class="font-weight-bold">Navbar Color</p>
+                    <ul class="list-inline unstyled-list">
+                        <li class="color-box bg-white border selected" data-navbar-default=""></li>
+                        <li class="color-box bg-primary" data-navbar-color="bg-primary"></li>
+                        <li class="color-box bg-secondary" data-navbar-color="bg-secondary"></li>
+                        <li class="color-box bg-success" data-navbar-color="bg-success"></li>
+                        <li class="color-box bg-danger" data-navbar-color="bg-danger"></li>
+                        <li class="color-box bg-info" data-navbar-color="bg-info"></li>
+                        <li class="color-box bg-warning" data-navbar-color="bg-warning"></li>
+                        <li class="color-box bg-dark" data-navbar-color="bg-dark"></li>
+                    </ul>
+                </div>
+
+                <p class="navbar-type-text font-weight-bold">Navbar Type</p>
+                <div class="d-flex">
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="nav-type-floating" name="navType" class="custom-control-input"
+                            checked />
+                        <label class="custom-control-label" for="nav-type-floating">Floating</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="nav-type-sticky" name="navType" class="custom-control-input" />
+                        <label class="custom-control-label" for="nav-type-sticky">Sticky</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="nav-type-static" name="navType" class="custom-control-input" />
+                        <label class="custom-control-label" for="nav-type-static">Static</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="nav-type-hidden" name="navType" class="custom-control-input" />
+                        <label class="custom-control-label" for="nav-type-hidden">Hidden</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- Footer -->
+            <div class="customizer-footer px-2">
+                <p class="font-weight-bold">Footer Type</p>
+                <div class="d-flex">
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="footer-type-sticky" name="footerType" class="custom-control-input" />
+                        <label class="custom-control-label" for="footer-type-sticky">Sticky</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="footer-type-static" name="footerType" class="custom-control-input"
+                            checked />
+                        <label class="custom-control-label" for="footer-type-static">Static</label>
+                    </div>
+                    <div class="custom-control custom-radio mr-1">
+                        <input type="radio" id="footer-type-hidden" name="footerType" class="custom-control-input" />
+                        <label class="custom-control-label" for="footer-type-hidden">Hidden</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End: Customizer-->
+      <div class="sidenav-overlay"></div>
+      <div class="drag-target"></div>
+      <!-- BEGIN: Footer-->
+      <footer class="footer footer-static footer-light">
+      </footer>
+      <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+      <!-- END: Footer-->
+      <script src="/js/app.js"></script>
+      <!-- BEGIN: Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/vendors.min.js"></script>
+      <!-- BEGIN Vendor JS-->
+      <!-- BEGIN: Page Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/js/jquery.dataTables.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/dataTables.bootstrap5.min.js"></script>
+      
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
+      <script src="https://cdn.datatables.net/fixedheader/3.2.2/js/dataTables.fixedHeader.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+      
+      <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+
+      <!-- END: Page Vendor JS-->
+      <!-- BEGIN: Page Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/extensions/toastr.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+      <!-- END: Page Vendor JS-->
+      <!-- BEGIN: Theme JS-->
+      <script src="http://127.0.0.1:8000/app-assets/js/core/app-menu.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/core/app.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/customizer.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/forms/form-number-input.js"></script>
+      <!-- END: Theme JS-->
+      <!-- BEGIN: Page JS-->
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/ui/ui-feather.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/forms/form-select2.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/extensions/dropzone.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/forms/form-file-uploader.js"></script>
+      <!-- END: Page JS-->
+      <!-- BEGIN: Page Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/pickers/pickadate/picker.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/pickers/pickadate/picker.date.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/pickers/pickadate/picker.time.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/pickers/pickadate/legacy.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+      <!-- END: Page Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/selectpicker/js/bootstrap-select.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/selectpicker/js/bootstrap-select.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/components/components-collapse.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/extensions/ext-component-blockui.js"></script>
+      <!--Begin Load Custom Javascripts-->
+      <script src="http://127.0.0.1:8000/app-assets/js/validation.js"></script>
+      <!--End Load Custom Javascripts-->
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/moment.min.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/moment.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/daterangepicker.min.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/highlight.min.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/quill.min.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/jquery-ui.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/jquery.highlight.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/customjs/dataTables.searchHighlight.min.js"></script>
+      <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/js/scripts/forms/pickers/form-pickers.js"></script>
+      
+      <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/js/scripts/pages/app-invoice.js"></script>
+    <!-- END: Page JS-->
+      <!-- BEGIN: Page Vendor JS-->
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/forms/cleave/cleave.min.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/vendors/js/forms/cleave/addons/cleave-phone.us.js"></script>
+      <script src="http://127.0.0.1:8000/app-assets/js/scripts/forms/form-input-mask.js"></script>
+      <!-- END: Page Vendor JS-->
+    <script src="http://127.0.0.1:8000/customjs/sweetalert2.all.min.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/table2excel.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/jquery.table2excel.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/jquery-explr-1.4.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/tree.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/jquery.almightree.js"></script>
+    <script src="http://127.0.0.1:8000/customjs/webcam.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/customjs/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/js/scripts/charts/chart-chartjs.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/vendors/js/charts/chart.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/vendors/js/charts/canvasjs.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/vendors/js/charts/SimpleChart.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/vendors/js/charts/chartjs-plugin-datalabels.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8000/app-assets/js/scripts/components/components-popovers.js"></script>
+    <script src="http://127.0.0.1:8000/app-assets/js/multiselect.min.js"></script>
+
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        });
+
+        function changeurl(url)
+        {
+          var new_url=url;
+          window.history.pushState("data","Title",new_url);
+          $("#main-content").load(new_url);
+        }
+
+        function toastrMessage($type,$message,$info){
+          toastr[$type]($message,$info,{
+            "closeButton": true,
+            "debug": true,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "preventOpenDuplicates": true,
+            "onclick": null,
+            "showDuration": "3000",
+            "hideDuration": "1000",
+            "timeOut": "10000",
+            "extendedTimeOut": "10000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          });
+        }
+
+    var checkexpiredate = function(){
+        var remdate=0;
+        var expiredate="";
+        $.get("/showexpdate" , function(data) { 
+            $.each(data.checkexpdate, function(index, value) {
+               remdate=value.RemainingDate;
+               expiredate=value.ExpiredateVal;
+            });
+            if(parseFloat(remdate)<=300){
+                $('#renewlbl').html("Your anual subscription expires in "+remdate+" days. Please renew your subscription.</br>If you have any questions regarding the renewal process or need help contact us at");
+                $('#expirenotice').modal('show');
+            }
+        }); 
+    }
+    //setInterval(checkexpiredate,3600000);
+
+    function closemodal(){
+        $('#expirenotice').modal('hide');
+    }
+    
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#exportdiv').hide();
+});
+var fr='';
+var tr='';
+$("#downloatoexcel").click(function(){
+    $("#headertables").empty();
+    var datefrom=$('#datefrom').val();
+    var dateto=$('#dateto').val();
+    let tbl = document.getElementById('spurchasetable');
+    let footer = tbl.getElementsByTagName('tfoot')[0];
+    footer.style.display = 'table-row-group';
+    tbl.removeChild(footer);
+    tbl.appendChild(footer);
+    $.ajax({
+        type: "get",
+        url: "http://127.0.0.1:8000/purchaseuitest",
+        success: function(data) {
+           
+        },
+        error: function(data) {
+            console.log('Error:', data);
+        }
+    });
+
+    // $("#spurchasetable").table2excel({
+    //     name: "Worksheet Name",
+    //     filename: "PurchaseBySupplierReport"+fr+' to '+tr, //do not include extension
+    //     fileext: ".xls" // file extension
+    // });
+});
+
+$('#printtable').click(function(){
+        var tr='<tr>'+
+                '<td colspan="6" class="headerTitles" style="text-align:center;font-size:1.7rem;"><b>Demiss Building Materials</b></td>'+
+                '<td rowspan="4" style="float:right;width:150px;height:120px;"></td>'+
+                '</tr>'+
+                '<tr><td style="width:15%"><b>Tel:</b></td>'+
+                '<td style="width:35%" colspan="2">+251911201592,+251115533692</td>'+
+                '<td style="width:15%"><b>Website:</b></td>'+
+                '<td style="width:35%" colspan="2"></td>'+
+                '</tr>'+
+                '<tr><td><b>Email:</b></td>'+
+                '<td colspan="2"></td>'+
+                '<td><b>Address:</b></td>'+
+                '<td colspan="2"></td>'+
+                '</tr>'+
+                '<tr><td style="width:15%"><b>TIN No.:</b></td>'+
+                '<td colspan="2">0000750355</td>'+
+                '<td><b>VAT No:</b></td>'+
+                '<td colspan="2"></td>'+
+                '</tr>';
+                $("#headertables").append(tr);
+        $('#daterangetr').show();
+        $('#titletr').show();
+        $('#paymenttr').show();
+        $('#compinfotr').show();
+
+        let tbl = document.getElementById('spurchasetable');
+        let footer = tbl.getElementsByTagName('tfoot')[0];
+        footer.style.display = 'table-row-group';
+        let header = tbl.getElementsByTagName('thead')[0];
+        header.style.display = 'table-row-group';
+        tbl.removeChild(footer);
+        tbl.appendChild(footer);
+    
+        var divToPrint=document.getElementById("spurchasetable");
+        var htmlToPrint = '' +
+            '<style type="text/css">' +
+            'table th, table td {' +
+            'border:1px solid #000;' +
+            'padding:0.5em;' +
+            '}' +
+            '</style>';
+            htmlToPrint += divToPrint.outerHTML;
+            newWin= window.open("");
+            newWin.document.write(divToPrint.outerHTML);
+            newWin.print();
+            newWin.close();
+            
+        $('#compinfotr').hide();
+        $('#daterangetr').hide();
+        $('#titletr').hide();
+        $('#paymenttr').hide();
+        $("#headertables").empty();
+});
+
+$(function() {
+var start = moment().subtract(29, 'days');
+var end = moment();
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM DD, YYYY') + ' - ' + end.format('MMMM DD, YYYY'));
+  var from=start.format('YYYY-MM-DD');
+  var to=end.format('YYYY-MM-DD');
+  fr=from;
+  tr=to; 
+}
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+        'Today': [moment(), moment()],
+        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        'Last 6 Month': [moment().subtract(179, 'days'), moment()],
+        }
+    }, cb);
+        cb(start, end);
+    });
+
+$('#reportbutton').click(function()
+{    
+    var storeval=$('#store').val(); 
+    var paymenttype=$('#paymenttype').val(); 
+    var customer=$('#customer').val();   
+    var selectedstore="";
+    var selectedptype="";
+    var customerid="";
+    if(customer==''||storeval==''||paymenttype==''){
+        if(customer=='')
+        {
+            $( '#customer-error' ).html('Supplier is required');
+        }
+        if(storeval=='')
+        {
+            $( '#pointofsale-error' ).html('Store/Shop is required');
+        }
+        if(paymenttype=='')
+        {
+            $( '#paymenttype-error' ).html('Payment type is required');
+        }
+        toastrMessage("error", "Please fill all required fields","Error");
+    }
+    else
+    {   
+        $( '#paymenttype-error' ).html('');
+        $( '#pointofsale-error' ).html('');
+        $( '#customer-error' ).html('');
+        $("#store :selected").each(function() {
+            selectedstore+=this.text+" , ";
+        });
+        $("#paymenttype :selected").each(function() {
+            selectedptype+=this.text+" , ";
+        });
+        $('#daterange').html('<b>'+fr+'</b> to <b>'+tr+'</b>');
+        $('#paymenttypelbl').html('<b>'+selectedptype+'</b>');
+        $('#selectedstorelbl').html('<b>'+selectedstore+'</b>');
+        var table = $("#spurchasetable").DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: true,
+            paging: false,
+            searching: true,
+            info: true,
+            responsive:true,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "simple",
+                language: {
+                    search: '',
+                    searchPlaceholder: "Search here"
+                },
+                "dom": "<'row'<'col-lg-10 col-md-10 col-xs-8'f><'col-lg-2 col-md-2 col-xs-8'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'i><'col-sm-12 col-md-3'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/purchasebysupplier/'+ fr + '/' + tr + '/' + storeval + '/' + paymenttype,
+                    type: 'POST',
+                    data:{
+                        customerid: $('#customer').val(),
+                    },
+                },
+                buttons: true,
+                ordering: false,
+                paging: false,
+                columns: [
+                    {
+                        data: "ItemCode",
+                        name: "ItemCode",
+                        width:"5%",
+                    },
+                    {
+                        data: "ItemName",
+                        name: "ItemName",
+                        width:"25%",
+                    },
+                    {
+                        data: "PaymentType",
+                        name: "PaymentType",
+                        width:"10%",
+                    },
+                        {
+                        data: "UOM",
+                        name: "UOM",
+                        width:"5%",
+                    },
+                    {
+                        data: "StoreName",
+                        name: "StoreName",
+                        width:"15%",
+                    },
+                    {
+                        data: "Quantity",
+                        name: "Quantity",
+                        width:"5%",
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    },
+                    {
+                        data: "UnitCost",
+                        name: "UnitCost",
+                        width:"10%",
+                        render: $.fn.dataTable.render.number(',', '.',2, '')
+                    },
+                    {
+                        data: "BeforeTaxCost",
+                        name: "BeforeTaxCost",
+                        width:"10%",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: "Tax",
+                        name: "Tax",
+                        width:"10%",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: "TotalCost",
+                        name: "TotalCost",
+                        width:"10%",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: "Supplier",
+                        name: "Supplier",
+                        'visible':false,
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "width": "100%",
+                        targets: [0,1,2,3,4,5,6,7,8,9,10],
+                        createdCell: function (td, cellData, rowData, row, col){
+                        $(td).css('border', '0.1px solid black');
+                        $(td).css('color', 'black');
+                    }
+                }],
+                fixedHeader: {
+                        header: true,
+                        headerOffset: $('.header-navbar').outerHeight(),
+                        footer: true
+                    },
+                     order: [[3, 'asc'], [10, 'asc']],
+                rowGroup: {
+                            startRender: function ( rows, group,level ) {
+                            var color = 'style="color:black;font-weight:bold;background:#f2f3f4;"';
+                            if(level===0){
+                            return $('<tr style="color:black" >')
+                            .append('<td colspan="11" style="text-align:center;border: 0.1px solid black; background:#ccc;"><b>' + group + ' Purchase </b></td></tr>')
+                            }
+                            else{
+                                return $('<tr ' + color + '>')
+                                .append('<td colspan="11" style="text-align:left;border:0.1px solid;">Supplier : ' + group + '</td></tr>')
+                            }   
+                           
+                },
+                endRender: function ( rows, group,level ) {
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                                i : 0;
+                };
+                var totalbeforetax = rows
+                .data()
+                .pluck('BeforeTaxCost')
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0); 
+                var totaltax = rows
+                .data()
+                .pluck('Tax')
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0); 
+                    var totalcost = rows
+                .data()
+                .pluck('TotalCost')
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0); 
+                var color = 'style="color:black;font-weight:bold;background:#f2f3f4;"';
+                if(level===0){
+                    return $('<tr ' + color + '/>')
+                    .append('<td colspan="7" style="text-align:right;border:0.1px solid;">Total ' + group+ ' Purchase</td>') 
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totalbeforetax.toFixed(2))+'</td>')
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totaltax.toFixed(2))+'</td>')
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totalcost.toFixed(2))+'</td>');    
+                }  
+                else{
+                    return $('<tr ' + color + '/>')
+                    .append('<td colspan="7" style="text-align:right;border:0.1px solid;">Total of : ' + group+ '</td>') 
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totalbeforetax.toFixed(2))+'</td>')
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totaltax.toFixed(2))+'</td>')
+                    .append('<td style="text-align:left;border:0.1px solid;">'+ numformat(totalcost.toFixed(2))+'</td>');   
+                }
+            }, 
+            dataSrc: ['PaymentType','Supplier']},
+                        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api();
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+           
+            beforetax = api
+                .column( 7 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            // Update footer
+            //tax total
+            taxtotal = api
+                .column( 8 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+             //tax total
+            grandtotal = api
+                 .column( 9 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+                   
+                // calculate total cash and credit sales
+                    var totalcash = api.column(7)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(7).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Cash") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                        var totalcredit = api.column(7)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(7).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Credit") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                    // calculate tax cash and credit sales
+                    var taxcash = api.column(8)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(8).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Cash") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                        var taxcredit = api.column(8)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(8).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Credit") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                        //calculate grand cash and credit sales
+                        var grandtotalcash = api.column(9)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(9).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Cash") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                        var grandtotalcredit = api.column(9)
+                        .data()
+                        .reduce(function (a, b) {
+                                var cur_index = api.column(9).data().indexOf(b);
+                                if (api.column(2).data()[cur_index] == "Credit") {
+                                return intVal(a) + intVal(b);
+                            }
+                            else { return intVal(a); }
+                        }, 0);
+                var tf='<tr style="color:black;"><td colspan="7" class="text-right" style="color: black; font-weight:bold;border:0.1px solid;background:#f2f3f4;">Total Cash Purchase</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(totalcash.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(taxcash.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(grandtotalcash.toFixed(2))+'</td>'+
+                '</tr>'+
+                '<tr style="color:black;"><td colspan="7" class="text-right" style="color: black;background:#f2f3f4; font-weight:bold;border:0.1px solid;">Total Credit Purchase</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(totalcredit.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(taxcredit.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black;border:0.1px solid;background:#f2f3f4;">'+numformat(grandtotalcredit.toFixed(2))+'</td>'+
+                '</tr>'+
+                '<tr style="color:black;"><td colspan="7" class="text-right" style="color: black; font-weight:bold;border:0.1px solid;background:#f2f3f4;">Grand Total</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(beforetax.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(taxtotal.toFixed(2))+'</td>'+
+                '<td style="text-align: left; font-weight:bold; color:black; border:0.1px solid;background:#f2f3f4;">'+numformat(grandtotal.toFixed(2))+'</td>'+
+                '</tr>';
+                $(table.table().footer()).empty().append(tf);
+            }
+        });
+        $('#exportdiv').show();
+        $("#printable").show();   
+         table.on( 'draw', function () {
+            var body = $( table.table().body() );
+            body.unhighlight();
+            body.highlight( table.search() );
+        }); 
+    }
+}); 
+
+    function numformat(val){
+        while (/(\d+)(\d{3})/.test(val.toString())){
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+        }
+        return val;
+    }
+
+    function clearstoreval(){
+        $('#pointofsale-error').html('');
+    }
+
+    function clearptype(){
+        $('#paymenttype-error').html('');
+    }
+
+    function clearsupplierval(){
+        $('#customer-error').html('');
+    }
+</script>
+
+</body>
+<!-- END: Body-->
+
+</html>

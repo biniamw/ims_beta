@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class salesHoldDetails extends Model
+{
+    use HasFactory;
+    protected $table='salesholddetails';
+    public $primarykey='id';
+    public $timestamps=true; 
+    public $fillable = ['HeaderId','ItemId', 'Quantity', 'UnitPrice','BeforeTaxPrice',
+    'TaxAmount','TotalPrice','Common','Discount','TransactionType','ConvertedQuantity',
+    'ConversionAmount','NewUOMId','DefaultUOMId','ItemType','StoreId','DiscountAmount','Dprice',
+];
+}

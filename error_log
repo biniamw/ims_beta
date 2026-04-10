@@ -1,0 +1,25 @@
+[11-Sep-2021 20:18:38 Europe/London] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/systemte/ims/bootstrap/app.php:17
+Stack trace:
+#0 /home/systemte/ims/artisan(20): require_once()
+#1 {main}
+  thrown in /home/systemte/ims/bootstrap/app.php on line 17
+[11-Sep-2021 20:45:40 Europe/London] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/systemte/ims/bootstrap/app.php:17
+Stack trace:
+#0 /home/systemte/ims/artisan(20): require_once()
+#1 {main}
+  thrown in /home/systemte/ims/bootstrap/app.php on line 17
+[11-Sep-2021 20:49:49 Europe/London] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/systemte/ims/bootstrap/app.php:17
+Stack trace:
+#0 /home/systemte/ims/artisan(20): require_once()
+#1 {main}
+  thrown in /home/systemte/ims/bootstrap/app.php on line 17
+[11-Sep-2021 21:06:02 Europe/London] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/systemte/ims/bootstrap/app.php:17
+Stack trace:
+#0 /home/systemte/ims/artisan(20): require_once()
+#1 {main}
+  thrown in /home/systemte/ims/bootstrap/app.php on line 17
+[11-Sep-2021 21:30:59 Europe/London] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/systemte/ims/bootstrap/app.php:17
+Stack trace:
+#0 /home/systemte/ims/artisan(20): require_once()
+#1 {main}
+  thrown in /home/systemte/ims/bootstrap/app.php on line 17

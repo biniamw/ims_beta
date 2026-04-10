@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddYearnumberToFiscalyearTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('fiscalyear', function (Blueprint $table) {
+            //
+            $table->string('Yearnumber')->nullable()->after('Monthrange');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('fiscalyear', function (Blueprint $table) {
+            //
+            $table->dropColumn('Yearnumber');
+        });
+    }
+}
