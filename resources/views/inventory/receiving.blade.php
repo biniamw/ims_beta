@@ -1249,9 +1249,9 @@
                                     <label style="font-size: 14px;">Brand</label>
                                     <select class="selectpicker form-control" data-live-search="true" data-style="btn btn-outline-secondary waves-effect" name="brand" id="brand" onchange="brandVal();">
                                         <option selected value="1"></option>
-                                        @foreach ($brand as $brand)
+                                        {{-- @foreach ($brand as $brand)
                                             <option value="{{$brand->id}}"> {{$brand->Name}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                     <span class="text-danger">
                                         <strong id="brand-error"></strong>

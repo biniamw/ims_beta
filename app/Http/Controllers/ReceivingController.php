@@ -59,7 +59,8 @@ class ReceivingController extends Controller
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fiscalyr.' ORDER BY fiscalyear.FiscalYear DESC');
         
         if($recpage == 0){
-            $brand = DB::select('SELECT * FROM brands WHERE brands.ActiveStatus="Active" AND brands.IsDeleted=1');
+            $brand = DB::select('SELECT * FROM brands WHERE brands.ActiveStatus="Active" AND brands.IsDeleted=1 ORDER BY brands.Name ASC');
+            $models = DB::select('SELECT * FROM models WHERE models.ActiveStatus="Active" AND models.IsDeleted=1 ORDER BY models.Name ASC');
             $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
             $storefilter = DB::select('SELECT DISTINCT StoreId AS store_id,stores.Name AS store_name FROM storeassignments INNER JOIN stores ON storeassignments.StoreId=stores.id WHERE storeassignments.UserId="'.$userid.'" AND storeassignments.Type=1 AND stores.IsDeleted=1');
             $ref_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=100 AND lookuprefs.Status=1 ORDER BY lookuprefs.LookupName ASC'); 
@@ -68,13 +69,14 @@ class ReceivingController extends Controller
             $witholds = DB::select('SELECT * FROM withold');
             $uses_data = DB::select('SELECT * FROM users WHERE id>1 ORDER BY users.username ASC');
             $proc_data = DB::select('SELECT "po" AS type,purchaseorders.id AS rec_id,purchaseorders.customers_id AS supplier_id,CONCAT_WS(", ",NULLIF(purchaseorders.porderno, ""), NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS proc_data FROM purchaseorders LEFT JOIN customers ON purchaseorders.customers_id=customers.id WHERE purchaseorders.purchaseordertype="Goods" AND purchaseorders.status=3 AND purchaseorders.isfullyreceived IN(0,2,3) UNION SELECT "pi" AS type,purchaseinvoices.id AS rec_id,supplier AS supplier_id,CONCAT_WS(", ",NULLIF(purchaseinvoices.docno, ""), NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS proc_data FROM purchaseinvoices LEFT JOIN customers ON purchaseinvoices.supplier=customers.id WHERE purchaseinvoices.status=3 ORDER BY rec_id ASC');
+            $countries = DB::select('SELECT * FROM country ORDER BY country.Name ASC');
 
             $receiving_data = [
                 'setting' => $setting,'customerSrc' => $customerSrc,'storeSrc' => $storeSrc,'itemSrcs' => $itemSrcs,
-                'purchaser' => $purchaser,'user' => $user,'brand' => $brand,'fiscalyears' => $fiscalyears,
+                'purchaser' => $purchaser,'user' => $user,'brand' => $brand,'models' => $models,'fiscalyears' => $fiscalyears,
                 'curdate' => $curdate,'vats' => $vats,'witholds' => $witholds,'fiscalyr' => $fiscalyr,'storefilter' => $storefilter,
                 'doc_type_data' => $doc_type_data,'ref_type_data' => $ref_type_data,'receiving_mode' => $receiving_mode,'uses_data' => $uses_data,
-                'proc_data' => $proc_data
+                'proc_data' => $proc_data,'countries' => $countries
             ];
 
             if($request->ajax()){
