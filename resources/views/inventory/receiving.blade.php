@@ -1665,6 +1665,8 @@
         </form>
     </div>
     <!--/ end manage document modal-->
+
+    @include('parts.batch_serial')
     @include('layout.universal-component')
 
     <script type="text/javascript">
@@ -2684,7 +2686,7 @@
         //End Show Item Info
 
         //Start Show Item Info
-        function itemVal(ele) {
+        function itemFn(ele) {
             var idval = $(ele).closest('tr').find('.vals').val();
             var item_id = $(`#itemNameSl${idval}`).val();
             
@@ -2733,6 +2735,7 @@
             var ref_type = $('#ReferenceType').val() || 0;
             var reqsn = null;
             var reqed = null;
+            var itm = $(`#itemNameSl${indx}`).val() || 0;
 
             $.ajax({
                 url: '/fetchItemInfo', 
@@ -2763,6 +2766,7 @@
                         $(`#RequireExpireDate${indx}`).val(value.RequireExpireDate);
 
                         if(reqsn != "Not-Require" || reqed != "Not-Require"){
+                            $(`#addsernum${indx}`).attr('onclick',`mngBatchSerialExpireFn('${indx}','${itm}')`);
                             $(`#addsernum${indx}`).show();
                             $(`#addsernum${indx}`).attr('title',`Add batch number, serial number, expire date for ${value.Name} item`);
                         }
@@ -2859,265 +2863,8 @@
         }
         //End UOM change
 
-        //Add serial no or batch no or expire date
-        function addser(ele){
-            var itemnames="";
-            var optype=$("#operationtypes").val();
-            var headerid = $("#receivingId").val();
-            var quantity = $(ele).closest('tr').find('.quantity').val();
-            var itemid = $(ele).closest('tr').find('.itemName').val();
-            var storeid = $(ele).closest('tr').find('.storeid').val();
-            var common = $(ele).closest('tr').find('.common').val();
-            var reqsnm = $(ele).closest('tr').find('.RequireSerialNumber').val();
-            var reqexd = $(ele).closest('tr').find('.RequireExpireDate').val();
-            var vals = $(ele).closest('tr').find('.vals').val();
-            var inserted = $(ele).closest('tr').find('.insertedqty').val();
-            var itemname = $(ele).closest('tr').find('.itemName :selected').text();
-            $(".itemName :selected").each(function() {
-                itemnames+=this.text+" , ";
-            });
-            if(parseFloat(optype)==1){
-                $("#serialnumbertitle").html("Register Serial number , Batch number or Expire date for <b><u>"+itemname+"<u></b>");
-                quantity = quantity == '' ? 0 : quantity;
-                if(quantity==0){
-                    toastrMessage('error',"Please insert quantity first","Error");
-                }
-                else{
-                    if(reqsnm==="Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                    }
-                    if(reqexd==="Require-ExpireDate"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                    }
-                    if(reqexd==="Require-Both"){
-                        $("#batchnumberdiv").show();
-                        $("#expiredatediv").show();
-                        $("#quantitydiv").show();
-                    }
-                    if(reqexd==="Not-Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                    }
-                    if(reqexd==="Not-Require" && reqsnm==="Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqsnm==="Require" && reqexd==="Require-ExpireDate"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber" && reqsnm==="Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-Both" && reqsnm==="Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqsnm==="Require" && reqexd==="Not-Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber" && reqsnm==="Not-Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").hide();
-                    }
-                    if(reqexd==="Require-Both" && reqsnm==="Not-Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").hide();
-                    }
-                    $("#serialnumreq").val(reqsnm);
-                    $("#expirenumreq").val(reqexd);
-                    $("#tableid").val("");
-                    $("#seritemid").val(itemid);
-                    $("#serstoreid").val(storeid);
-                    $("#storeQuantity").val(quantity);
-                    $("#commonserval").val(common);
-                    $("#dynamicrownum").val(vals);
-                    var remaining=parseFloat(quantity)-parseFloat(inserted);
-                    $("#totalQuantityLbl").html(quantity);
-                    $("#insertedQuantityLbl").html(inserted);
-                    $("#remainingQuantityLbl").html(remaining);
-                    $("#serialNumberModal").modal('show');
-                    $("#staticTableDiv").hide();
-                    $("#dynamicTableDiv").show();
-                    $("#staticbuttondiv").hide();
-                    $("#dynamicbuttondiv").show();   
-                    $('#laravel-datatable-crud-sn').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        "order": [[ 0, "desc" ]],
-                        "pagingType": "simple",
-                        language: { search: '', searchPlaceholder: "Search here"},
-                        "dom": "<'row'<'col-lg-10 col-md-10 col-xs-8'f><'col-lg-2 col-md-2 col-xs-8'>>" +
-                        "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'i><'col-sm-12 col-md-3'p>>",
-                        ajax: {
-                            url: '/showSerialNmRec/'+common+'/'+itemid,
-                            type: 'GET',
-                            },
-                        columns: [
-                            { data: 'id', name: 'id', 'visible': false },
-                            { data: 'item_id', name: 'item_id','visible': false},
-                            { data: 'store_id', name: 'store_id','visible': false},  
-                            { data: 'BrandName', name: 'BrandName'},
-                            { data: 'ModelName', name: 'ModelName' },
-                            { data: 'ManufactureDate', name: 'ManufactureDate' },
-                            { data: 'ExpireDate', name: 'ExpireDate' },
-                            { data: 'BatchNumber', name: 'BatchNumber' },
-                            { data: 'SerialNumber', name: 'SerialNumber' },
-                            { data: 'action', name: 'action' },
-                        ],
-                    });
-                }
-            }
-            else if(parseFloat(optype)==2){
-                $("#serialnumbertitle").html("Register Serial number , Batch number or Expire date for <b><u>"+itemname+"<u></b>");
-                quantity = quantity == '' ? 0 : quantity;
-                if(quantity==0){
-                    toastrMessage('error',"Please insert quantity first","Error");
-                }
-                else{
-                    if(reqsnm==="Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                    }
-                    if(reqexd==="Require-ExpireDate"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                    }
-                    if(reqexd==="Require-Both"){
-                        $("#batchnumberdiv").show();
-                        $("#expiredatediv").show();
-                        $("#quantitydiv").show();
-                    }
-                    if(reqexd==="Not-Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                    }
-                    if(reqexd==="Not-Require" && reqsnm==="Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqsnm==="Require" && reqexd==="Require-ExpireDate"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber" && reqsnm==="Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-Both" && reqsnm==="Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqsnm==="Require" && reqexd==="Not-Require"){
-                        $("#batchnumberdiv").hide();
-                        $("#quantitydiv").hide();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").show();
-                    }
-                    if(reqexd==="Require-BatchNumber" && reqsnm==="Not-Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").hide();
-                        $("#serialnumdiv").hide();
-                    }
-                    if(reqexd==="Require-Both" && reqsnm==="Not-Require"){
-                        $("#batchnumberdiv").show();
-                        $("#quantitydiv").show();
-                        $("#expiredatediv").show();
-                        $("#serialnumdiv").hide();  
-                    }
-                    $("#serialnumreq").val(reqsnm);
-                    $("#expirenumreq").val(reqexd);
-                    $("#tableid").val("");
-                    $("#serheaderid").val(headerid);
-                    $("#seritemid").val(itemid);
-                    $("#serstoreid").val(storeid);
-                    $("#storeQuantity").val(quantity);
-                    var remaining=parseFloat(quantity)-parseFloat(inserted);
-                    $("#totalQuantityLbl").html(quantity);
-                    $("#insertedQuantityLbl").html(inserted);
-                    $("#remainingQuantityLbl").html(remaining);
-                    $("#serialNumberModal").modal('show');
-                    $("#staticTableDiv").show();
-                    $("#dynamicTableDiv").hide();
-                    $("#staticbuttondiv").show();
-                    $("#dynamicbuttondiv").hide();
-                    
-                    $('#laravel-datatable-crud-snedit').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        "order": [[ 0, "desc" ]],
-                        "pagingType": "simple",
-                        language: { search: '', searchPlaceholder: "Search here"},
-                        "dom": "<'row'<'col-lg-10 col-md-10 col-xs-8'f><'col-lg-2 col-md-2 col-xs-8'>>" +
-                        "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'i><'col-sm-12 col-md-3'p>>",
-                        ajax: {
-                            url: '/showSerialNmRecStatic/'+headerid+'/'+itemid,
-                            type: 'GET',
-                            },
-                        columns: [
-                            { data: 'id', name: 'id', 'visible': false },
-                            { data: 'item_id', name: 'item_id','visible': false},
-                            { data: 'store_id', name: 'store_id','visible': false},  
-                            { data: 'BrandName', name: 'BrandName'},
-                            { data: 'ModelName', name: 'ModelName' },
-                            { data: 'ManufactureDate', name: 'ManufactureDate' },
-                            { data: 'ExpireDate', name: 'ExpireDate' },
-                            { data: 'BatchNumber', name: 'BatchNumber' },
-                            { data: 'SerialNumber', name: 'SerialNumber' },
-                            { data: 'action', name: 'action' },
-                        ],
-                    });
-                }
-            }  
-        }
-        //End serial no or batch no or expire date
+
+
 
         //Add serial no or batch no or expire date
         $('.addSerialnumbes').click(function() {
@@ -3327,7 +3074,7 @@
                 $("#dynamicTable > tbody").append(`<tr>
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                    <td style="width:22%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemVal(this)" name="row[${m}][ItemId]"></select></td>
+                    <td style="width:22%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
                     <td style="width:10%"><select id = "uom${m}" class ="select2 form-control uom" onchange = "uomVal(this)" name = "row[${m}][uom]"></select></td>
                     <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
@@ -3336,7 +3083,10 @@
                     <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:6%;text-align:center;"><button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:none;color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="addser(this)"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button><button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                    <td style="width:6%;text-align:center;">
+                        <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:none;color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                    </td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" style="font-weight:bold;"/></td>
@@ -3703,32 +3453,6 @@
             }
         });
         //End save receiving
-
-        //start checkbox change function
-        $(function() {
-            $("#printGRVCBX").click(function() {
-                if ($(this).is(":checked")) {
-                    $('#checkboxVali').val('1');
-
-                } else {
-                    $('#checkboxVali').val('0');
-                }
-            });
-        });
-        //end checkbox change function
-
-        //start checkbox change function
-        $(function() {
-            $("#hideGRVCBX").click(function() {
-                if ($(this).is(":checked")) {
-                    $('#hidegrvcheckbox').val('1');
-
-                } else {
-                    $('#hidegrvcheckbox').val('0');
-                }
-            });
-        });
-        //end checkbox change function
 
         //Start get hold number value
         $('#addrecbutton').click(function(){ 
@@ -4505,7 +4229,7 @@
                         $("#dynamicTable > tbody").append(`<tr>
                             <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                            <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemVal(this)" name="row[${m}][ItemId]"></select></td>
+                            <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
                             <td style="width:10%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"></select></td>
                             <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                             <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.Quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
@@ -4514,7 +4238,10 @@
                             <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="${value.BeforeTaxCost}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="${value.TaxAmount}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.TotalCost}" style="font-weight:bold;"/></td>
-                            <td style="width:6%;text-align:center"><button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="addser(this)" title="Add serial number or expire date for value.ItemCode} ,   value.ItemName}  ,   value.SKUNumber} item!"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button><button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                            <td style="width:6%;text-align:center">
+                                <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="mngBatchSerialExpireFn('${m}','${value.ItemId}')"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                            </td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" value="${value.ReSerialNm}" style="font-weight:bold;"/></td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" value="${value.ReExpDate}" style="font-weight:bold;"/></td>
@@ -6618,7 +6345,7 @@
                     $("#dynamicTable > tbody").append(`<tr>
                         <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                        <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemVal(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
+                        <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
                         <td style="width:10%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"><option selected disabled value="${value.uom}">${value.uom_name}</option></select></td>
                         <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" value="${value.qty}" style="font-weight:bold;"/></td>
                         <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
@@ -6627,7 +6354,10 @@
                         <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
-                        <td style="width:6%;text-align:center"><button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="addser(this)" title="add batch number, serial number, expire date for ${value.items} item!"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button><button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                        <td style="width:6%;text-align:center">
+                            <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="mngBatchSerialExpireFn('${m}','${value.itemid}')" title="add batch number, serial number, expire date for ${value.items} item!"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                        </td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" value="${value.RequireSerialNumber}" style="font-weight:bold;"/></td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" value="${value.RequireExpireDate}" style="font-weight:bold;"/></td>
@@ -7125,9 +6855,8 @@
                 }
             });
         });
-
-
         //----------Document ends---------------
+        
         $('#brand').on('change', function (){
             var sid = $('#brand').val();
             $('#modelNumber').find('option').not(':first').remove();
