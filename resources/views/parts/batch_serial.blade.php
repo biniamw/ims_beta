@@ -245,22 +245,26 @@
 
                             is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                             is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
-                            is_serial_req = value.RequireSerialNumber == "Require" ? "Yes" : "No";
+                            is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
 
                             $(".is_batch_req").html(is_batch_req);
                             $(".is_expiry_date_req").html(is_expiry_req);
                             $(".is_serial_req").html(is_serial_req);
 
                             if(is_batch_req == "Yes"){
-                                
+                                $(".bs_batch_no_controls").show();
                             }
                             if(is_serial_req == "Yes"){
                                 $(".bs_only_serial_controls").show();
                             }
-                            else{
-                                
+                            if(is_expiry_req == "Yes"){
+                                $(".bs_expiry_date_controls").show();
                             }
                         });
+
+                        $("#bs_footer_total_batch_qty").html("");
+                        $("#bs_footer_total_serial_qty").html("");
+                        countTotalBatchAndSerialFn();
                     }
                 });
 
@@ -340,7 +344,7 @@
                                         <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
                                     <label class="form_lbl">Batch No.<b style="color: red; font-size:16px;">*</b></label>
                                     <input type="text" placeholder="Enter Batch Number" class="bactchNumber form-control" name="batch_row[${b_m}][bactchNumber]" id="bactchNumber${b_m}" onkeyup="bactchNumberFn(this)" onblur="checkDuplicatesFn(this)"/>
                                     <span class="text-danger">
@@ -354,7 +358,7 @@
                                         <strong id="bs-batchqty-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
                                     <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
                                     <input type="text" id="bsExpiryDate${b_m}" name="batch_row[${b_m}][bsExpiryDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsExpiryDateFn(this)"/>
                                     <span class="text-danger">
@@ -397,8 +401,14 @@
                     </tr>`
                 );
 
+                if(is_batch_req == "Yes"){
+                    $(".bs_batch_no_controls").show();
+                }
                 if(is_serial_req == "Yes"){
                     $(".bs_only_serial_controls").show();
+                }
+                if(is_expiry_req == "Yes"){
+                    $(".bs_expiry_date_controls").show();
                 }
 
                 var origin_options = $("#bs_country_default > option").clone();
