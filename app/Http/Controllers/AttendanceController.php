@@ -595,15 +595,15 @@ class AttendanceController extends Controller
 
         $offftime = [];
 
-        $totalworkinghr=0;
-        $totalbreaktime=0;
-        $totalbeforeot=0;
-        $totalafterot=0;
-        $totalot=0;
-        $totallatechekinhr=0;
-        $totallatechekouthr=0;
-        $totalbeforeondutytime=0;
-        $totalafteroffdutytime=0;
+        $totalworkinghr = 0;
+        $totalbreaktime = 0;
+        $totalbeforeot = 0;
+        $totalafterot = 0;
+        $totalot = 0;
+        $totallatechekinhr = 0;
+        $totallatechekouthr = 0;
+        $totalbeforeondutytime = 0;
+        $totalafteroffdutytime = 0;
         $breakDuration = 0;
         $offShiftOvertime = 0;
         $offShiftOvertimeLevelPercent = 0;

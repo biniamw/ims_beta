@@ -23,6 +23,7 @@ use App\Models\rfq;
 use App\Models\purchaseRequest;
 use App\Models\actions;
 use App\Models\documents;
+use App\Models\batches;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class ReceivingController extends Controller
 {
@@ -2041,6 +2043,7 @@ class ReceivingController extends Controller
         $reference_type = $_POST['reference_type'];
         $reference_id = $_POST['reference_id'];
         $itemid = $_POST['itemid'];
+        $uuid = Str::uuid()->toString();
 
         $item_info = "";
 
@@ -2054,7 +2057,7 @@ class ReceivingController extends Controller
             $item_info = DB::select('SELECT regitems.*,uoms.id AS uom,uoms.Name AS uom_name FROM regitems LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE regitems.id='.$itemid);
         }
 
-        return response()->json(['item_info' => $item_info]);
+        return response()->json(['item_info' => $item_info,'uuid' => $uuid]);
     }
 
     public function getAllUoms(Request $request,$id){
@@ -3302,39 +3305,6 @@ class ReceivingController extends Controller
         }
     }
 
-    public function editSerialNumberConRec($id)
-    {
-        $recdata = serialandbatchnum_temp::find($id);
-        return response()->json(['recData'=>$recdata]);
-    }
-
-    public function editSerialNumberConRecStatic($id)
-    {
-        $recdata = serialandbatchnum::find($id);
-        return response()->json(['recData'=>$recdata]);
-    }
-
-    public function deleteSerialNumRec($id)
-    {
-        $sernum = serialandbatchnum_temp::find($id);
-        $cmn=$sernum->Common;
-        $itemid=$sernum->item_id;
-        $sernum->delete();
-        $countitem = DB::table('serialandbatchnum_temps')->where('Common', '=', $cmn)->where('item_id', '=', $itemid)->get();
-        $getCountItem = $countitem->count();
-        return Response::json(['success' => '1','Totalcount'=>$getCountItem]);
-    }
-
-    public function deleteSerialNumRecStatic($id)
-    {
-        $sernum = serialandbatchnum::find($id);
-        $hid=$sernum->header_id;
-        $itemid=$sernum->item_id;
-        $sernum->delete();
-        $countitem = DB::table('serialandbatchnums')->where('header_id', '=', $hid)->where('item_id', '=', $itemid)->where('TransactionType',2)->get();
-        $getCountItem = $countitem->count();
-        return Response::json(['success' => '1','Totalcount'=>$getCountItem]);
-    }
 
     public function uploadDocument(Request $request){
         $user = Auth()->user()->username;
@@ -3442,4 +3412,122 @@ class ReceivingController extends Controller
     public function randNumber(): int{
         return random_int(100000, 999999);
     }
+
+    public function saveBatchAndSerial(Request $request){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $is_serial_req = $request->IsSerialNumberRequired;
+        $receivied_qty = $request->receiving_item_qty;
+        $item_id = $request->receiving_item_id;
+        $form_id = $request->bsFormId;
+        $transaction_type = $request->bsTransactionType;
+        $batch_serial = [];
+        $variance_ids = [];
+        $batch_row_no = 0;
+        $inserted_qty = 0;
+
+        $batchRules = array(
+            'batch_row.*.bsBrand' => 'required',
+            'batch_row.*.bsModel' => 'required',
+            'batch_row.*.bactchQuantity' => 'required',
+            'batch_row.*.bactchNumber' => 'required_if:IsBatchNumberRequired,Yes',
+            'batch_row.*.bsExpiryDate' => 'required_if:IsExpiryDateRequired,Yes|date|after_or_equal:today',
+            'batch_row.*.bsManufactureDate' => 'nullable|date|before_or_equal:today',
+        );
+        $batchValidation = Validator::make($request->all(), $batchRules);
+
+        $serialRules = array(
+            'serial_row.*.serialNumber' => 'required_if:IsSerialNumberRequired,Yes',
+        );
+        $serialValidation = Validator::make($request->all(), $serialRules);
+
+        foreach ($request->batch_row as $batch_key => $batch_value){
+            $batch_qty = $batch_value['bactchQuantity'] ?? 0;
+            $batch_row_id = $batch_value['batch_index_col'] ?? 0;
+            $batch_uuid = $batch_value['batch_uuid'];
+
+            $inserted_qty += (float)$batch_qty;
+            $serial_qty = 0;
+            ++$batch_row_no;
+
+            foreach ($request->serial_row as $serial_key => $serial_value){
+                $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+                $serial_no = $serial_value['serialNumber'];
+                if($batch_row_id == $parent_row_id && $serial_no != null){
+                    $serial_qty++;
+                }  
+            }
+
+            if($batch_qty != $serial_qty){
+                $variance_ids[] = $batch_row_no;
+            }
+        }
+
+        if(
+            $batchValidation->passes() 
+            && $serialValidation->passes() 
+            && $request->batch_row != null && empty($variance_ids)
+            && $receivied_qty == $inserted_qty
+        ){
+            DB::beginTransaction();
+            try{
+                foreach ($request->batch_row as $batch_key => $batch_value){
+                    $uuid = $batch_uuid != null ? $batch_uuid : $form_id;
+
+                    $BasicVal = [
+                        'brand_id' => $request->BankName,
+                        'model_id' => $request->Description,
+                        
+                        'batch_number' => $request->status,
+                        'manufacturing_date' => $request->status,
+                        'expiry_date' => $request->status,
+                        'status' => $request->status,
+                        'remark' => "",
+                    ];
+
+                    $DbData = batches::where('uuid',$uuid)->where('item_id',$item_id)->first();
+
+                    $CreatedBy = [
+                        'item_id' => $request->status,
+                        'uuid' => $request->status,
+                        'is_temp' => "Yes",
+                        'source_type' => $request->transaction_type,
+                    ];
+                    $LastUpdatedBy = ['LastEditedBy' => $user];
+
+                    $batchParent = batches::updateOrCreate([
+                        'id' => $findid
+                    ],[
+                        array_merge($BasicVal, $DbData ? $LastUpdatedBy : $CreatedBy)
+                    ]);
+                }
+
+                DB::commit();
+                return Response::json(['success' => 1]);
+            }
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' => $e->getMessage()]);
+            }
+        }
+        else if($batchValidation->fails()){
+            return response()->json(['errorbatch' => $batchValidation->errors()->all()]);
+        }
+        else if($serialValidation->fails()){
+            return response()->json(['errorserial'=> $serialValidation->errors()->all()]);
+        }
+        else if($request->batch_row == null){
+            return response()->json(['empty_batch' => 462]);
+        }
+        else if($request->serial_row == null){
+            return response()->json(['empty_serial' => 462]);
+        }
+        else if(!empty($variance_ids)){
+            return response()->json(['variances' => $variance_ids]);
+        }
+        else if ($receivied_qty != $inserted_qty){
+            return response()->json(['batch_variances' => $variance_ids]);
+        }
+    }
+
 }

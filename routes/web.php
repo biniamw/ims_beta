@@ -672,6 +672,8 @@ Route::post('/fetchItemInfo','ReceivingController@fetchItemInfo');
 Route::post('/uploadDocument','ReceivingController@uploadDocument');
 Route::post('/fetchReceivingDoc','ReceivingController@fetchReceivingDoc');
 Route::post('/showDocumentData/{recid}','ReceivingController@showDocumentData');
+
+Route::post('saveBatchAndSerial','ReceivingController@saveBatchAndSerial');
 //----------------------Receiving Route Ends----------------------
 
 //----------------------Stock balance route starts----------------------

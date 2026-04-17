@@ -1145,6 +1145,7 @@
                         </div>
                         <input type="hidden" class="form-control" name="cdatevals" id="cdatevals" readonly="true" value="{{$curdate}}"/>
                         <input type="hidden" class="form-control" name="hiddenstoreval" id="hiddenstoreval" readonly="true"/>
+                        <input type="hidden" class="form-control mainforminp" name="formId" id="formId" readonly="true"/>
                         <input type="hidden" class="form-control" name="tid" id="tid" readonly="true"/>
                         <input type="hidden" class="form-control" name="receivingId" id="receivingId" readonly="true"/>
                         <input type="hidden" class="form-control" name="operationtypes" id="operationtypes" readonly="true" value="1"/>
@@ -2798,13 +2799,13 @@
                     var option = null;
                     $.each(data.sid, function(key, value) {
                         if(parseFloat(lastcost) > 0){
-                            $(`#unitcost${idval}`).css("background","white");
+                            $(`#unitcost${indx}`).css("background","white");
                         }
                         $("#taxpercenti").val(taxper);
                         option += `<option value='${value.ToUomID}'>${value.ToUnitName}</option>`;
                     });
 
-                    $(`#uom${idval}`).append(option).select2();
+                    $(`#uom${indx}`).append(option).select2();
                 },
             });
         }
@@ -2862,141 +2863,6 @@
             $(ele).closest('tr').find('.ConvertedQuantity').val("");
         }
         //End UOM change
-
-
-
-
-        //Add serial no or batch no or expire date
-        $('.addSerialnumbes').click(function() {
-            var quantity = $(this).data('qnt');
-            var headerid = $(this).data('headerid');
-            var itemid = $(this).data('itemid');
-            var storeid = $(this).data('storeid');
-            var reqsnm = $(this).data('reqsn');
-            var reqexd = $(this).data('reqed');
-            var inserted = $(this).data('itemcnt');
-            var itemname = $(this).data('itmname');
-            $("#serialnumbertitle").html("Register Serial number , Batch number or Expire date for <b><u>"+itemname+"<u></b>");
-            quantity = quantity == '' ? 0 : quantity;
-            if(quantity==0){
-                toastrMessage('error',"Please insert quantity first","Error");
-            }
-            else{
-                
-                if(reqsnm==="Require"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#serialnumdiv").show();
-                }
-                if(reqexd==="Require-BatchNumber"){
-                    $("#batchnumberdiv").show();
-                    $("#quantitydiv").show();
-                    $("#expiredatediv").hide();
-                }
-                if(reqexd==="Require-ExpireDate"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").show();
-                }
-                if(reqexd==="Require-Both"){
-                    $("#batchnumberdiv").show();
-                    $("#expiredatediv").show();
-                    $("#quantitydiv").show();
-                }
-                if(reqexd==="Not-Require"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").hide();
-                }
-                if(reqexd==="Not-Require" && reqsnm==="Require"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").hide();
-                    $("#serialnumdiv").show();
-                }
-                if(reqsnm==="Require" && reqexd==="Require-ExpireDate"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").show();
-                    $("#serialnumdiv").show();
-                }
-                if(reqexd==="Require-BatchNumber" && reqsnm==="Require"){
-                    $("#batchnumberdiv").show();
-                    $("#quantitydiv").show();
-                    $("#expiredatediv").hide();
-                    $("#serialnumdiv").show();
-                }
-                if(reqexd==="Require-Both" && reqsnm==="Require"){
-                    $("#batchnumberdiv").show();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").show();
-                    $("#serialnumdiv").show();
-                }
-                if(reqsnm==="Require" && reqexd==="Not-Require"){
-                    $("#batchnumberdiv").hide();
-                    $("#quantitydiv").hide();
-                    $("#expiredatediv").hide();
-                    $("#serialnumdiv").show();
-                }
-                if(reqexd==="Require-BatchNumber" && reqsnm==="Not-Require"){
-                    $("#batchnumberdiv").show();
-                    $("#quantitydiv").show();
-                    $("#expiredatediv").hide();
-                    $("#serialnumdiv").hide();
-                }
-                if(reqexd==="Require-Both" && reqsnm==="Not-Require"){
-                    $("#batchnumberdiv").show();
-                    $("#quantitydiv").show();
-                    $("#expiredatediv").show();
-                    $("#serialnumdiv").hide();
-                    
-                }
-                $("#serialnumreq").val(reqsnm);
-                $("#expirenumreq").val(reqexd);
-                $("#tableid").val("");
-                $("#serheaderid").val(headerid);
-                $("#seritemid").val(itemid);
-                $("#serstoreid").val(storeid);
-                $("#storeQuantity").val(quantity);
-                var remaining=parseFloat(quantity)-parseFloat(inserted);
-                $("#totalQuantityLbl").html(quantity);
-                $("#insertedQuantityLbl").html(inserted);
-                $("#remainingQuantityLbl").html(remaining);
-                $("#serialNumberModal").modal('show');
-                $("#staticTableDiv").show();
-                $("#dynamicTableDiv").hide();
-                $("#staticbuttondiv").show();
-                $("#dynamicbuttondiv").hide();
-                $('#laravel-datatable-crud-snedit').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                "order": [[ 0, "desc" ]],
-                "pagingType": "simple",
-                language: { search: '', searchPlaceholder: "Search here"},
-                "dom": "<'row'<'col-lg-10 col-md-10 col-xs-8'f><'col-lg-2 col-md-2 col-xs-8'>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-5'i><'col-sm-12 col-md-3'p>>",
-                ajax: {
-                    url: '/showSerialNmRecStatic/'+headerid+'/'+itemid,
-                    type: 'GET',
-                    },
-                columns: [
-                    { data: 'id', name: 'id', 'visible': false },
-                    { data: 'item_id', name: 'item_id','visible': false},
-                    { data: 'store_id', name: 'store_id','visible': false},  
-                    { data: 'BrandName', name: 'BrandName'},
-                    { data: 'ModelName', name: 'ModelName' },
-                    { data: 'ManufactureDate', name: 'ManufactureDate' },
-                    { data: 'ExpireDate', name: 'ExpireDate' },
-                    { data: 'BatchNumber', name: 'BatchNumber' },
-                    { data: 'SerialNumber', name: 'SerialNumber' },
-                    { data: 'action', name: 'action' },
-                ],
-            });
-            }
-        });
-        //End serial no or batch no or expire date
 
         //Start Voucher type info
         $('#voucherType').on('change', function() {
@@ -3467,6 +3333,8 @@
                 $('#commonVal').val(rnum + dbval);
             });
             resetFormFn();
+
+            $('#formId').val(generateUUIDv4Fn());
             $('#tid').val("");
             $('#receivingId').val("");
             $('#hiddenstoreval').val("");
@@ -6857,31 +6725,25 @@
         });
         //----------Document ends---------------
         
-        $('#brand').on('change', function (){
-            var sid = $('#brand').val();
-            $('#modelNumber').find('option').not(':first').remove();
-            var registerForm = $("#serialNumberRegForm");
-            var formData = registerForm.serialize();
-            $.ajax({
-                url:'showModelsRec/'+sid,
-                type:'DELETE',
-                data:formData,
-                success:function(data)
-                {
-                    if(data.model)
-                    {
-                        var len=data['model'].length;
-                        for(var i=0;i<=len;i++)
-                        {
-                            var name=data['model'][i].Name;
-                            var option = "<option value='"+name+"'>"+name+"</option>";
-                            $("#modelNumber").append(option);
-                            $('#modelNumber').selectpicker('refresh');
-                        }
-                    }
-                },
-            });
-        });
+
+        function generateUUIDv4Fn() {
+            // Generate random bytes
+            var bytes = new Uint8Array(16);
+            crypto.getRandomValues(bytes);
+            
+            // Set version (4) and variant bits
+            bytes[6] = (bytes[6] & 0x0f) | 0x40; // Version 4
+            bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant
+            
+            // Convert to hex string
+            var hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+            
+            // Format as UUID
+            return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
+        }
+
+
+
 
         $('#saveSerialNum').click(function()
         {
@@ -7038,256 +6900,11 @@
             });
         });
 
-        function serialNumberVal() {
-            $( '#serialnum-error' ).html("");
-        }
-        function batchNumberVal() {
-            $( '#batchnum-error' ).html("");
-        }
-        function expireDateVal() {
-            $( '#expiredate-error' ).html("");
-        }
-        function modelNumberVal() {
-            $( '#model-error' ).html("");
-        }
-        function brandVal() {
-            $( '#brand-error' ).html("");
-        }
-        function mfgDateVal() {
-            $('#manfdate-error').html("");
-        }
+        
 
-        function batchQuantityVal(){
-            var remainingqnt=$('#remainingQuantityLbl').text();
-            var quantityvals=$('#Quantity').val();
-            if(parseFloat(quantityvals)==0){
-                $('#Quantity').val("");
-            }
-            if(parseFloat(remainingqnt)<parseFloat(quantityvals)){
-                $('#Quantity').val("");
-                toastrMessage('error',"Inserted quantity is greater than remaining quantity","Error");
-            }
-            $('#quantitybatch-error').html("");
-        }
+       
 
-        function closeSn(){
-            $('#brand').val(null).trigger('change');
-            $('#modelNumber').empty();
-            $("#serialNumberRegForm")[0].reset();
-            $('#ManufactureDate').val("");
-            $('#tableid').val("");
-            $('#ExpireDate').val("");
-            $('#BatchNumber').val("");
-            $('#brand-error').html("");
-            $('#model-error').html("");
-            $('#expiredate-error').html("");
-            $('#serialnum-error').html("");
-            $('#manfdate-error').html("");
-            $('#batchnum-error' ).html("");
-            $('#saveSerialNum').text("Add");
-            $('#saveSerialNum').prop( "disabled", false );
-            $('#closeSerialNum').hide();
-        }
+       
 
-        function closeSnSt(){
-            $('#brand').val(null).trigger('change');
-            $('#modelNumber').empty();
-            $("#serialNumberRegForm")[0].reset();
-            $('#ManufactureDate').val("");
-            $('#tableid').val("");
-            $('#ExpireDate').val("");
-            $('#BatchNumber').val("");
-            $('#brand-error').html("");
-            $('#model-error').html("");
-            $('#expiredate-error').html("");
-            $('#serialnum-error').html("");
-            $('#manfdate-error').html("");
-            $('#batchnum-error' ).html("");
-            $('#saveSerialNumSt').text("Add");
-            $('#saveSerialNumSt').prop( "disabled", false );
-            $('#closeSerialNumSt').hide();
-        }
-
-        function clearSn(){
-            $('#brand').val(null).trigger('change');
-            $('#brand').selectpicker('refresh');
-            $('#modelNumber').empty();
-            $('#modelNumber').selectpicker('refresh');
-            $('#ManufactureDate').val("");
-            $('#SerialNumber').val("");
-            $('#Quantity').val("1");
-            $('#tableid').val("");
-            $('#brand-error').html("");
-            $('#model-error').html("");
-            $('#expiredate-error').html("");
-            $('#serialnum-error').html("");
-            $('#manfdate-error').html("");
-            $('#batchnum-error' ).html("");
-            $('#saveSerialNum').text("Add");
-            $('#saveSerialNum').prop( "disabled", false );
-            $('#closeSerialNum').hide();
-        }
-
-        function clearSnSt(){
-            $('#brand').val(null).trigger('change');
-            $('#brand').selectpicker('refresh');
-            $('#modelNumber').empty();
-            $('#modelNumber').selectpicker('refresh');
-            $('#ManufactureDate').val("");
-            $('#SerialNumber').val("");
-            $('#Quantity').val("1");
-            $('#tableid').val("");
-            $('#brand-error').html("");
-            $('#model-error').html("");
-            $('#expiredate-error').html("");
-            $('#serialnum-error').html("");
-            $('#manfdate-error').html("");
-            $('#batchnum-error' ).html("");
-            $('#saveSerialNumSt').text("Add");
-            $('#saveSerialNumSt').prop( "disabled", false );
-            $('#closeSerialNumSt').hide();
-        }
-
-        //start edit serial number modal
-        function editSN(recIdVar){
-            //var recIdVar = $(this).data('id');
-            //var mod = $(this).data('mod');
-            $('#modelNumber').empty();
-        // var options = "<option selected value="+mod+">"+mod+"</option>";
-            //$('#modelNumber').append(options);
-            $.get("/serialnumbereditRec" +'/' + recIdVar , function (data)
-            {
-                $('#tableid').val(recIdVar);
-                $('#brand').selectpicker('val',data.recData.brand_id).trigger('change');
-                $('#ManufactureDate').val(data.recData.ManufactureDate);
-                $('#ExpireDate').val(data.recData.ExpireDate);
-                $('#BatchNumber').val(data.recData.BatchNumber);
-                $('#SerialNumber').val(data.recData.SerialNumber);
-            });
-            $('#saveSerialNum').text("Update");
-            $('#saveSerialNum').prop( "disabled", false );
-            $('#closeSerialNum').show();
-            $('#serialNumberModal').animate({scrollTop: 0},'slow');
-        }
-        //end edit serial number modal
-
-        //start edit serial number modal
-        function editSNSt(recIdVar){
-            //var recIdVar = $(this).data('id');
-            //var mod = $(this).data('mod');
-            $('#modelNumber').empty();
-            //var options = "<option selected value="+mod+">"+mod+"</option>";
-            //$('#modelNumber').append(options);
-            $.get("/serialnumbereditRecStatic" +'/' + recIdVar , function (data)
-            {
-                $('#tableid').val(recIdVar);
-                $('#brand').selectpicker('val',data.recData.brand_id).trigger('change');
-                $('#ManufactureDate').val(data.recData.ManufactureDate);
-                $('#ExpireDate').val(data.recData.ExpireDate);
-                $('#BatchNumber').val(data.recData.BatchNumber);
-                $('#SerialNumber').val(data.recData.SerialNumber);
-            });
-            $('#saveSerialNumSt').text("Update");
-            $('#saveSerialNumSt').prop( "disabled", false );
-            $('#closeSerialNumSt').show();
-            $('#serialNumberModal').animate({scrollTop: 0},'slow');
-        }
-        //end edit serial number moda
-
-        $('#sernumDeleteModal').on('show.bs.modal',function(event){
-            var button=$(event.relatedTarget);
-            var totalqnt=$('#totalQuantityLbl').text();
-            $('#dynamicdelval').val($('#dynamicrownum').val());
-            $('#totalBegQuantity').val(totalqnt);
-            var id=button.data('id');
-            var modal=$(this);
-            modal.find('.modal-body #sid').val(id);
-        });
-
-        $('#sernumDeleteModalSt').on('show.bs.modal',function(event){
-            var button=$(event.relatedTarget);
-            var totalqnt=$('#totalQuantityLbl').text();
-            $('#dynamicdelval').val($('#dynamicrownum').val());
-            $('#totalBegQuantity').val(totalqnt);
-            var id=button.data('id');
-            var modal=$(this);
-            modal.find('.modal-body #stid').val(id);
-        });
-
-        //Delete Records Starts
-        $('#deleteSerialNumberBtn').click(function(){
-            var deleteForm = $("#deleteserialnumform");
-            var formData = deleteForm.serialize();
-            var sid=$('#sid').val();
-            $.ajax(
-            {
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url:'/serialdeleteRec/'+sid,
-                type:'DELETE',
-                data:'',
-                beforeSend:function(){
-                $('#deleteSerialNumberBtn').text('Deleting...');},
-                success:function(data)
-                {
-                    $('#deleteSerialNumberBtn').text('Delete');
-                    toastrMessage('success',"Removed","Success");
-                    $('#sernumDeleteModal').modal('hide');
-                    $('#insertedQuantityLbl').text(data.Totalcount);
-                    var dval=$('#dynamicdelval').val();
-                    var inserted=data.Totalcount;
-                    var totalcnt=$('#totalBegQuantity').val();
-                    var netQ=parseFloat(totalcnt)-parseFloat(inserted);
-                    $('#remainingQuantityLbl').text(netQ);
-                    $('#insertedqty'+dval).val(inserted);
-                    var oTable = $('#doneinfodetail').dataTable(); 
-                    oTable.fnDraw(false);
-                    var iTable = $('#laravel-datatable-crud-sn').dataTable(); 
-                    iTable.fnDraw(false);
-                }
-            });
-        });
-        //Delete Records Ends
-
-        //Delete Records Starts
-        $('#deleteSerialNumberBtnSt').click(function(){
-            var deleteForm = $("#deleteserialnumformst");
-            var formData = deleteForm.serialize();
-            var sid=$('#stid').val();
-            $.ajax(
-            {
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url:'/serialdeleteRecStatic/'+sid,
-                type:'DELETE',
-                data:'',
-                beforeSend:function(){
-                $('#deleteSerialNumberBtnSt').text('Deleting...');},
-                success:function(data)
-                {
-                    $('#deleteSerialNumberBtnSt').text('Delete');
-                    toastrMessage('success',"Removed","Success");
-                    $('#sernumDeleteModalSt').modal('hide');
-                    $('#insertedQuantityLbl').text(data.Totalcount);
-                    var dval=$('#dynamicdelval').val();
-                    var inserted=data.Totalcount;
-                    var totalcnt=$('#totalBegQuantity').val();
-                    var netQ=parseFloat(totalcnt)-parseFloat(inserted);
-                    $('#remainingQuantityLbl').text(netQ);
-                    $('#insertedqty'+dval).val(inserted);
-                    var oTable = $('#doneinfodetail').dataTable(); 
-                    oTable.fnDraw(false);
-                    var iTable = $('#laravel-datatable-crud-snedit').dataTable(); 
-                    iTable.fnDraw(false);
-                    var kTable = $('#laravel-datatable-crud-sn').dataTable(); 
-                    kTable.fnDraw(false);
-                    var jTable = $('#receivingEditTable').dataTable();
-                    jTable.fnDraw(false);
-                }
-            });
-        });
-        //Delete Records Ends
     </script>
 @endsection
