@@ -3482,6 +3482,7 @@ class ReceivingController extends Controller
         ){
             DB::beginTransaction();
             try{
+                $submitted_ids = [];
                 foreach ($request->batch_row as $batch_key => $batch_value){
                     $uuid = $batch_value['batch_uuid'] != null ? $batch_value['batch_uuid'] : Str::uuid()->toString();
                     
@@ -3512,7 +3513,15 @@ class ReceivingController extends Controller
                     ],
                         array_merge($common_data, $db_data ? $edited_data : $permanent_data)
                     );
+
+                    $submitted_ids[] = $batch_parent->id;
                 }
+
+                batches::where('source_id', $header_id)
+                    ->where('item_id', $item_id)
+                    ->where('source_type', $source_type)
+                    ->whereNotIn('id', $submitted_ids)
+                    ->delete();
 
                 $item_data = Regitem::find($item_id);
                 if($optype == 1){
