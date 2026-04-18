@@ -554,7 +554,7 @@
                                                                             <tr>
                                                                                 <th style="display: none;"></th>
                                                                                 <th style="width: 3%">#</th>
-                                                                                <th style="width: 13%">Item Code</th>
+                                                                                <th style="width: 12%">Item Code</th>
                                                                                 <th style="width: 17%">Item Name</th>
                                                                                 <th style="width: 13%" title="Barcode Number">Barcode No.</th>
                                                                                 <th style="width: 8%" title="Unit of Measurement">UOM</th>
@@ -563,6 +563,7 @@
                                                                                 <th id="before_total_cost" style="width: 10%">Before Tax</th>
                                                                                 <th style="width: 10%">Tax Amount</th>
                                                                                 <th style="width: 10%">Total Cost</th>
+                                                                                <th style="width: 1%"></th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody class="table table-sm"></tbody>
@@ -1009,15 +1010,15 @@
                                             <tr>
                                                 <th class="form_lbl" style="width:3%;">#</th>
                                                 <th class="form_lbl" style="width:22%">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                                <th class="form_lbl" style="width:10%" title="Unit of Measurement">UOM</th>
+                                                <th class="form_lbl" style="width:12%" title="Unit of Measurement">UOM</th>
                                                 <th class="form_lbl proc_module" style="width:12%" title="Ordered Quantity">Ordered Qty.</th>
-                                                <th class="form_lbl" style="width:11%" id="qty_header">Quantity<b style="color: red; font-size:16px;">*</b></th>
+                                                <th class="form_lbl" style="width:12%" id="qty_header">Quantity<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl proc_module" style="width:12%" title="Remaining Quantity">Remaining Qty.</th>
                                                 <th class="form_lbl cost_visibility_div unorder_price_col prd_price_con" style="width:12%">Unit Cost<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl cost_visibility_div unorder_price_col prd_price_con" style="width:12%" id="beforeAfterTax">Before Tax</th>
                                                 <th style="width:12%" class="form_lbl vatproperty cost_visibility_div">Tax Amount</th>
                                                 <th style="width:12%" class="form_lbl vatproperty cost_visibility_div">Total Cost</th>
-                                                <th class="form_lbl" style="width:6%"></th>
+                                                <th class="form_lbl" style="width:3%"></th>
                                             </tr>
                                         <thead>
                                         <tbody></tbody>
@@ -2766,12 +2767,6 @@
                         $(`#RequireSerialNumber${indx}`).val(value.RequireSerialNumber);
                         $(`#RequireExpireDate${indx}`).val(value.RequireExpireDate);
 
-                        if(reqsn != "Not-Require" || reqed != "Not-Require"){
-                            $(`#addsernum${indx}`).attr('onclick',`mngBatchSerialExpireFn('${indx}','${itm}')`);
-                            $(`#addsernum${indx}`).show();
-                            $(`#addsernum${indx}`).attr('title',`Add batch number, serial number, expire date for ${value.Name} item`);
-                        }
-
                         if(ref_type == 501 || ref_type == 502){
                             $(`#ordered_qty${indx}`).val(value.qty);
                             var remaining_qty = parseFloat(value.qty) - parseFloat(value.receivedqty);
@@ -2941,22 +2936,18 @@
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                     <td style="width:22%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                    <td style="width:10%"><select id = "uom${m}" class ="select2 form-control uom" onchange = "uomVal(this)" name = "row[${m}][uom]"></select></td>
+                    <td style="width:12%"><select id = "uom${m}" class ="select2 form-control uom" onchange = "uomVal(this)" name = "row[${m}][uom]"></select></td>
                     <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
                     <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:6%;text-align:center;">
-                        <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:none;color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                    <td style="width:3%;text-align:center;">
                         <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                     </td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="display:none;"><input type="hidden" name="row[${m}][insertedqty]" id="insertedqty${i}" class="insertedqty form-control" readonly="true" style="font-weight:bold;" value="0"/></td>
                 </tr>`);
 
                 columnMgtFn();
@@ -2992,6 +2983,9 @@
                 ({
                     placeholder: "Select UOM here...",
                 });
+
+                $(`#rowId${m}`).val(generateUUIDv4Fn());
+
                 $(`#select2-itemNameSl${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
                 $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
             
@@ -4098,16 +4092,15 @@
                             <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                             <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                            <td style="width:10%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"></select></td>
+                            <td style="width:12%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"></select></td>
                             <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                            <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.Quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                            <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.Quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                             <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.UnitCost}" onkeypress="return ValidateNum(event);"/></td>
                             <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="${value.BeforeTaxCost}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="${value.TaxAmount}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.TotalCost}" style="font-weight:bold;"/></td>
-                            <td style="width:6%;text-align:center">
-                                <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="mngBatchSerialExpireFn('${m}','${value.ItemId}')"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                            <td style="width:3%;text-align:center">
                                 <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                             </td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>
@@ -4134,7 +4127,7 @@
                             $(`#itemNameSl${m}`).append(options);
                         }
 
-                        $('#dynamicTable > tbody  > tr').each(function(index, tr) {
+                        $('#dynamicTable > tbody > tr').each(function(index, tr) {
                             let item_id = $(this).find('.itemName').val();
                             $(`#itemNameSl${m} option[value="${value.ItemId}"]`).remove(); 
                         });
@@ -4638,6 +4631,13 @@
                             classes = "danger";
                         }
 
+                        if(value.status == "Created"){
+                            classes = "success";
+                        }
+                        if(value.status == "Edited"){
+                            classes = "warning";
+                        }
+
                         if(value.reason != null && value.reason != ""){
                             reasonbody = `</br><span class="text-muted"><b>Reason:</b> ${value.reason}</span>`;
                         }
@@ -4742,7 +4742,7 @@
                     {
                         data: 'ItemCode',
                         name: 'ItemCode',
-                        width:'13%',
+                        width:'12%',
                     },
                     {
                         data: 'ItemName',
@@ -4750,12 +4750,7 @@
                         width:'17%',
                         "render": function ( data, type, row, meta ) {
                             $('#info_tax_pricing_tbl').text(`Tax (${row.TaxTypeId}%)`);
-                            if(row.RequireSerialNumber=="Not-Require" && row.RequireExpireDate=="Not-Require"){
-                                return `<div>${data}</div>`
-                            }
-                            else{
-                                return `<div><u>${data}</u><br/><table><tr><td>Batch#</td><td>Serial#</td><td>ExpiredDate</td><td>ManfacDate</td></tr><tr><td>${row.BatchNumber}</td><td>${row.SerialNumber}</td><td>${row.ExpireDate}</td><td>${row.ManufactureDate}</td></tr></table></div>`
-                            }
+                            return `<div>${data}</div>`;
                         } 
                     },
                     {
@@ -4797,7 +4792,31 @@
                         name: 'TotalCost',
                         width:'10%',
                         render: $.fn.dataTable.render.number(',', '.', 2, '')
-                    },     
+                    },   
+                    {
+                        data: null,
+                        name: 'action',
+                        orderable: false,
+                        "render": function ( data, type, row, meta ) {
+                            if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                return `<div class="text-center">
+                                            <a 
+                                                class="addsernum" 
+                                                href="javascript:void(0)" 
+                                                onclick="mngBatchSerialExpireFn(${row.id},${row.HeaderId},${row.ItemId},${row.Quantity},${row.trn_type})" 
+                                                data-id="addsernum${row.id}" 
+                                                id="addsernum${row.id}" 
+                                                title="add batch number, serial number, expire date for ${row.ItemName} item!">
+                                                <i class="fa fa-plus fa-xl" style="color: #00cfe8;"></i>
+                                            </a>
+                                        </div>`;
+                            }
+                            else{
+                                return "";
+                            }
+                        },
+                        width:'1%',
+                    }  
                 ],
                 "columnDefs": [
                     {
@@ -6214,16 +6233,15 @@
                         <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                         <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
-                        <td style="width:10%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"><option selected disabled value="${value.uom}">${value.uom_name}</option></select></td>
+                        <td style="width:12%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"><option selected disabled value="${value.uom}">${value.uom_name}</option></select></td>
                         <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" value="${value.qty}" style="font-weight:bold;"/></td>
-                        <td style="width:11%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                        <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" value="${remaining_qty >= 0 ? remaining_qty : 0}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" value="0" onkeypress="return ValidateNum(event);"/></td>
                         <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
-                        <td style="width:6%;text-align:center">
-                            <button type="button" class="btn btn-light btn-sm addsernum" id="addsernum${m}" style="display:${vis};color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF" onclick="mngBatchSerialExpireFn('${m}','${value.itemid}')" title="add batch number, serial number, expire date for ${value.items} item!"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                        <td style="width:3%;text-align:center">
                             <button type="button" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                         </td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>

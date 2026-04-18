@@ -23,9 +23,8 @@ class CreateBatchesTable extends Migration
             $table->string('manufacturing_date')->nullable()->default("");
             $table->string('expiry_date')->nullable()->default("");
             $table->string('status')->nullable()->default("");
-            $table->string('uuid')->nullable()->default("");
-            $table->string('is_temp')->nullable()->default("");
             $table->string('source_type')->nullable()->default("");
+            $table->string('batch_uuid')->nullable()->default("");
             $table->string('remark')->nullable()->default("");
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ class receiving extends Model
         'Type','source_type','DocumentNumber','productiono','requisitiono','CustomerId','PaymentType','VoucherStatus',
         'VoucherType','VoucherNumber','InvoiceNumber','CustomerMRC','StoreId','PurchaserName','IsVoid','VoidReason','VoidedBy','VoidedDate',
         'TransactionDate','Status','StatusOld','WitholdPercent','WitholdAmount','SubTotal','Tax','GrandTotal','NetPay','Username','ReceivedBy',
-        'DeliveredBy','Common','fiscalyear','Memo','CheckedBy','CheckedDate','ConfirmedBy','ConfirmedDate','ChangeToPendingBy','ChangeToPendingDate',
+        'DeliveredBy','Common','form_uuid','fiscalyear','Memo','CheckedBy','CheckedDate','ConfirmedBy','ConfirmedDate','ChangeToPendingBy','ChangeToPendingDate',
         'IsHide','UndoVoidBy','UndoVoidDate','EditConfirmedBy','EditConfirmedDate','ProductType','PoId','CommoditySource','CommodityType','CompanyType',
         'CustomerOrOwner','DeliveryOrderNo','DispatchStation','DriverName','TruckPlateNo','DriverPhoneNo','ReceivedDate','CurrentDocumentNumber',
         'IsFromProcurement','InvoiceStatus','is_cost_shown','FileName'

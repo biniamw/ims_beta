@@ -5,7 +5,7 @@
                 <div class="modal-content p-0">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ea5455 !important;font-weight:bold;">x</button>
                     <div class="modal-header mb-1">
-                        <h5 class="modal-title form_title" id="manage-item-title">Item Receiving Information</h5>
+                        <h5 class="modal-title form_title" id="manage-item-title"></h5>
                         <div class="info_modal_title_lbl" style="text-align: center;padding-right:30px;"></div>
                     </div>
                     <div class="modal-body flex-grow-1 pb-sm-0 pb-3 scrdivhor scrollhor" style="overflow-y:auto;height:100vh;">
@@ -148,7 +148,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        
                         <div style="display: none;">
                             <select class="select2 form-control" name="bs_country_default" id="bs_country_default">
                                 <option selected disabled value=""></option>
@@ -180,10 +179,11 @@
                             <input type="hidden" class="form-control" name="IsSerialNumberRequired" id="IsSerialNumberRequired" readonly="true">
                             <input type="hidden" class="form-control" name="IsExpiryDateRequired" id="IsExpiryDateRequired" readonly="true">
                             <input type="hidden" class="form-control" name="bsTransactionType" id="bsTransactionType" readonly="true">
-                            <input type="hidden" class="form-control" name="bsFormId" id="bsFormId" readonly="true">
-                            <input type="hidden" class="form-control" name="receiving_item_qty" id="receiving_item_qty" readonly="true">
-                            <input type="hidden" class="form-control" name="receiving_item_id" id="receiving_item_id" readonly="true">
+                            <input type="hidden" class="form-control" name="bsHeaderId" id="bsHeaderId" readonly="true">
+                            <input type="hidden" class="form-control" name="bs_item_qty" id="bs_item_qty" readonly="true">
+                            <input type="hidden" class="form-control" name="bs_item_id" id="bs_item_id" readonly="true">
                             <input type="hidden" class="form-control" name="bs_current_index_value" id="bs_current_index_value" readonly="true">
+                            <input type="hidden" class="form-control" name="bs_operation_type" id="bs_operation_type" readonly="true">
                         </div>
                         <button id="save_batch_and_serial_btn" type="button" class="btn btn-info form_btn">Save</button>
                         <button id="closebuttonbatch" type="button" class="btn btn-danger form_btn" data-dismiss="modal">Close</button> 
@@ -206,13 +206,21 @@
         $('#save_batch_and_serial_btn').click(function(){
             var manageForm = $("#ManageBatchAndSerialForm");
             var formData = manageForm.serialize();
+            var opt_type = $("#bs_operation_type").val();
             $.ajax({
                 url: '/saveBatchAndSerial',
                 type: 'POST',
                 data: formData,
                 beforeSend: function() { 
-                    blockPage(cardSection,"Saving...");
-                    $('#save_batch_and_serial_btn').text('Saving...');
+                    var processing_msg = "";
+                    if(parseInt(opt_type) == 1){
+                        processing_msg = "Saving...";
+                    }
+                    else{
+                        processing_msg = "Updating...";
+                    }
+                    blockPage(cardSection,processing_msg);
+                    $('#save_batch_and_serial_btn').text(processing_msg);
                     $('#save_batch_and_serial_btn').prop("disabled", true);
                 },
                 complete: function () { 
@@ -253,9 +261,14 @@
                                 }
                             }
                         });
-
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"Please insert valid data on highlighted fields!","Error");
                     }
                     else if (data.errorserial) {
@@ -274,56 +287,96 @@
                             }
                         });
 
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"Please insert valid data on highlighted fields!","Error");
                     }
                     else if(data.empty_batch){
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"You should add atleast one batch group","Error");
                     }
                     else if(data.empty_serial){
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"You should add atleast one serial number","Error");
                     }
                     else if(data.variances){
                         var list_of_rows = "";
                         $.each(data.variances, function(index, rowno) {
                             list_of_rows += `Row #: <b>${rowno}</b></br>`;
-
-                            // $(`#serialNumberDiv${rowno}`).show();
-                            // $(`#toggleSerialNum${rowno}`).html('<i class="fa fa-chevron-up"></i> Hide Serial No.');
                         });
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',`Please fill in the serial numbers for the specified rows below</br>--------------</br>${list_of_rows}`,"Error");
                     }
                     else if(data.batch_variances){
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"The received quantity does not match the total quantity entered.","Error");
                     }
                     else if (data.dberrors) {
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
                         toastrMessage('error',"Please contact administrator","Error");
                     }
                     else if (data.success) {
-                        $('#save_batch_and_serial_btn').text('Save');
-                        $('#save_batch_and_serial_btn').prop("disabled", false);
+                        toastrMessage('success',"Successful","Success");
+                        if(data.trn_type == 1){
+                            createReceivingInfoFn(data.header_id,data.vStatus);
+                        }
+                        $('#manageItemModal').modal('hide');
                     }
                 }
             });
         });
 
-        function mngBatchSerialExpireFn(indx,item_id){
+        function mngBatchSerialExpireFn(indx,header_id,item_id,qty,trn_type){
+            var source_id = null;
+            var itemId = null;
+            var source_type = null;
             $(".bs_only_serial_controls").hide();
+            $("#bsItemRowId").val(indx);
+            $("#batch_no_dynamic_table > tbody").empty();
 
-            var qty = $(`#quantity${indx}`).val();
             if(isNaN(parseFloat(qty)) || parseFloat(qty) == 0){
-                $(`#quantity${indx}`).css("background", errorcolor);
                 toastrMessage('error',"Please enter a valid quantity first.","Error");
             }
             else{
@@ -341,11 +394,9 @@
                         unblockPage(cardSection);
                     },
                     success: function(response) {
-                        $("#receiving_item_qty").val(qty);
+                        $("#bs_item_qty").val(qty);
                         $("#bs_footer_received_qty").html(numformat(parseFloat(qty).toFixed(0)));
-                        $("#receiving_item_id").val(item_id);
-                        $("#batch_no_dynamic_table > tbody").empty();
-                        $("#serial_no_dynamic_table > tbody").empty();
+                        $("#bs_item_id").val(item_id);
 
                         $("#batch_received_qty_lbl").html(`Received Quantity: <b>${numformat(parseFloat(qty).toFixed(0))}</b>`);
 
@@ -375,8 +426,6 @@
                             $("#IsSerialNumberRequired").val(is_serial_req);
                             $("#IsExpiryDateRequired").val(is_expiry_req);
 
-                            
-
                             if(is_batch_req == "Yes"){
                                 $(".bs_batch_no_controls").show();
                             }
@@ -394,9 +443,167 @@
                     }
                 });
 
+                $.ajax({ 
+                    url: '/getBatchAndSerial', 
+                    type: 'POST',
+                    data:{
+                        source_id : header_id,
+                        itemId : item_id,
+                        source_type : trn_type,
+                    },
+                    success: function(data) {
+
+                        if(parseInt(data.batch_data.length) > 0){
+                            $("#bs_operation_type").val(2);
+                            $("#manage-item-title").html("Update Batch and/or Serial Numbers");
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else{
+                            $("#bs_operation_type").val(1);
+                            $("#manage-item-title").html("Save Batch and/or Serial Numbers");
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        
+                        $.each(data.batch_data, function (index, value) { 
+                            ++b_i;
+                            ++b_m;
+                            ++b_j;
+
+                            $("#batch_no_dynamic_table > tbody").append(
+                                `<tr class="border" id="bs_data_row${b_m}">
+                                    <td style="width:2%;text-align:left;vertical-align: top;">
+                                        <span class="badge badge-center rounded-pill bg-secondary">${b_j}</span>
+                                    </td>
+                                    <td style="display:none;">
+                                        <input type="hidden" name="batch_row[${b_m}][batch_index_col]" id="batch_index_col${b_m}" class="batch_index_col form-control" readonly="true" style="font-weight:bold;" value="${b_m}"/>
+                                    </td>
+                                    <td style="width:96%">
+                                        <div class="row">
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Brand<b style="color: red; font-size:16px;">*</b></label>
+                                                <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
+                                                <span class="text-danger">
+                                                    <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Model<b style="color: red; font-size:16px;">*</b></label>
+                                                <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
+                                                <span class="text-danger">
+                                                    <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
+                                                <label class="form_lbl">Batch No.<b style="color: red; font-size:16px;">*</b></label>
+                                                <input type="text" placeholder="Enter Batch Number" class="bactchNumber form-control" name="batch_row[${b_m}][bactchNumber]" id="bactchNumber${b_m}" onkeyup="bactchNumberFn(this)" onblur="checkDuplicatesFn(this)"/>
+                                                <span class="text-danger">
+                                                    <strong id="bs-batchno-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Quantity<b style="color: red; font-size:16px;">*</b></label>
+                                                <input type="number" placeholder="Enter Quantity" class="bactchQuantity form-control" name="batch_row[${b_m}][bactchQuantity]" id="bactchQuantity${b_m}" onkeyup="bactchQuantityFn(this)" onkeypress="return ValidateOnlyNum(event);"/>
+                                                <span class="text-danger">
+                                                    <strong id="bs-batchqty-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Manufacturing Date</label>
+                                                <input type="text" id="bsManufactureDate${b_m}" name="batch_row[${b_m}][bsManufactureDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsManufactureDateFn(this)"/>
+                                                <span class="text-danger">
+                                                    <strong id="bs-manufacture-date-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
+                                                <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
+                                                <input type="text" id="bsExpiryDate${b_m}" name="batch_row[${b_m}][bsExpiryDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsExpiryDateFn(this)"/>
+                                                <span class="text-danger">
+                                                    <strong id="bs-expiry-date-error${b_m}" class="bs_error_cls"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 bs_only_serial_controls" id="toggleSerialNumberDiv${b_m}" style="text-align:right;display:none;">
+                                                <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control"/>
+                                                <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
+                                                    Quantity.: 0 | Serial Qty.: 0
+                                                </button>
+                                                
+                                                <button type="button" class="btn btn-light btn-sm btn-outline-info" id="toggleSerialNum${b_m}" onclick="toggleSerialNumberFn('${b_m}')">
+                                                    <i id="toggle_icon${b_m}" class="fa fa-chevron-down"></i> Show Serial No.
+                                                </button>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-1rem !important;">
+                                            <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
+                                            <div class="col-xl-4 col-lg-8 col-md-8 col-sm-10 col-12 mb-1">
+                                                <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table fit-content" style="width:100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="form_lbl" style="width: 10%">#</th>
+                                                            <th class="form_lbl" style="width: 80%">Serial No.<b style="color: red; font-size:16px;">*</b></th>
+                                                            <th class="form_lbl" style="width: 10%"></th>
+                                                        </tr>
+                                                    <thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                                <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add New Serial No.</button>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
+                                        </div>
+                                    </td>
+                                    <td style="width:2%;position:relative;vertical-align: top;">
+                                        <button type="button" class="btn btn-light btn-sm remove-batch-tr" id="remove-batch-tr${b_m}" onclick="removeBatchRecordFn(this)" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF;position: absolute; top: 2px; right: 0px;"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>`
+                            );
+
+                            var default_brand = `<option selected value='${value.brand_id}'>${value.brand_name}</option>`;
+                            var default_model = `<option selected value='${value.model_id}'>${value.model_name}</option>`;
+
+
+                            var brand_options = $("#bs_brand_default > option").clone();
+                            $(`#bsBrand${b_m}`).empty().append(brand_options);
+                            $(`#bsBrand${b_m} option[value="${value.brand_id}"]`).remove();
+                            $(`#bsBrand${b_m}`).append(default_brand).select2();
+
+                            var model_option = $("#bs_model_default");
+                            $(`#bsModel${b_m}`).empty().append(model_option.find(`option[data-brand-id="${value.brand_id}"]`).clone());
+                            $(`#bsModel${b_m} option[value="${value.model_id}"]`).remove();
+                            $(`#bsModel${b_m}`).append(default_model).select2();
+
+                            $(`#bactchNumber${b_m}`).val(value.batch_number);
+
+                            flatpickr(`#bsManufactureDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,maxDate:currentdate});
+                            $(`#bsManufactureDate${b_m}`).val(value.manufacturing_date);
+
+                            flatpickr(`#bsExpiryDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,minDate:currentdate});
+                            $(`#bsExpiryDate${b_m}`).val(value.expiry_date);
+
+                            $(`#batch_uuid${b_m}`).val(value.batch_uuid);
+
+                            $(`#serialNumberDiv${b_m}`).hide();
+                            $(`#toggleSerialNum${b_m}`).html('<i class="fa fa-chevron-down"></i> Show Serial No.');
+
+                            if($("#IsBatchNumberRequired").val() == "Yes"){
+                                $(".bs_batch_no_controls").show();
+                            }
+                            if($("#IsSerialNumberRequired").val() == "Yes"){
+                                $(".bs_only_serial_controls").show();
+                            }
+                            if($("#IsExpiryDateRequired").val() == "Yes"){
+                                $(".bs_expiry_date_controls").show();
+                            }
+                        });
+
+                        renumberBatchNumberRows();
+                    }
+                });
+
                 $(".batch_serial_collapse").collapse('hide');
-                $("#bsTransactionType").val("receiving");
-                $('#bsFormId').val($('#formId').val());
+                $("#bsTransactionType").val(trn_type);
+                $("#bsHeaderId").val(header_id);
                 $('#manageItemModal').modal('show');
             }
         }
@@ -404,7 +611,7 @@
         $("#add_batch_no").click(function() {
             var batch_last_row = $(`#batch_no_dynamic_table > tbody > tr:last`).find('td').eq(1).find('input').val();
             var batch_qty = $(`#bactchQuantity${batch_last_row}`).val();
-            var total_received_qty = $(`#receiving_item_qty`).val();
+            var total_received_qty = $(`#bs_item_qty`).val();
             var total_batch_qty = 0;
             $.each($(`#batch_no_dynamic_table`).find('.bactchQuantity'), function() {
                 if ($(this).val() != '' && !isNaN($(this).val())) {
@@ -480,7 +687,7 @@
                                     </span>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 bs_only_serial_controls" id="toggleSerialNumberDiv${b_m}" style="text-align:right;display:none;">
-                                    <input type="text" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control"/>
+                                    <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control"/>
                                     <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
                                         Quantity.: 0 | Serial Qty.: 0
                                     </button>
@@ -669,7 +876,7 @@
         function countTotalBatchAndSerialFn(){
             var total_batch_qty = 0;
             var total_serial_qty = 0;
-            var total_received_qty = $('#receiving_item_qty').val();
+            var total_received_qty = $('#bs_item_qty').val();
             $.each($('#batch_no_dynamic_table').find('.bactchQuantity'), function() {
                 if ($(this).val() != '' && !isNaN($(this).val())) {
                     total_batch_qty += parseFloat($(this).val());
@@ -806,7 +1013,7 @@
         }
 
         function checkQuantityVarianceFn(row_id){
-            var received_qty = $("#receiving_item_qty").val();
+            var received_qty = $("#bs_item_qty").val();
             var inserted_qty = 0;
             received_qty = received_qty == '' ? 0 : received_qty;
 

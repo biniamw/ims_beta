@@ -24,6 +24,7 @@ use App\Models\purchaseRequest;
 use App\Models\actions;
 use App\Models\documents;
 use App\Models\batches;
+use App\Models\batch_temp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -1551,15 +1552,14 @@ class ReceivingController extends Controller
                     $beforetaxcost = $value['BeforeTaxCost'] ?? 0;
                     $taxamount = $value['TaxAmount'] ?? 0;
                     $totalcost = $value['TotalCost'] ?? 0;
-                    $reqserialnum = $value['RequireSerialNumber'];
-                    $reqexpiredate = $value['RequireExpireDate'];
                     $receiving->items()->attach($itemname,
                     [
                         'Quantity' => $quantity,'UnitCost' => $unitcost,'BeforeTaxCost' => $beforetaxcost,
                         'TaxAmount' => $taxamount,'TotalCost' => $totalcost,'TransactionType' => "Receiving",
                         'ItemType' => $request->ProductType, 'StoreId' => $request->store,'DefaultUOMId' => $default_uom,
                         'NewUOMId' => $new_uom,'ConversionAmount' => $conversion_factor,'ConvertedQuantity' => $converted_qty,
-                        'RequireSerialNumber' => $reqserialnum,'RequireExpireDate' => $reqexpiredate,'PoDetId' => $proc_detail_rec_id
+                        'RequireSerialNumber' => $item_prop->RequireSerialNumber,'RequireExpireDate' => $item_prop->RequireExpireDate,
+                        'PoDetId' => $proc_detail_rec_id
                     ]);
 
                     if($request->ReferenceType == 501){
@@ -1570,6 +1570,8 @@ class ReceivingController extends Controller
                                 'purchaseordersdetails.receivedqty' => DB::raw('(SELECT COALESCE(SUM(receivingdetails.Quantity),0) AS Quantity FROM receivingdetails LEFT JOIN receivings ON receivingdetails.HeaderId=receivings.id WHERE receivings.Status IN("Draft","Pending","Verified","Confirmed") AND receivingdetails.ItemId='.$itemname.' AND receivings.PoId='.$request->Reference.')')
                             ]);
                     }
+
+
                 }
 
                 if($receiving->Status == "Confirmed"){
@@ -2143,9 +2145,7 @@ class ReceivingController extends Controller
     }
 
     public function showRecDetailData($id){
-        $HeaderId=$id;
-        $columnName="HeaderId";
-        $detailTable=DB::select('SELECT receivingdetails.id,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,receivingdetails.Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost,COALESCE(CONCAT((SELECT GROUP_CONCAT(BatchNumber," ") FROM serialandbatchnums WHERE header_id=receivingdetails.HeaderId AND item_id=regitems.id AND serialandbatchnums.TransactionType=2)),"") AS BatchNumber,COALESCE(CONCAT((SELECT GROUP_CONCAT(SerialNumber," ") FROM serialandbatchnums WHERE header_id=receivingdetails.HeaderId AND item_id=regitems.id AND serialandbatchnums.TransactionType=2)),"") AS SerialNumber,COALESCE(CONCAT((SELECT GROUP_CONCAT(ExpireDate," ") FROM serialandbatchnums WHERE header_id=receivingdetails.HeaderId AND item_id=regitems.id AND serialandbatchnums.TransactionType=2)),"") AS ExpireDate,COALESCE(CONCAT((SELECT GROUP_CONCAT(ManufactureDate," ") FROM serialandbatchnums WHERE header_id=receivingdetails.HeaderId AND item_id=regitems.id AND serialandbatchnums.TransactionType=2)),"") AS ManufactureDate,regitems.RequireSerialNumber,regitems.RequireExpireDate FROM receivingdetails INNER JOIN regitems ON receivingdetails.ItemId=regitems.id INNER JOIN uoms ON receivingdetails.NewUOMId=uoms.id where receivingdetails.HeaderId='.$HeaderId.' order by receivingdetails.id asc');
+        $detailTable = DB::select('SELECT receivingdetails.id,receivingdetails.HeaderId,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,receivingdetails.Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost,regitems.RequireSerialNumber,regitems.RequireExpireDate,1 AS trn_type  FROM receivingdetails LEFT JOIN regitems ON receivingdetails.ItemId=regitems.id LEFT JOIN uoms ON receivingdetails.NewUOMId=uoms.id WHERE receivingdetails.HeaderId='.$id.' ORDER BY receivingdetails.id ASC');
         return datatables()->of($detailTable)
         ->addIndexColumn()
         ->rawColumns(['action'])
@@ -3417,21 +3417,24 @@ class ReceivingController extends Controller
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $is_serial_req = $request->IsSerialNumberRequired;
-        $receivied_qty = $request->receiving_item_qty;
-        $item_id = $request->receiving_item_id;
-        $form_id = $request->bsFormId;
+        $receivied_qty = $request->bs_item_qty;
         $transaction_type = $request->bsTransactionType;
-        $batch_serial = [];
+        $header_id = $request->bsHeaderId;
+        $item_id = $request->bs_item_id;
+        $optype = $request->bs_operation_type;
         $variance_ids = [];
         $batch_row_no = 0;
         $inserted_qty = 0;
+        $source_data = null;
+        $status = null;
+        $source_type = null;
 
         $batchRules = array(
             'batch_row.*.bsBrand' => 'required',
             'batch_row.*.bsModel' => 'required',
             'batch_row.*.bactchQuantity' => 'required',
             'batch_row.*.bactchNumber' => 'required_if:IsBatchNumberRequired,Yes',
-            'batch_row.*.bsExpiryDate' => 'required_if:IsExpiryDateRequired,Yes|date|after_or_equal:today',
+            'batch_row.*.bsExpiryDate' => 'required_if:IsExpiryDateRequired,Yes',
             'batch_row.*.bsManufactureDate' => 'nullable|date|before_or_equal:today',
         );
         $batchValidation = Validator::make($request->all(), $batchRules);
@@ -3441,69 +3444,100 @@ class ReceivingController extends Controller
         );
         $serialValidation = Validator::make($request->all(), $serialRules);
 
+        if($transaction_type == 1){
+            $source_data = receiving::find($header_id);
+            $status = $source_data->Status;
+            $source_type = "receiving";
+        }
+
         foreach ($request->batch_row as $batch_key => $batch_value){
             $batch_qty = $batch_value['bactchQuantity'] ?? 0;
             $batch_row_id = $batch_value['batch_index_col'] ?? 0;
-            $batch_uuid = $batch_value['batch_uuid'];
 
             $inserted_qty += (float)$batch_qty;
             $serial_qty = 0;
             ++$batch_row_no;
 
-            foreach ($request->serial_row as $serial_key => $serial_value){
-                $parent_row_id = $serial_value['parent_row_id'] ?? 0;
-                $serial_no = $serial_value['serialNumber'];
-                if($batch_row_id == $parent_row_id && $serial_no != null){
-                    $serial_qty++;
-                }  
+            if($request->serial_row != null){
+                foreach ($request->serial_row as $serial_key => $serial_value){
+                    $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+                    $serial_no = $serial_value['serialNumber'];
+                    if($batch_row_id == $parent_row_id && $serial_no != null){
+                        $serial_qty++;
+                    }  
+                }
             }
 
-            if($batch_qty != $serial_qty){
+            if($batch_qty != $serial_qty && ($status == "Checked" || $status == "Confirmed")){
                 $variance_ids[] = $batch_row_no;
             }
         }
 
         if(
-            $batchValidation->passes() 
-            && $serialValidation->passes() 
-            && $request->batch_row != null && empty($variance_ids)
-            && $receivied_qty == $inserted_qty
+            $batchValidation->passes() &&
+            $serialValidation->passes() &&
+            $request->batch_row != null && 
+            empty($variance_ids) &&
+            ($receivied_qty == $inserted_qty || $status == "Draft" || $status == "Pending")
         ){
             DB::beginTransaction();
             try{
                 foreach ($request->batch_row as $batch_key => $batch_value){
-                    $uuid = $batch_uuid != null ? $batch_uuid : $form_id;
-
-                    $BasicVal = [
-                        'brand_id' => $request->BankName,
-                        'model_id' => $request->Description,
-                        
-                        'batch_number' => $request->status,
-                        'manufacturing_date' => $request->status,
-                        'expiry_date' => $request->status,
-                        'status' => $request->status,
+                    $uuid = $batch_value['batch_uuid'] != null ? $batch_value['batch_uuid'] : Str::uuid()->toString();
+                    
+                    $common_data = [
+                        'brand_id' => $batch_value['bsBrand'],
+                        'model_id' => $batch_value['bsModel'],
+                        'batch_number' => $batch_value['bactchNumber'],
+                        'manufacturing_date' => $batch_value['bsManufactureDate'],
+                        'expiry_date' => $batch_value['bsExpiryDate'],
                         'remark' => "",
                     ];
 
-                    $DbData = batches::where('uuid',$uuid)->where('item_id',$item_id)->first();
+                    $db_data = batches::where('batch_uuid',$uuid)->first();
 
-                    $CreatedBy = [
-                        'item_id' => $request->status,
-                        'uuid' => $request->status,
-                        'is_temp' => "Yes",
-                        'source_type' => $request->transaction_type,
+                    $permanent_data = [
+                        'batch_uuid' => $uuid,
+                        'item_id' => $item_id,
+                        'source_id' => $header_id,
+                        'source_type' => $source_type,
+                        'status' => "",
+                        'created_at' => Carbon::now()
                     ];
-                    $LastUpdatedBy = ['LastEditedBy' => $user];
 
-                    $batchParent = batches::updateOrCreate([
-                        'id' => $findid
-                    ],[
-                        array_merge($BasicVal, $DbData ? $LastUpdatedBy : $CreatedBy)
-                    ]);
+                    $edited_data = ['updated_at' => Carbon::now()];
+
+                    $batch_parent = batches::updateOrCreate([
+                        'batch_uuid' => $uuid
+                    ],
+                        array_merge($common_data, $db_data ? $edited_data : $permanent_data)
+                    );
                 }
 
+                $item_data = Regitem::find($item_id);
+                if($optype == 1){
+                    $actions = "Batch and/or Serial Numbers Created for [{$item_data->Name}] item";
+                    $log_status = "Created";
+                }
+                else{
+                    $actions = "Batch and/or Serial Numbers Edited for [{$item_data->Name}] item";
+                    $log_status = "Edited";
+                }
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $header_id,
+                    'pagename' => $source_type,
+                    'action' => $actions,
+                    'status' => $log_status,
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+
                 DB::commit();
-                return Response::json(['success' => 1]);
+                return Response::json(['success' => 1,'header_id' => $header_id,'vStatus' => $source_data->VoucherStatus,'trn_type' => $transaction_type]);
             }
             catch(Exception $e){
                 DB::rollBack();
@@ -3525,9 +3559,23 @@ class ReceivingController extends Controller
         else if(!empty($variance_ids)){
             return response()->json(['variances' => $variance_ids]);
         }
-        else if ($receivied_qty != $inserted_qty){
-            return response()->json(['batch_variances' => $variance_ids]);
+        else if ($receivied_qty != $inserted_qty && ($status == "Checked" || $status == "Confirmed")){
+            return response()->json(['batch_variances' => 472]);
         }
+    }
+
+    public function getBatchAndSerial(Request $request){
+        $source_id = $_POST['source_id']; 
+        $itemId = $_POST['itemId']; 
+        $src_type = $_POST['source_type'];
+
+        if($src_type == 1){
+            $source_type = "receiving";
+        }
+
+        $batch_data = DB::select('SELECT batches.*,regitems.Name AS item_name,brands.Name AS brand_name,models.Name AS model_name FROM batches LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batches.source_type="'. $source_type.'"'); 
+
+        return response()->json(['batch_data' => $batch_data]);
     }
 
 }
