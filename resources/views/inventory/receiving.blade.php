@@ -3965,7 +3965,6 @@
             $("#statusid").val(recordId);
             $("#recordIds").val(recordId); 
             $('.info_common_div').hide();
-            $('.infoRecDiv').hide();  
             $('.withold_lbl').hide();
             $('.infowitholdrectr').hide();  
             $('.delivery_info_cl').hide();

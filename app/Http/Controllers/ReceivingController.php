@@ -3511,6 +3511,7 @@ class ReceivingController extends Controller
         $duplicate_batch_number_row = [];
         $serial_number_list = [];
         $duplicate_serial_number_row = [];
+        $item_data = Regitem::find($item_id);
 
         $batchRules = array(
             'batch_row.*.bsBrand' => 'required',
@@ -3550,7 +3551,7 @@ class ReceivingController extends Controller
             ++$batch_row_no;
 
             if(in_array($batch_number, $batch_number_list)) {
-                $duplicate_batch_number_row[] = $batch_row_id;
+                $duplicate_batch_number_row[] = (int)$batch_row_id;
             }
 
             $inserted_qty += (float)$batch_qty;
@@ -3573,7 +3574,7 @@ class ReceivingController extends Controller
                 }
             }
 
-            if($batch_qty != $serial_qty && ($status == "Checked" || $status == "Confirmed")){
+            if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required" && ($status == "Checked" || $status == "Confirmed")){
                 $variance_ids[] = $batch_row_no;
             }
         }
@@ -3595,104 +3596,106 @@ class ReceivingController extends Controller
                 $db_received_qty = 0;
                 $is_fully_inserted = 0;
 
-                foreach ($request->batch_row as $batch_key => $batch_value){
-                    $batch_row_id = $batch_value['batch_index_col'] ?? 0;
+                $batchRowCollection = collect($request->batch_row);
+                $batchRowCollection->chunk(100)->each(function($chunkedBatchRows) use ($request, $item_id, $header_id, $source_type, &$submitted_ids, &$serial_number_count, &$submitted_ser_ids) {
+                    foreach ($chunkedBatchRows as $batch_key => $batch_value) {
+                        $batch_row_id = $batch_value['batch_index_col'] ?? 0;
 
-                    $uuid = $batch_value['batch_uuid'] != null ? $batch_value['batch_uuid'] : Str::uuid()->toString();
-                    $batchId = $batch_value['batch_db_id'] != null ? $batch_value['batch_db_id'] : NULL;
-                    
-                    $common_data = [
-                        'brand_id' => $batch_value['bsBrand'],
-                        'model_id' => $batch_value['bsModel'],
-                        'batch_number' => $batch_value['bactchNumber'],
-                        'manufacturing_date' => $batch_value['bsManufactureDate'],
-                        'expiry_date' => $batch_value['bsExpiryDate'],
-                        'remark' => "",
-                    ];
-
-                    $db_data = batches::where('id',$batchId)->first();
-
-                    $permanent_data = [
-                        'batch_uuid' => $uuid,
-                        'item_id' => $item_id,
-                        'source_id' => $header_id,
-                        'source_type' => $source_type,
-                        'status' => "",
-                        'created_at' => Carbon::now()
-                    ];
-
-                    $edited_data = ['updated_at' => Carbon::now()];
-
-                    $batch_parent = batches::updateOrCreate([
-                        'id' => $batchId
-                    ],
-                        array_merge($common_data, $db_data ? $edited_data : $permanent_data)
-                    );
-
-                    $common_batch_data = [
-                        'batches_id' => $batch_parent->id,
-                        'received_qty' => $batch_value['bactchQuantity'],
-                    ];
-
-                    $db_batch_inv_data = batch_inventory::where('batches_id',$batch_parent->id)->first();
-
-                    $permanent_batch_data = [
-                        'created_at' => Carbon::now()
-                    ];
-
-                    $edited_batch_data = ['updated_at' => Carbon::now()];
-
-                    $batch_child = batch_inventory::updateOrCreate([
-                        'batches_id' => $batch_parent->id
-                    ],
-                        array_merge($common_batch_data, $db_batch_inv_data ? $edited_batch_data : $permanent_batch_data)
-                    );
-
-                    if($request->serial_row != null){
+                        $uuid = $batch_value['batch_uuid'] != null ? $batch_value['batch_uuid'] : Str::uuid()->toString();
+                        $batchId = $batch_value['batch_db_id'] != null ? $batch_value['batch_db_id'] : NULL;
                         
-                        foreach ($request->serial_row as $serial_key => $serial_value){
-                            $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+                        $common_data = [
+                            'brand_id' => $batch_value['bsBrand'],
+                            'model_id' => $batch_value['bsModel'],
+                            'batch_number' => $batch_value['bactchNumber'],
+                            'manufacturing_date' => $batch_value['bsManufactureDate'],
+                            'expiry_date' => $batch_value['bsExpiryDate'],
+                            'remark' => "",
+                        ];
 
-                            if($batch_row_id == $parent_row_id){
-                                $serial_uuid = $serial_value['serial_uuid'] != null ? $serial_value['serial_uuid'] : Str::uuid()->toString();
+                        $db_data = batches::where('id',$batchId)->first();
 
-                                $serialId = $serial_value['serial_db_id'] != null ? $serial_value['serial_db_id'] : NULL;
+                        $permanent_data = [
+                            'batch_uuid' => $uuid,
+                            'item_id' => $item_id,
+                            'source_id' => $header_id,
+                            'source_type' => $source_type,
+                            'status' => "",
+                            'created_at' => Carbon::now()
+                        ];
 
-                                $common_serial_data = [
-                                    'batches_id' => $batch_parent->id,
-                                    'serial_number' => $serial_value['serialNumber'],
-                                ];
+                        $edited_data = ['updated_at' => Carbon::now()];
 
-                                $db_serial_data = serial_number::where('id',$serialId)->first();
+                        $batch_parent = batches::updateOrCreate([
+                            'id' => $batchId
+                        ],
+                            array_merge($common_data, $db_data ? $edited_data : $permanent_data)
+                        );
 
-                                $permanent_serial_data = [
-                                    'serial_uuid' => $serial_uuid,
-                                    'is_sold_issued' => 0,
-                                    'created_at' => Carbon::now()
-                                ];
+                        $common_batch_data = [
+                            'batches_id' => $batch_parent->id,
+                            'received_qty' => $batch_value['bactchQuantity'],
+                        ];
 
-                                $edited_serial_data = ['updated_at' => Carbon::now()];
+                        $db_batch_inv_data = batch_inventory::where('batches_id',$batch_parent->id)->first();
 
-                                $batch_serial = serial_number::updateOrCreate([
-                                    'id' => $serialId
-                                ],
-                                    array_merge($common_serial_data, $db_serial_data ? $edited_serial_data : $permanent_serial_data)
-                                );
-                                $submitted_ser_ids[] = $batch_serial->id;
-                                $serial_number_count++;
+                        $permanent_batch_data = [
+                            'created_at' => Carbon::now()
+                        ];
+
+                        $edited_batch_data = ['updated_at' => Carbon::now()];
+
+                        $batch_child = batch_inventory::updateOrCreate([
+                            'batches_id' => $batch_parent->id
+                        ],
+                            array_merge($common_batch_data, $db_batch_inv_data ? $edited_batch_data : $permanent_batch_data)
+                        );
+
+                        if($request->serial_row != null){
+                            
+                            foreach ($request->serial_row as $serial_key => $serial_value){
+                                $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+
+                                if($batch_row_id == $parent_row_id){
+                                    $serial_uuid = $serial_value['serial_uuid'] != null ? $serial_value['serial_uuid'] : Str::uuid()->toString();
+
+                                    $serialId = $serial_value['serial_db_id'] != null ? $serial_value['serial_db_id'] : NULL;
+
+                                    $common_serial_data = [
+                                        'batches_id' => $batch_parent->id,
+                                        'serial_number' => $serial_value['serialNumber'],
+                                    ];
+
+                                    $db_serial_data = serial_number::where('id',$serialId)->first();
+
+                                    $permanent_serial_data = [
+                                        'serial_uuid' => $serial_uuid,
+                                        'is_sold_issued' => 0,
+                                        'created_at' => Carbon::now()
+                                    ];
+
+                                    $edited_serial_data = ['updated_at' => Carbon::now()];
+
+                                    $batch_serial = serial_number::updateOrCreate([
+                                        'id' => $serialId
+                                    ],
+                                        array_merge($common_serial_data, $db_serial_data ? $edited_serial_data : $permanent_serial_data)
+                                    );
+                                    $submitted_ser_ids[] = $batch_serial->id;
+                                    $serial_number_count++;
+                                }
                             }
                         }
-                    }
 
-                    $submitted_ids[] = $batch_parent->id;
-                }
+                        $submitted_ids[] = $batch_parent->id;
+                    }
+                });
 
                 $serial_number_ids = [];
                 $serial_number_data = DB::select('SELECT serial_numbers.id FROM serial_numbers LEFT JOIN batches ON serial_numbers.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$header_id.' AND batches.item_id='.$item_id.' AND batches.source_type="'.$source_type.'"');
                 foreach($serial_number_data as $ser_row){
                     $serial_number_ids[] = $ser_row->id;
                 }
-
                 $to_be_removed = array_diff($serial_number_ids, $submitted_ser_ids);
                 
                 DB::table('batch_inventories')
@@ -3714,7 +3717,7 @@ class ReceivingController extends Controller
                     ->whereNotIn('id', $submitted_ids)
                     ->delete();
 
-                $item_data = Regitem::find($item_id);
+                
 
                 if($transaction_type == 1){
                     $receiving_detail_data = receivingdetail::where('HeaderId',$header_id)->where('ItemId',$item_id)->first();
@@ -3784,9 +3787,7 @@ class ReceivingController extends Controller
         else if($request->batch_row == null){
             return response()->json(['empty_batch' => 462]);
         }
-        else if($request->serial_row == null){
-            return response()->json(['empty_serial' => 462]);
-        }
+
         else if(!empty($duplicate_batch_number_row)){
             return response()->json(['duplicate_batch' => $duplicate_batch_number_row]);
         }

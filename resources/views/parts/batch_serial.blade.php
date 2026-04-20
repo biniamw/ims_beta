@@ -323,6 +323,7 @@
                         var list_of_rows = "";
                         $.each(data.duplicate_batch, function(index, rowno) {
                             $(`#bactchNumber${rowno}`).css("background",errorcolor);
+                            console.warn(`Duplicate: ${rowno}`);
                         });
 
                         if(parseInt(opt_type) == 1){
