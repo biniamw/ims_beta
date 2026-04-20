@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddItemuuidToReceivingdetails extends Migration
+class AddIsFullyEnteredToReceivingdetails extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,8 @@ class AddItemuuidToReceivingdetails extends Migration
     {
         Schema::table('receivingdetails', function (Blueprint $table) {
             //
-            $table->string('item_uuid')->nullable()->after('Common')->default("");
+            $table->integer('is_fully_entered')->nullable()->after('Common')->default(0);
+            $table->integer('entered_qty')->nullable()->after('is_fully_entered')->default(0);
         });
     }
 
@@ -28,7 +29,8 @@ class AddItemuuidToReceivingdetails extends Migration
     {
         Schema::table('receivingdetails', function (Blueprint $table) {
             //
-            $table->dropColumn("item_uuid");
+            $table->dropColumn("is_fully_entered");
+            $table->dropColumn("entered_qty");
         });
     }
 }

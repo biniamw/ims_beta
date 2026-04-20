@@ -319,6 +319,40 @@
                         }
                         toastrMessage('error',"You should add atleast one serial number","Error");
                     }
+                    else if(data.duplicate_batch){
+                        var list_of_rows = "";
+                        $.each(data.duplicate_batch, function(index, rowno) {
+                            $(`#bactchNumber${rowno}`).css("background",errorcolor);
+                        });
+
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        toastrMessage('error',"Duplicate batch number found!","Error");
+                    }
+                    else if(data.duplicate_serial){
+                        var list_of_rows = "";
+                        $.each(data.duplicate_serial, function(index, value) {
+                            $(`#serialNumber${value.serial_row}`).css("background",errorcolor);
+                            $(`#serialNumberDiv${value.batch_row}`).show();
+                            $(`#toggleSerialNum${value.batch_row}`).html('<i class="fa fa-chevron-up"></i> Hide Serial No.');
+                        });
+
+                        if(parseInt(opt_type) == 1){
+                            $('#save_batch_and_serial_btn').text('Save');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        else if(parseInt(opt_type) == 2){
+                            $('#save_batch_and_serial_btn').text('Update');
+                            $('#save_batch_and_serial_btn').prop("disabled", false);
+                        }
+                        toastrMessage('error',"Duplicate serial number found!","Error");
+                    }
                     else if(data.variances){
                         var list_of_rows = "";
                         $.each(data.variances, function(index, rowno) {
@@ -524,7 +558,8 @@
                                                 </span>
                                             </div>
                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 bs_only_serial_controls" id="toggleSerialNumberDiv${b_m}" style="text-align:right;display:none;">
-                                                <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control"/>
+                                                <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control batch_uuid"/>
+                                                <input type="hidden" id="batch_db_id${b_m}" name="batch_row[${b_m}][batch_db_id]" class="form-control batch_db_id"/>
                                                 <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
                                                     Quantity.: 0 | Serial Qty.: 0
                                                 </button>
@@ -548,7 +583,7 @@
                                                     <thead>
                                                     <tbody></tbody>
                                                 </table>
-                                                <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add New Serial No.</button>
+                                                <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add Serial No.</button>
                                             </div>
                                             <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
                                         </div>
@@ -562,7 +597,6 @@
                             var default_brand = `<option selected value='${value.brand_id}'>${value.brand_name}</option>`;
                             var default_model = `<option selected value='${value.model_id}'>${value.model_name}</option>`;
 
-
                             var brand_options = $("#bs_brand_default > option").clone();
                             $(`#bsBrand${b_m}`).empty().append(brand_options);
                             $(`#bsBrand${b_m} option[value="${value.brand_id}"]`).remove();
@@ -574,6 +608,7 @@
                             $(`#bsModel${b_m}`).append(default_model).select2();
 
                             $(`#bactchNumber${b_m}`).val(value.batch_number);
+                            $(`#bactchQuantity${b_m}`).val(value.received_qty);
 
                             flatpickr(`#bsManufactureDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,maxDate:currentdate});
                             $(`#bsManufactureDate${b_m}`).val(value.manufacturing_date);
@@ -582,6 +617,7 @@
                             $(`#bsExpiryDate${b_m}`).val(value.expiry_date);
 
                             $(`#batch_uuid${b_m}`).val(value.batch_uuid);
+                            $(`#batch_db_id${b_m}`).val(value.id);
 
                             $(`#serialNumberDiv${b_m}`).hide();
                             $(`#toggleSerialNum${b_m}`).html('<i class="fa fa-chevron-down"></i> Show Serial No.');
@@ -595,9 +631,48 @@
                             if($("#IsExpiryDateRequired").val() == "Yes"){
                                 $(".bs_expiry_date_controls").show();
                             }
+
+                            if(parseFloat(value.sold_issued_qty) > 0){
+                                $(`#remove-batch-tr${b_m}`).remove();
+                            }
+
+                            $.each(data.serial_data, function (ser_index, ser_value) {
+                                if(parseFloat(value.id) == parseFloat(ser_value.batches_id)){
+                                    ++s_i;
+                                    ++s_m;
+                                    ++s_j;
+                                    $(`#serial_no_dynamic_table${b_m} > tbody`).append(
+                                        `<tr class="border serial_no_tr serial_no_row${b_m}" id="sn_data_row${s_m}">
+                                            <td style="font-weight:bold;width:10%;text-align:center;">${s_j}</td>
+                                            <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][serial_index_col]" id="serial_index_col${s_m}" class="serial_index_col form-control" readonly="true" style="font-weight:bold;" value="${s_m}"/></td>
+                                            <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][parent_row_id]" id="parent_row_id${s_m}" class="parent_row_id form-control" readonly="true" style="font-weight:bold;" value="${b_m}"/></td>
+                                            <td style="width:80%">
+                                                <input type="text" placeholder="Enter Serial Number" class="serialNumber form-control" name="serial_row[${s_m}][serialNumber]" id="serialNumber${s_m}" onkeyup="serialNumberFn(this)" onblur="checkSerialNumDuplicatesFn(this)"/>
+                                            </td>
+                                            <td style="width:10%;text-align:center;">
+                                                <input type="hidden" id="serial_uuid${s_m}" name="serial_row[${s_m}][serial_uuid]" class="form-control serial_uuid"/>
+                                                <input type="hidden" id="serial_db_id${s_m}" name="serial_row[${s_m}][serial_db_id]" class="form-control serial_db_id"/>
+                                                <button type="button" id="remove_serial_tr${s_m}" class="btn btn-light btn-sm remove_serial_tr" onclick="removeSerialNumberTrFn(${b_m},${s_m})" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                                            </td>
+                                        </tr>`
+                                    );
+
+                                    $(`#serialNumber${s_m}`).val(ser_value.serial_number);
+                                    $(`#serial_uuid${s_m}`).val(ser_value.serial_uuid);
+                                    $(`#serial_db_id${s_m}`).val(ser_value.id);
+
+                                    if(parseInt(ser_value.is_sold_issued) == 1){
+                                        $(`#remove_serial_tr${s_m}`).remove();
+                                    }
+                                } 
+                            });
+
+                            renumberSerialNumberRows(b_m);
+                            countBatchAndSerialQtyFn(b_m);
                         });
 
                         renumberBatchNumberRows();
+                        countTotalBatchAndSerialFn();
                     }
                 });
 
@@ -687,7 +762,8 @@
                                     </span>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 bs_only_serial_controls" id="toggleSerialNumberDiv${b_m}" style="text-align:right;display:none;">
-                                    <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control"/>
+                                    <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control batch_uuid"/>
+                                    <input type="hidden" id="batch_db_id${b_m}" name="batch_row[${b_m}][batch_db_id]" class="form-control batch_db_id"/>
                                     <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
                                         Quantity.: 0 | Serial Qty.: 0
                                     </button>
@@ -711,7 +787,7 @@
                                         <thead>
                                         <tbody></tbody>
                                     </table>
-                                    <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add New Serial No.</button>
+                                    <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add Serial No.</button>
                                 </div>
                                 <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
                             </div>
@@ -795,6 +871,8 @@
                             <input type="text" placeholder="Enter Serial Number" class="serialNumber form-control" name="serial_row[${s_m}][serialNumber]" id="serialNumber${s_m}" onkeyup="serialNumberFn(this)" onblur="checkSerialNumDuplicatesFn(this)"/>
                         </td>
                         <td style="width:10%;text-align:center;">
+                            <input type="hidden" id="serial_uuid${s_m}" name="serial_row[${s_m}][serial_uuid]" class="form-control serial_uuid"/>
+                            <input type="hidden" id="serial_db_id${s_m}" name="serial_row[${s_m}][serial_db_id]" class="form-control serial_db_id"/>
                             <button type="button" id="remove_serial_tr${s_m}" class="btn btn-light btn-sm remove_serial_tr" onclick="removeSerialNumberTrFn(${row_id},${s_m})" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                         </td>
                     </tr>`
