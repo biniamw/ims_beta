@@ -3651,8 +3651,7 @@ class ReceivingController extends Controller
                             array_merge($common_batch_data, $db_batch_inv_data ? $edited_batch_data : $permanent_batch_data)
                         );
 
-                        if($request->serial_row != null){
-                            
+                        if($request->serial_row != null){        
                             foreach ($request->serial_row as $serial_key => $serial_value){
                                 $parent_row_id = $serial_value['parent_row_id'] ?? 0;
 
@@ -3686,7 +3685,6 @@ class ReceivingController extends Controller
                                 }
                             }
                         }
-
                         $submitted_ids[] = $batch_parent->id;
                     }
                 });
@@ -3823,4 +3821,18 @@ class ReceivingController extends Controller
         return response()->json(['batch_data' => $batch_data,'serial_data' => $serial_data]);
     }
 
+    public function getItemBactchData(Request $request){
+        $headerId = $_POST['headerId']; 
+        $itemId = $_POST['itemId'];
+
+        $batch_data = DB::select('SELECT batches.*,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories.received_qty,batch_inventories.sold_issued_qty,brands.Name AS brand_name,models.Name AS model_name,regitems.RequireSerialNumber FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$headerId.' AND batches.item_id='.$itemId.' AND batches.source_type="receiving" ORDER BY batch_inventories.id ASC');
+        return response()->json(['batch_data' => $batch_data]);
+    }
+
+    public function getItemSerialData(Request $request){
+        $batchId = $_POST['batchId'];
+
+        $serial_data = DB::select('SELECT GROUP_CONCAT(" ",serial_number) AS serial_number,COUNT(id) AS count_serial FROM serial_numbers WHERE serial_numbers.batches_id='.$batchId.' ORDER BY serial_numbers.id ASC');
+        return response()->json(['serial_data' => $serial_data]);
+    }
 }

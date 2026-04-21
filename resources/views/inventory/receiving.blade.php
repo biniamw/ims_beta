@@ -549,13 +549,15 @@
                                                         <div class="table-responsive scroll scrdiv">
                                                             <div class="row infoRecDiv">
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" id="receiving_item_div">
+                                                                    <input type="text" id="customSearch" placeholder="Search...">
                                                                     <table id="docRecInfoItem" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th style="display: none;"></th>
+                                                                                <th style="width: 2%"></th>
                                                                                 <th style="width: 3%">#</th>
                                                                                 <th style="width: 12%">Item Code</th>
-                                                                                <th style="width: 17%">Item Name</th>
+                                                                                <th style="width: 15%">Item Name</th>
                                                                                 <th style="width: 12%" title="Barcode Number">Barcode No.</th>
                                                                                 <th style="width: 7%" title="Unit of Measurement">UOM</th>
                                                                                 <th style="width: 8%">Quantity</th>
@@ -4443,38 +4445,38 @@
             if(src_type == "Purchase"){
                 if(ref_type == 500){
                     if(cost_visiblity == 1){
-                        column_index = [7,8,9,10];
+                        column_index = [8,9,10,11];
                         visibility_flag = true;
                     }
                     else{
-                        column_index = [7,8,9,10];
+                        column_index = [8,9,10,11];
                         visibility_flag = false;
                     }
                 }
                 else if(ref_type == 503){
                     if(v_status == 1){
-                        column_index = [7,8,9,10];
+                        column_index = [8,9,10,11];
                         visibility_flag = true;
                     }
                     else{
-                        column_index = [9,10];
+                        column_index = [10,11];
                         visibility_flag = false;
                     }
                 }
                 else{
-                    column_index = [7,8,9,10];
+                    column_index = [8,9,10,11];
                     visibility_flag = false;
                 }
             }
             else{
-                column_index = [9,10];
+                column_index = [10,11];
                 visibility_flag = false;
             }
 
             $('#docRecInfoItem').DataTable({
                 destroy:true,
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 paging: false,
                 info:false,
                 searchHighlight: true,
@@ -4485,7 +4487,7 @@
                 },
                 autoWidth: false,
                 deferRender: true,
-                dom: "<'row'<'col-sm-4 col-md-5 col-6'f><'col-sm-3 col-md-2 col-6'><'col-sm-3 col-md-2 col-6'>>" +
+                dom: "<'row'<'col-sm-4 col-md-2 col-5 ml-0'f><'col-sm-8 col-md-10 col-7 mt-2 d-flex justify-content-end expand-collapse-class'>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
                 ajax: {
@@ -4501,6 +4503,21 @@
                         'visible': false
                     },
                     {
+                        data:null,
+                        orderable: false,
+                        "render": function ( data, type, row, meta ) {
+                            if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                return '<i class="fas fa-caret-right fa-xl"></i>';
+                            }
+                        },
+                        createdCell: function (td, row, data) {
+                            if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                $(td).addClass('dt-show-1');
+                            }
+                        },
+                        width:'2%',
+                    },
+                    {
                         data:'DT_RowIndex',
                         width:'3%',
                     },
@@ -4512,7 +4529,7 @@
                     {
                         data: 'ItemName',
                         name: 'ItemName',
-                        width:'17%',
+                        width:'15%',
                         "render": function ( data, type, row, meta ) {
                             $('#info_tax_pricing_tbl').text(`Tax (${row.TaxTypeId}%)`);
                             return `<div>${data}</div>`;
@@ -4601,6 +4618,321 @@
                     $('.infoRecDiv').show();  
                 },
             });
+
+            $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+        }
+
+        $('#docRecInfoItem tbody').on('click', 'td.dt-show-1', async function () {
+            let tr = $(this).closest('tr');
+            let row = $('#docRecInfoItem').DataTable().row(tr);
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                $(this).html('<i class="fas fa-caret-right fa-xl"></i>');
+            } else {
+                row.child('Loading...').show();
+                let data = row.data();
+                let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
+                row.child(html).show();
+                $(this).html('<i class="fas fa-caret-down fa-xl"></i>');
+            }
+        });
+
+        async function formatLevel1Fn(header_id,item_id) {
+            var headerId = null;
+            var itemId = null;
+            
+            let response = await $.ajax({ 
+                url: '/getItemBactchData', 
+                type: 'POST',
+                data:{
+                    headerId : header_id,
+                    itemId : item_id,
+                },
+            });
+
+            let html = `<table class="child-table table-striped table-hover dt-responsive" width="100%">`;
+            html += `<tr>
+                <th style="width:2%"></th>
+                <th style="width:3%">#</th>
+                <th style="width:18%">Brand</th>
+                <th style="width:17%">Generic Name</th>
+                <th style="width:15%">Batch Number</th>
+                <th style="width:15%">Quantity</th>
+                <th style="width:15%">Manufacturing Date</th>
+                <th style="width:15%">Expiry Date</th>
+            </tr>`;
+
+            $.each(response.batch_data, function (index, value) {
+                html += `<tr>
+                    <td class="${value.RequireSerialNumber == 'Required' ? 'dt-show-2' : ''}" data-batchid="${value.id}">${value.RequireSerialNumber == 'Required' ? '<i class="fas fa-caret-right fa-xl"></i>' : ''}</td>
+                    <td>${++index}</td>
+                    <td>${value.brand_name}</td>
+                    <td>${value.model_name}</td>
+                    <td>${value.batch_number}</td>
+                    <td>${value.received_qty}</td>
+                    <td>${value.manufacturing_date}</td>
+                    <td>${value.expiry_date}</td>
+                </tr>`;
+            });
+
+            html += `</table>`;
+            return html;
+        }
+
+        $(document).on('click', '.dt-show-2', async function () {
+
+            let tr = $(this).closest('tr');
+
+            if ($(this).hasClass('shown')) {
+                tr.next('.child-level-2').remove();
+                $(this).removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
+            } else {
+
+                let loadingRow = `<tr class="child-level-2">
+                        <td colspan="8" class="child-container">Loading...</td>
+                    </tr>`;
+
+                tr.after(loadingRow);
+                $(this).addClass('shown').html('<i class="fas fa-caret-down fa-xl"></i>');
+
+                try{
+                    let batchId = $(this).data('batchid');
+                    let html = await formatLevel2Fn(batchId);
+
+                    tr.next('.child-level-2').html(`<td colspan="8">${html}</td>`);
+                }
+                catch(e){
+                    tr.next('.child-level-2').html(`<td colspan="8" style="color:red;">Error loading data</td>`);
+                }  
+            }
+        });
+
+        async function formatLevel2Fn(batch_id) {
+            var batchId = null;
+            let response = await $.ajax({ 
+                url: '/getItemSerialData', 
+                type: 'POST',
+                data:{
+                    batchId : batch_id,
+                },
+            });
+
+            let html = `<table class="child-table table-striped table-hover dt-responsive" width="100%">`;
+            $.each(response.serial_data, function (index, value) {
+                html += `<tr><th>Serial Number (${value.count_serial})</th></tr>`;
+                html += `<tr>
+                    <td>${value.serial_number}</td>
+                </tr>`;
+            });
+
+            html += `</table>`;
+            return html;
+        }
+
+        async function expandAllLevel1Fn() {
+            let table = $('#docRecInfoItem').DataTable();
+            for (let i = 0; i < table.rows().count(); i++) {
+
+                let row = table.row(i);
+                let tr = $(row.node());
+                let data = row.data();
+
+                if (!data) continue;
+
+                if (!row.child.isShown()) {
+                    let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
+                    row.child(html).show();
+                    tr.find('.dt-show-1').html('<i class="fas fa-caret-down fa-xl"></i>');
+                }
+            }
+        }
+
+        function expandAllLevel2Fn() {
+            // find only visible Level 1 rows
+            $('.dt-show-2').each(function () {
+
+                let el = $(this);
+
+                if (!el.hasClass('shown')) {
+
+                    // simulate click properly
+                    el.trigger('click');
+                }
+            });
+        }
+
+        $(document).on('click', '#expandrow',async function() {
+            await expandAllLevel1Fn();
+
+            setTimeout(function () {
+                expandAllLevel2Fn();
+                $('.expand-collapse-class').empty().append(`<a class="collapserow" href="javascript:void(0)" id="collapserow" style="color:#82868b;"><i class="far fa-minus"></i> Collapse All</a>`);
+            }, 300);
+        });
+
+        $(document).on('click', '#collapserow',async function() {
+            let table = $('#docRecInfoItem').DataTable();
+
+            table.rows().every(function () {
+
+                let row = this;
+                let tr = $(row.node());
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.find('.dt-show-1').html('<i class="fas fa-caret-right fa-xl"></i>');
+                }
+            });
+
+            // remove all level 2 DOM rows
+            $('.child-level-2').remove();
+            $('.dt-show-2').removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
+            $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+        });
+
+        $('#customSearch').on('keyup', async function () {
+
+            let keyword = safeLower(this.value).trim();
+            let table = $('#docRecInfoItem').DataTable();
+
+            for (let i = 0; i < table.rows().count(); i++) {
+
+                let row = table.row(i);
+                let tr = $(row.node());
+
+                if (!tr.length) continue;
+
+                let match = false;
+
+                // 🔍 1. SEARCH PARENT ROW TEXT (FIX: normalize spaces)
+                let parentText = safeLower(tr.text()).replace(/\s+/g, ' ');
+
+                if (parentText.includes(keyword)) {
+                    match = true;
+                }
+
+                // 🔍 2. CHECK CHILD (LEVEL 1 + LEVEL 2)
+                if (keyword !== '') {
+
+                    // ✅ ensure level 1 is expanded
+                    if (!row.child.isShown()) {
+
+                        let data = row.data();
+                        let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
+
+                        row.child(html).show();
+                        tr.find('.dt-control').text('-');
+                    }
+
+                    // ⏳ wait DOM render (FIX: slightly higher delay)
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                    let childRow = tr.next();
+
+                    if (childRow.length) {
+
+                        let childText = safeLower(childRow.text()).replace(/\s+/g, ' ');
+
+                        if (childText.includes(keyword)) {
+                            match = true;
+                        }
+
+                        // 🔥 NEW FIX: expand LEVEL 2 before checking again
+                        let lv2Btns = childRow.find('.dt-show-2');
+
+                        for (let btn of lv2Btns) {
+
+                            let el = $(btn);
+
+                            if (!el.hasClass('shown')) {
+                                el.trigger('click'); // expand level 2
+                            }
+                        }
+
+                        // ⏳ wait level 2 render
+                        await new Promise(resolve => setTimeout(resolve, 100));
+
+                        // 🔍 re-check INCLUDING level 2
+                        let fullChildText = safeLower(childRow.next().text()).replace(/\s+/g, ' ');
+
+                        if (fullChildText.includes(keyword)) {
+                            match = true;
+                        }
+                    }
+                }
+
+                // 🔥 SHOW / HIDE
+                if (keyword === '' || match) {
+
+                    tr.show();
+
+                } else {
+
+                    tr.hide();
+
+                    // collapse if not matched
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.find('.dt-control').text('+');
+                    }
+                }
+            }
+
+            // 🔥 highlight (after everything is ready)
+            setTimeout(function () {
+                applyHighlight($('#docRecInfoItem'), keyword);
+            }, 100);
+        });
+
+       function applyHighlight(container, keyword) {
+
+            // 🔥 STEP 1: RESET (clean previous highlight safely)
+            container.find('.highlightsearch').each(function () {
+                $(this).replaceWith(document.createTextNode($(this).text()));
+            });
+
+            if (!keyword) return;
+
+            // 🔥 STEP 2: split words (multi-keyword support)
+            let words = keyword.trim().split(/\s+/).filter(w => w.length > 0);
+
+            container.find('td, div').each(function () {
+
+                let node = this;
+
+                $(node).contents().filter(function () {
+                    return this.nodeType === 3; // TEXT NODE ONLY
+                }).each(function () {
+
+                    let originalText = this.nodeValue;
+                    let newHtml = originalText;
+
+                    words.forEach(word => {
+
+                        // 🔥 escape regex safely
+                        let escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+                        let regex = new RegExp("(" + keyword + ")", "gi");
+
+                        newHtml = newHtml.replace(regex, match => {
+                            return `<span class="highlightsearch">${match}</span>`;
+                        });
+                    });
+
+                    // 🔥 only replace if changed
+                    if (newHtml !== originalText) {
+                        $(this).replaceWith(newHtml);
+                    }
+                });
+            });
+        }
+        function escapeRegex(text) {
+            return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function safeLower(value) {
+            return (value || '').toString().toLowerCase();
         }
 
         function getDocumentDataFn(recordId){

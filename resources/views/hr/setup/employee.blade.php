@@ -11932,8 +11932,7 @@
             doc.save(`Leave_History_of(${employeeName}).pdf`);
         });
 
-        $(document).on('click', '#printLeaveHistory', function() {
-            
+        $(document).on('click', '#printLeaveHistory', function() {   
             var employeeid = $("#info_employee_code").val();
             var employeeName = $("#fullNameLbl").text();
             var branch = $("#BranchLbl").text();
