@@ -549,23 +549,24 @@
                                                         <div class="table-responsive scroll scrdiv">
                                                             <div class="row infoRecDiv">
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" id="receiving_item_div">
-                                                                    <input type="text" id="customSearch" placeholder="Search...">
                                                                     <table id="docRecInfoItem" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th style="display: none;"></th>
                                                                                 <th style="width: 2%"></th>
                                                                                 <th style="width: 3%">#</th>
-                                                                                <th style="width: 12%">Item Code</th>
-                                                                                <th style="width: 15%">Item Name</th>
-                                                                                <th style="width: 12%" title="Barcode Number">Barcode No.</th>
+                                                                                <th style="width: 10%">Item Code</th>
+                                                                                <th style="width: 20%">Item Name</th>
+                                                                                <th style="width: 10%" title="Barcode Number">Barcode No.</th>
                                                                                 <th style="width: 7%" title="Unit of Measurement">UOM</th>
-                                                                                <th style="width: 8%">Quantity</th>
+                                                                                <th style="width: 7%">Quantity</th>
                                                                                 <th style="width: 8%">Unit Cost</th>
                                                                                 <th id="before_total_cost" style="width: 10%">Before Tax</th>
                                                                                 <th style="width: 10%">Tax Amount</th>
                                                                                 <th style="width: 10%">Total Cost</th>
                                                                                 <th style="width: 3%"></th>
+                                                                                <th style="display: none;"></th>
+                                                                                <th style="display: none;"></th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody class="table table-sm"></tbody>
@@ -1442,6 +1443,7 @@
         var currentdate = $('#currentdateval').val();
         var cdatevar = $('#currentdateval').val();
         var table = "";
+        var detail_table = "";
         var prd_table = "";
         var can_change_src_type = true;
         var srctype_value = "";
@@ -3973,6 +3975,7 @@
             $('.receipt_data_cl').hide();
             $('.receipt_data_total_price').hide();
             $('.procurement_cl').hide();
+            $('.infoRecDiv').hide();  
             var visibilitymode = false;
             var withold_count = null;
             var subtotal = 0;
@@ -4473,13 +4476,14 @@
                 visibility_flag = false;
             }
 
-            $('#docRecInfoItem').DataTable({
+            detail_table = $('#docRecInfoItem').DataTable({
                 destroy:true,
                 processing: true,
                 serverSide: false,
                 paging: false,
                 info:false,
                 searchHighlight: true,
+                searching: true,
                 "order": [[ 0, "asc" ]],
                 language: { 
                     search: '', 
@@ -4524,12 +4528,12 @@
                     {
                         data: 'ItemCode',
                         name: 'ItemCode',
-                        width:'12%',
+                        width:'10%',
                     },
                     {
                         data: 'ItemName',
                         name: 'ItemName',
-                        width:'15%',
+                        width:'20%',
                         "render": function ( data, type, row, meta ) {
                             $('#info_tax_pricing_tbl').text(`Tax (${row.TaxTypeId}%)`);
                             return `<div>${data}</div>`;
@@ -4538,7 +4542,7 @@
                     {
                         data: 'SKUNumber',
                         name: 'SKUNumber',
-                        width:'12%',
+                        width:'10%',
                     },
                     {
                         data: 'UOM',
@@ -4548,7 +4552,7 @@
                     {
                         data: 'Quantity',
                         name: 'Quantity',
-                        width:'8%',
+                        width:'7%',
                         render: $.fn.dataTable.render.number(',', '.',0, '')
                     },
                     {
@@ -4605,7 +4609,17 @@
                             }
                         },
                         width:'3%',
-                    }  
+                    },
+                    {
+                        data: 'batch_numers',
+                        name: 'batch_numers',
+                        'visible': false
+                    },
+                    {
+                        data: 'serial_numbers',
+                        name: 'serial_numbers',
+                        'visible': false
+                    },
                 ],
                 "columnDefs": [
                     {
@@ -4619,7 +4633,70 @@
                 },
             });
 
+            $('#docRecInfoItem').on('draw.dt', function () {
+                let keyword = $('#docRecInfoItem_filter input').val();
+                detail_table.rows({ search: 'applied' }).every(function () {
+                    // parent row
+                    highlight(this.node(), keyword);
+
+                    // child row (if exists)
+                    if (this.child && this.child.isShown()) {
+                        highlight(this.child(), keyword);
+                    }
+                });
+            });
+
             $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+        }
+
+        function highlight(container, keyword) {
+            if (!keyword || keyword.trim() === '') {
+                // Restore original HTML
+                $(container).find('td').each(function() {
+                    let original = $(this).attr('data-original');
+                    if (original) {
+                        $(this).html(original);
+                    }
+                });
+                return;
+            }
+
+            let safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            let regex = new RegExp(`(${safeKeyword})`, 'gi');
+
+            $(container).find('td').each(function() {
+                let $td = $(this);
+                
+                // Store original HTML if not already stored
+                if (!$td.attr('data-original')) {
+                    $td.attr('data-original', $td.html());
+                }
+                
+                // Get original HTML
+                let originalHtml = $td.attr('data-original');
+                
+                // Create a temporary div to manipulate DOM
+                let $temp = $('<div>').html(originalHtml);
+                
+                // Function to highlight text in text nodes only
+                function highlightTextNodes(element) {
+                    $(element).contents().each(function() {
+                        if (this.nodeType === Node.TEXT_NODE && this.textContent.trim() !== '') {
+                            let text = this.textContent;
+                            let newText = text.replace(regex, '<b class="highlightsearch">$1</b>');
+                            if (newText !== text) {
+                                $(this).replaceWith(newText);
+                            }
+                        } else if (this.nodeType === Node.ELEMENT_NODE && 
+                                !['SCRIPT', 'STYLE', 'MARK'].includes(this.tagName)) {
+                            highlightTextNodes(this);
+                        }
+                    });
+                }
+                
+                highlightTextNodes($temp[0]);
+                $td.html($temp.html());
+            });
         }
 
         $('#docRecInfoItem tbody').on('click', 'td.dt-show-1', async function () {
@@ -4632,7 +4709,7 @@
             } else {
                 row.child('Loading...').show();
                 let data = row.data();
-                let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
+                let html = await formatLevel1Fn(data.HeaderId,data.ItemId);
                 row.child(html).show();
                 $(this).html('<i class="fas fa-caret-down fa-xl"></i>');
             }
@@ -4641,6 +4718,8 @@
         async function formatLevel1Fn(header_id,item_id) {
             var headerId = null;
             var itemId = null;
+            var is_batch_req = null;
+            var is_expiry_req = null;
             
             let response = await $.ajax({ 
                 url: '/getItemBactchData', 
@@ -4651,33 +4730,52 @@
                 },
             });
 
-            let html = `<table class="child-table table-striped table-hover dt-responsive" width="100%">`;
+            $.each(response.batch_data, function (index, value) {
+                is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+            });
+
+            let html = `<table class="first-level table-striped table-hover dt-responsive" width="100%">`;
             html += `<tr>
                 <th style="width:2%"></th>
                 <th style="width:3%">#</th>
                 <th style="width:18%">Brand</th>
                 <th style="width:17%">Generic Name</th>
-                <th style="width:15%">Batch Number</th>
+                <th class="batch_number_class" style="width:15%;display:${is_batch_req == "No" ? "none" : ""}">Batch Number</th>
                 <th style="width:15%">Quantity</th>
                 <th style="width:15%">Manufacturing Date</th>
-                <th style="width:15%">Expiry Date</th>
+                <th class="expiry_date_class" style="width:15%;display:${is_expiry_req == "No" ? "none" : ""}">Expiry Date</th>
             </tr>`;
 
             $.each(response.batch_data, function (index, value) {
+                var class_name = "";
+                var batch_id = "";
+                
+                if(value.RequireSerialNumber == 'Required'){
+                    class_name = "dt-show-2";
+                    batch_id = '<i class="fas fa-caret-right fa-xl"></i>';
+                }
+
                 html += `<tr>
-                    <td class="${value.RequireSerialNumber == 'Required' ? 'dt-show-2' : ''}" data-batchid="${value.id}">${value.RequireSerialNumber == 'Required' ? '<i class="fas fa-caret-right fa-xl"></i>' : ''}</td>
+                    <td class="${class_name}" data-batchid="${value.id}">${batch_id}</td>
                     <td>${++index}</td>
                     <td>${value.brand_name}</td>
                     <td>${value.model_name}</td>
-                    <td>${value.batch_number}</td>
+                    <td class="batch_number_class" style="display:${is_batch_req == "No" ? "none" : ""}">${value.batch_number}</td>
                     <td>${value.received_qty}</td>
                     <td>${value.manufacturing_date}</td>
-                    <td>${value.expiry_date}</td>
+                    <td class="expiry_date_class" style="display:${is_expiry_req == "No" ? "none" : ""}">${value.expiry_date}</td>
                 </tr>`;
             });
 
             html += `</table>`;
-            return html;
+
+            if(parseInt(response.batch_data.length) > 0){
+                return html;
+            }
+            else{
+                toastrMessage('error',"No items with batch and/or serial numbers are available to expand.","Error");
+            }
         }
 
         $(document).on('click', '.dt-show-2', async function () {
@@ -4718,12 +4816,10 @@
                 },
             });
 
-            let html = `<table class="child-table table-striped table-hover dt-responsive" width="100%">`;
+            let html = `<table class="second-level table-striped table-hover dt-responsive" width="100%">`;
             $.each(response.serial_data, function (index, value) {
                 html += `<tr><th>Serial Number (${value.count_serial})</th></tr>`;
-                html += `<tr>
-                    <td>${value.serial_number}</td>
-                </tr>`;
+                html += `<tr><td>${value.serial_number}</td></tr>`;
             });
 
             html += `</table>`;
@@ -4790,150 +4886,6 @@
             $('.dt-show-2').removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
             $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
         });
-
-        $('#customSearch').on('keyup', async function () {
-
-            let keyword = safeLower(this.value).trim();
-            let table = $('#docRecInfoItem').DataTable();
-
-            for (let i = 0; i < table.rows().count(); i++) {
-
-                let row = table.row(i);
-                let tr = $(row.node());
-
-                if (!tr.length) continue;
-
-                let match = false;
-
-                // 🔍 1. SEARCH PARENT ROW TEXT (FIX: normalize spaces)
-                let parentText = safeLower(tr.text()).replace(/\s+/g, ' ');
-
-                if (parentText.includes(keyword)) {
-                    match = true;
-                }
-
-                // 🔍 2. CHECK CHILD (LEVEL 1 + LEVEL 2)
-                if (keyword !== '') {
-
-                    // ✅ ensure level 1 is expanded
-                    if (!row.child.isShown()) {
-
-                        let data = row.data();
-                        let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
-
-                        row.child(html).show();
-                        tr.find('.dt-control').text('-');
-                    }
-
-                    // ⏳ wait DOM render (FIX: slightly higher delay)
-                    await new Promise(resolve => setTimeout(resolve, 100));
-
-                    let childRow = tr.next();
-
-                    if (childRow.length) {
-
-                        let childText = safeLower(childRow.text()).replace(/\s+/g, ' ');
-
-                        if (childText.includes(keyword)) {
-                            match = true;
-                        }
-
-                        // 🔥 NEW FIX: expand LEVEL 2 before checking again
-                        let lv2Btns = childRow.find('.dt-show-2');
-
-                        for (let btn of lv2Btns) {
-
-                            let el = $(btn);
-
-                            if (!el.hasClass('shown')) {
-                                el.trigger('click'); // expand level 2
-                            }
-                        }
-
-                        // ⏳ wait level 2 render
-                        await new Promise(resolve => setTimeout(resolve, 100));
-
-                        // 🔍 re-check INCLUDING level 2
-                        let fullChildText = safeLower(childRow.next().text()).replace(/\s+/g, ' ');
-
-                        if (fullChildText.includes(keyword)) {
-                            match = true;
-                        }
-                    }
-                }
-
-                // 🔥 SHOW / HIDE
-                if (keyword === '' || match) {
-
-                    tr.show();
-
-                } else {
-
-                    tr.hide();
-
-                    // collapse if not matched
-                    if (row.child.isShown()) {
-                        row.child.hide();
-                        tr.find('.dt-control').text('+');
-                    }
-                }
-            }
-
-            // 🔥 highlight (after everything is ready)
-            setTimeout(function () {
-                applyHighlight($('#docRecInfoItem'), keyword);
-            }, 100);
-        });
-
-       function applyHighlight(container, keyword) {
-
-            // 🔥 STEP 1: RESET (clean previous highlight safely)
-            container.find('.highlightsearch').each(function () {
-                $(this).replaceWith(document.createTextNode($(this).text()));
-            });
-
-            if (!keyword) return;
-
-            // 🔥 STEP 2: split words (multi-keyword support)
-            let words = keyword.trim().split(/\s+/).filter(w => w.length > 0);
-
-            container.find('td, div').each(function () {
-
-                let node = this;
-
-                $(node).contents().filter(function () {
-                    return this.nodeType === 3; // TEXT NODE ONLY
-                }).each(function () {
-
-                    let originalText = this.nodeValue;
-                    let newHtml = originalText;
-
-                    words.forEach(word => {
-
-                        // 🔥 escape regex safely
-                        let escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-                        let regex = new RegExp("(" + keyword + ")", "gi");
-
-                        newHtml = newHtml.replace(regex, match => {
-                            return `<span class="highlightsearch">${match}</span>`;
-                        });
-                    });
-
-                    // 🔥 only replace if changed
-                    if (newHtml !== originalText) {
-                        $(this).replaceWith(newHtml);
-                    }
-                });
-            });
-        }
-        function escapeRegex(text) {
-            return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-
-        function safeLower(value) {
-            return (value || '').toString().toLowerCase();
-        }
 
         function getDocumentDataFn(recordId){
             $('#document_div').hide();
@@ -6582,7 +6534,6 @@
             var link = `/directpoattachemnt/${po_id}`;
             window.open(link, '', 'width=1200,height=800,scrollbars=yes');
         }
-
         //----------Document start---------------
 
         function openDocumentUploadFn(rec_id){
@@ -6872,7 +6823,6 @@
         });
         //----------Document ends---------------
         
-
         function generateUUIDv4Fn() {
             // Generate random bytes
             var bytes = new Uint8Array(16);
@@ -6888,6 +6838,5 @@
             // Format as UUID
             return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
         }
-
     </script>
 @endsection
