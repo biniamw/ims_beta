@@ -23,13 +23,13 @@
                                     </div>
                                     <div class="collapse batch_coll show batch_serial_collapse shadow pl-1 pr-1">
                                         <div class="row mb-1">
-                                            <div class="col-xl-8 col-lg-6 col-md-6 col-sm-12 col-12 mt-1 mb-1">
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 mt-1 mb-1">
                                                 <div class="card shadow-none border m-0">
                                                     <div class="card-body mb-0">
                                                         <h6 class="card-title mb-0"><i class="fas fa-database"></i> General Information</h6>
                                                         <hr class="my-50">
                                                         <div class="row">
-                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-lg-6 col-md-7 col-sm-7 col-12">
                                                                 <table class="infotbl mb-0" style="width:100%;font-size:12px;">
                                                                     <tr>
                                                                         <td><label class="info_lbl">Item Type</label></td>
@@ -49,7 +49,7 @@
                                                                     </tr>
                                                                 </table>
                                                             </div>
-                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                                            <div class="col-xl-6 col-lg-6 col-md-5 col-sm-5 col-12">
                                                                 <table class="infotbl mb-0" style="width:100%;font-size:12px;">
                                                                     <tr>
                                                                         <td><label class="info_lbl">Category</label></td>
@@ -77,7 +77,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 mt-1 mb-1">
+
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-1 mb-1">
                                                 <div class="card shadow-none border m-0">
                                                     <div class="card-body">
                                                         <h6 class="card-title mb-0"><i class="fa-sharp fa-solid fa-file-invoice-dollar"></i> Sales Pricing</h6>
@@ -121,8 +122,8 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    <div class="col-xl-10 col-lg-8 col-md-6 col-sm-5 col-12"></div>
-                                    <div class="col-xl-2 col-lg-4 col-md-6 col-sm-7 col-12">
+                                    <div class="col-xl-9 col-lg-8 col-md-6 col-sm-6 col-4"></div>
+                                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-8">
                                         <table style="width: 100%;font-size:12px;text-align:center;">
                                             <tr>
                                                 <td class="border" style="width:50%;"><label title="Received Quantity">Received Qty.</label></td>
@@ -213,14 +214,17 @@
                 data: formData,
                 beforeSend: function() { 
                     var processing_msg = "";
+                    var btn_text = "";
                     if(parseInt(opt_type) == 1){
-                        processing_msg = "Saving...";
+                        processing_msg = "Saving batch and/or serial number";
+                        btn_text = "Saving...";
                     }
                     else{
-                        processing_msg = "Updating...";
+                        processing_msg = "Updating batch and/or serial number";
+                        btn_text = "Updating...";
                     }
                     blockPage(cardSection,processing_msg);
-                    $('#save_batch_and_serial_btn').text(processing_msg);
+                    $('#save_batch_and_serial_btn').text(btn_text);
                     $('#save_batch_and_serial_btn').prop("disabled", true);
                 },
                 complete: function () { 
@@ -368,7 +372,7 @@
                             $('#save_batch_and_serial_btn').text('Update');
                             $('#save_batch_and_serial_btn').prop("disabled", false);
                         }
-                        toastrMessage('error',`Please fill in the serial numbers for the specified rows below</br>--------------</br>${list_of_rows}`,"Error");
+                        toastrMessage('error',`Please match serial number and entered quantity for the specified rows below</br>--------------</br>${list_of_rows}`,"Error");
                     }
                     else if(data.batch_variances){
                         if(parseInt(opt_type) == 1){
@@ -516,42 +520,42 @@
                                     </td>
                                     <td style="width:96%">
                                         <div class="row">
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                                 <label class="form_lbl">Brand<b style="color: red; font-size:16px;">*</b></label>
                                                 <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
                                                 <span class="text-danger">
                                                     <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
-                                                <label class="form_lbl">Model<b style="color: red; font-size:16px;">*</b></label>
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
+                                                <label class="form_lbl" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></label>
                                                 <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
                                                 <span class="text-danger">
                                                     <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
                                                 <label class="form_lbl">Batch No.<b style="color: red; font-size:16px;">*</b></label>
                                                 <input type="text" placeholder="Enter Batch Number" class="bactchNumber form-control" name="batch_row[${b_m}][bactchNumber]" id="bactchNumber${b_m}" onkeyup="bactchNumberFn(this)" onblur="checkDuplicatesFn(this)"/>
                                                 <span class="text-danger">
                                                     <strong id="bs-batchno-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                                 <label class="form_lbl">Quantity<b style="color: red; font-size:16px;">*</b></label>
                                                 <input type="number" placeholder="Enter Quantity" class="bactchQuantity form-control" name="batch_row[${b_m}][bactchQuantity]" id="bactchQuantity${b_m}" onkeyup="bactchQuantityFn(this)" onkeypress="return ValidateOnlyNum(event);"/>
                                                 <span class="text-danger">
                                                     <strong id="bs-batchqty-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                                 <label class="form_lbl">Manufacturing Date</label>
                                                 <input type="text" id="bsManufactureDate${b_m}" name="batch_row[${b_m}][bsManufactureDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsManufactureDateFn(this)"/>
                                                 <span class="text-danger">
                                                     <strong id="bs-manufacture-date-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
+                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
                                                 <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
                                                 <input type="text" id="bsExpiryDate${b_m}" name="batch_row[${b_m}][bsExpiryDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsExpiryDateFn(this)"/>
                                                 <span class="text-danger">
@@ -571,9 +575,9 @@
                                             </div>
                                         </div>
                                     
-                                        <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-1rem !important;">
-                                            <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
-                                            <div class="col-xl-4 col-lg-8 col-md-8 col-sm-10 col-12 mb-1">
+                                        <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-0.5rem !important;">
+                                            <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-8 mb-1">
                                                 <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table fit-content" style="width:100%;">
                                                     <thead>
                                                         <tr>
@@ -586,7 +590,7 @@
                                                 </table>
                                                 <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add Serial No.</button>
                                             </div>
-                                            <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
+                                            <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
                                         </div>
                                     </td>
                                     <td style="width:2%;position:relative;vertical-align: top;">
@@ -720,42 +724,42 @@
                         </td>
                         <td style="width:96%">
                             <div class="row">
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                     <label class="form_lbl">Brand<b style="color: red; font-size:16px;">*</b></label>
                                     <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
                                     <span class="text-danger">
                                         <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
-                                    <label class="form_lbl">Model<b style="color: red; font-size:16px;">*</b></label>
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
+                                    <label class="form_lbl" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></label>
                                     <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
                                     <span class="text-danger">
                                         <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
                                     <label class="form_lbl">Batch No.<b style="color: red; font-size:16px;">*</b></label>
                                     <input type="text" placeholder="Enter Batch Number" class="bactchNumber form-control" name="batch_row[${b_m}][bactchNumber]" id="bactchNumber${b_m}" onkeyup="bactchNumberFn(this)" onblur="checkDuplicatesFn(this)"/>
                                     <span class="text-danger">
                                         <strong id="bs-batchno-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                     <label class="form_lbl">Quantity<b style="color: red; font-size:16px;">*</b></label>
                                     <input type="number" placeholder="Enter Quantity" class="bactchQuantity form-control" name="batch_row[${b_m}][bactchQuantity]" id="bactchQuantity${b_m}" onkeyup="bactchQuantityFn(this)" onkeypress="return ValidateOnlyNum(event);"/>
                                     <span class="text-danger">
                                         <strong id="bs-batchqty-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                     <label class="form_lbl">Manufacturing Date</label>
                                     <input type="text" id="bsManufactureDate${b_m}" name="batch_row[${b_m}][bsManufactureDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsManufactureDateFn(this)"/>
                                     <span class="text-danger">
                                         <strong id="bs-manufacture-date-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
-                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
+                                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
                                     <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
                                     <input type="text" id="bsExpiryDate${b_m}" name="batch_row[${b_m}][bsExpiryDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsExpiryDateFn(this)"/>
                                     <span class="text-danger">
@@ -776,8 +780,8 @@
                             </div>
                         
                             <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-1rem !important;">
-                                <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
-                                <div class="col-xl-4 col-lg-8 col-md-8 col-sm-10 col-12 mb-1">
+                                <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-8 mb-1">
                                     <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table fit-content" style="width:100%;">
                                         <thead>
                                             <tr>
@@ -790,7 +794,7 @@
                                     </table>
                                     <button type="button" name="batch_row[${b_m}][add_serial_no]" id="add_serial_no${b_m}" class="btn btn-success btn-sm" onclick="addSerialNumberFn(${b_m})"><i class="fa fa-plus" aria-hidden="true"></i>  Add Serial No.</button>
                                 </div>
-                                <div class="col-xl-4 col-lg-2 col-md-2 col-sm-1 col-0 mb-1"></div>
+                                <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
                             </div>
                         </td>
                         <td style="width:2%;position:relative;vertical-align: top;">

@@ -12,7 +12,7 @@
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: left !important;align-items: center;padding: 10px 5px;">
-                                            <h3 class="card-title form_title">Brand & Model</h3>
+                                            <h3 class="card-title form_title">Brands</h3>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: right !important;align-items: center;padding: 10px 5px;">
                                             <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-sm" onclick="refreshBrandDataFn()"><i class="fas fa-sync-alt"></i></button>
@@ -51,7 +51,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title form_title">Brand & Model Information</h4>
+                    <h4 class="modal-title form_title">Brand Information</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -106,7 +106,7 @@
                                             <tr>
                                                 <th style="display: none;"></th>
                                                 <th style="width: 5%">#</th>
-                                                <th style="width: 35%">Model Name</th>
+                                                <th style="width: 35%">Generic Name</th>
                                                 <th style="width: 40%">Description</th>
                                                 <th style="width: 20%">Status</th>
                                             </tr>
@@ -153,16 +153,34 @@
                     {{ csrf_field() }}
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <label class="form_lbl">Country/ Origin<b style="color: red; font-size:16px;">*</b></label>
+                                <select class="select2 form-control" name="country" id="country" onchange="countryFn()">
+                                    @foreach ($countries as $country)
+                                        <option value="{{$country->id}}">{{$country->Name}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger">
+                                    <strong class="errordatalabel" id="country-error"></strong>
+                                </span>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                <label class="form_lbl">Manufacturer<b style="color: red; font-size:16px;">*</b></label>
+                                <input type="text" id="manufacturer" placeholder="Enter manufacturer here" class="form-control reg_form" name="manufacturer" onkeypress="manufactuterFn()"/>
+                                <span class="text-danger">
+                                    <strong class="errordatalabel" id="manufacturer-error"></strong>
+                                </span>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                 <label class="form_lbl">Brand Name<b style="color: red; font-size:16px;">*</b></label>
-                                <input type="text" id="Name" placeholder="Brand Name" class="form-control reg_form" name="Name" onkeypress="brandFn()"/>
+                                <input type="text" id="Name" placeholder="Enter brand name here" class="form-control reg_form" name="Name" onkeypress="brandFn()"/>
                                 <span class="text-danger">
                                     <strong class="errordatalabel" id="name-error"></strong>
                                 </span>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                 <label class="form_lbl">Description</label>
-                                <textarea type="text" placeholder="Write Description here..." class="form-control reg_form" rows="1" name="description" id="description" onkeyup="descriptionFn()"></textarea>
+                                <textarea type="text" placeholder="Enter description here..." class="form-control reg_form" rows="1" name="description" id="description" onkeyup="descriptionFn()"></textarea>
                                 <span class="text-danger">
                                     <strong class="errordatalabel" id="description-error"></strong>
                                 </span>
@@ -186,7 +204,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="form_lbl" style="width:5%;">#</th>
-                                                <th class="form_lbl" style="width:30%">Model Name<b style="color: red; font-size:16px;">*</b></th>
+                                                <th class="form_lbl" style="width:30%" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl" style="width:40%">Description</th>
                                                 <th class="form_lbl" style="width:20%">Status<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl" style="width:5%"></th>
@@ -222,9 +240,6 @@
     <script  type="text/javascript">
         var errorcolor = "#ffcccc";
         var globalIndex = -1;
-        $(function () {
-            cardSection = $('#page-block');
-        });
 
         var j = 0;
         var i = 0;
@@ -258,19 +273,8 @@
                     },
                     url: '/branddata',
                     type: 'DELETE',
-                    beforeSend: function () { 
-                        cardSection.block({
-                            message:
-                                '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                            css: {
-                                backgroundColor: 'transparent',
-                                color: '#fff',
-                                border: '0'
-                            },
-                            overlayCSS: {
-                                opacity: 0.5
-                            }
-                        });
+                    beforeSend: function () {
+                        blockPage(cardSection, 'Loading brand data...');
                     },
                     complete: function () { 
                         setFocus('#laravel-datatable-crud');
@@ -311,16 +315,7 @@
                         });
                     });
                     
-                    cardSection.block({
-                        message:
-                        '',
-                        timeout: 1,
-                        css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                        }, 
-                    });     
+                    unblockPage(cardSection);
                     $("#main-datatable").show();
                 },
                 fixedHeader: {
@@ -343,7 +338,7 @@
 
         $("#addbrand").click(function() {
             resetBrandFormFn();
-            $("#brandformtitle").html("Add Brand & Model");
+            $("#brandformtitle").html("Add Brand");
             $("#inlineForm").modal('show');
         });
 
@@ -357,41 +352,30 @@
                 type:'POST',
                 data:formData,
                 beforeSend:function(){
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
-                    if(parseFloat(optype)==1){
+                    var operation_type = "";
+                    if(parseFloat(optype) == 1){
                         $('#savebutton').text('Saving...');
                         $('#savebutton').prop("disabled", true);
+                        operation_type = "Saving brand data...";
                     }
-                    else if(parseFloat(optype)==2){
+                    else if(parseFloat(optype) == 2){
                         $('#savebutton').text('Updating...');
                         $('#savebutton').prop("disabled", true);
+                        operation_type = "Updating brand data...";
                     }
+                    blockPage(cardSection,operation_type);
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection); 
                 },
                 success:function(data) {
                     if(data.errors) {
+                        if(data.errors.country){
+                            $('#country-error').html(data.errors.country[0]);
+                        }
+                        if(data.errors.manufacturer){
+                            $('#manufacturer-error').html(data.errors.manufacturer[0]);
+                        }
                         if(data.errors.Name){
                             $('#name-error').html(data.errors.Name[0]);
                         }
@@ -399,11 +383,11 @@
                             $('#status-error').html(data.errors.status[0]);
                         }
 
-                        if(parseFloat(optype)==1){
+                        if(parseFloat(optype) == 1){
                             $('#savebutton').text('Save');
                             $('#savebutton').prop("disabled", false);
                         }
-                        else if(parseFloat(optype)==2){
+                        else if(parseFloat(optype) == 2){
                             $('#savebutton').text('Update');
                             $('#savebutton').prop("disabled", false);
                         }
@@ -493,18 +477,7 @@
                 url: "{{url('getbrandmodel')}}"+'/'+recordId,
                 dataType: "json",
                 beforeSend: function () { 
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Fetching brand record...');
                 },
                 complete: function () { 
                     fetchModelDataFn(recordId);   
@@ -622,16 +595,7 @@
                     },
                 ],
                 drawCallback: function(settings) {
-                    cardSection.block({
-                        message:
-                        '',
-                        timeout: 1,
-                        css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                        }, 
-                    });     
+                    unblockPage(cardSection);   
                     $('#model_div').show();
                 },
             });
@@ -674,37 +638,19 @@
                 url: "{{url('getbrandmodel')}}"+'/'+recordId,
                 dataType: "json",
                 beforeSend: function () { 
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Fetching brand record...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                        '',
-                        timeout: 1,
-                        css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                        }, 
-                    });     
+                    unblockPage(cardSection);     
                 },
                 success: function (data) {
                     $.each(data.brandinfo, function(key, value) {
-                    $('#Name').val(value.Name);
-                    $('#description').val(value.description);
-                    $('#status').val(value.ActiveStatus).select2({minimumResultsForSearch: -1});
-                    $('#recordId').val(value.id);
+                        $('#country').val(value.countries_id).select2();
+                        $('#manufacturer').val(value.manufacturer);
+                        $('#Name').val(value.Name);
+                        $('#description').val(value.description);
+                        $('#status').val(value.ActiveStatus).select2({minimumResultsForSearch: -1});
+                        $('#recordId').val(value.id);
                     });
 
                     $.each(data.modeldata, function(key, value) {
@@ -714,8 +660,8 @@
                         $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
                             <td style="font-weight:bold;width:5%;text-align:center;">${j}</td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                            <td style="width:30%;"><input type="text" name="row[${m}][ModelName]" placeholder="Write model name here..." id="ModelName${m}" class="ModelName form-control" onkeyup="modelNameFn(this)" value="${value.Name}"/></td>
-                            <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Write description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)" value="${value.description != null ? value.description : ""}"/></td>
+                            <td style="width:30%;"><input type="text" name="row[${m}][ModelName]" placeholder="Enter generic/model name here..." id="ModelName${m}" class="ModelName form-control" onkeyup="modelNameFn(this)" value="${value.Name}"/></td>
+                            <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Enter description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)" value="${value.description != null ? value.description : ""}"/></td>
                             <td style="width:20%;"><select id="Status${m}" class="select2 form-control Status" name="row[${m}][Status]" onchange="dynamicStatusFn(this)"></select></td>
                             <td style="width:5%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
                         </tr>`);
@@ -738,7 +684,7 @@
             $('#savebutton').show();
 
             $('#operationType').val(2);
-            $('#brandformtitle').html("Edit Brand & Model");
+            $('#brandformtitle').html("Edit Brand");
             $('#inlineForm').modal('show');
         }
 
@@ -757,8 +703,8 @@
                 $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
                     <td style="font-weight:bold;width:5%;text-align:center;">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                    <td style="width:30%;"><input type="text" name="row[${m}][ModelName]" placeholder="Write model name here..." id="ModelName${m}" class="ModelName form-control" onkeyup="modelNameFn(this)"/></td>
-                    <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Write description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)"/></td>
+                    <td style="width:30%;"><input type="text" name="row[${m}][ModelName]" placeholder="Enter generic/model name here..." id="ModelName${m}" class="ModelName form-control" onkeyup="modelNameFn(this)"/></td>
+                    <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Enter description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)"/></td>
                     <td style="width:20%;"><select id="Status${m}" class="select2 form-control Status" name="row[${m}][Status]" onchange="dynamicStatusFn(this)"></select></td>
                     <td style="width:5%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
                 </tr>`);
@@ -789,6 +735,14 @@
         function refreshBrandDataFn(){
             var oTable = $('#laravel-datatable-crud').dataTable();
             oTable.fnDraw(false);
+        }
+
+        function countryFn() {
+            $('#country-error').html("");
+        }
+
+        function manufactuterFn() {
+            $('#manufacturer-error').html("");
         }
 
         function brandFn() {
@@ -847,30 +801,10 @@
                 type: 'DELETE',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Deleting brand...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);   
                 },
                 success: function(data) {
                     if(data.errors){
@@ -890,8 +824,11 @@
         }
 
         function resetBrandFormFn(){
-            $('#status').val("Active").select2
-            ({
+            $('#country').val(null).select2({
+                placeholder: "Select country/origin here",
+            });
+
+            $('#status').val("Active").select2({
                 placeholder: "Select status here",
                 minimumResultsForSearch: -1
             });

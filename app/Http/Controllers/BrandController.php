@@ -19,19 +19,19 @@ class BrandController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
+        $countries = DB::select('SELECT * FROM country ORDER BY country.Name ASC');
+        $brand_data = ['countries' => $countries];
         if($request->ajax()) {
-            return view('registry.brand')->renderSections()['content'];
+            return view('registry.brand',$brand_data)->renderSections()['content'];
         }
         else{
-            return view('registry.brand');
+            return view('registry.brand',$brand_data);
         }
     }
 
-    public function showBrandData()
-    {
-        $brand=DB::select('SELECT * FROM brands WHERE brands.IsDeleted=1 ORDER BY brands.id DESC');
+    public function showBrandData(){
+        $brand = DB::select('SELECT * FROM brands WHERE brands.IsDeleted=1 ORDER BY brands.id DESC');
         if(request()->ajax()) {
             return datatables()->of($brand)
             ->addIndexColumn()
@@ -78,12 +78,22 @@ class BrandController extends Controller
         $findid = $request->recordId;
         $modeldata = [];
         $validator = Validator::make($request->all(), [
-            'Name' => ['required','max:255','min:2',Rule::unique('brands')->ignore($findid)],
+            'country' => ['required'],
+            'manufacturer' => ['required','string'],
+            'Name' => [
+                'required',
+                'max:255',
+                'min:2',
+                Rule::unique('brands')->where(function ($query) use ($request) {
+                    return $query->where('countries_id', $request->country)
+                                ->where('manufacturer', $request->manufacturer)
+                                ->where('Name', $request->Name);
+                })->ignore($findid)
+            ],
             'status' => ['required','string','max:255','min:2'],
         ]);
 
         $rules = array(
-            //'row.*.ModelName' => 'required|distinct',
             'row.*.ModelName' => [
                 'required',
                 'distinct',
@@ -98,6 +108,8 @@ class BrandController extends Controller
             DB::beginTransaction();
             try{
                 $BasicVal = [
+                    'countries_id' => $request->country,
+                    'manufacturer' => $request->manufacturer,
                     'Name' => $request->Name,
                     'description' => $request->description,
                     'ActiveStatus' => $request->status,

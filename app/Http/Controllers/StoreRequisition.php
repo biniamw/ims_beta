@@ -1176,7 +1176,7 @@ class StoreRequisition extends Controller
                     'PreparedDate' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
                 ];
 
-                $CreateData = ['Status'=>"Pending",'Date'=>Carbon::today()->toDateString()];
+                $CreateData = ['Status'=>"Pending",'Date'=> Carbon::today()->toDateString()];
                 $UpdateData = ['updated_at'=>Carbon::now()];
 
                 $recpropdb = dispatchparent::updateOrCreate(['id' => $findid],

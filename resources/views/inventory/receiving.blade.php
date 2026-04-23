@@ -360,7 +360,7 @@
                                                             <h6 class="card-title mb-0"><i class="fas fa-dolly"></i> Purchase Information</h6>
                                                             <hr class="my-50">
                                                             <div class="row">
-                                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
                                                                             <td colspan="2" class="text-center"><b><u>Source Information</u></b></td>
@@ -379,7 +379,7 @@
                                                                         </tr>
                                                                     </table>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
                                                                             <td colspan="2" class="text-center"><b><u>Supplier Information</u></b></td>
@@ -414,7 +414,7 @@
                                                                         </tr>
                                                                     </table>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12 receipt_data_cl">
+                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 receipt_data_cl">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
                                                                             <td colspan="2" class="text-center"><b><u>Receipt Information</u></b></td>
@@ -741,26 +741,26 @@
                                 <fieldset class="fset">
                                     <legend>Purchase Data</legend>
                                     <div class="row">
-                                        <div class="col-xl-7 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                        <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                             <div class="divider" style="margin-top:-1rem;">
                                                 <div class="divider-text"><b>Source Data</b></div>
                                             </div>
                                             <div class="row" style="margin-top:-1rem;">
-                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                                     <label class="form_lbl">Reference Type<b style="color: red; font-size:16px;">*</b></label>
                                                     <select class="select2 form-control" name="ReferenceType" id="ReferenceType"></select>
                                                     <span class="text-danger">
                                                         <strong id="reference-type-error" class="errordatalabel purchase_error"></strong>
                                                     </span>
                                                 </div>
-                                                <div class="col-xl-5 col-lg-12 col-md-6 col-sm-6 col-12 mb-1 reference_doc default_hidden_div" id="reference_doc_div">
+                                                <div class="col-xl-5 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 reference_doc default_hidden_div" id="reference_doc_div">
                                                     <label class="form_lbl" title="Reference">Reference<b style="color: red; font-size:16px;">*</b></label>
                                                     <select class="select2 form-control" name="Reference" id="Reference"></select>
                                                     <span class="text-danger">
                                                         <strong id="reference-doc-error" class="errordatalabel purchase_error"></strong>
                                                     </span>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="product_type_div">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="product_type_div">
                                                     <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
                                                     <select class="select2 form-control" name="ProductType" id="ProductType" onchange="productTypeFn()">
                                                     </select>
@@ -782,19 +782,19 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-xl-5 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                        <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                             <div class="divider" style="margin-top:-1rem;">
                                                 <div class="divider-text"><b>Supplier Data</b></div>
                                             </div>
                                             <div class="row" style="margin-top:-1rem;">
-                                                <div class="col-xl-7 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                                <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-12 mb-1">
                                                     <label class="form_lbl">Supplier<b style="color: red; font-size:16px;">*</b></label>
                                                     <select class="select2 form-control purchase_select" name="supplier" id="supplier" onchange="supplierVal()"></select>
                                                     <span class="text-danger">
                                                         <strong id="supplier-error" class="errordatalabel purchase_error"></strong>
                                                     </span>
                                                 </div>
-                                                <div class="col-xl-5 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="document_no_div">
+                                                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 mb-1" id="document_no_div">
                                                     <label class="form_lbl" title="Document Number">Document No.</label>
                                                     <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Write document number here" class="form-control mainforminp purchase_input" onkeyup="docNumberFn()"/>
                                                     <span class="text-danger">
@@ -828,7 +828,7 @@
                                                         <strong id="paymentType-error" class="errordatalabel purchase_error receipt_error"></strong>
                                                     </span>
                                                 </div>
-                                                <div class="col-xl-2 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
+                                                <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                                     <label id="invoice_deliver_lbl" class="form_lbl">Date<b style="color: red; font-size:16px;">*</b></label>
                                                     <input type="text" id="date" name="date" class="form-control flatpickr-basic mainforminp purchase_input receipt_input" placeholder="YYYY-MM-DD" onchange="dateVal()"/>
                                                     <span class="text-danger">
@@ -872,6 +872,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </fieldset>
                             </div>
@@ -894,14 +895,14 @@
                                                 <strong id="req-number-error" class="errordatalabel production_error"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-3 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Delivered By</label>
                                             <input type="text" name="ProductionDeliveredBy" id="ProductionDeliveredBy" placeholder="Write Name here" class="form-control mainforminp production_input" onkeyup="prdDeliveredByFn()"/>
                                             <span class="text-danger">
                                                 <strong id="prd-deliveredby-error" class="errordatalabel production_error"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                            <label class="form_lbl">Production Date</label>
                                             <input type="text" name="ProductionDate" id="ProductionDate" placeholder="YYYY-MM-DD" class="form-control mainforminp production_input" onchange="productionDateFn()"/>
                                             <span class="text-danger">
@@ -916,7 +917,7 @@
                                 <fieldset class="fset">
                                     <legend>General Data</legend>
                                     <div class="row">  
-                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Station<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="store" id="store" onchange="stationFn()">
                                                 <option selected disabled value=""></option>
@@ -928,7 +929,7 @@
                                                 <strong id="store-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Received By<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="ReceivedBy" id="ReceivedBy" onchange="recievedByFn()">
                                                 <option selected disabled value=""></option>
@@ -940,14 +941,14 @@
                                                 <strong id="receivedby-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                            <label class="form_lbl">Received Date<b style="color: red; font-size:16px;">*</b></label>
                                             <input type="text" name="ReceivedDate" id="ReceivedDate" placeholder="YYYY-MM-DD" class="form-control mainforminp" onchange="receivedDateFn()"/>
                                             <span class="text-danger">
                                                 <strong id="received-date-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Remark</label>
                                             <textarea type="text" placeholder="Write remark here..." class="form-control mainforminp" name="Memo" id="Memo" rows="1"></textarea>
                                             <span class="text-danger">
@@ -979,7 +980,7 @@
                                                 <strong id="deliveredby-error" class="errordatalabel purchase_error"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl" title="Plate Number">Plate No.</label>
                                             <input type="text" name="PlateNumber" id="PlateNumber" placeholder="Write Truck plate number here" class="form-control mainforminp purchase_input" onkeyup="plateNumFn()" style="text-transform:uppercase"/>
                                             <span class="text-danger">
@@ -1035,8 +1036,8 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-xl-9 col-lg-8 col-md-6 col-sm-5 col-12"></div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-7 col-12" style="text-align: right;">
+                            <div class="col-xl-9 col-lg-8 col-md-5 col-sm-5 col-12"></div>
+                            <div class="col-xl-3 col-lg-4 col-md-7 col-sm-7 col-12" style="text-align: right;">
                                 <table style="width:100%;" id="pricingTable" class="rtable cost_visibility_div unorder_price_div prd_price_con">
                                     <tr>
                                         <td style="text-align: right;width:45%">
@@ -2838,12 +2839,12 @@
                         if(parseInt(optype) == 1){
                             $('#savebutton').text('Saving...');
                             $('#savebutton').prop("disabled", true);
-                            progress_text = "Saving...";
+                            progress_text = "Saving receiving";
                         }
                         else if(parseInt(optype) == 2){
                             $('#savebutton').text('Updating...');
                             $('#savebutton').prop("disabled", true);
-                            progress_text = "Updating...";
+                            progress_text = "Updating receiving";
                         }
 
                         blockPage(cardSection,progress_text);
@@ -3214,14 +3215,12 @@
             var reference_option = $("#ReferenceTypeDefault");
 
             if(receivng_md == 0){
-                //$('#ReferenceType').empty().append(reference_option.find(`option[value!="505"]`).clone());
                 $('#ReferenceType').empty().append(reference_option.find(`option[value="503"]`).clone());
                 $('#ReferenceType').trigger('change').select2({minimumResultsForSearch: -1});
                 $('.cost_visibility_div').show(); 
             }
             else if(receivng_md == 1){
-                $('#ReferenceType').empty().append(reference_option.find(`option[value!=505]`).clone());
-                //$('#ReferenceType').empty().append(reference_option.find(`option[value!=503]`).clone());
+                $('#ReferenceType').empty().append(reference_option.find(`option[value!=503]`).clone());
                 //$('.cost_visibility_div').hide(); 
 
                 $('#ReferenceType').val(null).select2({
@@ -3527,30 +3526,10 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Settling withholding...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);    
                 },
                 success: function(data) {
                     if (data.recerror) {
@@ -3664,7 +3643,7 @@
                 url: "{{url('recevingedit')}}"+"/"+recIdVar,
                 dataType: "json",
                 beforeSend: function () { 
-                    blockPage(cardSection, 'Fetching receiving data...');
+                    blockPage(cardSection, 'Fetching receiving record...');
                 },
                 complete: function () {
                     unblockPage(cardSection);    
@@ -4138,7 +4117,7 @@
                 url: "{{url('showRecDataRec')}}"+'/'+recordId,
                 dataType: "json",
                 beforeSend: function () { 
-                    blockPage(cardSection, 'Fetching receiving data...');                    
+                    blockPage(cardSection, 'Fetching receiving record...');                    
                 },
                 complete: function () {
                     visibilitymode = parseInt(vStatus) == 1 ? true : false;
@@ -4491,7 +4470,7 @@
                 },
                 autoWidth: false,
                 deferRender: true,
-                dom: "<'row'<'col-sm-4 col-md-2 col-5 ml-0'f><'col-sm-8 col-md-10 col-7 mt-2 d-flex justify-content-end expand-collapse-class'>>" +
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end expand-collapse-class'>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
                 ajax: {
@@ -4511,7 +4490,7 @@
                         orderable: false,
                         "render": function ( data, type, row, meta ) {
                             if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
-                                return '<i class="fas fa-caret-right fa-xl"></i>';
+                                return `<i title="Show batch number, serial number, expiry date under ${row.ItemName} item!" class="fas fa-caret-right fa-xl"></i>`;
                             }
                         },
                         createdCell: function (td, row, data) {
@@ -4599,7 +4578,7 @@
                                                 onclick="mngBatchSerialExpireFn(${row.id},${row.HeaderId},${row.ItemId},${row.Quantity},${row.trn_type})" 
                                                 data-id="addsernum${row.id}" 
                                                 id="addsernum${row.id}" 
-                                                title="add batch number, serial number, expire date for ${row.ItemName} item!">
+                                                title="Add batch number, serial number, expiry date for ${row.ItemName} item!">
                                                 <i class="fa fa-plus fa-xl" style="color:${fore_color};"></i>
                                             </a>
                                         </div>`;
@@ -4996,30 +4975,10 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Showing receiving record...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);   
                 },
                 success: function(data) {
                     if (data.dberrors) {
@@ -5068,30 +5027,10 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Hiding receiving record...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);     
                 },
                 success: function(data) {
                     if (data.dberrors) {
@@ -5152,30 +5091,10 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                            backgroundColor: 'transparent',
-                            color: '#fff',
-                            border: '0'
-                        },
-                        overlayCSS: {
-                            opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Forwarding receiving record...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                                backgroundColor: '',
-                                color: '',
-                                border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection); 
                 },
                 success: function(data) {
                     if (data.dberrors) {
@@ -5232,33 +5151,14 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                            backgroundColor: 'transparent',
-                            color: '#fff',
-                            border: '0'
-                        },
-                        overlayCSS: {
-                            opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Backwarding receiving record...');
 
                     $('#backwardActionBtn').text('Changing...');
                     $('#backwardActionBtn').prop("disabled", true);
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                                backgroundColor: '',
-                                color: '',
-                                border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);
+
                     $('#backwardActionBtn').text(btntxt);
                     $('#backwardActionBtn').prop("disabled", false);
                 },
@@ -5385,7 +5285,7 @@
                             type: 'POST',
                             data: formData,
                             beforeSend: function() {
-                                blockPage(cardSection, 'Voiding...');
+                                blockPage(cardSection, 'Voiding receiving record...');
                                 $('#voidbtn').text('Voiding...');
                                 $('#voidbtn').prop("disabled", true);
                             },
@@ -5508,7 +5408,7 @@
                             type: 'POST',
                             data: formData,
                             beforeSend: function() {
-                                blockPage(cardSection, 'Changing...');
+                                blockPage(cardSection, 'Restoring receiving record...');
                             },
                             complete: function () { 
                                 unblockPage(cardSection);    
@@ -5951,30 +5851,10 @@
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection, 'Unsettling withholding...');
                 },
                 complete: function () { 
-                    cardSection.block({
-                        message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            }, 
-                    });     
+                    unblockPage(cardSection);   
                 },
                 success: function(data) {
                     if (data.dberrors) {

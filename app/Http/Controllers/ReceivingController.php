@@ -26,6 +26,7 @@ use App\Models\documents;
 use App\Models\batches;
 use App\Models\batch_inventory;
 use App\Models\serial_number;
+use App\Models\batch_serial_transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -1184,8 +1185,7 @@ class ReceivingController extends Controller
         return response()->json(['holdHeader'=>$holdHeader,'count'=>$getCountItem,'pricing'=>$pricing,'getcountRec'=>$getcountRec,'pricingsett'=>$pricingsett,'getids'=>$getids,'allValues'=>$allValues,'diffValues'=>$diffValues,'fyear'=>$fyear,'fyearstr'=>$fiscalyearstr,'activitydata'=>$activitydata,'product_type' => $product_type,'can_change_srctype' => $can_change_srctype,'sold_issued'=>$sold_issued,'is_sold' => $is_sold]);       
     }
 
-    public function showRecDataConSett($id,$sids)
-    {
+    public function showRecDataConSett($id,$sids){
         $ids=$id;
         $selectedids=$sids;
         $selectedid = is_array($selectedids) ? $selectedids : [$selectedids];
@@ -1271,8 +1271,7 @@ class ReceivingController extends Controller
         return response()->json(['holdHeader'=>$holdHeader,'count'=>$getCountItem,'pricing'=>$pricing,'getcountRec'=>$getcountRec,'pricingsett'=>$pricingsett,'getids'=>$getids,'selectedids'=>$sids,'allVal'=>$allVal,'diffVal'=>$diffVal,'getcountRec'=>$getcountRec,'getcountSettRec'=>$getcountSettRec,'getcountUnSettRec'=>$getcountUnSettRec]);       
     }
 
-    public function showRecDataConUnSett($id,$sids)
-    {
+    public function showRecDataConUnSett($id,$sids){
         $ids=$id;
         $selectedids=$sids;
         $selectedid = is_array($selectedids) ? $selectedids : [$selectedids];
@@ -1325,8 +1324,7 @@ class ReceivingController extends Controller
         return response()->json(['holdHeader'=>$holdHeader,'count'=>$getCountItem,'pricing'=>$pricing,'getcountRec'=>$getcountRec,'pricingsett'=>$pricingsett,'getids'=>$getids,'selectedids'=>$sids,'allVal'=>$allVal,'diffVal'=>$diffVal,'diffValReceipt'=>$diffValReceipt,'with'=>$withReceipt]);       
     }
 
-    public function showRecDataConSep($id)
-    {
+    public function showRecDataConSep($id){
         $ids=$id;
         $columnName="id";
         $person="Person";
@@ -1367,8 +1365,7 @@ class ReceivingController extends Controller
         return response()->json(['holdHeader'=>$holdHeader,'count'=>$getCountItem,'pricing'=>$pricing,'pricingsingle'=>$pricingsingle,'getcountRec'=>$getcountRec]);       
     }
 
-    public function showMRCSCon($suppId)
-    {
+    public function showMRCSCon($suppId){
         $mrc = DB::select('SELECT MRCNumber FROM customers WHERE customers.id='.$suppId.' UNION SELECT MRCNumber FROM mrcs WHERE CustomerId='.$suppId.' AND ActiveStatus="Active" AND IsDeleted=1');
         return response()->json(['mrc'=>$mrc]);  
     }
@@ -2184,23 +2181,6 @@ class ReceivingController extends Controller
         ->make(true);
     }
 
-    public function showHoldDetailData($id)
-    {
-        $HeaderId=$id;
-        $columnName="HeaderId";
-        $detailTable=DB::select('SELECT receivingholddetails.id,receivingholddetails.ItemId,receivingholddetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,uoms.Name AS UOM,regitems.SKUNumber AS SKUNumber,uoms.Name AS UOM,receivingholddetails.Quantity,receivingholddetails.UnitCost,receivingholddetails.BeforeTaxCost,receivingholddetails.TaxAmount,receivingholddetails.TotalCost FROM receivingholddetails INNER JOIN regitems ON receivingholddetails.ItemId=regitems.id INNER JOIN uoms ON receivingholddetails.NewUOMId=uoms.id where receivingholddetails.HeaderId='.$HeaderId);
-        return datatables()->of($detailTable)
-        ->addIndexColumn()
-            ->addColumn('action', function($data)
-            {     
-                $btn = ' <a data-id="'.$data->id.'" data-HeaderId="'.$data->HeaderId.'" data-uom="'.$data->UOM.'" class="btn btn-icon btn-gradient-info btn-sm editHoldItem" data-toggle="modal" id="mediumButton" style="color: white;" title="Edit Record"><i class="fa fa-edit"></i></a>';
-                $btn = $btn.' <a data-id="'.$data->id.'" data-hid="'.$data->HeaderId.'" data-toggle="modal" id="smallButton" class="btn btn-icon btn-gradient-danger btn-sm" data-target="#holdremovemodal" data-attr="" style="color: white;" title="Delete Record"><i class="fa fa-trash"></i></a>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
-
     public function showRecDetailData($id){
         //$detailTable = DB::select('SELECT receivingdetails.id,receivingdetails.HeaderId,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,receivingdetails.Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost,regitems.RequireSerialNumber,regitems.RequireExpireDate,1 AS trn_type,receivingdetails.is_fully_entered,receivingdetails.entered_qty,receivings.Status FROM receivingdetails LEFT JOIN regitems ON receivingdetails.ItemId=regitems.id LEFT JOIN uoms ON receivingdetails.NewUOMId=uoms.id LEFT JOIN receivings ON receivingdetails.HeaderId=receivings.id WHERE receivingdetails.HeaderId='.$id.' ORDER BY receivingdetails.id ASC');
 
@@ -2678,6 +2658,7 @@ class ReceivingController extends Controller
             $docnum = $rec->DocumentNumber;
             $product_type = $rec->ProductType;
             $fiscalyr = $rec->fiscalyear;
+            $store_id = $rec->StoreId;
             
             if($newStatus == "Checked" || $newStatus == "Confirmed"){
 
@@ -2696,8 +2677,47 @@ class ReceivingController extends Controller
                 if($newStatus == "Confirmed"){
                     $rec->ConfirmedBy = $user;
                     $rec->ConfirmedDate = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+                    
                     if($product_type == "Goods"){
                         $syncToTransactions = DB::select('INSERT INTO transactions(HeaderId,ItemId,StockIn,UnitCost,BeforeTaxCost,TaxAmountCost,TotalCost,StoreId,TransactionType,ItemType,DocumentNumber,TransactionsType,FiscalYear,Date)SELECT HeaderId,ItemId,Quantity,UnitCost,BeforeTaxCost,TaxAmount,TotalCost,StoreId,TransactionType,ItemType,"'.$docnum.'","Receiving","'.$fiscalyr.'","'.Carbon::now()->toDateString().'" FROM receivingdetails WHERE receivingdetails.HeaderId='.$findid);
+
+                        $batch_db_data = [];
+                        $serial_db_data = [];
+                        $batch_data = DB::select('SELECT batch_inventories.* FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id WHERE batches.source_type="receiving" AND batches.source_id='.$findid);
+                        foreach($batch_data as $batch_row){
+                            $batch_db_data[] = [
+                                "batches_id" => $batch_row->batches_id,
+                                "in_quantity" => $batch_row->received_qty,
+                                "stores_id" => $store_id,
+                                "reference_id" => $findid,
+                                "reference_number" => $docnum,
+                                "transaction_type" => "receiving",
+                                "transaction_date" => Carbon::now()->toDateString(),
+                                "is_batch_or_serial" => "batch",
+                                "created_at" => Carbon::now(),
+                                "updated_at" => Carbon::now(),
+                            ];
+
+                            $serial_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.batches_id='.$batch_row->batches_id);
+                            foreach($serial_data as $serial_row){
+                                $serial_db_data[] = [
+                                    "batches_id" => $serial_row->batches_id,
+                                    "serial_number_id" => $serial_row->id,
+                                    "in_quantity" => 1,
+                                    "stores_id" => $store_id,
+                                    "reference_id" => $findid,
+                                    "reference_number" => $docnum,
+                                    "transaction_type" => "receiving",
+                                    "transaction_date" => Carbon::now()->toDateString(),
+                                    "is_batch_or_serial" => "serial",
+                                    "created_at" => Carbon::now(),
+                                    "updated_at" => Carbon::now(),
+                                ];
+                            }
+                        }
+
+                        DB::table('batch_serial_transactions')->insert($batch_db_data);
+                        DB::table('batch_serial_transactions')->insert($serial_db_data);
                     }
                     else if($product_type == "Commodity"){
                         $insertToTransaction = DB::select('INSERT INTO transactions(HeaderId,woredaId,uomId,CommodityType,Grade,ProcessType,CropYear,StockInComm,StockInFeresula,ItemType,FiscalYear,Memo,StoreId,TransactionType,TransactionsType,Date,customers_id,LocationId,ArrivalDate,SupplierId,GrnNumber,CertNumber,ProductionNumber,StockInNumOfBag,DocumentNumber,VarianceShortage,VarianceOverage,BagWeight,TotalKg,UnitCostComm,TotalCostComm,TaxCostComm,GrandTotalCostComm) SELECT '.$findid.',CommodityId,DefaultUOMId,woredas.Type,Grade,ProcessType,CropYear,NetKg,ROUND((NetKg/17),2),ItemType,'.$fiscalyr.',Memo,'.$rec->StoreId.',"Receiving","Receiving","'.Carbon::now().'",'.$rec->CustomerOrOwner.',LocationId,"'.$rec->ReceivedDate.'",'.$rec->CustomerId.',"'.$rec->DocumentNumber.'","N/A","N/A",NumOfBag,"'.$rec->DocumentNumber.'",VarianceShortage,VarianceOverage,BagWeight,TotalKg,UnitCost,BeforeTaxCost,TaxAmount,TotalCost FROM receivingdetails LEFT JOIN woredas ON receivingdetails.CommodityId=woredas.id WHERE receivingdetails.HeaderId='.$findid);
@@ -3525,6 +3545,8 @@ class ReceivingController extends Controller
         $serial_number_list = [];
         $duplicate_serial_number_row = [];
         $item_data = Regitem::find($item_id);
+        $store_id = null;
+        $reference_number = null;
 
         $batchRules = array(
             'batch_row.*.bsBrand' => 'required',
@@ -3544,6 +3566,8 @@ class ReceivingController extends Controller
         if($transaction_type == 1){
             $source_data = receiving::find($header_id);
             $status = $source_data->Status;
+            $store_id = $source_data->StoreId;
+            $reference_number = $source_data->DocumentNumber;
             $source_type = "receiving";
         }
 
@@ -3610,7 +3634,7 @@ class ReceivingController extends Controller
                 $is_fully_inserted = 0;
 
                 $batchRowCollection = collect($request->batch_row);
-                $batchRowCollection->chunk(100)->each(function($chunkedBatchRows) use ($request, $item_id, $header_id, $source_type, &$submitted_ids, &$serial_number_count, &$submitted_ser_ids) {
+                $batchRowCollection->chunk(100)->each(function($chunkedBatchRows) use ($request, $item_id, $header_id, $source_type,$store_id,$reference_number,$status, &$submitted_ids, &$serial_number_count, &$submitted_ser_ids) {
                     foreach ($chunkedBatchRows as $batch_key => $batch_value) {
                         $batch_row_id = $batch_value['batch_index_col'] ?? 0;
 
@@ -3664,6 +3688,23 @@ class ReceivingController extends Controller
                             array_merge($common_batch_data, $db_batch_inv_data ? $edited_batch_data : $permanent_batch_data)
                         );
 
+                        if($status == "Confirmed"){
+                            batch_serial_transaction::updateOrCreate([
+                                'batches_id' => $batch_parent->id,
+                                'is_batch_or_serial' => "batch",
+                                'transaction_type' => $source_type
+                            ],[
+                                'batches_id' => $batch_parent->id,
+                                'stores_id' => $store_id,
+                                'reference_id' => $header_id,
+                                'reference_number' => $reference_number,
+                                'transaction_type' => $source_type,
+                                'transaction_date' => Carbon::today()->toDateString(),
+                                'is_batch_or_serial' => "batch",
+                                'in_quantity' => $batch_value['bactchQuantity']
+                            ]);
+                        }
+
                         if($request->serial_row != null){        
                             foreach ($request->serial_row as $serial_key => $serial_value){
                                 $parent_row_id = $serial_value['parent_row_id'] ?? 0;
@@ -3693,6 +3734,25 @@ class ReceivingController extends Controller
                                     ],
                                         array_merge($common_serial_data, $db_serial_data ? $edited_serial_data : $permanent_serial_data)
                                     );
+
+                                    if($status == "Confirmed"){
+                                        batch_serial_transaction::updateOrCreate([
+                                            'batches_id' => $batch_parent->id,
+                                            'is_batch_or_serial' => "serial",
+                                            'transaction_type' => $source_type
+                                        ],[
+                                            'batches_id' => $batch_parent->id,
+                                            'serial_number_id' => $batch_serial->id,
+                                            'stores_id' => $store_id,
+                                            'reference_id' => $header_id,
+                                            'reference_number' => $reference_number,
+                                            'transaction_type' => $source_type,
+                                            'transaction_date' => Carbon::today()->toDateString(),
+                                            'is_batch_or_serial' => "serial",
+                                            'in_quantity' => 1
+                                        ]);
+                                    }
+
                                     $submitted_ser_ids[] = $batch_serial->id;
                                     $serial_number_count++;
                                 }
@@ -3717,8 +3777,21 @@ class ReceivingController extends Controller
                     ->whereNotIn('batch_inventories.batches_id', $submitted_ids)
                     ->delete();
 
+                DB::table('batch_serial_transactions')
+                    ->leftJoin('batches','batch_serial_transactions.batches_id','batches.id')
+                    ->where('batches.source_id', $header_id)
+                    ->where('batches.item_id', $item_id)
+                    ->where('batches.source_type', $source_type)
+                    ->whereNotIn('batch_serial_transactions.batches_id', $submitted_ids)
+                    ->delete();
+
                 DB::table('serial_numbers')
                     ->whereIn('serial_numbers.id', $to_be_removed)
+                    ->delete();
+
+                DB::table('batch_serial_transactions')
+                    ->whereIn('batch_serial_transactions.serial_number_id', $to_be_removed)
+                    ->where('batch_serial_transactions.is_batch_or_serial',"serial")
                     ->delete();
 
                 DB::table('batches')
@@ -3727,8 +3800,6 @@ class ReceivingController extends Controller
                     ->where('source_type', $source_type)
                     ->whereNotIn('id', $submitted_ids)
                     ->delete();
-
-                
 
                 if($transaction_type == 1){
                     $receiving_detail_data = receivingdetail::where('HeaderId',$header_id)->where('ItemId',$item_id)->first();

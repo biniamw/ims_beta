@@ -11,5 +11,5 @@ class brand extends Model
     protected $table='brands';
     public $primarykey='id';
     public $timestamps=true; 
-    protected $fillable=['Name','description','ActiveStatus','CreatedBy','CreatedDate','IsDeleted'];
+    protected $fillable=['countries_id','manufacturer','Name','description','ActiveStatus','CreatedBy','CreatedDate','IsDeleted'];
 }
