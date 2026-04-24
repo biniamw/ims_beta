@@ -11,5 +11,5 @@ class models extends Model
     protected $table='models';
     public $primarykey='id';
     public $timestamps=true; 
-    protected $fillable=['Name','description','ActiveStatus','IsDeleted'];
+    protected $fillable=['BrandId','Name','description','ActiveStatus','IsDeleted'];
 }

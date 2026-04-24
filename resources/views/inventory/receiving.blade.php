@@ -1433,9 +1433,9 @@
         </form>
     </div>
     <!--/ end manage document modal-->
-
-    @include('parts.batch_serial')
+    
     @include('layout.universal-component')
+    @include('parts.batch_serial')
 
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
@@ -1458,6 +1458,7 @@
         var z3 = 0;
         var purGlobalIndex = -1;
         var prdGlobalIndex = -1;
+        var expand_flag = [];
 
         var statusTransitions = {
             'Draft': {
@@ -1604,8 +1605,8 @@
                         width:"14%"
                     },
                     {
-                        data: 'reference',
-                        name: 'reference',
+                        data: 'doc_reference',
+                        name: 'doc_reference',
                         width:"15%",
                         "render": function ( data, type, row, meta ) {
                             return `<a style="text-decoration:underline;color:blue;" onclick=openPurchaseFn("${row.PoId}")>${data != null ? data : ""}</a>`;
@@ -3957,6 +3958,7 @@
             $('.infoRecDiv').hide();  
             var visibilitymode = false;
             var withold_count = null;
+            expand_flag = [];
             var subtotal = 0;
             var withold_min_amount = 0;
             var receiving_type = 0;
@@ -4492,6 +4494,9 @@
                             if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
                                 return `<i title="Show batch number, serial number, expiry date under ${row.ItemName} item!" class="fas fa-caret-right fa-xl"></i>`;
                             }
+                            else{
+                                return "";
+                            }
                         },
                         createdCell: function (td, row, data) {
                             if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
@@ -4718,8 +4723,8 @@
             html += `<tr>
                 <th style="width:2%"></th>
                 <th style="width:3%">#</th>
-                <th style="width:18%">Brand</th>
-                <th style="width:17%">Generic Name</th>
+                <th style="width:18%"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand</th>
+                <th style="width:17%">Generic/ Model Name</th>
                 <th class="batch_number_class" style="width:15%;display:${is_batch_req == "No" ? "none" : ""}">Batch Number</th>
                 <th style="width:15%">Quantity</th>
                 <th style="width:15%">Manufacturing Date</th>
@@ -4749,7 +4754,10 @@
 
             html += `</table>`;
 
-            if(parseInt(response.batch_data.length) > 0){
+            expand_flag.push(response.batch_data.length);
+            var has_value = expand_flag.some(value => value > 0);
+
+            if(has_value){
                 return html;
             }
             else{
@@ -4807,18 +4815,35 @@
 
         async function expandAllLevel1Fn() {
             let table = $('#docRecInfoItem').DataTable();
+
             for (let i = 0; i < table.rows().count(); i++) {
 
                 let row = table.row(i);
+
+                if (!row || !row.node()) continue;
+
                 let tr = $(row.node());
                 let data = row.data();
 
                 if (!data) continue;
 
-                if (!row.child.isShown()) {
+                if(data.RequireSerialNumber != "Not-Require" || data.RequireExpireDate != "Not-Require"){
+                
+                    // 🔥 FIX: ensure HTML exists
                     let html = await formatLevel1Fn(data.HeaderId, data.ItemId);
-                    row.child(html).show();
-                    tr.find('.dt-show-1').html('<i class="fas fa-caret-down fa-xl"></i>');
+
+                    if (!html) continue; // ← IMPORTANT
+
+                    // 🔥 FIX: check child() exists
+                    let child = row.child(html);
+
+                    if (child && typeof child.show === 'function') {
+                        child.show();
+                        tr.find('.dt-show-1').html('<i class="fas fa-caret-down fa-xl"></i>');
+                    }
+                }
+                else{
+                    toastrMessage('error',"No items with batch and/or serial numbers are available to expand.","Error");
                 }
             }
         }
@@ -4826,12 +4851,8 @@
         function expandAllLevel2Fn() {
             // find only visible Level 1 rows
             $('.dt-show-2').each(function () {
-
                 let el = $(this);
-
                 if (!el.hasClass('shown')) {
-
-                    // simulate click properly
                     el.trigger('click');
                 }
             });
@@ -4842,7 +4863,10 @@
 
             setTimeout(function () {
                 expandAllLevel2Fn();
-                $('.expand-collapse-class').empty().append(`<a class="collapserow" href="javascript:void(0)" id="collapserow" style="color:#82868b;"><i class="far fa-minus"></i> Collapse All</a>`);
+                var has_value = expand_flag.some(value => value > 0);
+                if(has_value){
+                    $('.expand-collapse-class').empty().append(`<a class="collapserow" href="javascript:void(0)" id="collapserow" style="color:#82868b;"><i class="far fa-minus"></i> Collapse All</a>`);
+                }
             }, 300);
         });
 
@@ -6719,4 +6743,5 @@
             return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
         }
     </script>
+   
 @endsection

@@ -31,8 +31,10 @@
                                             <tr>
                                                 <th style="display: none;"></th>
                                                 <th style="width: 3%;">#</th>
-                                                <th style="width: 50%;">Brand Name</th>
-                                                <th style="width: 43%;">Status</th>
+                                                <th style="width: 25%;">Country/ Origin</th>
+                                                <th style="width: 25%;">Manufacturer</th>
+                                                <th style="width: 25%;">Brand Name</th>
+                                                <th style="width: 18%;">Status</th>
                                                 <th style="width: 4%;">Action</th>
                                             </tr>
                                         </thead>
@@ -79,6 +81,14 @@
                                                         <div class="card-body">
                                                             <table class="infotbl" style="width:100%;font-size:12px;">
                                                                 <tr>
+                                                                    <td><label class="info_lbl">Country/ Origin</label></td>
+                                                                    <td><label class="info_lbl" id="countryLbl" style="font-weight: bold;"></label></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><label class="info_lbl">Manufacturer</label></td>
+                                                                    <td><label class="info_lbl" id="manufacturerLbl" style="font-weight: bold;"></label></td>
+                                                                </tr>
+                                                                <tr>
                                                                     <td><label class="info_lbl">Brand Name</label></td>
                                                                     <td><label class="info_lbl" id="brandnameinfl" style="font-weight: bold;"></label></td>
                                                                 </tr>
@@ -106,9 +116,9 @@
                                             <tr>
                                                 <th style="display: none;"></th>
                                                 <th style="width: 5%">#</th>
-                                                <th style="width: 35%">Generic Name</th>
-                                                <th style="width: 40%">Description</th>
-                                                <th style="width: 20%">Status</th>
+                                                <th style="width: 35%">Generic/ Model Name</th>
+                                                <th style="width: 45%">Description</th>
+                                                <th style="width: 15%">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody class="table table-sm"></tbody>
@@ -204,7 +214,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="form_lbl" style="width:5%;">#</th>
-                                                <th class="form_lbl" style="width:30%" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></th>
+                                                <th class="form_lbl" style="width:30%" title="Generic/ model name">Generic/ Model Name<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl" style="width:40%">Description</th>
                                                 <th class="form_lbl" style="width:20%">Status<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl" style="width:5%"></th>
@@ -234,7 +244,6 @@
         </div>
     </div>
     <!--End Registation Modal -->
-
     @include('layout.universal-component')
 
     <script  type="text/javascript">
@@ -283,7 +292,9 @@
                 columns: [
                     { data: 'id', name: 'id', 'visible': false },
                     { data:'DT_RowIndex',width:"3%"},
-                    { data: 'Name', name: 'Name',width:"50%"},
+                    { data: 'country_name', name: 'country_name',width:"25%"},
+                    { data: 'manufacturer_name', name: 'manufacturer_name',width:"25%"},
+                    { data: 'Name', name: 'Name',width:"25%"},
                     { data: 'ActiveStatus', name: 'ActiveStatus',
                         "render": function ( data, type, row, meta ) {
                             if(data == "Active"){
@@ -296,7 +307,7 @@
                                 return `<span class="badge bg-warning bg-glow">${data}</span>`;
                             }
                         },
-                        width:"43%"
+                        width:"18%"
                     },  
                     { data: 'action', name: 'action',
                         "render": function ( data, type, row, meta ) {
@@ -356,12 +367,12 @@
                     if(parseFloat(optype) == 1){
                         $('#savebutton').text('Saving...');
                         $('#savebutton').prop("disabled", true);
-                        operation_type = "Saving brand data...";
+                        operation_type = "Saving brand record...";
                     }
                     else if(parseFloat(optype) == 2){
                         $('#savebutton').text('Updating...');
                         $('#savebutton').prop("disabled", true);
-                        operation_type = "Updating brand data...";
+                        operation_type = "Updating brand record...";
                     }
                     blockPage(cardSection,operation_type);
                 },
@@ -484,6 +495,8 @@
                 },
                 success: function (data) {
                     $.each(data.brandinfo, function(key, value) {
+                        $('#countryLbl').html(value.country_name);
+                        $('#manufacturerLbl').html(value.manufacturer_name);
                         $('#brandnameinfl').html(value.Name);
                         $('#infoDescription').html(value.description);
                         $("#statusinfo").html(value.ActiveStatus == "Active" ? 
@@ -578,7 +591,7 @@
                     },
                     { data:'DT_RowIndex',width:"5%"},
                     { data: 'Name', name: 'Name',width:"35%"},
-                    { data: 'description', name: 'description',width:"40%"},
+                    { data: 'description', name: 'description',width:"45%"},
                     { data: 'ActiveStatus', name: 'ActiveStatus',
                         "render": function ( data, type, row, meta ) {
                             if(data == "Active"){
@@ -591,7 +604,7 @@
                                 return `<span class="badge bg-warning bg-glow">${data}</span>`;
                             }
                         },
-                        width:"20%"
+                        width:"15%"
                     },
                 ],
                 drawCallback: function(settings) {
@@ -659,11 +672,16 @@
                         ++j;
                         $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
                             <td style="font-weight:bold;width:5%;text-align:center;">${j}</td>
-                            <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
+                            <td style="display:none;">
+                                <input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/>
+                            </td>
                             <td style="width:30%;"><input type="text" name="row[${m}][ModelName]" placeholder="Enter generic/model name here..." id="ModelName${m}" class="ModelName form-control" onkeyup="modelNameFn(this)" value="${value.Name}"/></td>
                             <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Enter description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)" value="${value.description != null ? value.description : ""}"/></td>
                             <td style="width:20%;"><select id="Status${m}" class="select2 form-control Status" name="row[${m}][Status]" onchange="dynamicStatusFn(this)"></select></td>
                             <td style="width:5%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                            <td style="display:none;">
+                                <input type="hidden" name="row[${m}][model_id]" id="model_id${m}" class="model_id form-control" readonly="true" style="font-weight:bold;" value="${value.id}"/>
+                            </td>
                         </tr>`);
 
                         var default_status = `<option selected value="${value.ActiveStatus}">${value.ActiveStatus}</option>`;
@@ -674,6 +692,10 @@
                         ({
                             minimumResultsForSearch: -1
                         });
+
+                        if(parseInt(value.count_model) > 0){
+                            $(`#removebtn${m}`).remove();
+                        }
                     });
                     renumberRows();
                 },
@@ -707,6 +729,9 @@
                     <td style="width:40%;"><input type="text" name="row[${m}][Description]" placeholder="Enter description here..." id="Description${m}" class="Description form-control" onkeyup="dynamicDescriptionFn(this)"/></td>
                     <td style="width:20%;"><select id="Status${m}" class="select2 form-control Status" name="row[${m}][Status]" onchange="dynamicStatusFn(this)"></select></td>
                     <td style="width:5%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                    <td style="display:none;">
+                        <input type="hidden" name="row[${m}][model_id]" id="model_id${m}" class="model_id form-control" readonly="true" style="font-weight:bold;"/>
+                    </td>
                 </tr>`);
 
                 var statusopt = '<option value="Active">Active</option><option value="Inactive">Inactive</option>';

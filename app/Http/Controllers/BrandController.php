@@ -31,7 +31,7 @@ class BrandController extends Controller
     }
 
     public function showBrandData(){
-        $brand = DB::select('SELECT * FROM brands WHERE brands.IsDeleted=1 ORDER BY brands.id DESC');
+        $brand = DB::select('SELECT brands.*,IFNULL(brands.manufacturer,"") AS manufacturer_name,country.Name AS country_name FROM brands LEFT JOIN country ON brands.countries_id=country.id WHERE brands.id>1 AND brands.IsDeleted=1 ORDER BY brands.id DESC');
         if(request()->ajax()) {
             return datatables()->of($brand)
             ->addIndexColumn()
@@ -126,7 +126,9 @@ class BrandController extends Controller
                 );
 
                 foreach ($request->row as $key => $value){
-                    $modeldata[]=[
+                    models::updateOrCreate([
+                        'id' => $value['model_id'],
+                    ],[
                         "BrandId" => $brand->id,
                         "Name" => $value['ModelName'],
                         "description" => $value['Description'],
@@ -134,12 +136,8 @@ class BrandController extends Controller
                         "IsDeleted" => 1,
                         "created_at" => Carbon::now(),
                         "updated_at" => Carbon::now()
-                    ];
+                    ]);
                 }
-
-                DB::table('models')->where('models.BrandId',$brand->id)->delete();
-
-                DB::table('models')->insert($modeldata);
 
                 $actions = $findid == null ? "Created" : "Edited";
                 DB::table('actions')->insert([
@@ -194,9 +192,9 @@ class BrandController extends Controller
     }
 
     public function getbrandmodel($id){
-        $brandinfo = DB::select('SELECT * FROM brands WHERE brands.id='.$id);
+        $brandinfo = DB::select('SELECT brands.*,IFNULL(brands.manufacturer,"") AS manufacturer_name,country.Name AS country_name FROM brands LEFT JOIN country ON brands.countries_id=country.id WHERE brands.id='.$id);
 
-        $modeldata = DB::select('SELECT * FROM models WHERE models.BrandId='.$id.' ORDER BY id ASC');
+        $modeldata = DB::select('SELECT models.*,(SELECT COUNT(batches.id) FROM batches WHERE batches.model_id=models.id) AS count_model FROM models WHERE models.BrandId='.$id.' ORDER BY id ASC');
 
         $activitydata = actions::join('users','actions.user_id','users.id')
             ->where('actions.pagename',"brand")

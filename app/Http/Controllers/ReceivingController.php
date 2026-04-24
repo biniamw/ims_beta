@@ -64,8 +64,8 @@ class ReceivingController extends Controller
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fiscalyr.' ORDER BY fiscalyear.FiscalYear DESC');
         
         if($recpage == 0){
-            $brand = DB::select('SELECT * FROM brands WHERE brands.ActiveStatus="Active" AND brands.IsDeleted=1 ORDER BY brands.Name ASC');
-            $models = DB::select('SELECT * FROM models WHERE models.ActiveStatus="Active" AND models.IsDeleted=1 ORDER BY models.Name ASC');
+            $brand = DB::select('SELECT brands.*,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name FROM brands LEFT JOIN country ON brands.countries_id=country.id WHERE brands.ActiveStatus="Active" AND brands.IsDeleted=1 ORDER BY brands.Name ASC');
+            $models = DB::select('SELECT models.*,IFNULL(models.Name,"") AS model_name FROM models WHERE models.ActiveStatus="Active" AND models.IsDeleted=1 ORDER BY models.Name ASC');
             $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
             $storefilter = DB::select('SELECT DISTINCT StoreId AS store_id,stores.Name AS store_name FROM storeassignments INNER JOIN stores ON storeassignments.StoreId=stores.id WHERE storeassignments.UserId="'.$userid.'" AND storeassignments.Type=1 AND stores.IsDeleted=1');
             $ref_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=100 AND lookuprefs.Status=1 ORDER BY lookuprefs.LookupName ASC'); 
@@ -689,7 +689,7 @@ class ReceivingController extends Controller
             $receiving = DB::select('SELECT
                 lookuprefs.LookupName AS reference_type,
                 complookups.CompanyType AS CompanyTypes,
-                purchaseorders.porderno AS reference,
+                purchaseorders.porderno AS doc_reference,
                 customers.CustomerCategory,
                 customers.Name AS CustomerName,
                 customers.TinNumber AS TIN,
@@ -3581,38 +3581,40 @@ class ReceivingController extends Controller
             $serial_number_list[] = $serial_row->serial_number;
         }
 
-        foreach ($request->batch_row as $batch_key => $batch_value){
-            $batch_qty = $batch_value['bactchQuantity'] ?? 0;
-            $batch_row_id = $batch_value['batch_index_col'] ?? 0;
-            $batch_number = trim($batch_value['bactchNumber']) ?? "";
-            ++$batch_row_no;
+        if($request->batch_row != null){
+            foreach ($request->batch_row as $batch_key => $batch_value){
+                $batch_qty = $batch_value['bactchQuantity'] ?? 0;
+                $batch_row_id = $batch_value['batch_index_col'] ?? 0;
+                $batch_number = trim($batch_value['bactchNumber']) ?? "";
+                ++$batch_row_no;
 
-            if(in_array($batch_number, $batch_number_list)) {
-                $duplicate_batch_number_row[] = (int)$batch_row_id;
-            }
-
-            $inserted_qty += (float)$batch_qty;
-            $serial_qty = 0;
-            
-            if($request->serial_row != null){
-                foreach ($request->serial_row as $serial_key => $serial_value){
-                    $parent_row_id = $serial_value['parent_row_id'] ?? 0;
-                    $serial_row_id = $serial_value['serial_index_col'] ?? 0;
-                    $serial_no = trim($serial_value['serialNumber']);
-                    if($batch_row_id == $parent_row_id && $serial_no != null){
-                        ++$serial_qty;
-                        if(in_array($serial_no, $serial_number_list)) {
-                            $duplicate_serial_number_row[] = [
-                                'batch_row' => $batch_row_id,
-                                'serial_row' => $serial_row_id
-                            ];
-                        }
-                    }  
+                if(in_array($batch_number, $batch_number_list)) {
+                    $duplicate_batch_number_row[] = (int)$batch_row_id;
                 }
-            }
 
-            if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required" && ($status == "Checked" || $status == "Confirmed")){
-                $variance_ids[] = $batch_row_no;
+                $inserted_qty += (float)$batch_qty;
+                $serial_qty = 0;
+                
+                if($request->serial_row != null){
+                    foreach ($request->serial_row as $serial_key => $serial_value){
+                        $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+                        $serial_row_id = $serial_value['serial_index_col'] ?? 0;
+                        $serial_no = trim($serial_value['serialNumber']);
+                        if($batch_row_id == $parent_row_id && $serial_no != null){
+                            ++$serial_qty;
+                            if(in_array($serial_no, $serial_number_list)) {
+                                $duplicate_serial_number_row[] = [
+                                    'batch_row' => $batch_row_id,
+                                    'serial_row' => $serial_row_id
+                                ];
+                            }
+                        }  
+                    }
+                }
+
+                if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required" && ($status == "Checked" || $status == "Confirmed")){
+                    $variance_ids[] = $batch_row_no;
+                }
             }
         }
 
@@ -3894,7 +3896,7 @@ class ReceivingController extends Controller
             $source_type = "receiving";
         }
 
-        $batch_data = DB::select('SELECT batches.*,batch_inventories.received_qty,batch_inventories.sold_issued_qty,regitems.Name AS item_name,brands.Name AS brand_name,models.Name AS model_name FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batches.source_type="'. $source_type.'"'); 
+        $batch_data = DB::select('SELECT batches.*,batch_inventories.received_qty,batch_inventories.sold_issued_qty,regitems.Name AS item_name,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batches.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batches.source_type="'. $source_type.'"'); 
         foreach($batch_data as $batch_row){
             $batch_ids[] = $batch_row->id;
         }
@@ -3909,7 +3911,7 @@ class ReceivingController extends Controller
         $headerId = $_POST['headerId']; 
         $itemId = $_POST['itemId'];
 
-        $batch_data = DB::select('SELECT batches.*,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories.received_qty,batch_inventories.sold_issued_qty,brands.Name AS brand_name,models.Name AS model_name,regitems.RequireSerialNumber,regitems.RequireExpireDate FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$headerId.' AND batches.item_id='.$itemId.' AND batches.source_type="receiving" ORDER BY batch_inventories.id ASC');
+        $batch_data = DB::select('SELECT batches.*,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories.received_qty,batch_inventories.sold_issued_qty,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name,regitems.RequireSerialNumber,regitems.RequireExpireDate FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batches.source_id='.$headerId.' AND batches.item_id='.$itemId.' AND batches.source_type="receiving" ORDER BY batch_inventories.id ASC');
         return response()->json(['batch_data' => $batch_data]);
     }
 

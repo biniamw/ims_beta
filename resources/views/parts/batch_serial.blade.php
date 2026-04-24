@@ -156,24 +156,16 @@
                                     <option value="{{ $cnt->id }}">{{ $cnt->Name }}</option>
                                 @endforeach
                             </select>
-                            <select class="select2 form-control" name="bs_manufacturer_default" id="bs_manufacturer_default">
-                                <option selected disabled value=""></option>
-                                <option value="1">Dell Inc.</option>
-                                <option value="2">HP Inc.(Hewlett-Packard)</option>
-                                <option value="3">Lenovo Group Limited</option>
-                                <option value="4">Samsung Electronics</option>
-                                <option value="5">Apple Inc.</option>
-                            </select>
                             <select class="select2 form-control" name="bs_brand_default" id="bs_brand_default">
                                 <option selected disabled value=""></option>
                                 @foreach ($brand as $brand_opt)
-                                    <option value="{{ $brand_opt->id }}">{{ $brand_opt->Name }}</option>
+                                    <option value="{{ $brand_opt->id }}">{{ $brand_opt->brand_name }}</option>
                                 @endforeach
                             </select>
                             <select class="select2 form-control" name="bs_model_default" id="bs_model_default">
                                 <option selected disabled value=""></option>
                                 @foreach ($models as $model_opt)
-                                    <option data-brand-id="{{$model_opt->BrandId}}" value="{{ $model_opt->id }}">{{ $model_opt->Name }}</option>
+                                    <option data-brand-id="{{$model_opt->BrandId}}" value="{{ $model_opt->id }}">{{ $model_opt->model_name }}</option>
                                 @endforeach
                             </select>
                             <input type="hidden" class="form-control" name="IsBatchNumberRequired" id="IsBatchNumberRequired" readonly="true">
@@ -521,14 +513,14 @@
                                     <td style="width:96%">
                                         <div class="row">
                                             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                                <label class="form_lbl">Brand<b style="color: red; font-size:16px;">*</b></label>
+                                                <label class="form_lbl"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand<b style="color: red; font-size:16px;">*</b></label>
                                                 <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
                                                 <span class="text-danger">
                                                     <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                                <label class="form_lbl" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></label>
+                                                <label class="form_lbl" title="Generic/ model name">Generic/ Model Name<b style="color: red; font-size:16px;">*</b></label>
                                                 <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
                                                 <span class="text-danger">
                                                     <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
@@ -566,7 +558,7 @@
                                                 <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control batch_uuid"/>
                                                 <input type="hidden" id="batch_db_id${b_m}" name="batch_row[${b_m}][batch_db_id]" class="form-control batch_db_id"/>
                                                 <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
-                                                    Quantity.: 0 | Serial Qty.: 0
+                                                    Qty.: 0 | Serial Qty.: 0
                                                 </button>
                                                 
                                                 <button type="button" class="btn btn-light btn-sm btn-outline-info" id="toggleSerialNum${b_m}" onclick="toggleSerialNumberFn('${b_m}')">
@@ -725,14 +717,14 @@
                         <td style="width:96%">
                             <div class="row">
                                 <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                    <label class="form_lbl">Brand<b style="color: red; font-size:16px;">*</b></label>
+                                    <label class="form_lbl"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand<b style="color: red; font-size:16px;">*</b></label>
                                     <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
                                     <span class="text-danger">
                                         <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
                                     </span>
                                 </div>
                                 <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                    <label class="form_lbl" title="Generic/ model name">Generic Name<b style="color: red; font-size:16px;">*</b></label>
+                                    <label class="form_lbl" title="Generic/ model name">Generic/ Model Name<b style="color: red; font-size:16px;">*</b></label>
                                     <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
                                     <span class="text-danger">
                                         <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
@@ -770,7 +762,7 @@
                                     <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control batch_uuid"/>
                                     <input type="hidden" id="batch_db_id${b_m}" name="batch_row[${b_m}][batch_db_id]" class="form-control batch_db_id"/>
                                     <button type="button" class="btn btn-light btn-sm btn-outline-warning mr-1" id="batch_serial_stat_btn${b_m}" disabled>
-                                        Quantity.: 0 | Serial Qty.: 0
+                                        Qty.: 0 | Serial Qty.: 0
                                     </button>
                                     
                                     <button type="button" class="btn btn-light btn-sm btn-outline-info" id="toggleSerialNum${b_m}" onclick="toggleSerialNumberFn('${b_m}')">
@@ -953,7 +945,7 @@
             else{
                 $(`#batch_serial_stat_btn${row_id}`).addClass('btn-outline-warning');
             }
-            $(`#batch_serial_stat_btn${row_id}`).text(`Quantity: ${batch_qty} | Serial Qty.: ${total_sn}`);
+            $(`#batch_serial_stat_btn${row_id}`).text(`Qty.: ${batch_qty} | Serial Qty.: ${total_sn}`);
         }
 
         function countTotalBatchAndSerialFn(){
