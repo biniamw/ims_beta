@@ -8,6 +8,7 @@ use App\Models\store;
 use App\Models\companyinfo;
 use App\Models\systeminfo;
 use App\Models\PurchaseOrder;
+use App\Models\lookupref;
 use Illuminate\Http\Request;
 use Invoice;
 use Carbon\Carbon;
@@ -28,10 +29,10 @@ class GRVController extends Controller
     {
         if(receivingdetail::where('HeaderId',$id)->exists())
         {
-            $st="";
+            $st = "";
             error_reporting(0); 
             //---Start Header Info---
-            $compId="1";
+            $compId = 1;
             $compInfo=companyinfo::find($compId);
             $companyname=$compInfo->Name;
             $companytin=$compInfo->TIN;
@@ -45,7 +46,7 @@ class GRVController extends Controller
             $companyalladdress=$compInfo->AllAddress;
             //---End Header Info----- 
             //---Start Footer Info---
-            $sysId="1";
+            $sysId = 1;
             $sysInfo=systeminfo::find($sysId);
             $systemname=$sysInfo->Name;
             $systemtin=$sysInfo->TIN;
@@ -61,6 +62,7 @@ class GRVController extends Controller
             //---End Footer Info----- 
             $headerInfo=receiving::find($id);
             $docnum=$headerInfo->DocumentNumber;
+            $type=$headerInfo->Type;
             $customerid=$headerInfo->CustomerId;
             $paymenttype=$headerInfo->PaymentType;
             $vouchertype=$headerInfo->VoucherType;
@@ -68,7 +70,7 @@ class GRVController extends Controller
             $invnumber=$headerInfo->InvoiceNumber;
             $mem=$headerInfo->Memo;
             $customermrc=$headerInfo->CustomerMRC;
-            $voucherdate=$headerInfo->TransactionDate;
+            $voucherdate=$headerInfo->TransactionDate == NULL || $headerInfo->TransactionDate == "" ? $headerInfo->ReceivedDate : $headerInfo->TransactionDate;
             $purchasedby=$headerInfo->PurchaserName;
             $preparedby=$headerInfo->Username;
             $checkedby=$headerInfo->CheckedBy;
@@ -78,73 +80,83 @@ class GRVController extends Controller
             $storeid=$headerInfo->StoreId;
             $source_type=$headerInfo->source_type;
             $status=$headerInfo->Status;
+
+            $purord = PurchaseOrder::find($headerInfo->PoId);
+            $po_number = $purord->porderno;
+
+            $lookup = lookupref::find($headerInfo->Type);
+            $reference = $lookup->LookupName;
+
             $transactiondate = Carbon::createFromFormat('Y-m-d H:i:s', $headerInfo->created_at)
             ->settings(['timezone' => 'Africa/Addis_Ababa'])->format('Y-m-d @ g:i:s A');
             
-            if($status=="Void"){
-                $st="Void";
+            if($status == "Void"){
+                $st = "Void";
             }
-            else if($status!="Void"){
-                $st="";
+            else if($status != "Void"){
+                $st = "";
             }
-            $customerDetails=customer::find($customerid);
-            $customername=$customerDetails->Name;
-            $customercategory=$customerDetails->CustomerCategory;
-            $customertin=$customerDetails->TinNumber;
-            $customervat=$customerDetails->VatNumber; 
+            $customerDetails = customer::find($customerid);
+            $customername = $customerDetails->Name;
+            $customercategory = $customerDetails->CustomerCategory;
+            $customertin = $customerDetails->TinNumber;
+            $customervat = $customerDetails->VatNumber; 
 
-            $storedetail=store::find($storeid);
-            $storename=$storedetail->Name;
+            $storedetail = store::find($storeid);
+            $storename = $storedetail->Name;
 
-            //$currentdate=Carbon::now()->isoFormat('YYYY Do MM HH:MM A');
-            $currentdate=Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
-            $detailTable=DB::select('SELECT receivingdetails.id,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Name AS ItemName,regitems.Code AS ItemCode,regitems.SKUNumber AS SKUNumber,uoms.Name as UOM,FORMAT(receivingdetails.Quantity,0) AS Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost FROM receivingdetails INNER JOIN regitems ON receivingdetails.ItemId=regitems.id inner join uoms on receivingdetails.NewUOMId=uoms.id where receivingdetails.HeaderId='.$id.' order by receivingdetails.id ASC');
-            $count=0;
-            $data=[ 'detailTable'=>$detailTable,
-                    'docnum'=>$docnum,
-                    'source_type'=>$source_type,
-                    'customername'=>$customername,
-                    'customercategory'=>$customercategory,
-                    'customertin'=>$customertin,
-                    'customervat'=>$customervat,
-                    'customermrc'=>$customermrc,
-                    'paymenttype'=>$paymenttype,
-                    'vouchertype'=>$vouchertype,
-                    'vouchernumber'=>$vouchernumber,
-                    'invnumber'=>$invnumber,
-                    'transactiondate'=>$transactiondate,
-                    'mem'=>$mem,
-                    'voucherdate'=>$voucherdate,
-                    'storename'=>$storename,
-                    'purchasedby'=>$purchasedby,
-                    'preparedby'=>$preparedby,
-                    'checkedby'=>$checkedby,
-                    'checkeddate'=>$checkeddate,
-                    'confirmedby'=>$confirmedby,
-                    'confirmeddate'=>$confirmeddate,
-                    'count'=>$count,
-                    'currentdate'=>$currentdate,
-                    'companyname'=>$companyname,
-                    'companytin'=>$companytin,
-                    'companyvat'=>$companyvat,
-                    'companyphone'=>$companyphone,
-                    'companyoffphone'=>$companyoffphone,
-                    'companyemail'=>$companyemail,
-                    'companyaddress'=>$companyaddress,
-                    'companywebsite'=>$companywebsite,
-                    'companycountry'=>$companycountry,
-                    'companyalladdress'=>$companyalladdress,
-                    'companyLogo'=>$companyLogo,
-                    'systemname'=>$systemname,
-                    'systemtin'=>$systemtin,
-                    'systemvat'=>$systemvat,
-                    'systemphone'=>$systemphone,
-                    'systemoffphone'=>$systemoffphone,
-                    'systememail'=>$systememail,
-                    'systemaddress'=>$systemaddress,
-                    'systemwebsite'=>$systemwebsite,
-                    'systemcountry'=>$systemcountry,
-                    'systemalladdress'=>$systemalladdress,
+            $currentdate = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+            $detailTable = DB::select('SELECT receivingdetails.id,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Name AS ItemName,regitems.Code AS ItemCode,regitems.SKUNumber AS SKUNumber,uoms.Name as UOM,FORMAT(receivingdetails.Quantity,0) AS Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost FROM receivingdetails INNER JOIN regitems ON receivingdetails.ItemId=regitems.id inner join uoms on receivingdetails.NewUOMId=uoms.id where receivingdetails.HeaderId='.$id.' order by receivingdetails.id ASC');
+
+            $count = 0;
+            $data=['detailTable' => $detailTable,
+                    'docnum' => $docnum,
+                    'type' => $type,
+                    'source_type' => $source_type,
+                    'po_number' => $po_number,
+                    'reference' => $reference,
+                    'customername' => $customername,
+                    'customercategory' => $customercategory,
+                    'customertin' => $customertin,
+                    'customervat' => $customervat,
+                    'customermrc' => $customermrc,
+                    'paymenttype' => $paymenttype,
+                    'vouchertype' => $vouchertype,
+                    'vouchernumber' => $vouchernumber,
+                    'invnumber' => $invnumber,
+                    'transactiondate' => $transactiondate,
+                    'mem' => $mem,
+                    'voucherdate' => $voucherdate,
+                    'storename' => $storename,
+                    'purchasedby' => $purchasedby,
+                    'preparedby' => $preparedby,
+                    'checkedby' => $checkedby,
+                    'checkeddate' => $checkeddate,
+                    'confirmedby' => $confirmedby,
+                    'confirmeddate' => $confirmeddate,
+                    'count' => $count,
+                    'currentdate' => $currentdate,
+                    'companyname' => $companyname,
+                    'companytin' => $companytin,
+                    'companyvat' => $companyvat,
+                    'companyphone' => $companyphone,
+                    'companyoffphone' => $companyoffphone,
+                    'companyemail' => $companyemail,
+                    'companyaddress' => $companyaddress,
+                    'companywebsite' => $companywebsite,
+                    'companycountry' => $companycountry,
+                    'companyalladdress' => $companyalladdress,
+                    'companyLogo' => $companyLogo,
+                    'systemname' => $systemname,
+                    'systemtin' => $systemtin,
+                    'systemvat' => $systemvat,
+                    'systemphone' => $systemphone,
+                    'systemoffphone' => $systemoffphone,
+                    'systememail' => $systememail,
+                    'systemaddress' => $systemaddress,
+                    'systemwebsite' => $systemwebsite,
+                    'systemcountry' => $systemcountry,
+                    'systemalladdress' => $systemalladdress,
                 ];
 
                 $mpdf=new \Mpdf\Mpdf([
@@ -157,6 +169,167 @@ class GRVController extends Controller
                     'margin_footer' => 1
                 ]); 
                 $html=\View::make('inventory.report.grv')->with($data);
+                $html=$html->render();  
+                $mpdf->SetTitle('Good Receiving Voucher ('.$docnum.')');
+                $mpdf->SetDisplayMode('fullpage');
+                $mpdf->list_indent_first_level = 0; 
+                $mpdf->SetAuthor($companyalladdress);
+                $mpdf->SetWatermarkText($status);
+                $mpdf->watermark_font = 'DejaVuSansCondensed';
+                $mpdf->showWatermarkText = true;
+                $mpdf->WriteHTML($html);
+                $mpdf->Output('Good-Receiving-Note '.$docnum.'.pdf','I');
+
+            //$pdf=PDF::loadView('inventory.report.grv',$data);
+            //return $pdf->stream();
+        }
+    }
+
+    public function grvBatch($id)
+    {
+        if(receivingdetail::where('HeaderId',$id)->exists())
+        {
+            $st = "";
+            error_reporting(0); 
+            //---Start Header Info---
+            $compId = 1;
+            $compInfo=companyinfo::find($compId);
+            $companyname=$compInfo->Name;
+            $companytin=$compInfo->TIN;
+            $companyvat=$compInfo->VATReg;
+            $companyphone=$compInfo->Phone;
+            $companyoffphone=$compInfo->OfficePhone;
+            $companyemail=$compInfo->Email;
+            $companyaddress=$compInfo->Address;
+            $companywebsite=$compInfo->Website;
+            $companycountry=$compInfo->Country;
+            $companyalladdress=$compInfo->AllAddress;
+            //---End Header Info----- 
+            //---Start Footer Info---
+            $sysId = 1;
+            $sysInfo=systeminfo::find($sysId);
+            $systemname=$sysInfo->Name;
+            $systemtin=$sysInfo->TIN;
+            $systemvat=$sysInfo->VATReg;
+            $systemphone=$sysInfo->Phone;
+            $systemoffphone=$sysInfo->OfficePhone;
+            $systememail=$sysInfo->Email;
+            $systemaddress=$sysInfo->Address;
+            $systemwebsite=$sysInfo->Website;
+            $systemcountry=$sysInfo->Country;
+            $companyLogo=$compInfo->Logo;
+            $systemalladdress=$sysInfo->AllAddress;
+            //---End Footer Info----- 
+            $headerInfo = receiving::find($id);
+            $docnum = $headerInfo->DocumentNumber;
+            $type=$headerInfo->Type;
+            $customerid=$headerInfo->CustomerId;
+            $paymenttype=$headerInfo->PaymentType;
+            $vouchertype=$headerInfo->VoucherType;
+            $vouchernumber=$headerInfo->VoucherNumber;
+            $invnumber=$headerInfo->InvoiceNumber;
+            $mem=$headerInfo->Memo;
+            $customermrc=$headerInfo->CustomerMRC;
+            $voucherdate=$headerInfo->TransactionDate == NULL || $headerInfo->TransactionDate == "" ? $headerInfo->ReceivedDate : $headerInfo->TransactionDate;
+            $purchasedby=$headerInfo->PurchaserName;
+            $preparedby=$headerInfo->Username;
+            $checkedby=$headerInfo->CheckedBy;
+            $checkeddate=$headerInfo->CheckedDate;
+            $confirmedby=$headerInfo->ConfirmedBy;
+            $confirmeddate=$headerInfo->ConfirmedDate;
+            $storeid=$headerInfo->StoreId;
+            $source_type=$headerInfo->source_type;
+            $status=$headerInfo->Status;
+
+            $purord = PurchaseOrder::find($headerInfo->PoId);
+            $po_number = $purord->porderno;
+
+            $lookup = lookupref::find($headerInfo->Type);
+            $reference = $lookup->LookupName;
+
+            $transactiondate = Carbon::createFromFormat('Y-m-d H:i:s', $headerInfo->created_at)
+            ->settings(['timezone' => 'Africa/Addis_Ababa'])->format('Y-m-d @ g:i:s A');
+            
+            if($status == "Void"){
+                $st = "Void";
+            }
+            else if($status != "Void"){
+                $st = "";
+            }
+            $customerDetails = customer::find($customerid);
+            $customername = $customerDetails->Name;
+            $customercategory = $customerDetails->CustomerCategory;
+            $customertin = $customerDetails->TinNumber;
+            $customervat = $customerDetails->VatNumber; 
+
+            $storedetail = store::find($storeid);
+            $storename = $storedetail->Name;
+
+            $currentdate = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+
+            $detailTable = DB::select('SELECT regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,uoms.Name AS UOM,receivingdetails.Quantity,batches.batch_number,brands.Name AS brand_name,models.Name AS model_name,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories.received_qty,(SELECT GROUP_CONCAT(" ",NULLIF(serial_numbers.serial_number,"")) FROM serial_numbers WHERE serial_numbers.batches_id=batch_inventories.batches_id) AS serial_number FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN receivingdetails ON batches.item_id=receivingdetails.ItemId AND receivingdetails.HeaderId=batches.source_id AND batches.source_type="receiving" LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$id.' AND batches.source_type="receiving" ORDER BY receivingdetails.id');
+            
+            $count = 0;
+            $data=['detailTable' => $detailTable,
+                    'docnum' => $docnum,
+                    'type' => $type,
+                    'source_type' => $source_type,
+                    'po_number' => $po_number,
+                    'reference' => $reference,
+                    'customername' => $customername,
+                    'customercategory' => $customercategory,
+                    'customertin' => $customertin,
+                    'customervat' => $customervat,
+                    'customermrc' => $customermrc,
+                    'paymenttype' => $paymenttype,
+                    'vouchertype' => $vouchertype,
+                    'vouchernumber' => $vouchernumber,
+                    'invnumber' => $invnumber,
+                    'transactiondate' => $transactiondate,
+                    'mem' => $mem,
+                    'voucherdate' => $voucherdate,
+                    'storename' => $storename,
+                    'purchasedby' => $purchasedby,
+                    'preparedby' => $preparedby,
+                    'checkedby' => $checkedby,
+                    'checkeddate' => $checkeddate,
+                    'confirmedby' => $confirmedby,
+                    'confirmeddate' => $confirmeddate,
+                    'count' => $count,
+                    'currentdate' => $currentdate,
+                    'companyname' => $companyname,
+                    'companytin' => $companytin,
+                    'companyvat' => $companyvat,
+                    'companyphone' => $companyphone,
+                    'companyoffphone' => $companyoffphone,
+                    'companyemail' => $companyemail,
+                    'companyaddress' => $companyaddress,
+                    'companywebsite' => $companywebsite,
+                    'companycountry' => $companycountry,
+                    'companyalladdress' => $companyalladdress,
+                    'companyLogo' => $companyLogo,
+                    'systemname' => $systemname,
+                    'systemtin' => $systemtin,
+                    'systemvat' => $systemvat,
+                    'systemphone' => $systemphone,
+                    'systemoffphone' => $systemoffphone,
+                    'systememail' => $systememail,
+                    'systemaddress' => $systemaddress,
+                    'systemwebsite' => $systemwebsite,
+                    'systemcountry' => $systemcountry,
+                    'systemalladdress' => $systemalladdress,
+                ];
+
+                $mpdf=new \Mpdf\Mpdf([
+                    //'orientation' => 'L',
+                    'margin_left' => 2,
+                    'margin_right' => 2,
+                    'margin_top' => 37,
+                    'margin_bottom' => 25,
+                    'margin_header' => 0,
+                    'margin_footer' => 1
+                ]); 
+                $html=\View::make('inventory.report.grv_batch')->with($data);
                 $html=$html->render();  
                 $mpdf->SetTitle('Good Receiving Voucher ('.$docnum.')');
                 $mpdf->SetDisplayMode('fullpage');

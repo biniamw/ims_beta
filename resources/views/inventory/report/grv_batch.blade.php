@@ -140,7 +140,7 @@
         <sethtmlpagefooter name="myfooter" value="on"/>
         <table>
             <tr>
-                <td colspan="3" class="headers doctitle"><b>Good Receiving Voucher / GRV</b></td>
+                <td colspan="3" class="headers doctitle"><b>Good Receiving Voucher / GRV (Batch & Serial No.)</b></td>
             </tr>
             <tr>
                 <td>
@@ -251,26 +251,104 @@
         <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
             <thead>
                 <tr>
-                    <th style="width: 5%;" class="bordertables">#</th>
-                    <th style="width: 14%;" class="bordertables">Item Code</th>
-                    <th style="width: 28%;" class="bordertables">Item Name</th>
-                    <th style="width: 18%;" class="bordertables">Barcode No.</th>
-                    <th style="width: 10%;" class="bordertables">UOM</th>
-                    <th style="width: 10%;" class="bordertables">Quantity</th>
-                    <th style="width: 15%;" class="bordertables">Remark</th>
+                    <th style="width: 3%;" class="bordertables">#</th>
+                    <th style="width: 10%;" class="bordertables">Item Code</th>
+                    <th style="width: 13%;" class="bordertables">Item Name</th>
+                    <th style="width: 10%;" class="bordertables">Barcode No.</th>
+                    <th style="width: 6%;" class="bordertables">UOM</th>
+                    <th style="width: 8%;" class="bordertables">Quantity</th>
+                    <th style="width: 13%;" class="bordertables">Batch No.</th>
+                    <th style="width: 12%;" class="bordertables">Expiry Date</th>
+                    <th style="width: 11%;" class="bordertables">Received Qty.</th>
+                    <th style="width: 14%;" class="bordertables">Serial No.</th>
                 </tr>
             </thead>
-            @foreach ($detailTable as $item)
-            <tr>           
-                <td style="text-align: center" class="bordertables">{{++$count}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->ItemCode}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->ItemName}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->SKUNumber}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->UOM}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->Quantity}}</td>
-                <td style="text-align: center" class="bordertables"></td>
-            </tr>
-            @endforeach
+            <tbody>
+                @php
+                    $previousItem = null;
+                    $itemCount = 0;
+                    $currentItemRows = [];
+                    $currentIndex = 0;
+                    $totalRecords = count($detailTable);
+                @endphp
+
+                @while($currentIndex < $totalRecords)
+                    @php
+                        $currentItem = $detailTable[$currentIndex]->ItemCode;
+                        
+                        // Calculate rowspan for current employee
+                        $itemCount = 1;
+                        $itemRows = [];
+                        $nextIndex = $currentIndex;
+                        while($nextIndex < $totalRecords && $detailTable[$nextIndex]->ItemCode === $currentItem) {
+                            $itemRows[] = $detailTable[$nextIndex];
+                            $itemCount++;
+                            $nextIndex++;
+                        }
+                        $batchGroups = [];
+                        foreach($itemRows as $row) {
+                            $batch = $row->batch_number;
+                            if(!isset($batchGroups[$batch])) {
+                                $batchGroups[$batch] = [];
+                            }
+                            $batchGroups[$batch][] = $row;
+                        }
+                        $totalItemRows = count($itemRows);
+                        $isFirstRow = true;
+                        
+                    @endphp
+
+                    
+                    @foreach($batchGroups as $batchNumber => $batchRows)
+                        @foreach($batchRows as $rowIndex => $row)
+                            <tr>
+                                <td style="text-align: center" class="bordertables">{{ ++$count }}</td>
+                                
+                                {{-- Item details - merged across ALL item rows --}}
+                                @if($isFirstRow && $rowIndex === 0)
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
+                                        {{ $row->ItemCode }}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
+                                        {{ $row->ItemName }}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
+                                        {{ $row->SKUNumber }}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
+                                        {{ $row->UOM }}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
+                                        {{ $row->Quantity }}
+                                    </td>
+                                    @php $isFirstRow = false; @endphp
+                                @endif
+                                
+                                {{-- Batch Number - merged across same batch --}}
+                                @if($rowIndex === 0)
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ count($batchRows) }}">
+                                        {{ $batchNumber }}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ count($batchRows) }}">
+                                        {{ $row->expiry_date}}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ count($batchRows) }}">
+                                        {{ $row->received_qty}}
+                                    </td>
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ count($batchRows) }}">
+                                        {{ $row->serial_number }}
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                       
+                    @endforeach
+
+                    @php $currentIndex = $nextIndex; @endphp
+                    
+                @endwhile 
+                
+            </tbody>
         </table>
         <br/>
         <div>Remark:  <u>{{$mem}}</u></div>

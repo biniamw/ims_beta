@@ -1437,6 +1437,7 @@
     @include('layout.universal-component')
     @include('parts.batch_serial')
 
+    
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var voideditor;
@@ -4095,6 +4096,13 @@
                     </a>
                 </li>`;
 
+            var print_batch_serial_link = `
+                <li>
+                    <a class="dropdown-item printGrnLink" href="javascript:void(0)" data-link="/grv_batch/${recordId}" data-id="printgrnlink${recordId}" id="printgrnlink${recordId}" title="Print GRV Attachment">
+                    <span><i class="fa fa-file"></i> Print GRV with Batch & Serial No.</span>  
+                    </a>
+                </li>`;
+
             var print_production_link = `
                 <li>
                     <a class="dropdown-item printGrnLink" href="javascript:void(0)" data-link="/grv_prd/${recordId}" data-id="printgrnprdlink${recordId}" id="printgrnprdlink${recordId}" title="Print GRV Attachment">
@@ -4330,7 +4338,8 @@
                         ${upload_document_link}
                         ${status_btn_link}
                         ${flag_btn_link}
-                        ${print_btn_link}`;
+                        ${print_btn_link}
+                        ${print_batch_serial_link}`;
 
                         $("#receiving_action_ul").empty().append(action_links);
 
@@ -4345,8 +4354,7 @@
                         var st = value.Status;
                         var status = value.Status;
 
-                        if (parseFloat(withold_amnt) > 0 && parseFloat(withold_percent) > 0 && customer_category != "Foreigner-Supplier" && customer_category != "Person") 
-                        {
+                        if (parseFloat(withold_amnt) > 0 && parseFloat(withold_percent) > 0 && customer_category != "Foreigner-Supplier" && customer_category != "Person") {
                             $("#infowitholdingTr").show();
                             $("#infonetpayTr").show();
                         } 

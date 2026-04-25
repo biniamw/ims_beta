@@ -1205,6 +1205,7 @@ Route::get('/salereport/{id}','ReportController@index');
 Route::get('/test','ReportController@tt');
 
 Route::get('/grv/{id}','GRVController@index');
+Route::get('/grv_batch/{id}','GRVController@grvBatch');
 Route::get('/grv_prd/{id}','GRVController@grvprd');
 Route::get('/grvComm/{id}','GRVController@grvComm');
 Route::get('/req/{id}','ReqController@index');
