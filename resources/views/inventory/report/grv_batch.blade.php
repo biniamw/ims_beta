@@ -270,6 +270,7 @@
                     $currentItemRows = [];
                     $currentIndex = 0;
                     $totalRecords = count($detailTable);
+                    $row_no = 0;
                 @endphp
 
                 @while($currentIndex < $totalRecords)
@@ -298,14 +299,12 @@
                         
                     @endphp
 
-                    
                     @foreach($batchGroups as $batchNumber => $batchRows)
                         @foreach($batchRows as $rowIndex => $row)
                             <tr>
-                                <td style="text-align: center" class="bordertables">{{ ++$count }}</td>
-                                
                                 {{-- Item details - merged across ALL item rows --}}
                                 @if($isFirstRow && $rowIndex === 0)
+                                    <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">{{ ++$row_no }}</td>
                                     <td style="text-align: center" class="bordertables" rowspan="{{ $totalItemRows }}">
                                         {{ $row->ItemCode }}
                                     </td>
@@ -341,11 +340,8 @@
                                 @endif
                             </tr>
                         @endforeach
-                       
                     @endforeach
-
-                    @php $currentIndex = $nextIndex; @endphp
-                    
+                    @php $currentIndex = $nextIndex; @endphp 
                 @endwhile 
                 
             </tbody>

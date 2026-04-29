@@ -195,7 +195,9 @@
         var s_i = 0;
         var s_m = 0;
         var s_j = 0;
-
+        var START_YEAR = 1900;
+        var END_YEAR = 2100;
+        
         $('#save_batch_and_serial_btn').click(function(){
             var manageForm = $("#ManageBatchAndSerialForm");
             var formData = manageForm.serialize();
@@ -364,7 +366,7 @@
                             $('#save_batch_and_serial_btn').text('Update');
                             $('#save_batch_and_serial_btn').prop("disabled", false);
                         }
-                        toastrMessage('error',`Please match serial number and entered quantity for the specified rows below</br>--------------</br>${list_of_rows}`,"Error");
+                        toastrMessage('warning',`Please match serial number and entered quantity for the specified rows below</br>--------------</br>${list_of_rows}`,"Warning");
                     }
                     else if(data.batch_variances){
                         if(parseInt(opt_type) == 1){
@@ -375,7 +377,7 @@
                             $('#save_batch_and_serial_btn').text('Update');
                             $('#save_batch_and_serial_btn').prop("disabled", false);
                         }
-                        toastrMessage('error',"The received quantity does not match the total quantity entered.","Error");
+                        toastrMessage('warning',"The received quantity does not match the total quantity entered.","Warning");
                     }
                     else if (data.dberrors) {
                         if(parseInt(opt_type) == 1){
@@ -606,11 +608,37 @@
 
                             $(`#bactchNumber${b_m}`).val(value.batch_number);
                             $(`#bactchQuantity${b_m}`).val(value.received_qty);
-
-                            flatpickr(`#bsManufactureDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,maxDate:currentdate});
+                            
+                            flatpickr(`#bsManufactureDate${b_m}`, { 
+                                dateFormat: 'Y-m-d',
+                                monthSelectorType: 'dropdown',
+                                showMonths: 1,
+                                clickOpens: true,
+                                maxDate: currentdate,
+                                plugins: [
+                                    yearSelectPlugin({
+                                        yearSelectorType: "dropdown", // This is the plugin-specific option
+                                        yearStart: START_YEAR,
+                                        yearEnd: CURRENT_YEAR
+                                    })
+                                ]
+                            });
                             $(`#bsManufactureDate${b_m}`).val(value.manufacturing_date);
 
-                            flatpickr(`#bsExpiryDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,minDate:currentdate});
+                            flatpickr(`#bsExpiryDate${b_m}`, { 
+                                dateFormat: 'Y-m-d',
+                                monthSelectorType: 'dropdown',
+                                showMonths: 1,
+                                clickOpens:true,
+                                minDate:currentdate,
+                                plugins: [
+                                    yearSelectPlugin({
+                                        yearSelectorType: "dropdown", // This is the plugin-specific option
+                                        yearStart: CURRENT_YEAR,
+                                        yearEnd: END_YEAR
+                                    })
+                                ]
+                            });
                             $(`#bsExpiryDate${b_m}`).val(value.expiry_date);
 
                             $(`#batch_uuid${b_m}`).val(value.batch_uuid);
@@ -811,14 +839,40 @@
                 var manufacurer_options = $("#bs_manufacturer_default > option").clone();
                 $(`#bsManufacturer${b_m}`).empty().append(manufacurer_options).select2({placeholder: "Select manufacturer here..."});
 
-                flatpickr(`#bsManufactureDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,maxDate:currentdate});
+                flatpickr(`#bsManufactureDate${b_m}`, { 
+                    dateFormat: 'Y-m-d',
+                    monthSelectorType: 'dropdown',
+                    showMonths: 1,
+                    clickOpens: true,
+                    maxDate: currentdate,
+                    plugins: [
+                        yearSelectPlugin({
+                            yearSelectorType: "dropdown", // This is the plugin-specific option
+                            yearStart: START_YEAR,
+                            yearEnd: CURRENT_YEAR
+                        })
+                    ]
+                });
 
                 var brand_options = $("#bs_brand_default > option").clone();
                 $(`#bsBrand${b_m}`).empty().append(brand_options).select2({placeholder: "Select brand here..."});
 
                 $(`#bsModel${b_m}`).empty().select2({placeholder: "Select brand first"});
 
-                flatpickr(`#bsExpiryDate${b_m}`, { dateFormat: 'Y-m-d',clickOpens:true,minDate:currentdate});
+                flatpickr(`#bsExpiryDate${b_m}`, { 
+                    dateFormat: 'Y-m-d',
+                    monthSelectorType: 'dropdown',
+                    showMonths: 1,
+                    clickOpens:true,
+                    minDate:currentdate,
+                    plugins: [
+                        yearSelectPlugin({
+                            yearSelectorType: "dropdown", // This is the plugin-specific option
+                            yearStart: CURRENT_YEAR,
+                            yearEnd: END_YEAR
+                        })
+                    ]
+                });
 
                 $("#batch_title_for_serial_no").html("");
 

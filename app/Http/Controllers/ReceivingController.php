@@ -54,7 +54,7 @@ class ReceivingController extends Controller
         $fiscalyr = $settingsval->FiscalYear;
         $recpage = $settingsval->ReceivingMode;
         $isPoAmntAuth = 0;
-        $receiving_mode = 0;
+        $receiving_mode = 1;
         $curdate = Carbon::today()->toDateString();
         $setting = DB::table('settings')->latest()->first();
         $customerSrc = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory NOT IN("Customer","Person") AND customers.ActiveStatus="Active" AND customers.IsDeleted=1 ORDER BY customers.Name ASC');
@@ -1419,7 +1419,6 @@ class ReceivingController extends Controller
                 return $query->where('CustomerId',$request->supplier);
             })->ignore($findid)],
 
-            'VoucherStatus' => ['required_if:ReferenceType,503'],
             'PaymentType' => ['required_if:ReferenceType,503'],
             'date' => ['required_if:ReferenceType,503','nullable','before:now'],
             'voucherType' => ['required_if:VoucherStatus,true,1,on,yes'],
@@ -1474,7 +1473,7 @@ class ReceivingController extends Controller
                     'DocumentNumber' => $document_number,
                     'Type' => $request->SourceType == "Purchase" ? $request->ReferenceType : 500,
                     'source_type' => $request->SourceType,
-                    'PoId' => $request->Reference,
+                    'PoId' => ($request->ReferenceType == 501 || $request->ReferenceType == 502) ? $request->Reference : "",
                     'ProductType' => $request->ProductType,
                     'CustomerId' => $request->SourceType == "Purchase" ? $request->supplier : 1,
                     'DeliveryOrderNo' => $request->DocumentNumber,
@@ -2082,7 +2081,7 @@ class ReceivingController extends Controller
 
         if($reference_type == 501){
             $purchase_order_data = DB::select('SELECT purchaseorders.id,purchaseorders.customers_id AS supplier_id,purchaseorders.purchaseordertype,purchaseorders.deliverydate,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS supplier FROM purchaseorders LEFT JOIN customers ON purchaseorders.customers_id=customers.id WHERE purchaseorders.id='.$reference_id);
-            $purchase_detail_data = DB::select('SELECT purchaseordersdetails.id,purchaseordersdetails.purchaseorder_id,purchaseordersdetails.itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,purchaseordersdetails.uom,uoms.Name AS uom_name,regitems.RequireSerialNumber,regitems.RequireExpireDate,purchaseordersdetails.qty,purchaseordersdetails.receivedqty FROM purchaseordersdetails LEFT JOIN regitems ON purchaseordersdetails.itemid=regitems.id LEFT JOIN uoms ON purchaseordersdetails.uom=uoms.id WHERE purchaseordersdetails.purchaseorder_id='.$reference_id.' ORDER BY purchaseordersdetails.id ASC');
+            $purchase_detail_data = DB::select('SELECT purchaseordersdetails.id,purchaseordersdetails.purchaseorder_id,purchaseordersdetails.itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,purchaseordersdetails.uom,uoms.Name AS uom_name,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,purchaseordersdetails.qty,purchaseordersdetails.receivedqty FROM purchaseordersdetails LEFT JOIN regitems ON purchaseordersdetails.itemid=regitems.id LEFT JOIN uoms ON purchaseordersdetails.uom=uoms.id WHERE purchaseordersdetails.purchaseorder_id='.$reference_id.' ORDER BY purchaseordersdetails.id ASC');
         }
         else if($reference_type == 502){
             $purchase_invoice_data = DB::select('SELECT purchaseinvoices.id,purchaseinvoices.supplier AS supplier_id,purchaseinvoices.productype,purchaseinvoices.invoicedate,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS supplier FROM purchaseinvoices LEFT JOIN customers ON purchaseinvoices.supplier=customers.id WHERE purchaseinvoices.id='.$reference_id);
@@ -2442,7 +2441,7 @@ class ReceivingController extends Controller
 
         $origindata=DB::select('SELECT receivingdetails.CommodityType AS CommTypeId,lookups.CommodityType AS CommType,crplookup.CropYear AS CropYearData,grdlookup.Grade AS GradeName,CONCAT_WS(", ", NULLIF(regions.Rgn_Name, ""), NULLIF(zones.Zone_Name, ""), NULLIF(woredas.Woreda_Name, "")) AS Origin,regitems.Name AS item_name,uoms.Name AS UomName,receivingdetails.*, IFNULL(receivingdetails.Memo,"") AS Remark,ROUND((receivingdetails.NetKg/1000),2) AS WeightByTon,uoms.Name as UomName,locations.Name AS LocationName,VarianceShortage,VarianceOverage,receivingdetails.NetKg,receivings.PoId FROM receivingdetails LEFT JOIN receivings ON receivingdetails.HeaderId=receivings.id LEFT JOIN woredas ON receivingdetails.CommodityId = woredas.id LEFT JOIN zones ON woredas.zone_id = zones.id LEFT JOIN regions ON zones.Rgn_Id = regions.id LEFT JOIN uoms ON receivingdetails.NewUomId = uoms.id LEFT JOIN locations ON receivingdetails.LocationId=locations.id LEFT JOIN lookups ON receivingdetails.CommodityType=lookups.CommodityTypeValue LEFT JOIN lookups AS crplookup ON receivingdetails.CropYear=crplookup.CropYearValue LEFT JOIN lookups AS grdlookup ON receivingdetails.Grade=grdlookup.GradeValue LEFT JOIN regitems ON receivingdetails.ItemId=regitems.id WHERE receivingdetails.HeaderId = '.$id.' ORDER BY receivingdetails.id ASC');
 
-        return response()->json(['recData'=>$recdata,'origindata'=>$origindata,'count'=>$getCountItem,'receivingdt'=>$data,'cuscatdata'=>$custmercategory,'fiscalyr'=>$fiscalyr,'fiscalyrval'=>$fiscalyears,'fiscalyear'=>$recfiscalyr,'status'=>$status,'rectype'=>$rectype,'product_type'=>$product_type]);
+        return response()->json(['recData' => $recdata,'origindata' => $origindata,'count' => $getCountItem,'receivingdt' => $data,'cuscatdata' => $custmercategory,'fiscalyr' => $fiscalyr,'fiscalyrval' => $fiscalyears,'fiscalyear' => $recfiscalyr,'status' => $status,'rectype' => $rectype,'product_type' => $product_type]);
     }
 
     public function editHoldItem($id){
@@ -2478,7 +2477,6 @@ class ReceivingController extends Controller
     {
         //
     }
-
 
     public function deleteReceivingItem(Request $request, $id)
     {
@@ -3065,15 +3063,15 @@ class ReceivingController extends Controller
         $vcount = $getCountedVouchernum[0]->VoucherCount;
         $vcounts = (float)$vcount;
 
-        $batch_number_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$findid.' AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
+        $batch_number_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$findid.' AND (batches.batch_number!="" OR batches.batch_number IS NOT NULL) AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
         foreach($batch_number_data as $batch_row){
             $batch_number_list[] = $batch_row->batch_number;
         }
 
-        $serial_number_data = DB::select('SELECT serial_numbers.serial_number FROM serial_numbers LEFT JOIN batches ON serial_numbers.batches_id=batches.id LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$findid.' AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
-        foreach($serial_number_data as $serial_row){
-            $serial_number_list[] = $serial_row->serial_number;
-        }
+        // $batch_number_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$findid.' AND (batches.batch_number!="" OR batches.batch_number IS NOT NULL) AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
+        // foreach($batch_number_data as $batch_row){
+        //     $batch_number_list[] = $batch_row->batch_number;
+        // }
 
         $batch_number_exist_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id='.$findid);
         foreach($batch_number_exist_data as $batch_row){
@@ -3564,7 +3562,7 @@ class ReceivingController extends Controller
             $source_type = "receiving";
         }
 
-        $batch_number_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$header_id.' AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
+        $batch_number_data = DB::select('SELECT batches.batch_number FROM batches LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="'.$source_type.'" WHERE receivings.id!='.$header_id.' AND (batches.batch_number!="" OR batches.batch_number IS NOT NULL) AND receivings.Status IN("Draft","Pending","Checked","Confirmed")');
         foreach($batch_number_data as $batch_row){
             $batch_number_list[] = $batch_row->batch_number;
         }
@@ -3629,6 +3627,7 @@ class ReceivingController extends Controller
                 $is_fully_inserted = 0;
 
                 $batchRowCollection = collect($request->batch_row);
+                
                 $batchRowCollection->chunk(100)->each(function($chunkedBatchRows) use ($request, $item_id, $header_id, $source_type,$store_id,$reference_number,$status, &$submitted_ids, &$serial_number_count, &$submitted_ser_ids) {
                     foreach ($chunkedBatchRows as $batch_key => $batch_value) {
                         $batch_row_id = $batch_value['batch_index_col'] ?? 0;
@@ -3801,7 +3800,7 @@ class ReceivingController extends Controller
                     $db_received_qty = $receiving_detail_data->Quantity;
                 }
 
-                if($item_data->RequireSerialNumber == "Required"){
+                if($item_data->RequireSerialNumber == "Required"){   
                     if($db_received_qty == $inserted_qty && $db_received_qty == $serial_number_count){
                         $is_fully_inserted = 1;
                     }
@@ -3864,7 +3863,6 @@ class ReceivingController extends Controller
         else if($request->batch_row == null){
             return response()->json(['empty_batch' => 462]);
         }
-
         else if(!empty($duplicate_batch_number_row)){
             return response()->json(['duplicate_batch' => $duplicate_batch_number_row]);
         }
@@ -3911,7 +3909,7 @@ class ReceivingController extends Controller
     public function getItemSerialData(Request $request){
         $batchId = $_POST['batchId'];
 
-        $serial_data = DB::select('SELECT GROUP_CONCAT(" ",serial_number) AS serial_number,COUNT(id) AS count_serial FROM serial_numbers WHERE serial_numbers.batches_id='.$batchId.' ORDER BY serial_numbers.id ASC');
+        $serial_data = DB::select('SELECT IFNULL(GROUP_CONCAT(" ",serial_number),"") AS serial_number,COUNT(id) AS count_serial FROM serial_numbers WHERE serial_numbers.batches_id='.$batchId.' ORDER BY serial_numbers.id ASC');
         return response()->json(['serial_data' => $serial_data]);
     }
 }

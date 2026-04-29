@@ -311,7 +311,7 @@
     </div>
 
     <!--Start Info Modal -->
-    <div class="modal fade text-left fit-content" id="docInfoModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal fade text-left fit-content" id="docInfoModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="docInfoModal" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -340,45 +340,41 @@
                                         <div class="collapse show infoscl shadow pl-1 pr-1">
                                             <div class="row mb-1">
                                                 
-                                                <div class="col-xl-2 col-lg-12 col-md-12 col-sm-12 col-12 mt-1">
+                                                <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12 mt-1">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
-                                                            <h4 class="card-title mb-0"></h4>
+                                                            <h6 class="card-title mb-0">
+                                                                <i class="fas fa-share-alt"></i> Source Information
+                                                            </h6>
+                                                            <hr class="my-50">
                                                             <table class="infotbl" style="width:100%;font-size:12px;">
                                                                 <tr>
                                                                     <td><label class="info_lbl">Source Type</label></td>
                                                                     <td><label class="info_lbl" id="info_source_type" style="font-weight: bold;"></label></td>
+                                                                </tr>
+                                                                <tr class="purchase_tr">
+                                                                    <td><label class="info_lbl">Reference Type</label></td>
+                                                                    <td><label class="info_lbl" id="infoReferenceType" style="font-weight: bold;"></label></td>
+                                                                </tr>
+                                                                <tr class="procurement_cl purchase_tr" id="reference_td">
+                                                                    <td><label class="info_lbl">Reference</label></td>
+                                                                    <td><label class="info_lbl" id="infoReference" style="font-weight: bold;"></label></td>
+                                                                </tr>
+                                                                <tr class="purchase_tr">
+                                                                    <td><label class="info_lbl">Product Type</label></td>
+                                                                    <td><label class="info_lbl" id="infoProductType" style="font-weight: bold;"></label></td>
                                                                 </tr>
                                                             </table>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 mb-1 info_common_div" id="info_purchase_div">
+                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 mb-1 info_common_div" id="info_purchase_div">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body mb-0">
                                                             <h6 class="card-title mb-0"><i class="fas fa-dolly"></i> Purchase Information</h6>
                                                             <hr class="my-50">
                                                             <div class="row">
-                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                    <table class="infotbl" style="width:100%;font-size:12px;">
-                                                                        <tr>
-                                                                            <td colspan="2" class="text-center"><b><u>Source Information</u></b></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td><label class="info_lbl">Reference Type</label></td>
-                                                                            <td><label class="info_lbl" id="infoReferenceType" style="font-weight: bold;"></label></td>
-                                                                        </tr>
-                                                                        <tr class="procurement_cl" id="reference_td">
-                                                                            <td><label class="info_lbl">Reference</label></td>
-                                                                            <td><label class="info_lbl" id="infoReference" style="font-weight: bold;"></label></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td><label class="info_lbl">Product Type</label></td>
-                                                                            <td><label class="info_lbl" id="infoProductType" style="font-weight: bold;"></label></td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </div>
                                                                 <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
@@ -462,7 +458,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 info_common_div" id="info_production_div">
+                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 info_common_div" id="info_production_div">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
                                                             <h6 class="card-title mb-0"><i class="fas fa-industry"></i> Production Information</h6>
@@ -549,7 +545,7 @@
                                                         <div class="table-responsive scroll scrdiv">
                                                             <div class="row infoRecDiv">
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" id="receiving_item_div">
-                                                                    <table id="docRecInfoItem" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
+                                                                    <table id="docRecInfoItem" class="display table-bordered table-striped dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th style="display: none;"></th>
@@ -707,7 +703,7 @@
     <!-- End Info Modal -->
 
     <!--Start Registration Modal -->
-    <div class="modal fade text-left fit-content" id="inlineForm" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true" style="overflow-y:scroll;">
+    <div class="modal fade text-left fit-content" id="inlineForm" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="inlineForm" aria-hidden="true" style="overflow-y:scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -768,10 +764,10 @@
                                                         <strong id="product-type-error" class="errordatalabel purchase_error"></strong>
                                                     </span>
                                                 </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 source_data_dynamic_div" id="src_expiry_date">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 source_data_dynamic_div" id="src_expiry_date">
                                                     <label class="form_lbl" id="reference_date_lbl"></label>
                                                 </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 source_data_dynamic_div" id="src_cost_visibility">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 source_data_dynamic_div" id="src_cost_visibility">
                                                     <div class="form-check form-check-inline">
                                                         <div class="custom-control custom-control-primary custom-checkbox">
                                                             <input type="checkbox" class="custom-control-input" id="VisibleCost" name="VisibleCost"/>
@@ -796,7 +792,7 @@
                                                 </div>
                                                 <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 mb-1" id="document_no_div">
                                                     <label class="form_lbl" title="Document Number">Document No.</label>
-                                                    <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Write document number here" class="form-control mainforminp purchase_input" onkeyup="docNumberFn()"/>
+                                                    <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Enter document number here" class="form-control mainforminp purchase_input" onkeyup="docNumberFn()"/>
                                                     <span class="text-danger">
                                                         <strong id="docnumber-error" class="errordatalabel purchase_error"></strong>
                                                     </span>
@@ -883,21 +879,21 @@
                                     <div class="row">
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Production No.<b style="color: red; font-size:16px;">*</b></label>
-                                            <input type="text" placeholder="Write production number here" class="form-control mainforminp production_input" name="productionNumber" id="production_number" onkeyup="productionNumFn()"/>
+                                            <input type="text" placeholder="Enter production number here" class="form-control mainforminp production_input" name="productionNumber" id="production_number" onkeyup="productionNumFn()"/>
                                             <span class="text-danger">
                                                 <strong id="production-number-error" class="errordatalabel production_error"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Requisition No.</label>
-                                            <input type="text" placeholder="Write requisition number here" class="form-control mainforminp production_input" name="requisitionNumber" id="requisition_number" onkeyup="requisitionNumFn()"/>
+                                            <input type="text" placeholder="Enter requisition number here" class="form-control mainforminp production_input" name="requisitionNumber" id="requisition_number" onkeyup="requisitionNumFn()"/>
                                             <span class="text-danger">
                                                 <strong id="req-number-error" class="errordatalabel production_error"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Delivered By</label>
-                                            <input type="text" name="ProductionDeliveredBy" id="ProductionDeliveredBy" placeholder="Write Name here" class="form-control mainforminp production_input" onkeyup="prdDeliveredByFn()"/>
+                                            <input type="text" name="ProductionDeliveredBy" id="ProductionDeliveredBy" placeholder="Enter Name here" class="form-control mainforminp production_input" onkeyup="prdDeliveredByFn()"/>
                                             <span class="text-danger">
                                                 <strong id="prd-deliveredby-error" class="errordatalabel production_error"></strong>
                                             </span>
@@ -950,7 +946,7 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Remark</label>
-                                            <textarea type="text" placeholder="Write remark here..." class="form-control mainforminp" name="Memo" id="Memo" rows="1"></textarea>
+                                            <textarea type="text" placeholder="Enter remark here" class="form-control mainforminp" name="Memo" id="Memo" rows="1"></textarea>
                                             <span class="text-danger">
                                                 <strong id="memo-error" class="errordatalabel"></strong>
                                             </span>
@@ -975,14 +971,14 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Delivered By</label>
-                                            <input type="text" name="DeliveredBy" id="DeliveredBy" placeholder="Write Name here" class="form-control mainforminp purchase_input" onkeyup="deliveredByFn()"/>
+                                            <input type="text" name="DeliveredBy" id="DeliveredBy" placeholder="Enter Name here" class="form-control mainforminp purchase_input" onkeyup="deliveredByFn()"/>
                                             <span class="text-danger">
                                                 <strong id="deliveredby-error" class="errordatalabel purchase_error"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl" title="Plate Number">Plate No.</label>
-                                            <input type="text" name="PlateNumber" id="PlateNumber" placeholder="Write Truck plate number here" class="form-control mainforminp purchase_input" onkeyup="plateNumFn()" style="text-transform:uppercase"/>
+                                            <input type="text" name="PlateNumber" id="PlateNumber" placeholder="Enter Truck plate number here" class="form-control mainforminp purchase_input" onkeyup="plateNumFn()" style="text-transform:uppercase"/>
                                             <span class="text-danger">
                                                 <strong id="platenum-error" class="errordatalabel purchase_error"></strong>
                                             </span>
@@ -996,7 +992,7 @@
                                         </div>
                                         <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" style="display:none">
                                             <label class="form_lbl" title="Driver License Number">Driver License No.</label>
-                                            <input type="text" placeholder="Write Driver license number here" class="form-control mainforminp purchase_input" name="DriverLicenseNo" id="DriverLicenseNo" onkeyup="driverLicFn()"/>
+                                            <input type="text" placeholder="Enter Driver license number here" class="form-control mainforminp purchase_input" name="DriverLicenseNo" id="DriverLicenseNo" onkeyup="driverLicFn()"/>
                                             <span class="text-danger">
                                                 <strong id="driverlic-error" class="errordatalabel purchase_error"></strong>
                                             </span>
@@ -1013,16 +1009,16 @@
                                         <thead>
                                             <tr>
                                                 <th class="form_lbl" style="width:3%;">#</th>
-                                                <th class="form_lbl" style="width:22%">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                                <th class="form_lbl" style="width:12%" title="Unit of Measurement">UOM</th>
+                                                <th class="form_lbl" style="width:21%">Item Name<b style="color: red; font-size:16px;">*</b></th>
+                                                <th class="form_lbl" style="width:11%" title="Unit of Measurement">UOM</th>
                                                 <th class="form_lbl proc_module" style="width:12%" title="Ordered Quantity">Ordered Qty.</th>
-                                                <th class="form_lbl" style="width:12%" id="qty_header">Quantity<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl proc_module" style="width:12%" title="Remaining Quantity">Remaining Qty.</th>
+                                                <th class="form_lbl" style="width:12%" id="qty_header">Quantity<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl cost_visibility_div unorder_price_col prd_price_con" style="width:12%">Unit Cost<b style="color: red; font-size:16px;">*</b></th>
                                                 <th class="form_lbl cost_visibility_div unorder_price_col prd_price_con" style="width:12%" id="beforeAfterTax">Before Tax</th>
                                                 <th style="width:12%" class="form_lbl vatproperty cost_visibility_div">Tax Amount</th>
                                                 <th style="width:12%" class="form_lbl vatproperty cost_visibility_div">Total Cost</th>
-                                                <th class="form_lbl" style="width:3%"></th>
+                                                <th class="form_lbl" style="width:5%"></th>
                                             </tr>
                                         <thead>
                                         <tbody></tbody>
@@ -1118,8 +1114,8 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
-                        
                         <div style="display:none;">
                             <select class="select2 form-control" name="ReferenceTypeDefault" id="ReferenceTypeDefault">
                                 @foreach ($ref_type_data as $ref_type)
@@ -1171,7 +1167,7 @@
     <!--End Registation Modal -->
 
     <!--Start backward action modal -->
-    <div class="modal fade text-left" id="backwardActionModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+    <div class="modal fade text-left fit-content" id="backwardActionModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="backwardActionModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1185,7 +1181,7 @@
                     <div class="modal-body">
                         <label style="font-size: 14px;" id="backwardActionLabel"></label>
                         <div class="form-group">
-                            <textarea type="text" placeholder="Write Reason here..." class="form-control" rows="3" name="CommentOrReason" id="CommentOrReason" onkeyup="receivingReasonFn()"></textarea>
+                            <textarea type="text" placeholder="Enter reason here" class="form-control" rows="3" name="CommentOrReason" id="CommentOrReason" onkeyup="receivingReasonFn()"></textarea>
                             <span class="text-danger">
                                 <strong id="commentres-error"></strong>
                             </span>
@@ -1206,7 +1202,7 @@
     <!-- End backward action modal -->
 
     <!--Start Void modal -->
-    <div class="modal fade text-left" id="voidreasonmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+    <div class="modal fade text-left fit-content" id="voidreasonmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="voidreasonmodal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1219,7 +1215,7 @@
                     @csrf
                     <div class="modal-body">
                         <label class="form_lbl">Reason</label>
-                        <textarea type="text" placeholder="Write Reason here..." class="form-control Reason" rows="3" name="Reason" id="Reason" onkeyup="voidReason()"></textarea>
+                        <textarea type="text" placeholder="Enter reason here" class="form-control Reason" rows="3" name="Reason" id="Reason" onkeyup="voidReason()"></textarea>
                         <span class="text-danger">
                             <strong id="void-error"></strong>
                         </span>
@@ -1237,7 +1233,7 @@
     <!-- End Void modal -->
 
     <!-- start manage withold modal-->
-    <div class="modal modal-slide-in event-sidebar fade fit-content" id="witholdManageModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal modal-slide-in event-sidebar fade fit-content" id="witholdManageModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="witholdManageModal" aria-hidden="true">
         <form id="ManageWitholdForm">    
             <div class="modal-dialog sidebar-xl withholding_mgt_modal" style="width: 50%;">
                 <div class="modal-content p-0">
@@ -1319,7 +1315,7 @@
                                                 <div class="row mt-1 mb-1">
                                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                                         <label class="form_lbl">Receipt No.<b style="color: red; font-size:16px;">*</b></label>
-                                                        <input type="number" placeholder="Write receipt number here..." class="form-control mainforminp" name="ReceiptNumber" id="ReceiptNumber" onkeyup="ReceiptNumberVal()" onkeypress="return ValidateOnlyNum(event);" />
+                                                        <input type="number" placeholder="Enter receipt number here..." class="form-control mainforminp" name="ReceiptNumber" id="ReceiptNumber" onkeyup="ReceiptNumberVal()" onkeypress="return ValidateOnlyNum(event);" />
                                                         <span class="text-danger">
                                                             <strong id="receipt-error" class="errlblclass errordatalabel"></strong>
                                                         </span>
@@ -1375,13 +1371,13 @@
     <!--/ end manage withold modal-->
 
     <!-- start manage document modal-->
-    <div class="modal modal-slide-in event-sidebar fade fit-content" id="manageDocumentModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal modal-slide-in event-sidebar fade fit-content" id="manageDocumentModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageDocumentModal" aria-hidden="true">
         <form id="ManageDocumentForm">    
             <div class="modal-dialog sidebar-xl" style="width: 95%;">
                 <div class="modal-content p-0">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ea5455 !important;font-weight:bold;">x</button>
                     <div class="modal-header mb-1">
-                        <h5 class="modal-title form_title" id="manage-document-title">Upload Documents</h5>
+                        <h5 class="modal-title form_title" id="manage-document-title">Manage Documents</h5>
                         <div class="info_modal_title_lbl info_modal_title_lbl" style="text-align: center;padding-right:30px;"></div>
                     </div>
                     <div class="modal-body flex-grow-1 pb-sm-0 pb-3 scrdivhor scrollhor" style="overflow-y:auto;height:100vh;">
@@ -1435,14 +1431,17 @@
     <!--/ end manage document modal-->
     
     @include('layout.universal-component')
-    @include('parts.batch_serial')
-
     
+@endsection
+
+@section('scripts')
+@include('parts.batch_serial')
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var voideditor;
         var fyears = $('#fiscalyearval').val();
         var currentdate = $('#currentdateval').val();
+        var CURRENT_YEAR = currentdate.split("-")[0];
         var cdatevar = $('#currentdateval').val();
         var table = "";
         var detail_table = "";
@@ -1459,6 +1458,8 @@
         var z3 = 0;
         var purGlobalIndex = -1;
         var prdGlobalIndex = -1;
+        var firstLevelIndex = -1;
+        var infoTblIndex = -1;
         var expand_flag = [];
 
         var statusTransitions = {
@@ -2210,7 +2211,6 @@
             $('#laravel-datatable-crud tbody > tr').removeClass('selected');
             $(this).addClass('selected');
             purGlobalIndex = $(this).index();
-            
         });
 
         $('#laravel-datatable-crud-prd tbody').on('click', 'tr', function () {
@@ -2275,6 +2275,7 @@
                     $('.purchase_select').val(null).select2({placeholder: "Select value here..."});
                     resWitholdCalcFn();
                 }
+                resetSourceDateFn();
                 $("#source_type-error").html("");
             }
             else{
@@ -2282,7 +2283,6 @@
                 toastrMessage('error',"You can not change source type, because there is a record after this receiving.","Error");
             }
             CalculateGrandTotal();
-            resetSourceDateFn();
         });
 
         function productionNumFn(){
@@ -2528,13 +2528,20 @@
                         reqsn = value.RequireSerialNumber;
                         reqed = value.RequireExpireDate;
 
+                        var is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                        var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                        var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+
                         $(`#uom${indx}`).empty().append(`<option selected value='${value.uom}'>${value.uom_name}</option>`).select2();
 
                         $('#pricing_tbl_tax').text(`Tax (${value.TaxTypeId}%)`);
 
                         $(`#tax${indx}`).val(value.TaxTypeId);
-                        $(`#RequireSerialNumber${indx}`).val(value.RequireSerialNumber);
-                        $(`#RequireExpireDate${indx}`).val(value.RequireExpireDate);
+
+                        if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
+                            $(`#batch_serial_info${indx}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
+                            $(`#batch_serial_info${indx}`).show();
+                        }
 
                         if(ref_type == 501 || ref_type == 502){
                             $(`#ordered_qty${indx}`).val(value.qty);
@@ -2704,16 +2711,17 @@
                 $("#dynamicTable > tbody").append(`<tr>
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                    <td style="width:22%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                    <td style="width:12%"><select id = "uom${m}" class ="select2 form-control uom" onchange = "uomVal(this)" name = "row[${m}][uom]"></select></td>
+                    <td style="width:21%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
+                    <td style="width:11%"><select id = "uom${m}" class ="select2 form-control uom" onchange = "uomVal(this)" name = "row[${m}][uom]"></select></td>
                     <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
                     <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:3%;text-align:center;">
+                    <td style="width:5%;text-align:center;">
+                        <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
                         <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                     </td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" style="font-weight:bold;"/></td>
@@ -3295,7 +3303,7 @@
                     $('.unorder_price_div').show();
                     $('.proc_module').hide();
                     $("#qty_header").html(`Quantity<b style="color: red; font-size:16px;">*</b>`);
-                    //voucherStatusFn();
+                    voucherStatusFn();
                 }
             }
             else{
@@ -3314,33 +3322,34 @@
             var tax = 0;
             var total = 0;
             var linetotal = 0;
-            var taxpercent = 15;
+            var taxpercent = 0;
             
             if(parseInt(vstatus) == 1){
                 for(var i = 0;i <= m;i++){
-                    quantity = $('#quantity'+i).val()||0;
-                    unitcost = $('#unitcost'+i).val()||0;
+                    var taxpercent = $(`#tax${i}`).val()||0;
+                    quantity = $(`#quantity${i}`).val()||0;
+                    unitcost = $(`#unitcost${i}`).val()||0;
                     unitcost = unitcost == '' ? 0 : unitcost;
                     quantity = quantity == '' ? 0 : quantity;
                     total = parseFloat(unitcost) * parseFloat(quantity);
                     taxamount = (parseFloat(total) * parseFloat(taxpercent) / 100);
                     linetotal = parseFloat(total) + parseFloat(taxamount);
-                    $('#beforetax'+i).val(total.toFixed(2));
-                    $('#taxamounts'+i).val(taxamount.toFixed(2));
-                    $('#total'+i).val(linetotal.toFixed(2));
+                    $(`#beforetax${i}`).val(total.toFixed(2));
+                    $(`#taxamounts${i}`).val(taxamount.toFixed(2));
+                    $(`#total${i}`).val(linetotal.toFixed(2));
                 }
             }
             else if(parseInt(vstatus)==2){
-                for(var i=0;i<=m;i++){
-                    quantity=$('#quantity'+i).val()||0;
-                    unitcost=$('#unitcost'+i).val()||0;
+                for(var i = 0;i <= m;i++){
+                    quantity = $(`#quantity${i}`).val()||0;
+                    unitcost = $(`#unitcost${i}`).val()||0;
                     unitcost = unitcost == '' ? 0 : unitcost;
                     quantity = quantity == '' ? 0 : quantity;
                     total = parseFloat(unitcost) * parseFloat(quantity);
                     
-                    $('#beforetax'+i).val(total.toFixed(2));
-                    $('#taxamounts'+i).val("0");
-                    $('#total'+i).val(total.toFixed(2));
+                    $(`#beforetax${i}`).val(total.toFixed(2));
+                    $(`#taxamounts${i}`).val("0");
+                    $(`#total${i}`).val(total.toFixed(2));
                 }
             }
             CalculateGrandTotal();
@@ -3666,13 +3675,10 @@
                         //$('#source_type').val(value.source_type).select2({minimumResultsForSearch: -1});
                         
                         if(receivng_md == 0){
-                            $('#ReferenceType').empty().append(reference_option.find(`option[value!="505"]`).clone());
-                            
-                            //$('#ReferenceType').empty().append(reference_option.find(`option[value="503"]`).clone());
+                            $('#ReferenceType').empty().append(reference_option.find(`option[value="503"]`).clone());
                         }
                         else if(receivng_md == 1){
-                            $('#ReferenceType').empty().append(reference_option.find(`option[value!=505]`).clone());
-                            //$('#ReferenceType').empty().append(reference_option.find(`option[value!=503]`).clone());
+                            $('#ReferenceType').empty().append(reference_option.find(`option[value!=503]`).clone());
                         }
 
                         $(`#ReferenceType option[value="${value.Type}"]`).remove(); 
@@ -3736,7 +3742,21 @@
                             $("#document_no_div").show();
                             $('.cost_visibility_div').hide();
 
-                            $("#reference_date_lbl").html(`Expiry Date: <b>${value.deliverydate}</b>`);
+                            var expiry_flag_color = "";
+                            var expiry_info = "";
+                            var delivery_date = new Date(value.deliverydate);
+                            var current_date = new Date(currentdate);
+
+                            if(delivery_date < current_date){
+                                expiry_flag_color = "#ea5455";
+                                expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Purchase order expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                            }
+                            else{
+                                expiry_flag_color = "#5e5873";
+                                expiry_info = "";
+                            }
+                  
+                            $("#reference_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.deliverydate}</b> ${expiry_info}`);
                             $("#src_expiry_date").show();
                         }
 
@@ -3827,33 +3847,24 @@
                         ++i;
                         ++m;
                         ++j;
-                        var vis = "";
-                        if(value.ReSerialNm == "Require" || value.ReExpDate == "Require"){
-                            vis = "visible";
-                        }
-                        else{
-                            vis = "none";
-                        }
 
                         $("#dynamicTable > tbody").append(`<tr>
                             <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                             <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                            <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                            <td style="width:12%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"></select></td>
+                            <td style="width:21%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
+                            <td style="width:11%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"></select></td>
                             <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                            <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.Quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                             <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                            <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.Quantity}" onkeypress="return ValidateNum(event);" placeholder="Enter quantity here" ondrop="return false;" onpaste="return false;"/></td>
                             <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.UnitCost}" onkeypress="return ValidateNum(event);"/></td>
                             <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="${value.BeforeTaxCost}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="${value.TaxAmount}" style="font-weight:bold;"/></td>
                             <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.TotalCost}" style="font-weight:bold;"/></td>
-                            <td style="width:3%;text-align:center">
+                            <td style="width:5%;text-align:center">
+                                <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
                                 <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                             </td>
-                            <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>
-                            <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" value="${value.ReSerialNm}" style="font-weight:bold;"/></td>
-                            <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" value="${value.ReExpDate}" style="font-weight:bold;"/></td>
-                            <td style="display:none;"><input type="hidden" name="row[${m}][insertedqty]" id="insertedqty${i}" class="insertedqty form-control" readonly="true" style="font-weight:bold;" value="${value.Quantity}"/></td> 
+                            <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="${value.TaxTypeId}" style="font-weight:bold;"/></td>
                         </tr>`);
 
                         var default_item = `<option selected value='${value.ItemId}'>${value.item_name}</option>`;
@@ -3888,6 +3899,15 @@
 
                         if(parseFloat(value.sold_issued) > 0 || parseFloat(value.is_sold) > 0){
                             $(`#remove_rec_item${m}`).remove();
+                        }
+
+                        var is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                        var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                        var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+
+                        if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
+                            $(`#batch_serial_info${m}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
+                            $(`#batch_serial_info${m}`).show();
                         }
 
                         columnMgtFn();
@@ -3957,8 +3977,10 @@
             $('.receipt_data_total_price').hide();
             $('.procurement_cl').hide();
             $('.infoRecDiv').hide();  
+            $('.purchase_tr').hide();  
             var visibilitymode = false;
             var withold_count = null;
+            infoTblIndex = -1;
             expand_flag = [];
             var subtotal = 0;
             var withold_min_amount = 0;
@@ -4083,8 +4105,8 @@
                 @can("Receiving-Confirm")
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                    <a class="dropdown-item" id="managedocumentBtn" onclick="openDocumentUploadFn(${recordId})" title="Open document upload form">
-                    <span><i class="fas fa-upload"></i> Upload Documents</span>
+                    <a class="dropdown-item" id="managedocumentBtn" onclick="openDocumentUploadFn(${recordId})" title="Open document manage form">
+                    <span><i class="fas fa-sliders-h"></i> Manage Documents</span>
                     </a>
                 </li>
                 @endcan`;
@@ -4202,6 +4224,7 @@
                         $("#info_voucher_status").val(value.VoucherStatus); 
                         
                         if(value.source_type == "Purchase"){
+                            $('.purchase_tr').show();
                             $('#info_purchase_div').show();
                             $('.delivery_info_cl').show();
                             $('#invoice_deliver_date').html(value.VoucherStatus == 1 ? "Invoice Date" : "Date");
@@ -4210,6 +4233,7 @@
                             if(value.Type == 500){
                                 $('#reference_td').hide();
                                 value.is_cost_shown == 1 ? $('.receipt_data_total_price').show() : $('.receipt_data_total_price').hide();
+                                $('.procurement_cl').show();
                             }
                             else if(value.Type == 503){
                                 $('.receipt_data_cl').show();
@@ -4233,6 +4257,7 @@
                             }
                         }
                         else if(value.source_type == "Production"){
+                            $('.purchase_tr').hide();
                             $('#info_production_div').show();
                             $('.receipt_data_cl').show();
                             $('.delivery_info_cl').hide();
@@ -4489,6 +4514,10 @@
                     },
                     url: '/showrecDetail/' + recordId,
                     type: 'DELETE',
+                    complete: function () { 
+                        setFocusInfoTable('#docRecInfoItem');
+                        //setFirstLevelFocus('.first-level');
+                    },
                 },
                 columns: [{
                         data: 'id',
@@ -4727,7 +4756,7 @@
                 is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
             });
 
-            let html = `<table class="first-level table-striped table-hover dt-responsive" width="100%">`;
+            let html = `<table class="first-level table-striped dt-responsive" width="100%">`;
             html += `<tr>
                 <th style="width:2%"></th>
                 <th style="width:3%">#</th>
@@ -4737,7 +4766,7 @@
                 <th style="width:15%">Quantity</th>
                 <th style="width:15%">Manufacturing Date</th>
                 <th class="expiry_date_class" style="width:15%;display:${is_expiry_req == "No" ? "none" : ""}">Expiry Date</th>
-            </tr>`;
+            </tr><tbody>`;
 
             $.each(response.batch_data, function (index, value) {
                 var class_name = "";
@@ -4760,7 +4789,7 @@
                 </tr>`;
             });
 
-            html += `</table>`;
+            html += `</tbody></table>`;
 
             expand_flag.push(response.batch_data.length);
             var has_value = expand_flag.some(value => value > 0);
@@ -4769,8 +4798,18 @@
                 return html;
             }
             else{
-                toastrMessage('error',"No items with batch and/or serial numbers are available to expand.","Error");
+                toastrMessage('info',"No items with batch and/or serial numbers are available to expand.","Info");
             }
+        }
+
+        $('#docRecInfoItem tbody').on('click', 'tr', function () {
+            $('#docRecInfoItem tbody > tr').removeClass('selected');
+            $(this).addClass('selected');
+            infoTblIndex = $(this).index();
+        });
+
+        function setFocusInfoTable(targetTable) {
+            $($(targetTable + ' tbody > tr')[infoTblIndex]).addClass('selected');
         }
 
         $(document).on('click', '.dt-show-2', async function () {
@@ -4811,10 +4850,10 @@
                 },
             });
 
-            let html = `<table class="second-level table-striped table-hover dt-responsive" width="100%">`;
+            let html = `<table class="second-level table-striped dt-responsive" width="100%">`;
             $.each(response.serial_data, function (index, value) {
                 html += `<tr><th>Serial Number (${value.count_serial})</th></tr>`;
-                html += `<tr><td>${value.serial_number}</td></tr>`;
+                html += `<tr style="background-color:#FFFFFF;"><td>${value.serial_number}</td></tr>`;
             });
 
             html += `</table>`;
@@ -4851,7 +4890,7 @@
                     }
                 }
                 else{
-                    toastrMessage('error',"No items with batch and/or serial numbers are available to expand.","Error");
+                    toastrMessage('info',"No items with batch and/or serial numbers are available to expand.","Info");
                 }
             }
         }
@@ -5137,7 +5176,7 @@
                         $.each(data.item_variances, function(key, value) {
                             item_list += `${++key}. ${value.item_name}</br>`;
                         });
-                        toastrMessage('error',`Please enter all required batch and/or serial numbers for the items listed below</br>----------------</br>${item_list}`,"Error");
+                        toastrMessage('warning',`Please enter all required batch and/or serial numbers for the items listed below</br>----------------</br>${item_list}`,"Warning");
                     }
                     else if (data.success) {
                         toastrMessage('success',"Successful","Success");
@@ -6026,10 +6065,12 @@
                 $('#beforeAfterTax').html("Total Cost");
                 $('#subGrandTotalLbl').html("Grand Total");
                 $('#invoice_deliver_lbl').html("Date<b style='color: red; font-size:16px;'>*</b>");
+
+                $('.with_error').html("");
+                $('.with_input').val("");
+                $('.with_select').val(null).select2({placeholder: "Select value here..."});
             }
-            $('.with_error').html("");
-            $('.with_input').val("");
-            $('.with_select').val(null).select2({placeholder: "Select value here..."});
+            
             $('#voucherstatus-error').html("");
             calculateVat(voucherst);
         }
@@ -6178,7 +6219,24 @@
                         $.each(data.purchase_order_data, function(key, value) {
                             supplier_option = `<option selected value="${value.supplier_id}">${value.supplier}</option>`;
                             product_type_option = `<option selected value="${value.purchaseordertype}">${value.purchaseordertype}</option>`;
-                            $('#reference_date_lbl').html(`Expiry Date: <b>${value.deliverydate}</b>`);
+                            
+                            var expiry_flag_color = "";
+                            var expiry_info = "";
+                            var delivery_date = new Date(value.deliverydate);
+                            var current_date = new Date(currentdate);
+
+                            if(delivery_date < current_date){
+                                expiry_flag_color = "#ea5455";
+                                expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Purchase order expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                            }
+                            else{
+                                expiry_flag_color = "#5e5873";
+                                expiry_info = "";
+                            }
+
+                            
+                            $("#reference_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.deliverydate}</b> ${expiry_info}`);
+                            
                         });
 
                         listPurchaseOrderDetailFn(data.purchase_detail_data);
@@ -6225,22 +6283,20 @@
                     $("#dynamicTable > tbody").append(`<tr>
                         <td style="font-weight:bold;text-align:center;width:3%;">${j}</td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                        <td style="width:22%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
-                        <td style="width:12%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"><option selected disabled value="${value.uom}">${value.uom_name}</option></select></td>
+                        <td style="width:21%;"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
+                        <td style="width:11%"><select id="uom${m}" class = "select2 form-control uom" onchange="uomVal(this)" name = "row[${m}][uom]"><option selected disabled value="${value.uom}">${value.uom_name}</option></select></td>
                         <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][ordered_qty]" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" value="${value.qty}" style="font-weight:bold;"/></td>
-                        <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Quantity" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:12%" class="proc_module"><input type="number" name="row[${m}][remaining_qty]" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" value="${remaining_qty >= 0 ? remaining_qty : 0}" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:12%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][UnitCost]" placeholder="Unit Cost" id="unitcost${m}" class="unitcost form-control numeral-mask" onkeyup="CalculateTotal(this)" value="0" onkeypress="return ValidateNum(event);"/></td>
                         <td style="width:12%" class="cost_visibility_div unorder_price_col prd_price_con"><input type="number" name="row[${m}][BeforeTaxCost]" id="beforetax${m}" class="beforetax form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TaxAmount]" id="taxamounts${m}" class="taxamount form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
                         <td style="width:12%" class="vatproperty cost_visibility_div"><input type="number" name="row[${m}][TotalCost]" id="total${m}" class="total form-control numeral-mask" readonly="true" value="0" style="font-weight:bold;"/></td>
-                        <td style="width:3%;text-align:center">
+                        <td style="width:5%;text-align:center">
+                            <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
                             <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                         </td>
-                        <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="15" style="font-weight:bold;"/></td>
-                        <td style="display:none;"><input type="hidden" name="row[${m}][RequireSerialNumber]" id="RequireSerialNumber${m}" class="RequireSerialNumber form-control" readonly="true" value="${value.RequireSerialNumber}" style="font-weight:bold;"/></td>
-                        <td style="display:none;"><input type="hidden" name="row[${m}][RequireExpireDate]" id="RequireExpireDate${m}" class="RequireExpireDate form-control" readonly="true" value="${value.RequireExpireDate}" style="font-weight:bold;"/></td>
-                        <td style="display:none;"><input type="hidden" name="row[${m}][insertedqty]" id="insertedqty${i}" class="insertedqty form-control" readonly="true" style="font-weight:bold;" value="${value.qty}"/></td> 
+                        <td style="display:none;"><input type="hidden" name="row[${m}][tax]" id="tax${m}" class="tax form-control" readonly="true" value="${value.TaxTypeId}" style="font-weight:bold;"/></td>
                     </tr>`);
 
                     columnMgtFn();
@@ -6251,6 +6307,15 @@
                     $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
 
                     item_options += `<option value="${value.itemid}">${value.items}</option>`; 
+
+                    var is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                    var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                    var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+
+                    if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
+                        $(`#batch_serial_info${m}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
+                        $(`#batch_serial_info${m}`).show();
+                    }
                 }
             });
 
@@ -6483,7 +6548,7 @@
                                     <input type="hidden" class="form-control" value="${value.actual_file_name}" name="docrow[${z3}][doc_actual_name]" id="doc_actual_name${z3}"/>
                                 <div>
                             </td>
-                            <td style="width:20%;"><input type="text" name="docrow[${z3}][doc_remark]" id="cont_remark${z3}" class="cont_remark form-control" value="${value.remark == "" || value.remark == null ? "" : value.remark}" placeholder="Write Remark here..."/></td>
+                            <td style="width:20%;"><input type="text" name="docrow[${z3}][doc_remark]" id="cont_remark${z3}" class="cont_remark form-control" value="${value.remark == "" || value.remark == null ? "" : value.remark}" placeholder="Enter remark here"/></td>
                             <td style="width:14%;"><select id="doc_status${z3}" class="select2 form-control doc_status" name="docrow[${z3}][doc_status]"></select></td>
                             <td style="width:3%;text-align:center;"></td>
                         </tr>`);
@@ -6751,5 +6816,4 @@
             return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
         }
     </script>
-   
 @endsection

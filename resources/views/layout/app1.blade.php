@@ -88,6 +88,7 @@
 
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-menu.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
   @yield('styles')
 
@@ -569,7 +570,10 @@
     .google-visualization-orgchart-linenode{
         max-width: 2px !important;
     }
-    
+
+    .modal .picker .picker__holder {
+        overflow: visible;
+    }
     </style>
     <script>
         window.Laravel = {!! json_encode([
@@ -578,7 +582,6 @@
     </script>
     <script>
         window.Laravel.userId = {{auth()->user()->id}}
-        
     </script>
     <script type="text/javascript" src="{{ asset('app-assets/js/helpers.js') }}"></script>
     <script type="text/javascript" src="{{ asset('app-assets/js/template-customizer.js') }}"></script>
@@ -1809,6 +1812,8 @@
     <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/picker.time.js') }}"></script>
     <script src="{{ asset('app-assets/vendors/js/pickers/pickadate/legacy.js') }}"></script>
     <script src="{{ asset('app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <!-- END: Page Vendor JS-->
     <script src="{{ asset('app-assets/selectpicker/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('app-assets/selectpicker/js/bootstrap-select.min.js') }}"></script>
@@ -2089,6 +2094,106 @@
         function unblockPage(element) {
             element.unblock();
         }
+
+        const yearSelectPlugin1 = (pluginConfig) => {
+            const defaultConfig = {
+                yearStart: 1900,
+                yearEnd: 2050
+            };
+            const config = { ...defaultConfig, ...pluginConfig };
+
+            return (instance) => {
+                return {
+                    onReady() {
+                        const yearInput = instance.calendarContainer.querySelector(".cur-year");
+                        if (!yearInput) return;
+
+                        // Create the dropdown
+                        const select = document.createElement("select");
+                        select.className = "flatpickr-monthDropdown-months"; // Reusing Flatpickr styles
+                        select.style.appearance = "auto";
+                        select.style.marginLeft = "5px";
+
+                        // Populate years
+                        for (let i = config.yearStart; i <= config.yearEnd; i++) {
+                            const option = document.createElement("option");
+                            option.value = i;
+                            option.text = i;
+                            if (i === instance.currentYear) option.selected = true;
+                            select.appendChild(option);
+                        }
+
+                        // Update Flatpickr when dropdown changes
+                        select.addEventListener("change", (e) => {
+                            instance.changeYear(parseInt(e.target.value));
+                        });
+
+                        // Replace or append
+                        yearInput.style.display = "none";
+                        yearInput.parentNode.insertBefore(select, yearInput.nextSibling);
+
+                        // Update dropdown if year changes via arrows
+                        instance.set("onYearChange", () => {
+                            select.value = instance.currentYear;
+                        });
+                    }
+                };
+            };
+        };
+
+        const yearSelectPlugin = (pluginConfig) => {
+            const defaultConfig = {
+                yearStart: 1900,
+                yearEnd: 2050
+            };
+            const config = { ...defaultConfig, ...pluginConfig };
+
+            return (instance) => {
+                return {
+                    onReady() {
+                        const yearInput = instance.calendarContainer.querySelector(".cur-year");
+                        if (!yearInput) return;
+
+                        const select = document.createElement("select");
+                        select.className = "flatpickr-monthDropdown-months";
+                        select.style.appearance = "auto";
+                        select.style.marginLeft = "5px";
+                        select.style.cursor = "pointer";
+
+                        // 1. CLAMPING: Ensure the starting year is within our dropdown bounds
+                        let startYear = instance.currentYear;
+                        if (startYear < config.yearStart) startYear = config.yearStart;
+                        if (startYear > config.yearEnd) startYear = config.yearEnd;
+                        
+                        // If the date was out of bounds, force Flatpickr to jump into range
+                        if (startYear !== instance.currentYear) {
+                            instance.changeYear(startYear);
+                        }
+
+                        for (let i = config.yearStart; i <= config.yearEnd; i++) {
+                            const option = document.createElement("option");
+                            option.value = i;
+                            option.text = i;
+                            if (i === startYear) option.selected = true;
+                            select.appendChild(option);
+                        }
+
+                        select.addEventListener("change", (e) => {
+                            const selectedYear = parseInt(e.target.value);
+                            instance.changeYear(selectedYear);
+                        });
+
+                        yearInput.style.display = "none";
+                        yearInput.parentNode.insertBefore(select, yearInput.nextSibling);
+
+                        // 2. SYNC: Update dropdown if year changes via month-jump or arrows
+                        instance.set("onYearChange", () => {
+                            select.value = instance.currentYear;
+                        });
+                    }
+                };
+            };
+        };
 
     </script>
 
