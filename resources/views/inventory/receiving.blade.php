@@ -375,7 +375,7 @@
                                                             <h6 class="card-title mb-0"><i class="fas fa-dolly"></i> Purchase Information</h6>
                                                             <hr class="my-50">
                                                             <div class="row">
-                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
                                                                             <td colspan="2" class="text-center"><b><u>Supplier Information</u></b></td>
@@ -410,7 +410,7 @@
                                                                         </tr>
                                                                     </table>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 receipt_data_cl">
+                                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 receipt_data_cl">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
                                                                             <td colspan="2" class="text-center"><b><u>Receipt Information</u></b></td>
@@ -845,14 +845,14 @@
                                                 </div>
                                                 <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 with_rec invprop">
                                                     <label class="form_lbl">FS No.<b style="color: red; font-size:16px;">*</b></label>
-                                                    <input type="text" placeholder="Doc/Fs Number" class="form-control invtypeval mainforminp purchase_input with_input receipt_input" name="VoucherNumber" id="VoucherNumber" onkeyup="voucherNumberval()" onkeypress="return ValidateOnlyNum(event);" />
+                                                    <input type="text" placeholder="Enter FS/Doc no. here" class="form-control invtypeval mainforminp purchase_input with_input receipt_input" name="VoucherNumber" id="VoucherNumber" onkeyup="voucherNumberval()" onkeypress="return ValidateOnlyNum(event);" />
                                                     <span class="text-danger">
                                                         <strong id="voucherNumber-error" class="errlblclass errordatalabel purchase_error with_error receipt_error"></strong>
                                                     </span>
                                                 </div>
                                                 <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 with_rec invprop">
                                                     <label class="form_lbl" title="Invoice/ Reference Number">Invoice No.</label>
-                                                    <input type="text" placeholder="Invoice/ Reference Number" class="form-control invtypeval mainforminp purchase_input with_input receipt_input" name="InvoiceNumber" id="InvoiceNumber" onkeyup="invoiceNumberval()"/>
+                                                    <input type="text" placeholder="Enter invoice/ reference no. here" class="form-control invtypeval mainforminp purchase_input with_input receipt_input" name="InvoiceNumber" id="InvoiceNumber" onkeyup="invoiceNumberval()"/>
                                                     <span class="text-danger">
                                                         <strong id="invoiceNumber-error" class="errlblclass errordatalabel purchase_error with_error receipt_error"></strong>
                                                     </span>
@@ -868,7 +868,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </fieldset>
                             </div>
@@ -956,7 +955,6 @@
                                         <div class="divider-text"><b>Delivery Data</b></div>
                                     </div>
                                     <div class="row major_class purchase_class" style="margin-top:-1rem;">
-                                        
                                         <div class="col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12 mb-1" style="display:none">
                                             <label id="purchase_deliver_lbl" class="form_lbl">Purchased By<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control purchase_select" name="Purchaser" id="Purchaser" onchange="purchaserVal()">
@@ -1431,11 +1429,11 @@
     <!--/ end manage document modal-->
     
     @include('layout.universal-component')
-    
+
 @endsection
 
 @section('scripts')
-@include('parts.batch_serial')
+    @include('parts.batch_serial')
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var voideditor;
@@ -2491,8 +2489,7 @@
             else{
                 fetchItemInfoFn(idval);
                 fetchUOMListFn(idval);
-                CalculateGrandTotal();
-
+                
                 $(`#select2-itemNameSl${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
                 $(`#select2-uom${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
             }
@@ -2531,12 +2528,26 @@
                         var is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                         var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                         var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+                        var tax_percent = value.TaxTypeId;
+                        tax_percent = tax_percent == '' || tax_percent == null ? 0 : tax_percent;
 
                         $(`#uom${indx}`).empty().append(`<option selected value='${value.uom}'>${value.uom_name}</option>`).select2();
 
-                        $('#pricing_tbl_tax').text(`Tax (${value.TaxTypeId}%)`);
+                        $('#pricing_tbl_tax').text(`Tax (${tax_percent}%)`);
 
-                        $(`#tax${indx}`).val(value.TaxTypeId);
+                        $(`#tax${indx}`).val(tax_percent);
+
+                        var quantity = $(`#quantity${indx}`).val() || 0;
+                        var unitcost = $(`#unitcost${indx}`).val() || 0;
+
+                        var total = parseFloat(unitcost) * parseFloat(quantity);
+                        var taxamount = (parseFloat(total) * parseFloat(tax_percent) / 100);
+                        var linetotal = parseFloat(total) + parseFloat(taxamount);
+
+                        $(`#beforetax${indx}`).val(parseFloat(total).toFixed(2));
+                        $(`#taxamounts${indx}`).val(parseFloat(taxamount) > 0 ? parseFloat(taxamount).toFixed(2) : 0);
+                        $(`#total${indx}`).val(parseFloat(linetotal).toFixed(2));
+                        CalculateGrandTotal();
 
                         if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
                             $(`#batch_serial_info${indx}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
@@ -2802,7 +2813,6 @@
                 $('#itemInfoCardDiv').show();
                 $('#pricingTable').show();
             }
-
             columnMgtFn();
         }
 
@@ -3395,10 +3405,8 @@
             var newuom = $(ele).closest('tr').find('.NewUOMId').val();
             var convamount = $(ele).closest('tr').find('.ConversionAmount').val();
             var convertedq = parseFloat(quantity) / parseFloat(convamount);
-            $(ele).closest('tr').find('.ConvertedQuantity').val(convertedq);
-            if(reqexp === "Not-Require" && reqser === "Not-Require"){
-                $(ele).closest('tr').find('.insertedqty').val(quantity);
-            }
+
+
             CalculateGrandTotal();
         }
 
@@ -3734,6 +3742,7 @@
                             $('#Reference').append(ref_options.find(`option[data-type="${p_type}"]`).clone());
                             $(`#Reference option[value="${value.PoId}"]`).remove();
                             $('#Reference').append(`<option selected value="${value.PoId}">${value.porderno}, ${value.supplier_name}</option>`).select2();
+                            $('#DocumentNumber').val(value.DeliveryOrderNo);
 
                             fetchReferenceDataEditFn(value.Type,value.PoId);
                             options = $("#proc_item_default > option").clone();
@@ -4516,7 +4525,6 @@
                     type: 'DELETE',
                     complete: function () { 
                         setFocusInfoTable('#docRecInfoItem');
-                        //setFirstLevelFocus('.first-level');
                     },
                 },
                 columns: [{
@@ -4529,6 +4537,8 @@
                         orderable: false,
                         "render": function ( data, type, row, meta ) {
                             if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+
                                 return `<i title="Show batch number, serial number, expiry date under ${row.ItemName} item!" class="fas fa-caret-right fa-xl"></i>`;
                             }
                             else{
@@ -4666,8 +4676,6 @@
                     }
                 });
             });
-
-            $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
         }
 
         function highlight(container, keyword) {
@@ -4723,16 +4731,19 @@
         $('#docRecInfoItem tbody').on('click', 'td.dt-show-1', async function () {
             let tr = $(this).closest('tr');
             let row = $('#docRecInfoItem').DataTable().row(tr);
-
+            
             if (row.child.isShown()) {
                 row.child.hide();
                 $(this).html('<i class="fas fa-caret-right fa-xl"></i>');
             } else {
-                row.child('Loading...').show();
                 let data = row.data();
                 let html = await formatLevel1Fn(data.HeaderId,data.ItemId);
-                row.child(html).show();
-                $(this).html('<i class="fas fa-caret-down fa-xl"></i>');
+                
+                if(html != undefined){
+                    row.child('Loading...').show();
+                    row.child(html).show();
+                    $(this).html('<i class="fas fa-caret-down fa-xl"></i>');
+                }
             }
         });
 
@@ -4798,7 +4809,7 @@
                 return html;
             }
             else{
-                toastrMessage('info',"No items with batch and/or serial numbers are available to expand.","Info");
+                toastrMessage('info',"No batch and/or serial numbers are available to expand.","Info");
             }
         }
 
@@ -4862,6 +4873,7 @@
 
         async function expandAllLevel1Fn() {
             let table = $('#docRecInfoItem').DataTable();
+            var count_req = 0;
 
             for (let i = 0; i < table.rows().count(); i++) {
 
@@ -4889,9 +4901,9 @@
                         tr.find('.dt-show-1').html('<i class="fas fa-caret-down fa-xl"></i>');
                     }
                 }
-                else{
-                    toastrMessage('info',"No items with batch and/or serial numbers are available to expand.","Info");
-                }
+                // else{
+                //     //toastrMessage('info',"No batch and/or serial numbers are available to expand.","Info");
+                // }
             }
         }
 

@@ -5215,6 +5215,7 @@
             var edit_permission_count = 0;
 
             $.get("/showemployee"+'/'+recordId , function(data) {
+                
                 picdatabin = data.picdata;
                 count_contr = data.count_contract;
 

@@ -61,8 +61,7 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response 
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $compId = 1;
@@ -658,7 +657,6 @@ class EmployeeController extends Controller
                     }
                 }
 
-
                 employee_document::where('employee_documents.employees_id',$employees->id)->delete();
                 employee_document::insert($document_upload_data);
 
@@ -875,8 +873,6 @@ class EmployeeController extends Controller
         $salaryid = $recdata->salaries_id;
         $negflag = $recdata->UpdateSalaryFlag;
         $picidName = $recdata->BiometricPicture;
-        $createddate = Carbon::createFromFormat('Y-m-d H:i:s', $recdata->created_at)->settings(['timezone' => 'Africa/Addis_Ababa'])->format('Y-m-d @ g:i:s A');
-        $updateddate = Carbon::createFromFormat('Y-m-d H:i:s', $recdata->updated_at)->settings(['timezone' => 'Africa/Addis_Ababa'])->format('Y-m-d @ g:i:s A');
 
         $data = employee::leftJoin('branches','employees.branches_id','=','branches.id')
         ->leftJoin('departments','employees.departments_id','=','departments.id')
@@ -896,31 +892,12 @@ class EmployeeController extends Controller
         'salaries.TaxableEarning','salaries.NonTaxableEarning','salaries.TotalEarnings','salaries.TotalDeductions','salaries.CompanyPension',
         'salaries.NetSalary','cities.city_name','subcities.subcity_name','devices.DeviceName','banks.BankName',
         'titleref.LookupName AS emp_title','bloodtype.LookupName AS bloodtype',
-        DB::raw('CASE WHEN employees.UpdateSalaryFlag=0 THEN "No" WHEN employees.UpdateSalaryFlag=1 THEN "Yes" END AS SalaryTypeFlag'),
-        DB::raw("'$createddate' AS CreatedDateTime"),DB::raw("'$updateddate' AS UpdatedDateTime")]);
+        DB::raw('CASE WHEN employees.UpdateSalaryFlag=0 THEN "No" WHEN employees.UpdateSalaryFlag=1 THEN "Yes" END AS SalaryTypeFlag')]);
 
         if($data[0]->AccessStatus == "Enable"){
             $usr = User::where('empid', $id)->first();
             $uname = $usr->username;
         }
-
-        $leavedata = hr_employee_leave::join('hr_leavetypes','hr_employee_leaves.hr_leavetypes_id','=','hr_leavetypes.id')
-        ->where('hr_employee_leaves.employees_id', $id)
-        ->get(['hr_employee_leaves.*','hr_leavetypes.LeaveType','hr_leavetypes.Description','hr_leavetypes.Status',DB::raw('IFNULL(hr_employee_leaves.Remark,"") AS Remark'),DB::raw('IFNULL(hr_employee_leaves.LeaveBalance,"") AS LeaveBalance')]);
-
-        $salarydetdata = salarydetail::join('salarytypes','salarydetails.salarytypes_id','salarytypes.id')
-        ->where('salarydetails.salaries_id',$salaryid)
-        ->orderBy('salarytypes.SalaryType','DESC')
-        ->orderBy('salarytypes.id','ASC')
-        ->get(['salarydetails.*','salarytypes.SalaryTypeName','salarytypes.SalaryType',
-            DB::raw('IFNULL(salarytypes.Description,"") AS Descriptions'),
-            DB::raw('IFNULL(salarydetails.Remark,"") AS Remark')
-        ]);
-
-        $salarynegdata = hr_employee_salary::join('salarytypes','hr_employee_salaries.salarytypes_id','=','salarytypes.id')
-        ->where('hr_employee_salaries.employees_id', $id)->orderBy('salarytypes.SalaryType','DESC')->orderBy('salarytypes.id','ASC')
-        ->get(['hr_employee_salaries.*','salarytypes.SalaryTypeName','salarytypes.SalaryType',
-        DB::raw('IFNULL(salarytypes.Description,"") AS Descriptions'),DB::raw('IFNULL(hr_employee_salaries.Remark,"") AS Remarks')]);
 
         $documentation = DB::select('SELECT lookuprefs.LookupName AS doc_type,employee_documents.* FROM employee_documents LEFT JOIN lookuprefs ON employee_documents.type=lookuprefs.id WHERE employee_documents.employees_id='.$id.' ORDER BY employee_documents.upload_type ASC');
         $count_contract = DB::select('SELECT COUNT(*) AS total FROM employee_documents WHERE employee_documents.employees_id='.$id.' AND employee_documents.upload_type=2')[0]->total;
@@ -991,9 +968,6 @@ class EmployeeController extends Controller
         $can_edit_med_skill = auth()->user()->can('Employee-Edit-MedicalSkill-Tab') ? 1 : 0;
         
         return response()->json(['employeedata' => $data,
-                                'leavedata' => $leavedata,
-                                'salarydetdata' => $salarydetdata,
-                                'salarynegdata' => $salarynegdata,
                                 'salaryid' => $salaryid,
                                 'usenegsalary' => $negflag,
                                 'activitydata' => $activitydata,
