@@ -270,7 +270,8 @@ class GRVController extends Controller
             $detailTable = DB::select('SELECT regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,uoms.Name AS UOM,receivingdetails.Quantity,batches.batch_number,brands.Name AS brand_name,models.Name AS model_name,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories.received_qty,(SELECT GROUP_CONCAT(" ",NULLIF(serial_numbers.serial_number,"")) FROM serial_numbers WHERE serial_numbers.batches_id=batch_inventories.batches_id) AS serial_number FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN receivingdetails ON batches.item_id=receivingdetails.ItemId AND receivingdetails.HeaderId=batches.source_id AND batches.source_type="receiving" LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE batches.source_id='.$id.' AND batches.source_type="receiving" ORDER BY receivingdetails.id');
             
             $count = 0;
-            $data=['detailTable' => $detailTable,
+            $data = [
+                    'detailTable' => $detailTable,
                     'docnum' => $docnum,
                     'type' => $type,
                     'source_type' => $source_type,
@@ -328,7 +329,8 @@ class GRVController extends Controller
                     'margin_bottom' => 25,
                     'margin_header' => 0,
                     'margin_footer' => 1
-                ]); 
+                ]);
+
                 $html=\View::make('inventory.report.grv_batch')->with($data);
                 $html=$html->render();  
                 $mpdf->SetTitle('Good Receiving Voucher ('.$docnum.')');

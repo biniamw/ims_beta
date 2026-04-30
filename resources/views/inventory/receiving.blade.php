@@ -1430,9 +1430,6 @@
     
     @include('layout.universal-component')
 
-@endsection
-
-@section('scripts')
     @include('parts.batch_serial')
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
@@ -3645,7 +3642,9 @@
             var reference_type = null;
             var product_type = null;
             var ref_options = $("#proc_data_default");
+            $('#VoucherSt').prop('checked', false);
             resetSourceDataForEditFn();
+            resetFormFn();
             $.ajax({
                 type: "get",
                 url: "{{url('getWithNumber')}}",
@@ -3680,8 +3679,7 @@
                         product_type = value.ProductType;
                         
                         $(`input[name="SourceType"][value="${value.source_type}"]`).prop('checked', true);
-                        //$('#source_type').val(value.source_type).select2({minimumResultsForSearch: -1});
-                        
+
                         if(receivng_md == 0){
                             $('#ReferenceType').empty().append(reference_option.find(`option[value="503"]`).clone());
                         }
@@ -3727,6 +3725,7 @@
                                 $("#document_no_div").hide();
                             }
                             else{
+                                $('#DocumentNumber').val(value.DeliveryOrderNo);
                                 $('#VisibleCost').prop('checked', value.is_cost_shown == 1);
                                 $('#src_cost_visibility').show();
                                 $("#document_no_div").show();
@@ -4830,8 +4829,8 @@
             if ($(this).hasClass('shown')) {
                 tr.next('.child-level-2').remove();
                 $(this).removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
-            } else {
-
+            } 
+            else {
                 let loadingRow = `<tr class="child-level-2">
                         <td colspan="8" class="child-container">Loading...</td>
                     </tr>`;
@@ -6103,6 +6102,7 @@
             $('.unorder_pricing_div').hide();
             $('.unorder_price_col').hide();
             fillProductTypeDataFn(reference_type);
+            $('#VoucherSt').prop('checked', false);
             $('#VisibleCost').prop('checked', false);
             showCostColumnFn();
             if(reference_type == 500){

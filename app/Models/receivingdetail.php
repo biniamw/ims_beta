@@ -13,6 +13,6 @@ class receivingdetail extends Model
     public $timestamps=true; 
     public $fillable = ['HeaderId','ItemId', 'Quantity','UnitCost','BeforeTaxCost','TaxAmount','TotalCost','StoreId',
     'LocationId','RetailerPrice','Wholeseller','Date','RequireSerialNumber','RequireExpireDate','ConvertedQuantity','ConversionAmount',
-    'NewUOMId','DefaultUOMId','IsVoid','Memo','Common','is_fully_entered','entered_qty','item_uuid','PoDetId','CommodityType','CommodityId','Grade','ProcessType','CropYear','NumOfBag',
+    'NewUOMId','DefaultUOMId','IsVoid','Memo','Common','is_fully_entered','entered_qty','entered_serial_qty','item_uuid','PoDetId','CommodityType','CommodityId','Grade','ProcessType','CropYear','NumOfBag',
     'TotalKg','NetKg','Feresula','VarianceShortage','VarianceOverage','TransactionType','TransactionsType','ItemType']; 
 }

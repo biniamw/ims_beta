@@ -140,7 +140,7 @@
         <sethtmlpagefooter name="myfooter" value="on"/>
         <table>
             <tr>
-                <td colspan="3" class="headers doctitle"><b>Good Receiving Voucher / GRV (Batch & Serial No.)</b></td>
+                <td colspan="3" class="headers doctitle"><b>Good Receiving Voucher / GRV <i>(Batch & Serial No.)</i></b></td>
             </tr>
             <tr>
                 <td>
@@ -174,7 +174,7 @@
                     </table>
                 </td>
                 @if($type == 503)
-                <td style="width: 40%;">
+                <td style="width: 30%;">
                     <table style="width: 100%;" class="bordertables">
                         <tbody>
                             <tr class="headerHeight">
@@ -229,12 +229,8 @@
                                 <td class="bordertables">{{$storename}}</td>
                             </tr>
                             <tr>
-                                <td style="width: 42%;" class="bordertables"><b>Date</b></td>
-                                <td style="width: 58%;" class="bordertables">{{$voucherdate}}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordertableswhite" style="color:white;">.</td>
-                                <td class="bordertableswhite" style="color:white;">.</td>
+                                <td class="bordertables"><b>Date</b></td>
+                                <td class="bordertables">{{$voucherdate}}</td>
                             </tr>
                             @if($type == 503)
                             <tr>
@@ -247,7 +243,6 @@
                 </td>
             </tr>
         </table>
-        <br/>
         <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
             <thead>
                 <tr>
@@ -295,8 +290,7 @@
                             $batchGroups[$batch][] = $row;
                         }
                         $totalItemRows = count($itemRows);
-                        $isFirstRow = true;
-                        
+                        $isFirstRow = true; 
                     @endphp
 
                     @foreach($batchGroups as $batchNumber => $batchRows)

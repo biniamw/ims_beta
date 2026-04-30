@@ -54,7 +54,7 @@ class ReceivingController extends Controller
         $fiscalyr = $settingsval->FiscalYear;
         $recpage = $settingsval->ReceivingMode;
         $isPoAmntAuth = 0;
-        $receiving_mode = 1;
+        $receiving_mode = 0;
         $curdate = Carbon::today()->toDateString();
         $setting = DB::table('settings')->latest()->first();
         $customerSrc = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory NOT IN("Customer","Person") AND customers.ActiveStatus="Active" AND customers.IsDeleted=1 ORDER BY customers.Name ASC');
@@ -1535,6 +1535,7 @@ class ReceivingController extends Controller
                     $default_uom = $item_prop->MeasurementId;
                     $new_uom = $value['uom'] ?? $default_uom;
                     $conversion_factor = 1;
+                    $serial_qty = 0;
                     $converted_qty = $value['Quantity'];
                     if($default_uom != $new_uom){
                         $conversion_data = conversion::where('FromUomID',$default_uom)->where('ToUomID',$new_uom)->first();
@@ -1564,6 +1565,13 @@ class ReceivingController extends Controller
                     $rec_detail_db_data = receivingdetail::where('HeaderId',$receiving->id)->where('ItemId',$value['ItemId'])->first();
                     $is_fully_ent = $rec_detail_db_data->entered_qty ?? 0;
 
+                    if($item_prop->RequireSerialNumber == "Required"){
+                        $serial_qty = $rec_detail_db_data->entered_serial_qty ?? 0;
+                    }
+                    else if($item_prop->RequireSerialNumber == "Not-Require"){
+                        $serial_qty = $quantity;
+                    }
+
                     $rec_detail_permanent_data = [
                         'ItemId' => $value['ItemId'],
                         'Quantity' => $quantity,
@@ -1590,7 +1598,7 @@ class ReceivingController extends Controller
                     ];
 
                     $rec_detail_edited_data = [
-                        'is_fully_entered' => $quantity == $is_fully_ent ? 1 : 0,
+                        'is_fully_entered' => ($quantity == $is_fully_ent && $quantity == $serial_qty) ? 1 : 0,
                         'updated_at' => Carbon::now()
                     ];
 
@@ -3820,7 +3828,7 @@ class ReceivingController extends Controller
                     DB::table('receivingdetails')
                     ->where('HeaderId',$header_id)
                     ->where('ItemId',$item_id)
-                    ->update(['receivingdetails.is_fully_entered' => $is_fully_inserted,'receivingdetails.entered_qty' => $inserted_qty]);
+                    ->update(['receivingdetails.is_fully_entered' => $is_fully_inserted,'receivingdetails.entered_qty' => $inserted_qty,'entered_serial_qty' => $serial_number_count]);
                 }
 
                 if($optype == 1){
