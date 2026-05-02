@@ -54,7 +54,7 @@ class ReceivingController extends Controller
         $fiscalyr = $settingsval->FiscalYear;
         $recpage = $settingsval->ReceivingMode;
         $isPoAmntAuth = 0;
-        $receiving_mode = 0;
+        $receiving_mode = 1;
         $curdate = Carbon::today()->toDateString();
         $setting = DB::table('settings')->latest()->first();
         $customerSrc = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory NOT IN("Customer","Person") AND customers.ActiveStatus="Active" AND customers.IsDeleted=1 ORDER BY customers.Name ASC');

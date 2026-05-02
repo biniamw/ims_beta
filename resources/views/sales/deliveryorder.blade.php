@@ -248,7 +248,7 @@
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Remark</label>
-                                            <textarea type="text" placeholder="Write Remark here..." class="form-control reg_form" name="Remark" id="Remark" rows="1" onkeyup="remarkFn()"></textarea>
+                                            <textarea type="text" placeholder="Enter remark here" class="form-control reg_form" name="Remark" id="Remark" rows="1" onkeyup="remarkFn()"></textarea>
                                             <span class="text-danger">
                                                 <strong id="remark-error" class="errordatalabel"></strong>
                                             </span>
@@ -256,6 +256,7 @@
                                     </div>
                                 </fieldset>
                             </div>
+
                             <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12 mb-1">
                                 <fieldset class="fset">
                                     <legend>Customer Data</legend>
@@ -270,7 +271,7 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Contact Person</label>
-                                            <input type="text" placeholder="Write contact person here" class="form-control reg_form" name="ContactPerson" id="ContactPerson" onkeyup="contactPersonFn()"/>
+                                            <input type="text" placeholder="Enter contact person here" class="form-control reg_form" name="ContactPerson" id="ContactPerson" onkeyup="contactPersonFn()"/>
                                             <span class="text-danger">
                                                 <strong id="contact-person-error" class="errordatalabel"></strong>
                                             </span>
@@ -293,7 +294,6 @@
                                     </div>
                                 </fieldset>
                             </div>
-                            
                         </div>
                         <hr class="my-30"/>
                         <div class="row">

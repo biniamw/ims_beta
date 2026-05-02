@@ -1232,3 +1232,21 @@
   text-align: right;
   font-size: 14px;
 }
+
+.select2-container--open .select2-dropdown {
+  position: fixed !important;
+  /* Use fixed instead of absolute */
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  z-index: 99999 !important;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .select2-container--open .select2-dropdown {
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+  }
+}

@@ -2,7 +2,7 @@
 @section('title')
 @endsection
 @section('content')
-    @if (auth()->user()->can('UOM-s-View') || auth()->user()->can('Conversion-s-view'))
+    @if (auth()->user()->can('sUOM-View') || auth()->user()->can('sConversion-view'))
     <div class="app-content content">
         <section id="responsive-datatable">
             <div class="row">
@@ -30,7 +30,7 @@
                                     </div>
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3" style="text-align: right !important;align-items: center;padding: 10px 5px;">
                                         <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-sm" onclick="refreshUomConvFn()"><i class="fas fa-sync-alt"></i></button>
-                                        @if (auth()->user()->can('UOM-View') || auth()->user()->can('Conversion-view'))
+                                        @if (auth()->user()->can('UOM-Add') || auth()->user()->can('Conversion-add'))
                                             <button type="button" class="btn btn-gradient-info btn-sm add_uom_conv header-prop" id="add_uom_conv"><i class="fas fa-plus"></i><span class="header-text">&nbsp Add</span></button>
                                         @endif 
                                     </div>

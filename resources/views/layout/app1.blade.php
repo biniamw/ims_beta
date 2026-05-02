@@ -2095,52 +2095,6 @@
             element.unblock();
         }
 
-        const yearSelectPlugin1 = (pluginConfig) => {
-            const defaultConfig = {
-                yearStart: 1900,
-                yearEnd: 2050
-            };
-            const config = { ...defaultConfig, ...pluginConfig };
-
-            return (instance) => {
-                return {
-                    onReady() {
-                        const yearInput = instance.calendarContainer.querySelector(".cur-year");
-                        if (!yearInput) return;
-
-                        // Create the dropdown
-                        const select = document.createElement("select");
-                        select.className = "flatpickr-monthDropdown-months"; // Reusing Flatpickr styles
-                        select.style.appearance = "auto";
-                        select.style.marginLeft = "5px";
-
-                        // Populate years
-                        for (let i = config.yearStart; i <= config.yearEnd; i++) {
-                            const option = document.createElement("option");
-                            option.value = i;
-                            option.text = i;
-                            if (i === instance.currentYear) option.selected = true;
-                            select.appendChild(option);
-                        }
-
-                        // Update Flatpickr when dropdown changes
-                        select.addEventListener("change", (e) => {
-                            instance.changeYear(parseInt(e.target.value));
-                        });
-
-                        // Replace or append
-                        yearInput.style.display = "none";
-                        yearInput.parentNode.insertBefore(select, yearInput.nextSibling);
-
-                        // Update dropdown if year changes via arrows
-                        instance.set("onYearChange", () => {
-                            select.value = instance.currentYear;
-                        });
-                    }
-                };
-            };
-        };
-
         const yearSelectPlugin = (pluginConfig) => {
             const defaultConfig = {
                 yearStart: 1900,
@@ -2194,6 +2148,39 @@
                 };
             };
         };
+
+        function fixSelect2Position() {
+            const openContainer = document.querySelector('.select2-container--open');
+            if (!openContainer) return;
+
+            // Force reflow
+            void openContainer.offsetHeight;
+
+            const rect = openContainer.getBoundingClientRect();
+            const dropdown = document.querySelector('.select2-dropdown');
+
+            if (dropdown) {
+                dropdown.style.position = 'fixed';
+                dropdown.style.top = '-5 px !important';     // tweak this number
+                dropdown.style.left = Math.floor(rect.left) + 'px';
+                dropdown.style.width = Math.floor(rect.width) + 'px';
+            }
+        }
+
+        // Main open event
+        $(document).on('select2:open', function() {
+            // Multiple attempts with different delays
+            setTimeout(fixSelect2Position, 5);
+            setTimeout(fixSelect2Position, 30);
+            setTimeout(fixSelect2Position, 80);
+        });
+
+        // On scroll
+        $(window).on('scroll', function() {
+            if ($('.select2-container--open').length) {
+                fixSelect2Position();
+            }
+        });
 
     </script>
 

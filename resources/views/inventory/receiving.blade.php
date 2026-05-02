@@ -128,7 +128,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-sm-3 col-lg custom-col mb-1" title="Purchase Orders and Invoices ready for receiving" id="ready_for_receiving_div" style="display: none;">
+                                            <div class="col-12 col-sm-6 col-lg custom-col mb-1" title="Purchase Orders and Invoices ready for receiving" id="ready_for_receiving_div" style="display: none;">
                                                 <div class="stat-item">
                                                     <div class="media">
                                                         <div class="avatar bg-light-success mr-1">
@@ -742,7 +742,7 @@
                                                 <div class="divider-text"><b>Source Data</b></div>
                                             </div>
                                             <div class="row" style="margin-top:-1rem;">
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" style="position: relative;" class="select-wrapper">
                                                     <label class="form_lbl">Reference Type<b style="color: red; font-size:16px;">*</b></label>
                                                     <select class="select2 form-control" name="ReferenceType" id="ReferenceType"></select>
                                                     <span class="text-danger">
@@ -892,7 +892,7 @@
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Delivered By</label>
-                                            <input type="text" name="ProductionDeliveredBy" id="ProductionDeliveredBy" placeholder="Enter Name here" class="form-control mainforminp production_input" onkeyup="prdDeliveredByFn()"/>
+                                            <input type="text" name="ProductionDeliveredBy" id="ProductionDeliveredBy" placeholder="Enter name here" class="form-control mainforminp production_input" onkeyup="prdDeliveredByFn()"/>
                                             <span class="text-danger">
                                                 <strong id="prd-deliveredby-error" class="errordatalabel production_error"></strong>
                                             </span>
