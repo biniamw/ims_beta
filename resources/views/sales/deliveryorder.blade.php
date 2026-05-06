@@ -190,17 +190,16 @@
                     {{ csrf_field() }}
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-xl-7 col-lg-6 col-md-12 col-sm-12 col-12 mb-1"> 
+                            <div class="col-xl-8 col-lg-6 col-md-12 col-sm-12 col-12 mb-1"> 
                                 <fieldset class="fset">
                                     <legend>General Data</legend>
                                     <div class="row">
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Reference Type<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="ReferenceType" id="ReferenceType">
-                                                <option value="Direct">Direct</option>
-                                                <option value="Proforma-Invoice">Proforma-Invoice</option>
-                                                <option value="Sales-Order">Sales-Order</option>
-                                                <option value="Sales-Invoice">Sales-Invoice</option>
+                                                @foreach ($ref_type_data as $reftype)
+                                                    <option value="{{ $reftype->id }}">{{ $reftype->LookupName }}</option>
+                                                @endforeach
                                             </select>
                                             <span class="text-danger">
                                                 <strong id="reference-type-error" class="errordatalabel"></strong>
@@ -215,8 +214,7 @@
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="product_type_div">
                                             <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
-                                            <select class="select2 form-control" name="ProductType" id="ProductType" onchange="productTypeFn()">
-                                            </select>
+                                            <select class="select2 form-control" name="ProductType" id="ProductType" onchange="productTypeFn()"></select>
                                             <span class="text-danger">
                                                 <strong id="product-type-error" class="errordatalabel"></strong>
                                             </span>
@@ -247,17 +245,73 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                            <label class="form_lbl">Ordered By<b style="color: red; font-size:16px;">*</b></label>
+                                            <select class="select2 form-control" name="OrderedBy" id="OrderedBy" onchange="orderedbyFn()">
+                                                @foreach ($uses_data as $orderby)
+                                                    <option value="{{ $orderby->username }}">{{ $orderby->username }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger">
+                                                <strong id="orderby-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                            <label class="form_lbl">Sales Person<b style="color: red; font-size:16px;">*</b></label>
+                                            <select class="select2 form-control" name="SalesPerson" id="SalesPerson" onchange="salesPersonFn()"></select>
+                                            <span class="text-danger">
+                                                <strong id="salesperson-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="document_no_div">
+                                            <label class="form_lbl" title="Document Number">Document No.</label>
+                                            <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Enter document number here" class="form-control mainforminp reg_form" onkeyup="docNumberFn()"/>
+                                            <span class="text-danger">
+                                                <strong id="docnumber-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 direct-reference" style="display: none;">
+                                            <label class="form_lbl">Payment Type<b style="color: red; font-size:16px;">*</b></label>
+                                            <select class="select2 form-control" name="PaymentType" id="PaymentType" onchange="paymentTypeFn()">
+                                                <option selected disabled value=""></option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Credit">Credit</option>
+                                            </select>
+                                            <span class="text-danger">
+                                                <strong id="paymentType-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 direct-reference" style="display: none;">
+                                            <label class="form_lbl">Payment Term<b style="color: red; font-size:16px;">*</b></label>
+                                            <select class="select2 form-control" name="PaymentTerm" id="PaymentTerm" onchange="PaymentTermFn()">
+                                                <option selected disabled value=""></option>
+                                                <option value="1">1 Month</option>
+                                                <option value="2">2 Month</option>
+                                            </select>
+                                            <span class="text-danger">
+                                                <strong id="paymentTerm-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Remark</label>
                                             <textarea type="text" placeholder="Enter remark here" class="form-control reg_form" name="Remark" id="Remark" rows="1" onkeyup="remarkFn()"></textarea>
                                             <span class="text-danger">
                                                 <strong id="remark-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
+
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="do_cost_visibility">
+                                            <div class="form-check form-check-inline">
+                                                <div class="custom-control custom-control-primary custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="VisibleCost" name="VisibleCost"/>
+                                                    <label class="custom-control-label form_lbl" for="VisibleCost">Show Cost Columns</label>                                  
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </fieldset>
                             </div>
 
-                            <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12 mb-1">
+                            <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12 mb-1">
                                 <fieldset class="fset">
                                     <legend>Customer Data</legend>
                                     <div class="row">
@@ -270,31 +324,38 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
-                                            <label class="form_lbl">Contact Person</label>
-                                            <input type="text" placeholder="Enter contact person here" class="form-control reg_form" name="ContactPerson" id="ContactPerson" onkeyup="contactPersonFn()"/>
+                                            <label class="form_lbl">Deliver By</label>
+                                            <input type="text" placeholder="Enter deliver by here" class="form-control reg_form" name="DeliverBy" id="DeliverBy" onkeyup="deliverByFn()"/>
                                             <span class="text-danger">
-                                                <strong id="contact-person-error" class="errordatalabel"></strong>
+                                                <strong id="deliverby-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
-                                            <label class="form_lbl" title="Contact Phone Number">Contact Phone No.</label>
-                                            <input type="tel" placeholder="+251-XXX-XX-XX-XX" class="form-control reg_form phone_number" name="CotactPhoneNo" id="CotactPhoneNo" onkeyup="contactPhoneFn()"/>
+                                            <label class="form_lbl" title="Phone Number">Phone No.</label>
+                                            <input type="tel" placeholder="+251-XXX-XX-XX-XX" class="form-control reg_form phone_number" name="PhoneNumber" id="PhoneNumber" onkeyup="phoneNoFn()"/>
                                             <span class="text-danger">
-                                                <strong id="contact-phone-error" class="errordatalabel"></strong>
+                                                <strong id="phone-no-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
-                                            <label class="form_lbl" title="Contact Email">Contact Email</label>
-                                            <input type="email" id="ContactEmail" name="ContactEmail" class="form-control email_validation reg_form" placeholder="abc@domain.com" onkeydown="contactEmailFn()"/>
+                                            <label class="form_lbl">ID No.</label>
+                                            <input type="text" placeholder="Enter ID number here" class="form-control reg_form" name="IdNumber" id="IdNumber" onkeyup="idNumberFn()"/>
                                             <span class="text-danger">
-                                                <strong id="contact-email-error" class="errordatalabel"></strong>
+                                                <strong id="id-no-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1">
+                                            <label class="form_lbl" title="Plate Number">Plate No.</label>
+                                            <input type="text" name="PlateNumber" id="PlateNumber" placeholder="Enter plate number here" class="form-control mainforminp purchase_input" onkeyup="plateNumFn()" style="text-transform:uppercase"/>
+                                            <span class="text-danger">
+                                                <strong id="platenum-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
                                     </div>
                                 </fieldset>
                             </div>
                         </div>
+
                         <hr class="my-30"/>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -329,6 +390,11 @@
                             <select class="select2 form-control" name="default_customer" id="default_customer">
                                 @foreach ($customer_src as $customer_src)
                                     <option value="{{ $customer_src->id }}">{{ $customer_src->customer }}</option>
+                                @endforeach
+                            </select>
+                            <select class="select2 form-control" name="DefaultSalesPerson" id="DefaultSalesPerson">
+                                @foreach ($uses_data as $salesperson)
+                                    <option value="{{ $salesperson->username }}">{{ $salesperson->username }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -383,17 +449,22 @@
                 success: function(data) {
                     var ref_type = $('#ReferenceType').val();
 
-                    if(ref_type == "Proforma-Invoice"){
-                       //$.each(data.sales_invoice_data, function(key, value) {});
+                    if(ref_type == 601){
+                       $.each(data.proforma_invoice_data, function(key, value) {
+                            options += `<option value="${value.proforma_id}">${value.proforma_data}</option>`;
+                        });
                     }
-                    else if(ref_type == "Sales-Order"){
-                        //$.each(data.sales_invoice_data, function(key, value) {});
+                    else if(ref_type == 602){
+                        $.each(data.sales_order_data, function(key, value) {
+                            options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
+                        });
                     }
-                    else if(ref_type == "Sales-Invoice"){
+                    else if(ref_type == 603){
                         $.each(data.sales_invoice_data, function(key, value) {
                             options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
                         });
                     }
+
                     $('#ReferenceDocument')
                     .empty()
                     .append(options)
@@ -409,6 +480,9 @@
             var reference_type = null;
             var reference_id = null;
             var customer_option = null;
+            var payment_type_option = null;
+            var expiry_date = null;
+            var sales_person = null;
             var ref_type = $('#ReferenceType').val();
             var block_ui_message = "";
             $.ajax({ 
@@ -419,13 +493,13 @@
                     reference_id:$('#ReferenceDocument').val(),
                 },
                 beforeSend: function() {
-                    if(ref_type == "Proforma-Invoice"){
+                    if(ref_type == 601){
                         block_ui_message = "proforma";
                     }
-                    if(ref_type == "Sales-Order"){
+                    if(ref_type == 602){
                         block_ui_message = "sales order";
                     }
-                    if(ref_type == "Sales-Invoice"){
+                    if(ref_type == 603){
                         block_ui_message = "sales";
                     }
                     blockPage(cardSection, `Fetching ${block_ui_message} data...`);
@@ -434,19 +508,55 @@
                     unblockPage(cardSection);
                 },
                 success: function(data) {
-                    if(ref_type == "Sales-Invoice"){
+                    if(ref_type == 601){
                         $.each(data.customer_data, function(key, value) {
                             customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
                         });
-                    }
 
+                        $.each(data.main_data, function(key, value) {
+                            flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                            $('#ExpiryDate').val(value.expireDate);
+                            sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
+                        });
+                    }
+                    else if(ref_type == 602){
+                        $.each(data.customer_data, function(key, value) {
+                            customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
+                        });
+
+                        $.each(data.main_data, function(key, value) {
+                            flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                            $('#ExpiryDate').val(value.expiredate);
+                            sales_person = `<option selected value="${value.username}">${value.username}</option>`;
+                        });
+                    }
+                    else if(ref_type == 603){
+                        $.each(data.customer_data, function(key, value) {
+                            customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
+                        });
+
+                        $.each(data.main_data, function(key, value) {
+                            flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
+                            $('#ExpiryDate').val(value.expiredate);
+                            sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
+                        });
+                    }
+                    
                     $('#customer')
-                    .empty()
-                    .append(customer_option)
-                    .select2({
-                        placeholder: "Select customer here",
-                        minimumResultsForSearch: -1
-                    });
+                        .empty()
+                        .append(customer_option)
+                        .select2({
+                            placeholder: "Select customer here",
+                            minimumResultsForSearch: -1
+                        });
+
+                    $('#SalesPerson')
+                        .empty()
+                        .append(sales_person)
+                        .select2({
+                            placeholder: "Select sales person here",
+                            minimumResultsForSearch: -1
+                        });
                 }
             });
         }
@@ -466,12 +576,26 @@
             $('#station').val(null).select2({
                 placeholder: "Select station here",
             });
+            $('#OrderedBy').val(null).select2({
+                placeholder: "Select ordered by here",
+            });
+            $('#SalesPerson').empty().select2({
+                placeholder: "Select sales person here",
+            });
+            $('#PaymentType').val(null).select2({
+                placeholder: "Select payment type here",
+            });
+            $('#PaymentTerm').val(null).select2({
+                placeholder: "Select payment term here",
+            });
             $('#customer').val(null).select2({
                 placeholder: "Select reference type first",
             });
             $('.default_hidden_div').hide();
+            $('.direct-reference').hide();
             $('#operationtypes').val(1);
             $('.reg_form').val("");
+            $('#VisibleCost').prop('checked', false);
             $('#delivery_order_status').html("");
             $('.errordatalabel').html("");
             flatpickr('#DeliveryDate', { dateFormat: 'Y-m-d',clickOpens:true,maxDate:current_date});
@@ -493,14 +617,27 @@
 
         $('#ReferenceType').on('change', function() {
             var reference_type = $(this).val();
+            var sales_person = null;
             $('.reference_doc').hide();
             $('.default_hidden_div').hide();
             fillProductTypeDataFn(reference_type);
-            if(reference_type == "Direct"){
+            $('#PaymentType').val(null).select2({placeholder: "Select payment type here"});
+            $('#PaymentTerm').val(null).select2({placeholder: "Select payment term here"});
+            $('#SalesPerson').empty().select2({placeholder: "Select sales person here"});
+            if(reference_type == 600){
                 $('#ExpiryDate').val("");
+                $('.direct-reference').show();
+                sales_person = $("#DefaultSalesPerson > option").clone();
+                $('#SalesPerson')
+                    .append(sales_person)
+                    .val(null)
+                    .select2({
+                        placeholder: "Select sales person here",
+                    });
             }
             else{
                 $('#reference_doc_div').show();
+                $('.direct-reference').hide();
                 fetchReferenceDocFn();
             }
             $('#reference-type-error').html("");
@@ -591,6 +728,26 @@
             $('#expiry-date-error').html("");
         }
 
+        function orderedbyFn(){
+            $('#orderby-error').html("");
+        }
+
+        function salesPersonFn(){
+            $('#salesperson-error').html("");
+        }
+
+        function docNumberFn(){
+            $('#docnumber-error').html("");
+        }
+
+        function paymentTypeFn(){
+            $('#paymentType-error').html("");
+        }
+
+        function PaymentTermFn(){
+            $('#paymentTerm-error').html("");
+        }
+
         function remarkFn(){
             $('#remark-error').html("");
         }
@@ -599,20 +756,24 @@
             $('#customer-error').html("");
         }
 
-        function contactPersonFn(){
-            $('#contact-person-error').html("");
+        function deliverByFn(){
+            $('#deliverby-error').html("");
         }
 
-        function contactPhoneFn(){
-            $('#contact-phone-error').html("");
+        function phoneNoFn(){
+            $('#phone-no-error').html("");
         }
 
-        function contactEmailFn(){
-            $('#contact-email-error').html("");
+        function idNumberFn(){
+            $('#id-no-error').html("");
+        }
+
+        function plateNumFn(){
+            $('#platenum-error').html("");
         }
 
         function fillProductTypeDataFn(ref_type){
-            if(ref_type == "Direct"){
+            if(ref_type == 600){
                 var product_type_options = `
                     <option value="Goods">Goods</option>
                     <option value="Commodity">Commodity</option>

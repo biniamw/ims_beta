@@ -2077,8 +2077,8 @@
             element.block({
                 message: 
                 `<div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-grow spinner-grow-sm text-white" role="status"></div><br>
                     <p class="mr-50 mb-50">${message}</p>
-                    <div class="spinner-grow spinner-grow-sm text-white" role="status"></div>
                 </div>`,
                 css: {
                     backgroundColor: 'transparent',
@@ -2100,7 +2100,8 @@
                 yearStart: 1900,
                 yearEnd: 2050
             };
-            const config = { ...defaultConfig, ...pluginConfig };
+
+            const config = {...defaultConfig, ...pluginConfig };
 
             return (instance) => {
                 return {
