@@ -1127,6 +1127,8 @@ Route::post('dispatchBackwardAction','DispatchController@dispatchBackwardAction'
 Route::get('/deliveryorder','DeliveryOrderController@index');
 Route::post('/fetchReferenceDoc','DeliveryOrderController@fetchReferenceDoc');
 Route::post('/fetchReferenceData','DeliveryOrderController@fetchReferenceData');
+Route::post('/fetchDOItemInfo','DeliveryOrderController@fetchDOItemInfo');
+Route::post('/calcDOBalance','DeliveryOrderController@calcDOBalance');
 //---------------End DO--------------------
 
 

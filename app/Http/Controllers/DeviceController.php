@@ -204,9 +204,9 @@ class DeviceController extends Controller
                 // ]);
 
 
-                $userid=Auth()->user()->id;
+                $userid = Auth()->user()->id;
                 $mquuid = Str::uuid()->toString();
-                $mqt=new mqttmessage;
+                $mqt = new mqttmessage;
                 $mqtt = MQTT::connection();
 
 

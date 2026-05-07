@@ -2486,7 +2486,7 @@
             else{
                 fetchItemInfoFn(idval);
                 fetchUOMListFn(idval);
-                
+         
                 $(`#select2-itemNameSl${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
                 $(`#select2-uom${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
             }
