@@ -221,7 +221,7 @@
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Station<b style="color: red; font-size:16px;">*</b></label>
-                                            <select class="select2 form-control" name="station" id="station" onchange="stationFn()"></select>
+                                            <select class="select2 form-control" name="station" id="station"></select>
                                             <span class="text-danger">
                                                 <strong id="station-error" class="errordatalabel"></strong>
                                             </span>
@@ -366,7 +366,7 @@
                                             <th style="width:10%;" class="non_direct_reference" title="Remaining Quantity">Remaining Qty.</th>
                                             <th style="width:10%;" title="Delivery Quantity">Delivery Qty.<b style="color: red; font-size:16px;">*</b></th>
                                             <th style="width:9%;" class="pricing_column">Unit Price<b style="color: red; font-size:16px;">*</b></th>
-                                            <th style="width:9%;" class="pricing_column">Total Price<b style="color: red; font-size:16px;">*</b></th>
+                                            <th style="width:9%;" class="pricing_column">Total Price</th>
                                             <th style="width:12%;">Remark</th>
                                             <th style="width:5%;"></th>
                                         </thead>
@@ -475,56 +475,9 @@
             $("#inlineForm").modal('show');
         });
 
-        function fetchReferenceDocFn(){
-            var reference_type = null;
-            var options = null;
-            $.ajax({ 
-                url: '/fetchReferenceDoc', 
-                type: 'POST',
-                data:{
-                    reference_type:$('#ReferenceType').val(),
-                },
-                beforeSend: function() {
-                    blockPage(cardSection, 'Fetching references...');
-                },
-                complete: function () { 
-                    unblockPage(cardSection);
-                },
-                success: function(data) {
-                    var ref_type = $('#ReferenceType').val();
-
-                    if(ref_type == 601){
-                       $.each(data.proforma_invoice_data, function(key, value) {
-                            options += `<option value="${value.proforma_id}">${value.proforma_data}</option>`;
-                        });
-                    }
-                    else if(ref_type == 602){
-                        $.each(data.sales_order_data, function(key, value) {
-                            options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
-                        });
-                    }
-                    else if(ref_type == 603){
-                        $.each(data.sales_invoice_data, function(key, value) {
-                            options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
-                        });
-                    }
-
-                    $('#Reference').empty().append(options).val(null).select2({
-                        placeholder: "Select reference document here"
-                    });
-                }
-            });
-        }
-
         function fetchReferenceDataFn(){
             var reference_type = null;
             var reference_id = null;
-            var customer_option = null;
-            var payment_type_option = null;
-            var expiry_date = null;
-            var sales_person = null;
-            var product_type = null;
-            var station = null;
             var ref_type = $('#ReferenceType').val();
             var block_ui_message = "";
             $.ajax({ 
@@ -542,70 +495,87 @@
                         block_ui_message = "sales order";
                     }
                     if(ref_type == 603){
-                        block_ui_message = "sales";
+                        block_ui_message = "sales invoice";
                     }
                     blockPage(cardSection, `Fetching ${block_ui_message} data...`);
                 },
-                complete: function () { 
+                success: async function(data) {
+                    await getReferenceDataFn(data,ref_type);
                     unblockPage(cardSection);
                 },
-                success: function(data) {
-                    if(ref_type == 601){
-                        $.each(data.customer_data, function(key, value) {
-                            customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
-                        });
+                error: function () { 
+                    unblockPage(cardSection);
+                },
+            });
+        }
 
-                        $.each(data.main_data, function(key, value) {
-                            flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
-                            $('#ExpiryDate').val(value.expireDate);
-                            sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
-                        });
-                    }
-                    else if(ref_type == 602){
-                        $.each(data.customer_data, function(key, value) {
-                            customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
-                        });
+        function getReferenceDataFn(data,ref_type){
+            var expiry_date = null;
+            var sales_person = null;
+            var product_type = null;
+            var station = null;
+            var customer_option = null;
+            var payment_type_option = null;
+            
+            if(ref_type == 601){
+                $.each(data.customer_data, function(key, value) {
+                    customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
+                });
 
-                        $.each(data.main_data, function(key, value) {
-                            flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
-                            $('#ExpiryDate').val(value.expiredate);
-                            sales_person = `<option selected value="${value.username}">${value.username}</option>`;
-                        });
-                    }
-                    else if(ref_type == 603){
-                        $.each(data.customer_data, function(key, value) {
-                            customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
-                        });
+                $.each(data.main_data, function(key, value) {
+                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                    $('#ExpiryDate').val(value.expireDate);
 
-                        $.each(data.main_data, function(key, value) {
-                            flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
-                            $('#ExpiryDate').val(value.expiredate);
+                    station = `<option selected value="${value.store_id}">${value.station}</option>`;
+                    product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
+                    sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
+                });
 
-                            station = `<option selected value="${value.store_id}">${value.station}</option>`;
-                            product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
-                            sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
-                        });
+                listReferenceItemFn(data.detail_data);
+            }
+            else if(ref_type == 602){
+                $.each(data.customer_data, function(key, value) {
+                    customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
+                });
 
-                        populateReferenceItemFn(data.detail_data);
-                        listReferenceItemFn(data.detail_data);
-                    }
-                    
-                    $('#customer').empty().append(customer_option).select2({
-                        minimumResultsForSearch: -1
-                    });
+                $.each(data.main_data, function(key, value) {
+                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                    $('#ExpiryDate').val(value.expiredate);
+                    sales_person = `<option selected value="${value.username}">${value.username}</option>`;
+                });
+            }
+            else if(ref_type == 603){
+                $.each(data.customer_data, function(key, value) {
+                    customer_option = `<option selected value="${value.id}">${value.customer}</option>`;
+                });
 
-                    $('#ProductType').empty().append(product_type).select2({
-                        minimumResultsForSearch: -1
-                    });
+                $.each(data.main_data, function(key, value) {
+                    flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
+                    $('#ExpiryDate').val(value.expiredate);
 
-                    $('#SalesPerson').empty().append(sales_person).select2({
-                        minimumResultsForSearch: -1
-                    });
+                    station = `<option selected value="${value.store_id}">${value.station}</option>`;
+                    product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
+                    sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
+                });
 
-                    $('#station').empty().append(station).select2({
-                        minimumResultsForSearch: -1
-                    });
-                }
+                //populateReferenceItemFn(data.detail_data);
+                listReferenceItemFn(data.detail_data);
+            }
+            
+            $('#customer').empty().append(customer_option).select2({
+                minimumResultsForSearch: -1
+            });
+
+            $('#ProductType').empty().append(product_type).select2({
+                minimumResultsForSearch: -1
+            });
+
+            $('#SalesPerson').empty().append(sales_person).select2({
+                minimumResultsForSearch: -1
+            });
+
+            $('#station').empty().append(station).select2({
+                minimumResultsForSearch: -1
             });
         }
 
@@ -712,6 +682,7 @@
                 $('.direct-reference').hide();
                 fetchReferenceDocFn();
             }
+            CalculateGrandTotal();
             $('#reference-type-error').html("");
         });
 
@@ -719,6 +690,51 @@
             fetchReferenceDataFn();
             $('#reference-doc-error').html("");
         });
+
+        function fetchReferenceDocFn(){
+            var reference_type = null;
+            $.ajax({ 
+                url: '/fetchReferenceDoc', 
+                type: 'POST',
+                data:{
+                    reference_type:$('#ReferenceType').val(),
+                },
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching references...');
+                },  
+                success: async function(data) {
+                    await fetchReferenceListFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () { 
+                    unblockPage(cardSection);
+                },
+            });
+        }
+
+        function fetchReferenceListFn(data){
+            var ref_type = $('#ReferenceType').val();
+            var options = null;
+            if(ref_type == 601){
+                $.each(data.proforma_invoice_data, function(key, value) {
+                    options += `<option value="${value.proforma_id}">${value.proforma_data}</option>`;
+                });
+            }
+            else if(ref_type == 602){
+                $.each(data.sales_order_data, function(key, value) {
+                    options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
+                });
+            }
+            else if(ref_type == 603){
+                $.each(data.sales_invoice_data, function(key, value) {
+                    options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
+                });
+            }
+
+            $('#Reference').empty().append(options).val(null).select2({
+                placeholder: "Select reference here"
+            });
+        }
 
         $("#adds").click(function() {
             var lastrowcount = $('#dynamicTable tr:last').find('td').eq(1).find('input').val();
@@ -868,19 +884,12 @@
                     reference_id: $('#Reference').val() || 0,
                     reference_type: ref_type,
                 },
-                beforeSend: function() {
-                    blockPage(cardSection, 'Fetching item data...');
-                },
-                complete: function () { 
-                    unblockPage(cardSection);
-                },
                 success: function(data) {
                     $.each(data.item_info, function(key, value) {
-                        
                         var is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                         var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                         var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
-                        var tax_percent = value.TaxTypeId;
+                        var tax_percent = 15;
                         tax_percent = tax_percent == '' || tax_percent == null ? 0 : tax_percent;
 
                         $(`#uom${indx}`).empty().append(`<option selected value='${value.uom}'>${value.uom_name}</option>`).select2();
@@ -900,8 +909,8 @@
                         }
 
                         if(ref_type == 601){
-                            $(`#ordered_qty${indx}`).val(value.qty);
-                            var remaining_qty = parseFloat(value.qty) - parseFloat(value.receivedqty);
+                            $(`#ordered_qty${indx}`).val(value.Quantity);
+                            var remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
@@ -915,6 +924,9 @@
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
                     });
+                },
+                error: function () {
+                    unblockPage(cardSection);
                 }
             });
         }
@@ -946,8 +958,7 @@
             var baseRecordId = null;
             var storeval = null;
             var itemid = null;
-            var net_balance = null;
-            var qty = null;
+            
             $.ajax({
                 url: '/calcDOBalance', 
                 type: 'POST',
@@ -956,16 +967,30 @@
                     storeval:$('#station').val(),
                     itemid:$(`#itemNameSl${rowid}`).val(),
                 },
-                success: function(data) {
-                    net_balance = parseFloat(data.available_qty);
-                    qty = $(`#quantity${rowid}`).val();
-                    $(`#qty_on_hand${rowid}`).val(net_balance);
-
-                    if(parseFloat(qty) > parseFloat(net_balance)){
-                        $(`#qty_on_hand${rowid}`).val("");
-                    }
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching item data...');
+                },
+                success: async function(data) {
+                    await getBalanceFn(data,rowid);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
                 }
             });
+        }
+
+        function getBalanceFn(data,rowid){
+            var net_balance = null;
+            var qty = null;
+
+            net_balance = parseFloat(data.available_qty);
+            qty = $(`#quantity${rowid}`).val();
+            $(`#qty_on_hand${rowid}`).val(net_balance);
+
+            if(parseFloat(qty) > parseFloat(net_balance)){
+                $(`#qty_on_hand${rowid}`).val("");
+            }
         }
 
         $('#VisiblePrice').on('change', function() {
@@ -1140,8 +1165,63 @@
             $(this).toggleClass('is-invalid', email !== '' && !isValid);
         });
 
-        function stationFn(){
+        $('#station').on('change', function() {
+            getStoreBalanceFn($(this).val());
             $('#station-error').html("");
+        });
+
+        function getStoreBalanceFn(str_id){
+            var store_id = null;
+            var item_id = null;
+            var selected_items = [];
+            $('#dynamicTable > tbody > tr').each(function(index, tr) {
+                selected_items.push($(this).find('.itemName').val());
+            });
+
+            if(selected_items.length > 0) {
+                $.ajax({ 
+                    url: '/getDOStoreBalance', 
+                    type: 'POST',
+                    data:{
+                        store_id : str_id,
+                        item_id : selected_items,
+                    },      
+                    beforeSend: function() {
+                        blockPage(cardSection, 'Calculating available balance...');
+                    }, 
+                    success: async function(data) {
+                        await getAllItemBalanceFn(data);
+                        unblockPage(cardSection);
+                    },
+                    error: function () {
+                        unblockPage(cardSection);
+                    }
+                });
+            }
+        }
+
+        function getAllItemBalanceFn(data){
+            $('.qty_on_hand').val(0);
+            if(parseFloat(data.result.length) == 0){
+                $('.quantity').val("");
+            }
+            else{
+                $.each(data.result, function(key, value) {
+                    $('#dynamicTable > tbody > tr').each(function(index, tr) {
+                        var itm = $(this).find('.itemName').val();
+
+                        if(parseInt(value.ItemId) == parseInt(itm)){
+                            var qty = $(this).find('.quantity').val();
+                            var available_qty = value.available_quantity;
+                            $(this).find('.qty_on_hand').val(available_qty);
+
+                            if(parseFloat(qty) > parseFloat(available_qty)){
+                                $(this).find('.quantity').val("");
+                            }
+                        }
+                    });
+                });
+            }
         }
 
         function deliveryDateFn(){

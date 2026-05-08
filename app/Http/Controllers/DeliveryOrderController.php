@@ -71,10 +71,12 @@ class DeliveryOrderController extends Controller
         $detail_data = "";
 
         if($reference_type == 601){
-            $proforma_data = DB::select('SELECT proformas.CustomerId AS customer_id,proformas.expireDate,proformas.Username FROM proformas WHERE proformas.id='.$reference_id);
+            $proforma_data = DB::select('SELECT proformas.CustomerId AS customer_id,proformas.expireDate,proformas.Username,"Goods" AS product_type,proformas.store_id,stores.Name AS station FROM proformas LEFT JOIN stores ON proformas.store_id=stores.id WHERE proformas.id='.$reference_id);
             $customer_id = $proforma_data[0]->customer_id;
             $customer_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.id='.$customer_id);
             $main_data = $proforma_data;
+
+            $detail_data = DB::select('SELECT proforma_regitem.id,proforma_regitem.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,proforma_regitem.Quantity,proforma_regitem.issued_qty,proforma_regitem.UnitPrice,proforma_regitem.BeforeTaxPrice FROM proforma_regitem LEFT JOIN regitems ON proforma_regitem.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE proforma_regitem.proforma_id='.$reference_id.' ORDER BY proforma_regitem.id ASC');
         }
         else if($reference_type == 602){
             $sales_order_data = DB::select('SELECT sales_orders.customer_id,sales_orders.expiredate,users.username FROM sales_orders LEFT JOIN users ON sales_orders.user_id=users.id WHERE sales_orders.id='.$reference_id);
@@ -102,7 +104,7 @@ class DeliveryOrderController extends Controller
         $item_info = "";
 
         if($reference_type == 601){
-            $item_info = DB::select(''.$itemid);
+            $item_info = DB::select('SELECT proforma_regitem.id,proforma_regitem.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,proforma_regitem.Quantity,proforma_regitem.issued_qty,proforma_regitem.UnitPrice,proforma_regitem.BeforeTaxPrice FROM proforma_regitem LEFT JOIN regitems ON proforma_regitem.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE proforma_regitem.proforma_id='.$reference_id.' AND proforma_regitem.regitem_id='.$itemid);
         }
         else if($reference_type == 602){
             $item_info = DB::select(''.$itemid);
@@ -139,6 +141,49 @@ class DeliveryOrderController extends Controller
         $available_qty = $available_qty < 0 ? 0 : $available_qty;
 
         return response()->json(['available_qty' => $available_qty]);       
+    }
+
+    public function getDOStoreBalance(Request $request){
+        $settings = DB::table('settings')->latest()->first();
+        $fyear = $settings->FiscalYear;
+        $store_id = $_POST['store_id'] ?? 0;
+        $item_id = $_POST['item_id'] ?? 0;
+
+        $result = DB::table('transactions')
+            ->select([
+                'transactions.ItemId',
+                DB::raw("(
+                    (SUM(COALESCE(StockIn, 0)) - SUM(COALESCE(StockOut, 0))) - 
+                    (SELECT IFNULL(SUM(rd.Quantity), 0) 
+                    FROM requisitiondetails rd
+                    INNER JOIN requisitions r ON rd.HeaderId = r.id 
+                    WHERE r.SourceStoreId = transactions.StoreId 
+                    AND rd.ItemId = transactions.ItemId 
+                    AND r.fiscalyear = transactions.FiscalYear 
+                    AND r.Status IN ('Draft','Pending','Verified','Approved')) -
+                    (SELECT IFNULL(SUM(si.Quantity), 0) 
+                    FROM salesitems si
+                    INNER JOIN sales s ON si.HeaderId = s.id 
+                    WHERE s.StoreId = transactions.StoreId 
+                    AND si.ItemId = transactions.ItemId 
+                    AND s.fiscalyear = transactions.FiscalYear 
+                    AND s.Status IN ('pending..','Checked')) -
+                    (SELECT IFNULL(SUM(td.Quantity), 0) 
+                    FROM transferdetails td
+                    INNER JOIN transfers t ON td.HeaderId = t.id 
+                    WHERE t.SourceStoreId = transactions.StoreId 
+                    AND td.ItemId = transactions.ItemId 
+                    AND t.fiscalyear = transactions.FiscalYear 
+                    AND t.Status IN ('Draft','Pending','Verified','Reviewed','Approved'))
+                ) as available_quantity")
+            ])
+            ->where('transactions.FiscalYear', $fyear)
+            ->where('transactions.StoreId', $store_id)
+            ->whereIn('transactions.ItemId', $item_id)
+            ->groupBy('transactions.ItemId')
+            ->get();
+
+        return response()->json(['result' => $result]);    
     }
 
     /**

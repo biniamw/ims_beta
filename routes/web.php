@@ -1129,8 +1129,8 @@ Route::post('/fetchReferenceDoc','DeliveryOrderController@fetchReferenceDoc');
 Route::post('/fetchReferenceData','DeliveryOrderController@fetchReferenceData');
 Route::post('/fetchDOItemInfo','DeliveryOrderController@fetchDOItemInfo');
 Route::post('/calcDOBalance','DeliveryOrderController@calcDOBalance');
+Route::post('/getDOStoreBalance','DeliveryOrderController@getDOStoreBalance');
 //---------------End DO--------------------
-
 
 //---------------Start finance closing------------------
 Route::get('/closing','ClosingController@index');

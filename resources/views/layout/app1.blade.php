@@ -54,6 +54,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('customcss/tableexport.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/jstree.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/ext-component-tree.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/spinkit/spinkit.css') }}">
 
   {{-- <link href="jquery-explr-VERSION.css" rel="stylesheet"> --}}
 
@@ -2076,10 +2077,16 @@
         function blockPage(element,message) {
             element.block({
                 message: 
-                `<div class="d-flex justify-content-center align-items-center">
-                    <div class="spinner-grow spinner-grow-sm text-white" role="status"></div><br>
-                    <p class="mr-50 mb-50">${message}</p>
-                </div>`,
+                `<div class="d-flex justify-content-center align-items-center mr-50 mb-50">
+                    <div class="sk-chase sk-primary">
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                        <div class="sk-chase-dot"></div>
+                    </div>
+                </div>${message}`,
                 css: {
                     backgroundColor: 'transparent',
                     color: '#fff',
