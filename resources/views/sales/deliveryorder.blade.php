@@ -207,7 +207,16 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1 reference_doc default_hidden_div" id="reference_doc_div">
                                             <label class="form_lbl" title="Reference Document">Reference<b style="color: red; font-size:16px;">*</b></label>
-                                            <select class="select2 form-control" name="Reference" id="Reference"></select>
+                                            <div class="row">
+                                                <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mr-0 pr-0">
+                                                    <select class="select2 form-control" name="Reference" id="Reference"></select>
+                                                </div>
+                                                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 ml-0 mr-0 pr-0" style="display: flex;align-items: center;justify-content: left;">
+                                                    <a id="show_reference" href="javascript:void(0)" class="show_reference" onclick="openReferenceDocFn()" title="Open reference document">
+                                                       <i class="fas fa-info fa-lg" style="color: #00cfe8;"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
                                             <span class="text-danger">
                                                 <strong id="reference-doc-error" class="errordatalabel"></strong>
                                             </span>
@@ -260,7 +269,7 @@
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="document_no_div">
                                             <label class="form_lbl" title="Document Number">Document No.</label>
-                                            <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Enter document number here" class="form-control mainforminp reg_form" onkeyup="docNumberFn()"/>
+                                            <input type="text" name="DocumentNumber" id="DocumentNumber" placeholder="Enter document number here" class="form-control reg_form" onkeyup="docNumberFn()"/>
                                             <span class="text-danger">
                                                 <strong id="docnumber-error" class="errordatalabel"></strong>
                                             </span>
@@ -541,8 +550,13 @@
                 $.each(data.main_data, function(key, value) {
                     flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
                     $('#ExpiryDate').val(value.expiredate);
+
+                    station = `<option selected value="${value.store_id}">${value.station}</option>`;
+                    product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
                     sales_person = `<option selected value="${value.username}">${value.username}</option>`;
                 });
+
+                listReferenceItemFn(data.detail_data);
             }
             else if(ref_type == 603){
                 $.each(data.customer_data, function(key, value) {
@@ -648,10 +662,6 @@
             $('#reference_item_default').empty().append(item_options).select2();
             renumberRows();
             CalculateGrandTotal();
-        }
-
-        function productTypeFn(){
-            $('#product-type-error').html("");
         }
 
         $('#ReferenceType').on('change', function() {
@@ -915,7 +925,10 @@
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
                         else if(ref_type == 602){
-
+                            $(`#ordered_qty${indx}`).val(value.Quantity);
+                            var remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
+                            remaining_qty >= 0 ? remaining_qty : 0;
+                            $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
                         else if(ref_type == 603){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
@@ -1221,6 +1234,34 @@
                         }
                     });
                 });
+            }
+        }
+
+        function productTypeFn(){
+            $('#product-type-error').html("");
+        }
+
+        function openReferenceDocFn(){
+            var reference_type = $('#ReferenceType').val();
+            var reference = $('#Reference').val();
+
+            if(reference == null || reference == ""){
+                $('#reference-doc-error').html("Reference field is required");
+                toastrMessage('error',"Please fill required field","Error");
+            }
+            else{
+                var link = null;
+                if(reference_type == 601){
+                    link = `/proformadownload/${reference}`;
+                }
+                else if(reference_type == 602){
+                    
+                }
+                else if(reference_type == 603){
+                    link = `/salereport/${reference}`;
+                }
+                
+                window.open(link, '', 'width=1200,height=800,scrollbars=yes');
             }
         }
 

@@ -16,8 +16,8 @@ class DeliveryOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    
+    public function index(Request $request){
         $settings = DB::table('settings')->latest()->first();
         $fyear = $settings->FiscalYear;
         $currentdate = Carbon::today()->toDateString();
@@ -79,10 +79,12 @@ class DeliveryOrderController extends Controller
             $detail_data = DB::select('SELECT proforma_regitem.id,proforma_regitem.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,proforma_regitem.Quantity,proforma_regitem.issued_qty,proforma_regitem.UnitPrice,proforma_regitem.BeforeTaxPrice FROM proforma_regitem LEFT JOIN regitems ON proforma_regitem.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE proforma_regitem.proforma_id='.$reference_id.' ORDER BY proforma_regitem.id ASC');
         }
         else if($reference_type == 602){
-            $sales_order_data = DB::select('SELECT sales_orders.customer_id,sales_orders.expiredate,users.username FROM sales_orders LEFT JOIN users ON sales_orders.user_id=users.id WHERE sales_orders.id='.$reference_id);
+            $sales_order_data = DB::select('SELECT sales_orders.customer_id,sales_orders.expiredate,users.username,"Goods" AS product_type,sales_orders.store_id,stores.Name AS station FROM sales_orders LEFT JOIN stores ON sales_orders.store_id=stores.id LEFT JOIN users ON sales_orders.user_id=users.id WHERE sales_orders.id='.$reference_id);
             $customer_id = $sales_order_data[0]->customer_id;
             $customer_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.id='.$customer_id);
             $main_data = $sales_order_data;
+
+            $detail_data = DB::select('SELECT sales_order_items.id,sales_order_items.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,sales_order_items.quantity AS Quantity,sales_order_items.issued_qty,sales_order_items.unit_price AS UnitPrice,sales_order_items.total_price FROM sales_order_items LEFT JOIN regitems ON sales_order_items.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE sales_order_items.sales_order_id='.$reference_id.' ORDER BY sales_order_items.id ASC');
         }
         else if($reference_type == 603){
             $sales_invoice_data = DB::select('SELECT sales.CustomerId AS customer_id,sales.PaymentType,sales.Username,"Goods" AS product_type,sales.StoreId AS store_id,stores.Name AS station FROM sales LEFT JOIN stores ON sales.StoreId=stores.id WHERE sales.id='.$reference_id);
@@ -107,7 +109,7 @@ class DeliveryOrderController extends Controller
             $item_info = DB::select('SELECT proforma_regitem.id,proforma_regitem.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,proforma_regitem.Quantity,proforma_regitem.issued_qty,proforma_regitem.UnitPrice,proforma_regitem.BeforeTaxPrice FROM proforma_regitem LEFT JOIN regitems ON proforma_regitem.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE proforma_regitem.proforma_id='.$reference_id.' AND proforma_regitem.regitem_id='.$itemid);
         }
         else if($reference_type == 602){
-            $item_info = DB::select(''.$itemid);
+            $item_info = DB::select('SELECT sales_order_items.id,sales_order_items.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,sales_order_items.quantity AS Quantity,sales_order_items.issued_qty,sales_order_items.unit_price AS UnitPrice,sales_order_items.total_price FROM sales_order_items LEFT JOIN regitems ON sales_order_items.regitem_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE sales_order_items.sales_order_id='.$reference_id.' AND sales_order_items.regitem_id='.$itemid);
         }
         else if($reference_type == 603){
             $item_info = DB::select('SELECT salesitems.id,salesitems.ItemId AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,salesitems.Quantity,salesitems.issued_qty,salesitems.UnitPrice,salesitems.BeforeTaxPrice FROM salesitems LEFT JOIN regitems ON salesitems.ItemId=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE salesitems.HeaderId='.$reference_id.' AND salesitems.ItemId='.$itemid);
