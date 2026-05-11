@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\customer;
+use App\Models\delivery_order;
 use Illuminate\Support\Facades\Validator;
 use Yajra\Datatables\Datatables;
 use Exception;
+use Response;
 use Carbon\Carbon;
 
 class DeliveryOrderController extends Controller
@@ -38,6 +41,61 @@ class DeliveryOrderController extends Controller
         }
         else{
             return view('sales.deliveryorder',$delivery_data);
+        }
+    }
+
+    public function store(Request $request){
+        $settings = DB::table('settings')->latest()->first();
+        $fyear = $settings->FiscalYear;
+        $findid = $request->recordId;
+
+        $validator = Validator::make($request->all(), [
+            'ReferenceType' => ['required'],
+            'Reference' => ['required_if:ReferenceType,601,602,603'],
+            'ProductType' => ['required'],
+            'station' => ['required'],
+
+            'DeliveryDate' => ['required'],
+            'ExpiryDate' => ['required'],
+            'OrderedBy' => ['required'],
+            'SalesPerson' => ['required'],
+
+            'PaymentType' => ['required_if:ReferenceType,600'],
+            'PaymentTerm' => ['required_if:ReferenceType,600'],
+            
+            'customer' => ['required'],
+        ]);
+
+        $rules = array(
+            'row.*.ItemId' => 'required',
+            'row.*.Quantity' => 'required|gt:0',
+            'row.*.UnitPrice' => 'required_if:VisiblePrice,true,1,on,yes',
+        );
+        $v2 = Validator::make($request->all(), $rules);
+
+        if($validator->passes() && $v2->passes() && $request->row != null){
+            DB::beginTransaction();
+            try{
+                $submitted_ids = [];
+                $DbData = delivery_order::where('id', $request->recordId)->first();
+                $document_number =  $this->generateDocumentNumberFn($fyear, $request->recordId);
+                preg_match('/-(\d+)\//', $document_number, $matches); //extract number from doc
+                $current_doc_number = intval($matches[1] ?? 0);
+
+            }
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' =>  $e->getMessage()]);
+            }
+        }
+        else if($validator->fails()){
+            return Response::json(['errors' => $validator->errors()]);
+        }
+        else if($v2->fails()){
+            return response()->json(['errorv2' => $v2->errors()->all()]);
+        }
+        else if($request->row == null){
+            return Response::json(['empty_table' => 460]);
         }
     }
 
@@ -188,23 +246,45 @@ class DeliveryOrderController extends Controller
         return response()->json(['result' => $result]);    
     }
 
+    function generateDocumentNumberFn($fyear, $recId = null){
+        $fyear = (int)$fyear;
+        $currentShort = substr($fyear, -2);
+        $nextShort = substr($fyear + 1, -2);
+        $fiscalyear_formatted = $currentShort . '-' . $nextShort;
+        $prefix = DB::table('settings')->latest()->first();
+        $docPrefix = $prefix->delivery_order_prefix ?? 'DO#';
+
+        if($recId == null){
+            $currentNumber = DB::table('delivery_orders')
+                ->where('fiscal_year',$fyear)
+                ->orderByDesc('current_document_no')
+                ->latest()
+                ->first();
+
+            $newNumber = (int)($currentNumber->current_document_no ?? 0) + 1;
+            return $docPrefix . '-' . str_pad($newNumber, 6, '0', STR_PAD_LEFT). '/' .$fiscalyear_formatted;
+        }
+
+        if($recId != null){
+            $rec_data = delivery_order::where('id', $recId)->first();
+
+            $currentNumber = DB::table('delivery_orders')
+                ->where('fiscalyear',$fyear)
+                ->orderByDesc('current_document_no')
+                ->latest()
+                ->first();
+            
+            $newNumber = (int)($currentNumber->current_document_no ?? 0) + 1;
+            return $docPrefix . '-' . str_pad($newNumber, 6, '0', STR_PAD_LEFT). '/' .$fiscalyear_formatted;
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
     {
         //
     }

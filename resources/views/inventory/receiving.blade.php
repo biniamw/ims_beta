@@ -3019,7 +3019,7 @@
                                 $('#savebutton').text('Update');
                                 $('#savebutton').prop("disabled", false);
                             }
-                            toastrMessage('error',"Please insert valid data on highlighted fields!</br>"+error_html,"Error");
+                            toastrMessage('error',`Please insert valid data on highlighted fields!</br>${error_html}`,"Error");
                         } 
                         else if (data.dberrors) {
                             if(parseInt(optype) == 1){

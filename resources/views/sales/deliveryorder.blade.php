@@ -484,6 +484,172 @@
             $("#inlineForm").modal('show');
         });
 
+        $("#savebutton").click(function() {
+            var optype = $("#operationtypes").val();
+            var arr = [];
+            var found = 0;
+            var progress_text = "";
+            $('.itemName').each(function() {
+                var name = $(this).val();
+                if (arr.includes(name)) {
+                    found++;
+                } else {
+                    arr.push(name);
+                }
+            });
+
+            if(found){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"There is duplicate item found in the list","Error");
+            }
+            else{
+                var registerForm = $("#Register");
+                var formData = registerForm.serialize();
+                $.ajax({
+                    url: '/saveDeliveryOrder',
+                    type: 'POST',
+                    data: formData,
+                    beforeSend: function() { 
+                        if(parseInt(optype) == 1){
+                            $('#savebutton').text('Saving...');
+                            $('#savebutton').prop("disabled", true);
+                            progress_text = "Saving delivery order...";
+                        }
+                        else if(parseInt(optype) == 2){
+                            $('#savebutton').text('Updating...');
+                            $('#savebutton').prop("disabled", true);
+                            progress_text = "Updating delivery order...";
+                        }
+
+                        blockPage(cardSection,progress_text);
+                    },
+                    success: async function(data) {
+                        await saveDeliveryOrderFn(data);
+                        unblockPage(cardSection);
+                    },
+                    error: function () { 
+                        unblockPage(cardSection);     
+                    },
+                });
+            }
+        });
+
+        function saveDeliveryOrderFn(data){
+            var optype = $("#operationtypes").val();
+            if (data.errors) {
+                if (data.errors.ReferenceType) {
+                    $('#reference-type-error').html(data.errors.ReferenceType[0]);
+                }
+                if (data.errors.Reference) {
+                    var text = data.errors.Reference[0];
+                    text = text.replace("601", "PI");
+                    text = text.replace("602", "SO");
+                    text = text.replace("603", "SI");
+                    $('#reference-doc-error').html(text);
+                }
+                if (data.errors.ProductType) {
+                    $('#product-type-error').html(data.errors.ProductType[0]);
+                }
+                if (data.errors.station) {
+                    $('#station-error').html(data.errors.station[0]);
+                }
+                if (data.errors.DeliveryDate) {
+                    $('#delivery-date-error').html(data.errors.DeliveryDate[0]);
+                }
+                if (data.errors.ExpiryDate) {
+                    $('#expiry-date-error').html(data.errors.ExpiryDate[0]);
+                }
+                if (data.errors.OrderedBy) {
+                    $('#orderby-error').html(data.errors.OrderedBy[0]);
+                }
+                if (data.errors.SalesPerson) {
+                    $('#sales-person-error').html(data.errors.SalesPerson[0]);
+                }
+                if (data.errors.DocumentNumber) {
+                    $('#docnumber-error').html(data.errors.DocumentNumber[0]);
+                }
+                if (data.errors.PaymentType) {
+                    var text = data.errors.PaymentType[0];
+                    text = text.replace("600", "direct");
+                    $('#paymentType-error').html(text);
+                }
+                if (data.errors.PaymentTerm) {
+                    var text = data.errors.PaymentTerm[0];
+                    text = text.replace("600", "direct");
+                    $('#paymentTerm-error').html(text);
+                }
+                if (data.errors.customer) {
+                    $('#customer-error').html(data.errors.customer[0]);
+                }
+
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+            }
+            
+            else if (data.errorv2) {
+                var error_html = '';
+                var selecteditemsvar = '';
+                var reference_type =  $('#ReferenceType').val();
+                var isChecked = $('#VisiblePrice').is(':checked');
+
+                $('#dynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.vals').val();
+                    var itmid = ($(`#itemNameSl${k}`)).val();
+
+                    if(($(`#quantity${k}`).val())!=undefined){
+                        var qnt = $(`#quantity${k}`).val();
+                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                            $(`#quantity${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#unitprice${k}`).val()) != undefined && isChecked){
+                        var unit_price = $(`#unitprice${k}`).val();
+                        if(isNaN(parseFloat(unit_price)) || parseFloat(unit_price) == 0){
+                            $(`#unitprice${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(isNaN(parseFloat(itmid)) || parseFloat(itmid) == 0){
+                        $(`#select2-itemNameSl${k}-container`).parent().css('background-color',errorcolor);
+                    }
+                });
+
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`Please insert valid data on highlighted fields!</br>${error_html}`,"Error");
+            }
+            
+            else if(data.empty_table){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"You should add atleast one item","Error");
+            }
+        }
+
         function fetchReferenceDataFn(){
             var reference_type = null;
             var reference_id = null;
@@ -699,6 +865,11 @@
         $('#Reference').on('change', function() {
             fetchReferenceDataFn();
             $('#reference-doc-error').html("");
+            $('#product-type-error').html("");
+            $('#station-error').html("");
+            $('#expiry-date-error').html("");
+            $('#sales-person-error').html("");
+            $('#customer-error').html("");
         });
 
         function fetchReferenceDocFn(){
@@ -1385,7 +1556,6 @@
             });
             $('.default_hidden_div').hide();
             $('.direct-reference').hide();
-            $('#operationtypes').val(1);
             $('.reg_form').val("");
             $('#VisiblePrice').prop('checked', false);
             showCostColumnFn();
@@ -1396,6 +1566,7 @@
             flatpickr('#DeliveryDate', { dateFormat: 'Y-m-d',clickOpens:true,maxDate:current_date});
             flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
             $("#dynamicTable > tbody").empty();
+            $('#operationtypes').val(1);
         }
 
         function refreshDOFn(){
