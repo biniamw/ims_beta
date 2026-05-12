@@ -648,6 +648,13 @@
                 }
                 toastrMessage('error',"You should add atleast one item","Error");
             }
+
+            else if(data.success) {
+                toastrMessage('success',"Successful","Success");
+                var oTable = $('#laravel-datatable-crud').dataTable();
+                oTable.fnDraw(false);
+                $("#inlineForm").modal('hide');
+            }
         }
 
         function fetchReferenceDataFn(){
@@ -947,7 +954,7 @@
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                     <td style="width:14%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                    <td style="width:8%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"></select></td>
+                    <td style="width:8%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
                     <td style="width:10%;" class="direct_reference"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][ordered_qty]" placeholder="Ordered quantity" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][remaining_qty]" placeholder="Remaining quantity" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>

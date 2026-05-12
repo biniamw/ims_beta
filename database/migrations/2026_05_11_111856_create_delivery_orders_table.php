@@ -25,6 +25,8 @@ class CreateDeliveryOrdersTable extends Migration
             $table->string('order_by')->nullable()->default("");
             $table->string('sales_person')->nullable()->default("");
             $table->string('supporting_doc_no')->nullable()->default("");
+            $table->string('payment_type')->nullable()->default("");
+            $table->string('payment_term')->nullable()->default("");
             $table->boolean('show_pricing')->nullable()->default(false);
             $table->bigInteger('customers_id')->nullable()->default(1);
             $table->string('delivery_by')->nullable()->default("");
