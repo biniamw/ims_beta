@@ -1814,8 +1814,6 @@
                 }
             });
 
-
-
             var product_type_filter = $(`
                 <select class="selectpicker form-control dropdownclass" id="product_type_filter" name="product_type_filter[]" title="Select product type here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Product Type ({0})">
                     <option selected value="Goods">Goods</option>

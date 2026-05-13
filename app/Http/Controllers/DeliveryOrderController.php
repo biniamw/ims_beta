@@ -15,6 +15,7 @@ use App\Models\Proforma;
 use App\Models\ProformaItem;
 use App\Models\Salesitem;
 use App\Models\SalesOrderItems;
+use App\Models\actions;
 use Illuminate\Support\Facades\Validator;
 use Yajra\Datatables\Datatables;
 use Exception;
@@ -38,11 +39,12 @@ class DeliveryOrderController extends Controller
         $uses_data = DB::select('SELECT * FROM users WHERE id>1 ORDER BY users.username ASC');
         $ref_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=200 AND lookuprefs.Status=1 ORDER BY lookuprefs.LookupName ASC'); 
         $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
+        $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fyear.' ORDER BY fiscalyear.FiscalYear DESC');
 
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
-            'itemSrcs' => $itemSrcs
+            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears
         ];
 
         if($request->ajax()) {
@@ -50,6 +52,19 @@ class DeliveryOrderController extends Controller
         }
         else{
             return view('sales.deliveryorder',$delivery_data);
+        }
+    }
+
+    public function showDOData($fiscalyr){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $users = Auth()->user();
+        $do_data_list = DB::select('SELECT delivery_orders.*,customers.Name AS customer_name,customers.TinNumber AS TIN, customers.Code AS customer_code,stores.Name AS store_name,lookuprefs.LookupName AS reference_types,COALESCE(sales.VoucherNumber,sales_orders.docno,proformas.DocumentNumber) as reference_no FROM delivery_orders LEFT JOIN customers ON delivery_orders.customers_id=customers.id LEFT JOIN stores ON delivery_orders.station=stores.id LEFT JOIN lookuprefs ON delivery_orders.reference_type=lookuprefs.id LEFT JOIN sales ON delivery_orders.reference_id=sales.id AND delivery_orders.reference_type=603 LEFT JOIN sales_orders ON delivery_orders.reference_id=sales_orders.id AND delivery_orders.reference_type=602 LEFT JOIN proformas ON delivery_orders.reference_id=proformas.id AND delivery_orders.reference_type=601 WHERE delivery_orders.fiscal_year='.$fiscalyr.' ORDER BY delivery_orders.id DESC');
+        if(request()->ajax()) {
+            return datatables()->of($do_data_list)
+            ->addIndexColumn()
+            ->rawColumns(['action'])
+            ->make(true);
         }
     }
 
@@ -115,7 +130,7 @@ class DeliveryOrderController extends Controller
                     'delivery_by' => $request->DeliverBy,
                     'phone_no' => $request->PhoneNumber,
                     'id_no' => $request->IdNumber,
-                    'plate_no' => $request->PhoneNumber,
+                    'plate_no' => $request->PlateNumber,
                     'total_price' => 0,
                     'fiscal_year' => $fyear,
                     'remark' => $request->Remark ?? "",
@@ -229,7 +244,7 @@ class DeliveryOrderController extends Controller
                 ]);
 
                 DB::commit();
-                return Response::json(['success' => 1]);
+                return Response::json(['success' => 1,'fiscal_year' => $fyear]);
             }
             catch(Exception $e){
                 DB::rollBack();
@@ -325,6 +340,29 @@ class DeliveryOrderController extends Controller
         }
 
         return response()->json(['item_info' => $item_info]);
+    }
+
+    public function getDOData($id){
+
+        $do_data = DB::select('SELECT delivery_orders.*,customers.Name AS customer_name,customers.TinNumber AS TIN, customers.Code AS customer_code,customers.CustomerCategory,customers.VatNumber,customers.PhoneNumber,customers.OfficePhone,stores.Name AS store_name,lookuprefs.LookupName AS reference_types,COALESCE(sales.VoucherNumber,sales_orders.docno,proformas.DocumentNumber) AS reference_no FROM delivery_orders LEFT JOIN customers ON delivery_orders.customers_id=customers.id LEFT JOIN stores ON delivery_orders.station=stores.id LEFT JOIN lookuprefs ON delivery_orders.reference_type=lookuprefs.id LEFT JOIN sales ON delivery_orders.reference_id=sales.id AND delivery_orders.reference_type=603 LEFT JOIN sales_orders ON delivery_orders.reference_id=sales_orders.id AND delivery_orders.reference_type=602 LEFT JOIN proformas ON delivery_orders.reference_id=proformas.id AND delivery_orders.reference_type=601 WHERE delivery_orders.id='.$id); 
+        $is_price_vis = $do_data[0]->show_pricing;
+
+        $activitydata = actions::join('users','actions.user_id','users.id')
+            ->where('actions.pagename',"delivery_order")
+            ->where('pageid',$id)
+            ->orderBy('actions.id','DESC')
+            ->get(['actions.*','users.FullName','users.username']);
+
+        return response()->json(['do_data' => $do_data,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'rec_id' => $id]);
+    }
+
+    public function showDODetailData($id){
+
+        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
+        return datatables()->of($detailTable)
+        ->addIndexColumn()
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
     public function calcDOBalance(Request $request){
@@ -456,6 +494,18 @@ class DeliveryOrderController extends Controller
             $newNumber = (int)($currentNumber->current_document_no ?? 0) + 1;
             return $docPrefix . '-' . str_pad($newNumber, 6, '0', STR_PAD_LEFT). '/' .$fiscalyear_formatted;
         }
+    }
+
+    function countDOStatus(){
+        $fyear = $_POST['fyear']; 
+        $delivery_order_status = DB::select('SELECT delivery_orders.status,FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear.' GROUP BY delivery_orders.status UNION SELECT "Total",FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear);
+
+        $ready_for_do = DB::select('SELECT (SELECT COUNT(proformas.id) FROM proformas WHERE proformas.Status="Pass") + (SELECT COUNT(sales_orders.id) FROM sales_orders WHERE sales_orders.status=8) + (SELECT COUNT(sales.id) FROM sales WHERE sales.Status="Confirmed") AS ready_do');
+     
+        $ready_do_cnt = $ready_for_do[0]->ready_do ?? 0;
+        $ready_do_cnt = number_format($ready_do_cnt);
+
+        return response()->json(['delivery_order_status' => $delivery_order_status,'ready_do_cnt' => $ready_do_cnt]); 
     }
 
     /**

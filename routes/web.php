@@ -1125,6 +1125,7 @@ Route::post('dispatchBackwardAction','DispatchController@dispatchBackwardAction'
 
 //---------------Start DO--------------------
 Route::get('/deliveryorder','DeliveryOrderController@index');
+Route::post('/showDOData/{fy}','DeliveryOrderController@showDOData');
 Route::post('/fetchReferenceDoc','DeliveryOrderController@fetchReferenceDoc');
 Route::post('/fetchReferenceData','DeliveryOrderController@fetchReferenceData');
 Route::post('/fetchDOItemInfo','DeliveryOrderController@fetchDOItemInfo');
@@ -1132,6 +1133,9 @@ Route::post('/calcDOBalance','DeliveryOrderController@calcDOBalance');
 Route::post('/getDOStoreBalance','DeliveryOrderController@getDOStoreBalance');
 
 Route::post('saveDeliveryOrder','DeliveryOrderController@store');
+Route::get('/getDOData/{id}','DeliveryOrderController@getDOData');
+Route::post('/showDODetailData/{id}','DeliveryOrderController@showDODetailData');
+Route::post('/countDOStatus','DeliveryOrderController@countDOStatus');
 //---------------End DO--------------------
 
 //---------------Start finance closing------------------

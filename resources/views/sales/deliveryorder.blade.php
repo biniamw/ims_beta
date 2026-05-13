@@ -130,30 +130,30 @@
                                                     </div>
                                                     <div class="media-body my-auto mr-1">
                                                         <span class="font-weight-bolder mb-0 do_status_record_lbl" id="do_ready_record_lbl"></span>
-                                                        <p title="Ready for Delivery Order" class="card-text font-small-3 mb-0">Ready for DO</p>
+                                                        <p title="Total records of &#10; ✓ Proforma Invoice &#10; ✓ Sales Invoice &#10; ✓ Sales Order" class="card-text font-small-3 mb-0">Ready for DO</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>      
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 fit-content" style="display: none;">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 fit-content">
                                     <div class="row main_datatable" id="delivery_order_tbl">
                                         <div style="width:99%; margin-left:0.5%;">
-                                            <table id="laravel-datatable-crud" class="display table-bordered table-striped table-hover defaultdatatable mb-0 mobile-dt fit-content" style="width: 100%">
+                                            <table id="laravel-datatable-crud" class="display table-bordered table-striped table-hover defaultdatatable mb-0 mobile-dt" style="width: 100%">
                                                 <thead>
                                                     <tr>
                                                         <th style="display: none;"></th>
                                                         <th style="width:3%;">#</th>
-                                                        <th style="width:11%;" title="Dispatch Document Number">Document No.</th>
-                                                        <th style="width:10%;">Dispatch Type</th>
-                                                        <th style="width:10%;">Dispatch Mode</th>
-                                                        <th style="width:11%;">Driver/ Person Name</th>
-                                                        <th style="width:11%;" title="Driver or Person Phone Number">Driver/ Person Phone No.</th>
-                                                        <th style="width:10%;" title="Driver License Number">Driver License No.</th>
-                                                        <th style="width:10%;" title="Plate Number">Plate No.</th>
-                                                        <th style="width:10%;">Date</th>
-                                                        <th style="width:10%;">Status</th>
+                                                        <th style="width:12%;" title="Delivery Order Number">DO. No.</th>
+                                                        <th style="width:11%;">Reference Type</th>
+                                                        <th style="width:11%;">Reference</th>
+                                                        <th style="width:8%;">Product Type</th>
+                                                        <th style="width:14%;">Customer Name</th>
+                                                        <th style="width:8%;">TIN</th>
+                                                        <th style="width:11%;">Station</th>
+                                                        <th style="width:10%;">Delivery Date</th>
+                                                        <th style="width:8%;">Status</th>
                                                         <th style="width:4%;">Action</th>
                                                         <th style="display: none;"></th>
                                                         <th style="display: none;"></th>
@@ -173,6 +173,288 @@
             </section>
         </div>
     @endcan
+
+    <!--Start Info Modal -->
+    <div class="modal fade text-left fit-content" id="doInfoModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="dispatchinfotitle" aria-hidden="true" style=" overflow-y: scroll;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title form_title" id="doinfotitle">Delivery Order Information</h4>
+                    <div class="row">
+                        <div style="text-align: right" class="form_title info_modal_title_lbl" id="statustitles"></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <form id="doInfoForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <section id="card-text-alignment">
+                                        <div class="d-flex justify-content-between align-items-center cursor-pointer border-bottom" data-toggle="collapse" data-target=".infoscl" aria-expanded="true">
+                                            <h5 class="mb-0 form_title do_header_info"><i class="far fa-info-circle"></i> Basic Information</h5>
+                                            <div class="d-flex align-items-center header-tab">
+                                                <span class="text-uppercase font-weight-bold mr-50 toggle-text-label tab-text">Collapse</span>
+                                                <div class="collapse-icon">
+                                                    <i class="fas text-secondary fa-minus-circle"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse show infoscl shadow pl-1 pr-1">
+                                            <div class="row mb-1">
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1">
+                                                    <div class="card shadow-none border m-0">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title mb-0"><i class="fas fa-database"></i> General</h6>
+                                                            <hr class="my-50">
+                                                            <div class="row">
+                                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                    <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Reference Type</label></td>
+                                                                            <td><label class="info_lbl" id="info_reference_type" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr class="fl_class info_non_direct_ref">
+                                                                            <td><label class="info_lbl">Reference</label></td>
+                                                                            <td><label class="info_lbl" id="info_reference" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Product Type</label></td>
+                                                                            <td><label class="info_lbl" id="info_product_type" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Station</label></td>
+                                                                            <td><label class="info_lbl" id="info_station" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Delivery Date</label></td>
+                                                                            <td><label class="info_lbl" id="info_delivery_date" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Expiry Date</label></td>
+                                                                            <td><label class="info_lbl" id="info_expiry_date" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                    <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Order By</label></td>
+                                                                            <td><label class="info_lbl" id="info_order_by" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Sales Person</label></td>
+                                                                            <td><label class="info_lbl" id="info_sales_person" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Document No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_doc_no" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr class="fl_class info_direct_ref">
+                                                                            <td><label class="info_lbl">Payment Type</label></td>
+                                                                            <td><label class="info_lbl" id="info_payment_type" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr class="fl_class info_direct_ref">
+                                                                            <td><label class="info_lbl">Payment Term</label></td>
+                                                                            <td><label class="info_lbl" id="info_payment_term" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Remark</label></td>
+                                                                            <td><label class="info_lbl" id="info_remark" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Is Price Visible</label></td>
+                                                                            <td><label class="info_lbl" id="info_price_column_vis" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1 allinfo purchaseinfo">
+                                                    <div class="card shadow-none border m-0">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title mb-0"><i class="fas fa-user"></i> Customer Information</h6>
+                                                            <hr class="my-50">
+                                                            <div class="row">
+                                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                    <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Customer Name">Name</label></td>
+                                                                            <td><label class="info_lbl" id="info_customer_name" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Customer Code">Code</label></td>
+                                                                            <td><label class="info_lbl" id="info_customer_code" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Customer Category">Category</label></td>
+                                                                            <td><label class="info_lbl" id="info_customer_category" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Taxpayer Identification Number">TIN</label></td>
+                                                                            <td><label class="info_lbl" id="info_tin" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Vat Registration Number">VAT No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_vat_no" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Customer Phone Number">Customer Phone No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_customer_phone" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                                    <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Deliver By</label></td>
+                                                                            <td><label class="info_lbl" id="info_delivery_by" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl" title="Phone Number">Phone No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_phone_no" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">ID No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_id_no" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Plate No.</label></td>
+                                                                            <td><label class="info_lbl" id="info_plate_no" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="tab-pane do_info_tab tab-view" id="info-do-view" role="tabpanel" aria-labelledby="info-do-view">
+                                        <ul class="nav nav-tabs nav-fill" role="tablist">
+                                            <li class="nav-item formnavitm note">
+                                                <a class="nav-link active do-tabs tab-title active-tab-title" id="info_do_item_tab" data-toggle="tab" href="#info_do_item_view" aria-controls="info_do_item_tab" role="tab" aria-selected="true" title="Items"><i class="fas fa-list-ul"></i><span class="tab-text">Items</span></a>                                
+                                            </li>
+                                            <li class="nav-item formnavitm note">
+                                                <a class="nav-link do-tabs tab-title" id="info_do_doc_tab" data-toggle="tab" href="#info_do_doc_view" aria-controls="info_do_doc_tab" role="tab" aria-selected="true" title="Documents"><i class="fas fa-file-alt"></i><span class="tab-text">Documents</span></a>                                
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content formtabcon" style="margin-top:-14px;">
+                                            <div class="tab-pane do-view active tab-view active-tab-view border" id="info_do_item_view" aria-labelledby="info_do_item_view" role="tabpanel">
+                                                <div class="row mt-0 mr-1 ml-1 mb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div class="table-responsive scroll scrdiv">
+                                                            <div class="row infoRecDiv" id="do_item_div">
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                    <table id="doInfoDataTbl" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable" style="width: 100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th style="display:none;"></th>
+                                                                                <th style="width:2%"></th>
+                                                                                <th style="width:3%;">#</th>
+                                                                                <th style="width:10%;">Item Code</th>
+                                                                                <th style="width:20%;">Item Name</th>
+                                                                                <th style="width:10%;" title="Barcode Number">Barcode No.</th>
+                                                                                <th style="width:8%;" title="Unit of Measurement">UOM</th>
+                                                                                <th style="width:8%;">Quantity</th>
+                                                                                <th style="width:10%;">Unit Price</th>
+                                                                                <th style="width:10%;">Total Price</th>
+                                                                                <th style="width:16%;">Remark</th>
+                                                                                <th style="width:3%"></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="table table-sm"></tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row fl_class pricing_flag" style="display: none;">
+                                                                <div class="col-xl-8 col-lg-6 col-md-3 col-sm-3 col-12"></div>
+                                                                <div class="col-xl-4 col-lg-6 col-md-9 col-sm-9 col-12 mt-1" style="text-align: right;">
+                                                                    <table style="width: 100%;font-size:12px" class="rtable">
+                                                                        <tr>
+                                                                            <td style="text-align: right;width:55%;">
+                                                                                <label class="info_lbl">Total Price</label>
+                                                                            </td>
+                                                                            <td style="text-align: center;width:45%;">
+                                                                                <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane do-view tab-view border" id="info_do_doc_view" aria-labelledby="info_do_doc_view" role="tabpanel">
+                                                <div class="row mt-0 mr-1 ml-1 mb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <table id="info-document-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable" style="width: 100%;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="display: none;"></th>
+                                                                    <th style="width:3%;">#</th>
+                                                                    <th style="width:13%;">Type</th>
+                                                                    <th style="width:10%;">Date</th>
+                                                                    <th style="width:40%;">Document</th>
+                                                                    <th style="width:24%;">Remark</th>
+                                                                    <th style="width:10%;">Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table table-sm"></tbody>
+                                                        </table>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:left">
+                                    <div class="btn-group dropup">
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle hide-arrow action-btn form_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa-sharp fa-solid fa-caret-up fa-xl"></i><span class="btn-text">&nbsp Actions</span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="do_action_ul"></ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:right">
+                                    <input type="hidden" class="form-control" name="dstockin_type_inp" id="dstockin_type_inp" readonly="true">
+                                    <input type="hidden" class="form-control" name="dstockinid" id="dstockinid" readonly="true">
+                                    <input type="hidden" class="form-control" name="reqId" id="reqId" readonly="true">
+                                    <input type="hidden" class="form-control" name="currentStatus" id="currentStatus" readonly="true">
+                                    <input type="hidden" class="form-control" name="forwardReqId" id="forwardReqId" readonly="true">
+                                    <input type="hidden" class="form-control" name="newForwardStatusValue" id="newForwardStatusValue" readonly="true">
+                                    <input type="hidden" class="form-control" name="forwarkBtnTextValue" id="forwarkBtnTextValue" readonly="true">
+                                    <input type="hidden" class="form-control" name="forwardActionValue" id="forwardActionValue" readonly="true">
+                                    <button id="closebuttonds" type="button" class="btn btn-danger form_btn" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Info -->
 
     <div class="modal fade text-left fit-content" id="inlineForm" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
@@ -429,8 +711,8 @@
                                 @endforeach
                             </select>
                             <select class="select2 form-control" name="default_station" id="default_station">
-                                @foreach ($station_src as $station_src)
-                                    <option value="{{ $station_src->id }}">{{ $station_src->Name }}</option>
+                                @foreach ($station_src as $default_st)
+                                    <option value="{{ $default_st->id }}">{{ $default_st->Name }}</option>
                                 @endforeach
                             </select>
                             <select class="select2 form-control" name="DefaultSalesPerson" id="DefaultSalesPerson">
@@ -458,23 +740,353 @@
         </div>
     </div>
 
+    @include('layout.universal-component')
+
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var fyears = $('#fiscalyearval').val();
         var current_date = $('#currentdateval').val();
         var table = "";
+        var detail_table = "";
         var gblIndex = -1;
+        var infoTblIndex = -1;
         var i = 0;
         var m = 0;
         var j = 0;
 
-        $(function () {
-            cardSection = $('#page-block');
+        $(document).ready(async function() {
+            $('.main_datatable').hide();
+            await getDODataFn(fyears);
+            countDOStatusFn(fyears);
+            $('#delivery_order_tbl').show();
         });
 
-        $(function () {
-            reference_doc_element = $('#Reference');
+        function getDODataFn(fy){
+            table = $('#laravel-datatable-crud').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: true,
+                searchHighlight: true,
+                "order": [[ 0, "desc" ]],
+                "lengthMenu": [25,50,100,250,500],
+                "pagingType": "simple",
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                scrollY:'100%',
+                scrollX: true,
+                scrollCollapse: true, 
+                deferRender: true,
+                fixedHeader:true,
+                dom: "<'row'<'col-sm-3 col-md-2 col-6'f><'col-sm-3 col-md-2 col-6 mt-1 custom-1'><'col-sm-3 col-md-2 col-6 mt-1 custom-2'><'col-sm-3 col-md-2 col-6 mt-1 custom-3'><'col-sm-3 col-md-2 col-6 mt-1 custom-4'><'col-sm-3 col-md-2 col-6 mt-1 custom-5'>>" +
+                    "<'row'<'col-sm-12 margin_top_class'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showDOData/' + fy,
+                    type: 'POST',
+                    beforeSend: function() {
+                       blockPage(cardSection,'Loading delivery order data...');
+                    },
+                    complete: function () { 
+                        setFocus('#laravel-datatable-crud');
+                        $('#laravel-datatable-crud').DataTable().columns.adjust();
+                    },
+                    error: function () { 
+                        unblockPage(cardSection);
+                    },
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        "render": function ( data, type, row, meta ) {
+                            return "";
+                        },
+                        'visible': false
+                    },
+                    {
+                        data:'DT_RowIndex',
+                        width:"3%"
+                    },
+                    {
+                        data: 'document_number',
+                        name: 'document_number',
+                        width:"12%"
+                    },
+                    {
+                        data: 'reference_types',
+                        name: 'reference_types',
+                        width:"11%"
+                    },
+                    {
+                        data: 'reference_no',
+                        name: 'reference_no',
+                        width:"11%"
+                    },
+                    {
+                        data: 'product_type',
+                        name: 'product_type',
+                        width:"8%"
+                    },
+                    {
+                        data: 'customer_name',
+                        name: 'customer_name',
+                        width:"14%"
+                    },
+                    {
+                        data: 'TIN',
+                        name: 'TIN',
+                        width:"8%"
+                    },
+                    {
+                        data: 'store_name',
+                        name: 'store_name',
+                        width:"11%"
+                    },
+                    {
+                        data: 'delivery_date',
+                        name: 'delivery_date',
+                        width:"10%"
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        "render": function ( data, type, row, meta ) {
+                            if(data == "Draft"){
+                                return `<span class="badge bg-secondary bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Pending"){
+                                return `<span class="badge bg-warning bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Verified"){
+                                return `<span class="badge bg-primary bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Approved" || data == "Received"){
+                                return `<span class="badge bg-success bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Void"){
+                                return `<span class="badge bg-danger bg-glow">${data}</span>`;
+                            }
+                            else{
+                                return `<span class="badge bg-danger bg-glow">${data}</span>`;
+                            }
+                        },
+                        width:"8%"
+                    },
+                    { 
+                        data: 'action', 
+                        name: 'action',
+                        "render": function ( data, type, row, meta ) {
+                            return `<div class="text-center"><a class="doInfo" href="javascript:void(0)" onclick="doInfoFn(${row.id})" data-id="doInfo${row.id}" id="doInfo${row.id}" title="Open information form"><i class="fa-sharp fa-regular fa-circle-info fa-xl" style="color: #00cfe8;"></i></a></div>`;
+                        },
+                        width:"4%",
+                    },
+                    { 
+                        data: 'reference_type', 
+                        name: 'reference_type',
+                        "render": function ( data, type, row, meta ) {
+                            return "";
+                        },
+                        'visible': false //12
+                    },
+                    { 
+                        data: 'station', 
+                        name: 'station',
+                        "render": function ( data, type, row, meta ) {
+                            return "";
+                        },
+                        'visible': false //13
+                    },
+                ],
+                createdRow: function(row, data, dataIndex) {
+                    $('td', row).each(function() {
+                        // If the cell's text is "0", set it to an empty string
+                        if ($(this).text() == "NULL" || $(this).text() === "NULL") {
+                            $(this).text('');
+                        }
+                    });
+                },
+                drawCallback: function () { 
+                    this.api().columns().every(function() {
+                        var column = this;
+                        var header = $(column.header()).text().trim();
+                        
+                        $(column.nodes()).each(function() {
+                            $(this).attr('data-title', header);
+                        });
+                    });
+                    $('#laravel-datatable-crud').DataTable().columns.adjust();
+                    unblockPage(cardSection);
+                },
+                fixedHeader: {
+                    header: true,
+                    headerOffset: $('.header-navbar').outerHeight(),
+                },
+            });
+
+            appendDOFilterFn(fy);
+        }
+
+        function appendDOFilterFn(fyears){
+            var do_fiscalyear = $(`
+                <select class="selectpicker form-control dropdownclass" id="do_fy" name="do_fy[]" title="Select fiscal year here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" data-selected-text-format="count" data-count-selected-text="Fiscal Year ({0})">
+                    @foreach ($fiscalyears as $dofy)
+                        <option value="{{ $dofy->FiscalYear }}">{{ $dofy->Monthrange }}</option>
+                    @endforeach
+                </select>
+            `);
+
+            $('.custom-1').html(do_fiscalyear);
+            $('#do_fy')
+            .selectpicker()
+            .selectpicker('val', fyears)
+            .off('changed.bs.select') 
+            .on('changed.bs.select',async function () {
+                let fyear = $(this).val();
+                countDOStatusFn(fyear);
+                await getDODataFn(fyear);
+            });
+
+            var reference_type_filter = $(`
+                <select class="selectpicker form-control dropdownclass" id="reference_type_filter" name="reference_type_filter[]" title="Select reference type here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Reference Type ({0})">
+                    @foreach ($ref_type_data as $reftype_filter)
+                        <option selected value="{{ $reftype_filter->id }}">{{ $reftype_filter->LookupName }}</option>
+                    @endforeach
+                </select>
+            `);
+
+            $('.custom-2').html(reference_type_filter);
+            $("#reference_type_filter").selectpicker('selectAll');
+            $('#reference_type_filter')
+            .selectpicker()
+            .off('changed.bs.select') 
+            .on('changed.bs.select', function () {  
+                var selected = $('#reference_type_filter option:selected');
+                var search = [];
+
+                // Collect selected option values
+                $.each(selected, function() {
+                    search.push($(this).val());
+                });
+
+                if (search.length === 0) {
+                    // No option selected: force DataTable to return no data
+                    table.column(12).search('^$', true, false).draw(); // Match an impossible pattern
+                } else {
+                    // Options selected: build regex for filtering
+                    var searchRegex = search.join('|'); // OR-separated values for regex
+                    table.column(12).search(searchRegex, true, false).draw();
+                }
+            });
+
+            var product_type_filter = $(`
+                <select class="selectpicker form-control dropdownclass" id="product_type_filter" name="product_type_filter[]" title="Select product type here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Product Type ({0})">
+                    <option selected value="Goods">Goods</option>
+                    <option selected value="Commodity">Commodity</option>
+                    <option selected value="Metal">Metal</option>
+                </select>
+            `);
+
+            $('.custom-3').html(product_type_filter);
+            $('#product_type_filter')
+            .selectpicker()
+            .off('changed.bs.select') 
+            .on('changed.bs.select', function () {  
+                var selected = $('#product_type_filter option:selected');
+                var search = [];
+
+                // Collect selected option values
+                $.each(selected, function() {
+                    search.push($(this).val());
+                });
+
+                if (search.length === 0) {
+                    // No option selected: force DataTable to return no data
+                    table.column(5).search('^$', true, false).draw(); // Match an impossible pattern
+                } else {
+                    // Options selected: build regex for filtering
+                    var searchRegex = search.join('|'); // OR-separated values for regex
+                    table.column(5).search(searchRegex, true, false).draw();
+                }
+            });
+
+            var store_filter = $(`
+                <select class="selectpicker form-control dropdownclass" id="do_store_filter" name="do_store_filter[]" title="Select station here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Station ({0})">
+                    @foreach ($station_src as $station_filter)
+                        <option selected value="{{ $station_filter->id }}">{{ $station_filter->Name }}</option>
+                    @endforeach
+                </select>
+            `);
+
+            $('.custom-4').html(store_filter);
+            $('#do_store_filter')
+            .selectpicker()
+            .off('changed.bs.select') 
+            .on('changed.bs.select', function () {  
+                var selected = $('#do_store_filter option:selected');
+                var search = [];
+
+                // Collect selected option values
+                $.each(selected, function() {
+                    search.push($(this).val());
+                });
+
+                if (search.length === 0) {
+                    // No option selected: force DataTable to return no data
+                    table.column(13).search('^$', true, false).draw(); // Match an impossible pattern
+                } else {
+                    // Options selected: build regex for filtering
+                    var searchRegex = search.join('|'); // OR-separated values for regex
+                    table.column(13).search(searchRegex, true, false).draw();
+                }
+            });
+
+            var status_filter = $(`
+                <select class="selectpicker form-control dropdownclass" id="do_status_filter" name="do_status_filter[]" title="Select status here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Status ({0})">
+                    <option selected value="Draft">Draft</option>
+                    <option selected value="Pending">Pending</option>
+                    <option selected value="Verified">Verified</option>
+                    <option selected value="Approved">Approved</option>
+                    <option selected value="Void">Void</option>
+                </select>
+            `);
+
+            $('.custom-5').html(status_filter);
+            $('#do_status_filter')
+            .selectpicker()
+            .off('changed.bs.select') 
+            .on('changed.bs.select', function () {  
+                var selected = $('#do_status_filter option:selected');
+                var search = [];
+
+                // Collect selected option values
+                $.each(selected, function() {
+                    search.push($(this).val());
+                });
+
+                if (search.length === 0) {
+                    // No option selected: force DataTable to return no data
+                    table.column(10).search('^$', true, false).draw(); // Match an impossible pattern
+                } else {
+                    // Options selected: build regex for filtering
+                    var searchRegex = search.join('|'); // OR-separated values for regex
+                    table.column(10).search(searchRegex, true, false).draw();
+                }
+            });
+        }
+
+        $('#laravel-datatable-crud tbody').on('click', 'tr', function () {
+            $('#laravel-datatable-crud tbody > tr').removeClass('selected');
+            $(this).addClass('selected');
+            gblIndex = $(this).index();
         });
+
+        function setFocus(targetTable) {
+            $($(targetTable + ' tbody > tr')[gblIndex]).addClass('selected');
+        }
 
         $("#addDeliveryOrder").click(function() {
             resetDOFormFn();
@@ -653,6 +1265,7 @@
                 toastrMessage('success',"Successful","Success");
                 var oTable = $('#laravel-datatable-crud').dataTable();
                 oTable.fnDraw(false);
+                countDOStatusFn(data.fiscal_year);
                 $("#inlineForm").modal('hide');
             }
         }
@@ -1415,6 +2028,427 @@
             }
         }
 
+        function countDOStatusFn(fiscalyear){
+            var fyear = 0;
+            var do_void_cnt = 0;
+            
+            $.ajax({
+                url: '/countDOStatus',
+                type: 'POST',
+                data:{
+                    fyear: fiscalyear,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $(".do_status_record_lbl").html("0");
+                    $.each(data.delivery_order_status, function(key, value) {
+                        if(value.status == "Draft"){
+                            $("#do_draft_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Pending"){
+                            $("#do_pending_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Verified"){
+                            $("#do_verified_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Approved"){
+                            $("#do_approved_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Total"){
+                            $("#do_total_record_lbl").html(value.status_count);
+                        }
+                        else {
+                            do_void_cnt += parseInt(value.status_count);
+                            $("#do_void_record_lbl").html(do_void_cnt);
+                        }
+                    });
+
+                    $("#do_ready_record_lbl").html(data.ready_do_cnt);
+                }
+            });
+        }
+
+        function doInfoFn(recordId){
+            createDOInfoFn(recordId);
+            $("#doInfoModal").modal('show');
+        }
+
+        function createDOInfoFn(recordId){
+            $("#statusIds").val(recordId);
+            $("#recordIds").val(recordId);
+            $('.fl_class').hide();
+            infoTblIndex = -1;
+            var visibilitymode = false;
+            
+            $.ajax({
+                type: "get",
+                url: "{{url('getDOData')}}"+'/'+recordId,
+                dataType: "json",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching delivery order data...');
+                },
+                success: async function(data) {
+                    await getInfoDataFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function getInfoDataFn(data){
+            var lidata = "";
+            var status_color = "";
+            var action_links = "";
+            var major_btn_link = `<li><hr class="dropdown-divider"></li>`;
+            var status_btn_link = `<li><hr class="dropdown-divider"></li>`;
+
+            $.each(data.do_data, function(key, value) {
+                $('#info_reference_type').html(value.reference_types);
+                $('#info_reference').html(value.reference_no);
+                $('#info_product_type').html(value.product_type);
+                $('#info_station').html(value.store_name);
+                $('#info_delivery_date').html(value.delivery_date);
+                $('#info_expiry_date').html(value.expiry_date);
+
+                $('#info_order_by').html(value.order_by);
+                $('#info_sales_person').html(value.sales_person);
+                $('#info_doc_no').html(value.supporting_doc_no);
+                $('#info_payment_type').html(value.payment_type);
+                $('#info_payment_term').html(value.payment_term);
+                $('#info_remark').html(value.remark);
+                $('#info_price_column_vis').html(value.show_pricing == 1 ? "Yes" : "No");
+
+                $('#info_customer_name').html(value.customer_name);
+                $('#info_customer_code').html(value.customer_code);
+                $('#info_customer_category').html(value.CustomerCategory);
+                $('#info_tin').html(value.TIN);
+                $('#info_vat_no').html(value.VatNumber);
+                $('#info_customer_phone').html(`${value.PhoneNumber}, ${value.OfficePhone}`);
+
+                $('#info_delivery_by').html(value.delivery_by);
+                $('#info_phone_no').html(value.phone_no);
+                $('#info_id_no').html(value.id_no);
+                $('#info_plate_no').html(value.plate_no);
+
+                $('#info_total_price').html(numformat(parseFloat(value.total_price).toFixed(2)));
+
+                if(value.status == "Draft"){
+                    status_color = "#A8AAAE";
+                }
+                else if(value.status == "Pending"){
+                    status_color = "#f6c23e";
+                }
+                else if(value.status == "Verified"){
+                    status_color = "#7367F0";
+                }
+                else if(value.status == "Approved"){
+                    status_color = "#1cc88a";
+                }
+                else{
+                    status_color = "#e74a3b";
+                }
+                $(".info_modal_title_lbl").html(`<span class="form_title" style='color:${status_color};font-weight:bold;text-shadow;1px 1px 10px ${status_color};font-size:16px;'>${value.document_number},     ${value.status}</span>`);
+
+                if(value.reference_type == 600){
+                    $('.info_direct_ref').show();
+                }
+                if(value.reference_type != 600){
+                    $('.info_non_direct_ref').show();
+                }
+
+                if(value.show_pricing == 1){
+                    $('.pricing_flag').show();
+                }
+
+                action_links = `
+                <li>
+                    <a class="dropdown-item viewDOAction" onclick="viewDOActionFn(${data.rec_id})" data-id="view_do_actionbtn${recordId}" id="view_do_actionbtn${recordId}" title="View user log">
+                        <span><i class="fa-solid fa-eye"></i> View User Log</span>  
+                    </a>
+                </li>
+                ${major_btn_link}
+                ${status_btn_link}`;
+
+                $("#do_action_ul").empty().append(action_links);
+            });
+
+            $.each(data.activitydata, function(key, value) {
+                var classes = "";
+                var reasonbody = "";
+                if(value.action == "Edited" || value.action == "Change to Pending" || value.action == "Back to Pending" || value.action == "Edited (Dispatch)" || value.action == "Back to Pending (Dispatch)"){
+                    classes = "warning";
+                }
+                else if(value.action == "Verified" || value.action == "Change to Counting" || value.action == "Verified (Dispatch)"){
+                    classes = "primary";
+                }
+                else if(value.action == "Back to Draft" || value.action == "Back to Verify" || value.action == "Back to Review" || value.action == "Undo Void" || value.action == "Created (Dispatch)" || value.action == "Undo Void (Dispatch)"){
+                    classes = "secondary";
+                }
+                else if(value.action == "Created" || value.action == "Approved" || value.action == "Received" || value.action == "Approved (Dispatch)"){
+                    classes = "success";
+                }
+                else if(value.action == "Void" || value.action=="Void(Draft)" || value.action=="Void(Pending)" || value.action=="Void(Approved)" || value.action=="Void(Reviewed)" || value.action=="Rejected" || value.action=="Void (Dispatch)"){
+                    classes = "danger";
+                }
+                if(value.reason != null && value.reason != ""){
+                    reasonbody = `</br><span class="text-muted"><b>Reason:</b> ${value.reason}</span>`;
+                }
+                else{
+                    reasonbody="";
+                }
+                lidata += `<li class="timeline-item"><span class="timeline-point timeline-point-${classes} timeline-point-indicator"></span><div class="timeline-header mb-sm-0 mb-0"><h6 class="mb-0">${value.action}</h6><span class="text-muted"><i class="fa-regular fa-user"></i> ${value.FullName}</span>${reasonbody}</br><span class="text-muted"><i class="fa-regular fa-clock"></i> ${value.time}</span></div></li>`;
+            });
+
+            $("#universal-action-log-canvas").empty().append(lidata);
+
+            fetchDOItemFn(data.rec_id,data.is_price_vis);
+            tabMgtFn();
+            $(".infoscl").collapse('show');
+        }
+
+        function fetchDOItemFn(recordId,is_price_vis){
+
+            var visibility_flag = false;
+            var column_index = [];
+
+            if(is_price_vis == 1){
+                column_index = [8,9];
+                visibility_flag = true;
+            }
+            else{
+                column_index = [8,9];
+                visibility_flag = false;
+            }
+
+            detail_table = $('#doInfoDataTbl').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: false,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                searching: true,
+                "order": [[ 1, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end expand-collapse-class'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showDODetailData/' + recordId,
+                    type: 'POST',
+                    complete: function () { 
+                        setFocusInfoTable('#doInfoDataTbl');
+                    },
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        'visible': false
+                    },
+                    {
+                        data:null,
+                        orderable: false,
+                        "render": function ( data, type, row, meta ) {
+                            if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+
+                                return `<i title="Show batch number, serial number, expiry date under ${row.ItemName} item!" class="fas fa-caret-right fa-xl"></i>`;
+                            }
+                            else{
+                                return "";
+                            }
+                        },
+                        createdCell: function (td, row, data) {
+                            if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
+                                $(td).addClass('dt-show-1');
+                            }
+                        },
+                        width:'2%',
+                    },
+                    {
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },
+                    {
+                        data: 'ItemCode',
+                        name: 'ItemCode',
+                        width:'10%',
+                    },
+                    {
+                        data: 'ItemName',
+                        name: 'ItemName',
+                        width:'20%',
+                    },
+                    {
+                        data: 'SKUNumber',
+                        name: 'SKUNumber',
+                        width:'10%',
+                    },
+                    {
+                        data: 'UOM',
+                        name: 'UOM',
+                        width:'8%',
+                    },
+                    {
+                        data: 'quantity',
+                        name: 'quantity',
+                        width:'8%',
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    },
+                    {
+                        data: 'unit_price',
+                        name: 'unit_price',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: 'total_price',
+                        name: 'total_price',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },   
+                    {
+                        data: 'remark',
+                        name: 'remark',
+                        width:'16%',
+                    },
+                    {
+                        data: null,
+                        name: 'action',
+                        orderable: false,
+                        "render": function ( data, type, row, meta ) {
+                            if((row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require") && row.status != "Void"){
+                                var fore_color = "";
+                                if(parseInt(row.is_fully_entered) == 1){
+                                    fore_color = "#28c76f";
+                                }
+                                else{
+                                    fore_color = "#ff9f43";
+                                }
+                                return `<div class="text-center">
+                                            <a 
+                                                class="addsernum" 
+                                                href="javascript:void(0)" 
+                                                onclick="mngBatchSerialExpireFn(${row.id},${row.delivery_order_id},${row.regitems_id},${row.quantity})" 
+                                                data-id="addsernum${row.id}" 
+                                                id="addsernum${row.id}" 
+                                                title="Add batch number, serial number, expiry date for ${row.ItemName} item!">
+                                                <i class="fa fa-plus fa-xl" style="color:${fore_color};"></i>
+                                            </a>
+                                        </div>`;
+                            }
+                            else{
+                                return "";
+                            }
+                        },
+                        width:'3%',
+                    }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": column_index,
+                        "visible": visibility_flag,
+                    },
+                ],
+            });
+
+            $('#doInfoDataTbl').on('draw.dt', function () {
+                let keyword = $('#doInfoDataTbl_filter input').val();
+                detail_table.rows({ search: 'applied' }).every(function () {
+                    // parent row
+                    highlight(this.node(), keyword);
+
+                    // child row (if exists)
+                    if (this.child && this.child.isShown()) {
+                        highlight(this.child(), keyword);
+                    }
+                });
+            });
+        }
+
+        $('#doInfoDataTbl tbody').on('click', 'tr', function () {
+            $('#doInfoDataTbl tbody > tr').removeClass('selected');
+            $(this).addClass('selected');
+            infoTblIndex = $(this).index();
+        });
+
+        function setFocusInfoTable(targetTable) {
+            $($(targetTable + ' tbody > tr')[infoTblIndex]).addClass('selected');
+        }
+
+        function highlight(container, keyword) {
+            if (!keyword || keyword.trim() === '') {
+                // Restore original HTML
+                $(container).find('td').each(function() {
+                    let original = $(this).attr('data-original');
+                    if (original) {
+                        $(this).html(original);
+                    }
+                });
+                return;
+            }
+
+            let safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            let regex = new RegExp(`(${safeKeyword})`, 'gi');
+
+            $(container).find('td').each(function() {
+                let $td = $(this);
+                
+                // Store original HTML if not already stored
+                if (!$td.attr('data-original')) {
+                    $td.attr('data-original', $td.html());
+                }
+                
+                // Get original HTML
+                let originalHtml = $td.attr('data-original');
+                
+                // Create a temporary div to manipulate DOM
+                let $temp = $('<div>').html(originalHtml);
+                
+                // Function to highlight text in text nodes only
+                function highlightTextNodes(element) {
+                    $(element).contents().each(function() {
+                        if (this.nodeType === Node.TEXT_NODE && this.textContent.trim() !== '') {
+                            let text = this.textContent;
+                            let newText = text.replace(regex, '<b class="highlightsearch">$1</b>');
+                            if (newText !== text) {
+                                $(this).replaceWith(newText);
+                            }
+                        } else if (this.nodeType === Node.ELEMENT_NODE && 
+                                !['SCRIPT', 'STYLE', 'MARK'].includes(this.tagName)) {
+                            highlightTextNodes(this);
+                        }
+                    });
+                }
+                
+                highlightTextNodes($temp[0]);
+                $td.html($temp.html());
+            });
+        }
+
+        function tabMgtFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            
+            $(".active-tab-title").addClass("active");
+            $(".active-tab-view").addClass("active");
+        }
+
+        function viewDOActionFn(recordId){
+            $("#action-log-title").html("User Log Information");
+            $("#action-log-universal-modal").modal('show');
+        }
+
         function productTypeFn(){
             $('#product-type-error').html("");
         }
@@ -1531,6 +2565,36 @@
             }
         }
 
+        $(document).on('show.bs.collapse hide.bs.collapse', '.collapse', function (e) {
+            e.stopPropagation();
+            const collapse = $(this);
+            const container = collapse.closest('.card, .modal-content, .row');
+            const infoTarget = container.find('.do_header_info');
+            const collapseId = collapse.attr('id');
+            const trigger = $(`[data-target="#${collapseId}"], [data-bs-target="#${collapseId}"]`);
+
+            const isOpening = e.type === 'show';
+
+            $('.toggle-text-label').html(isOpening ? 'Collapse' : 'Expand');
+            $('.collapse-icon').html(isOpening ? '<i class="fas text-secondary fa-minus-circle"></i>' : '<i class="fas text-secondary fa-plus-circle"></i>');
+
+            if (isOpening) {
+                const originalHeader = `<i class="far fa-info-circle"></i> Basic Information`;
+                infoTarget.html(originalHeader);
+            } 
+            else {
+                // Section is COLLAPSING: Show the data summary
+                const reference_type = container.find('#info_reference_type').text().trim();
+                const station = container.find('#info_station').text().trim();
+                const customer_name = container.find('#info_customer_name').text().trim();
+                const summaryHtml = `
+                    Reference Type: <b>${reference_type}</b>, 
+                    Customer Name: <b>${customer_name}</b>, 
+                    Station: <b>${station}</b>`;
+                infoTarget.html(summaryHtml);
+            }
+        });
+
         function resetDOFormFn(){
             $('#ReferenceType').val(null).select2({
                 placeholder: "Select reference type here",
@@ -1578,7 +2642,7 @@
 
         function refreshDOFn(){
             var f_year = $('#fiscalyear').val();
-            //countDispatchStatusFn(f_year);
+            countDOStatusFn(f_year);
 
             var rTable = $('#laravel-datatable-crud').dataTable();
             rTable.fnDraw(false);
