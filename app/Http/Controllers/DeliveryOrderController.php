@@ -244,7 +244,7 @@ class DeliveryOrderController extends Controller
                 ]);
 
                 DB::commit();
-                return Response::json(['success' => 1,'fiscal_year' => $fyear]);
+                return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $delivery_order->id]);
             }
             catch(Exception $e){
                 DB::rollBack();
@@ -323,6 +323,7 @@ class DeliveryOrderController extends Controller
         $reference_type = $_POST['reference_type'];
         $reference_id = $_POST['reference_id'];
         $itemid = $_POST['itemid'];
+        $record_id = $_POST['record_id'];
 
         $item_info = "";
 
@@ -339,13 +340,34 @@ class DeliveryOrderController extends Controller
             $item_info = DB::select('SELECT regitems.*,uoms.id AS uom,uoms.Name AS uom_name FROM regitems LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE regitems.id='.$itemid);
         }
 
-        return response()->json(['item_info' => $item_info]);
+        $current_do_data = DB::select('SELECT delivery_order_details.quantity AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.id='.$record_id.' AND delivery_order_details.regitems_id='.$itemid.' AND delivery_orders.status IN("Draft","Pending","Verified","Approved")');
+        $do_qty = $current_do_data[0]->do_qty ?? 0;
+
+        return response()->json(['item_info' => $item_info,'do_qty' => $do_qty]);
     }
 
     public function getDOData($id){
-
+        $item_info = null;
+        $reference_data = null;
         $do_data = DB::select('SELECT delivery_orders.*,customers.Name AS customer_name,customers.TinNumber AS TIN, customers.Code AS customer_code,customers.CustomerCategory,customers.VatNumber,customers.PhoneNumber,customers.OfficePhone,stores.Name AS store_name,lookuprefs.LookupName AS reference_types,COALESCE(sales.VoucherNumber,sales_orders.docno,proformas.DocumentNumber) AS reference_no FROM delivery_orders LEFT JOIN customers ON delivery_orders.customers_id=customers.id LEFT JOIN stores ON delivery_orders.station=stores.id LEFT JOIN lookuprefs ON delivery_orders.reference_type=lookuprefs.id LEFT JOIN sales ON delivery_orders.reference_id=sales.id AND delivery_orders.reference_type=603 LEFT JOIN sales_orders ON delivery_orders.reference_id=sales_orders.id AND delivery_orders.reference_type=602 LEFT JOIN proformas ON delivery_orders.reference_id=proformas.id AND delivery_orders.reference_type=601 WHERE delivery_orders.id='.$id); 
-        $is_price_vis = $do_data[0]->show_pricing;
+        $is_price_vis = $do_data[0]->show_pricing ?? 0;
+        $reference_type = $do_data[0]->reference_type ?? 0;
+        $reference_id = $do_data[0]->reference_id ?? 0;
+
+        $detail_data = DB::select('SELECT delivery_order_details.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.TaxTypeId,uoms.Name AS UOM,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,COALESCE(salesitems.Quantity,sales_order_items.quantity,proforma_regitem.Quantity) AS ordered_qty,COALESCE(salesitems.issued_qty,sales_order_items.issued_qty,proforma_regitem.issued_qty) AS issued_qty FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id LEFT JOIN salesitems ON delivery_order_details.reference_detail_id=salesitems.id AND delivery_orders.reference_type=603 LEFT JOIN sales_order_items ON delivery_order_details.reference_detail_id=sales_order_items.id AND delivery_orders.reference_type=602 LEFT JOIN proforma_regitem ON delivery_order_details.reference_detail_id=proforma_regitem.id AND delivery_orders.reference_type=601 WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC');
+
+        if($reference_type == 601){
+            $reference_data = DB::select('SELECT proformas.id AS proforma_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(proformas.DocumentNumber,""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS proforma_data FROM proformas LEFT JOIN customers ON proformas.CustomerId=customers.id WHERE proformas.Status="Pass" ORDER BY proformas.id DESC');
+            $item_info = DB::select('SELECT proforma_regitem.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM proforma_regitem LEFT JOIN regitems ON proforma_regitem.regitem_id=regitems.id WHERE proforma_regitem.proforma_id='.$reference_id);
+        }
+        else if($reference_type == 602){
+            $reference_data = DB::select('SELECT sales_orders.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales_orders.docno, ""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales_orders LEFT JOIN customers ON sales_orders.customer_id=customers.id WHERE sales_orders.status=8 ORDER BY sales_orders.id DESC');
+            $item_info = DB::select('SELECT sales_order_items.regitem_id AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM sales_order_items LEFT JOIN regitems ON sales_order_items.regitem_id=regitems.id WHERE sales_order_items.sales_order_id='.$reference_id);
+        }
+        else if($reference_type == 603){
+            $reference_data = DB::select('SELECT sales.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales.VoucherNumber, ""), NULLIF(sales.invoiceNo, ""), NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales LEFT JOIN customers ON sales.CustomerId=customers.id WHERE sales.Status="Confirmed" ORDER BY sales.id DESC LIMIT 50');
+            $item_info = DB::select('SELECT salesitems.ItemId AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM salesitems LEFT JOIN regitems ON salesitems.ItemId=regitems.id WHERE salesitems.HeaderId='.$reference_id);
+        }
 
         $activitydata = actions::join('users','actions.user_id','users.id')
             ->where('actions.pagename',"delivery_order")
@@ -353,7 +375,7 @@ class DeliveryOrderController extends Controller
             ->orderBy('actions.id','DESC')
             ->get(['actions.*','users.FullName','users.username']);
 
-        return response()->json(['do_data' => $do_data,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'rec_id' => $id]);
+        return response()->json(['do_data' => $do_data,'detail_data' => $detail_data,'reference_data' => $reference_data,'item_info' => $item_info,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'reference_type' => $reference_type,'rec_id' => $id]);
     }
 
     public function showDODetailData($id){
@@ -372,12 +394,12 @@ class DeliveryOrderController extends Controller
         $store_id = $_POST['storeval'] ?? 0;
         $item_id = $_POST['itemid'] ?? 0;
 
-        $item_balance_data = DB::select('SELECT (SUM(COALESCE(StockIn,0)) - SUM(COALESCE(StockOut,0))) AS available_quantity FROM transactions WHERE transactions.FiscalYear='.$fyear.' AND transactions.StoreId='.$store_id.' AND transactions.ItemId='.$item_id);
+        $item_balance_data = DB::select('SELECT (SUM(COALESCE(transactions.StockIn,0)) - SUM(COALESCE(transactions.StockOut,0))) AS available_quantity FROM transactions WHERE transactions.FiscalYear='.$fyear.' AND transactions.StoreId='.$store_id.' AND transactions.ItemId='.$item_id);
         $other_req_data = DB::select('SELECT SUM(COALESCE(requisitiondetails.Quantity,0)) AS others_req_qty FROM requisitiondetails LEFT JOIN requisitions ON requisitiondetails.HeaderId=requisitions.id WHERE requisitions.SourceStoreId='.$store_id.' AND requisitiondetails.ItemId='.$item_id.' AND requisitions.Status IN("Draft","Pending","Verified","Approved")');
         $sales_data = DB::select('SELECT SUM(COALESCE(salesitems.Quantity,0)) AS sales_qty FROM salesitems LEFT JOIN sales ON salesitems.HeaderId=sales.id WHERE sales.StoreId='.$store_id.' AND salesitems.ItemId='.$item_id.' AND sales.Status IN("pending..","Checked")');
         $transfer_data = DB::select('SELECT SUM(COALESCE(transferdetails.Quantity,0)) AS transfer_qty FROM transferdetails LEFT JOIN transfers ON transferdetails.HeaderId=transfers.id WHERE transfers.SourceStoreId='.$store_id.' AND transferdetails.ItemId='.$item_id.' AND transfers.Status IN("Draft","Pending","Verified","Reviewed","Approved")');
         $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.id!='.$record_id.' AND delivery_order_details.regitems_id='.$item_id.' AND delivery_orders.status IN("Draft","Pending","Verified")');
-
+        
         $main_balance = $item_balance_data[0]->available_quantity ?? 0;
         $others_req_qty = $other_req_data[0]->others_req_qty ?? 0;
         $sales_qty = $sales_data[0]->sales_qty ?? 0;
@@ -449,13 +471,13 @@ class DeliveryOrderController extends Controller
 
             DB::table('proforma_regitem')->where('proforma_regitem.id',$ref_det_id)->update(['proforma_regitem.issued_qty' => $do_qty]);
         }
-        else if($ref_type == 601){
+        else if($ref_type == 602){
             $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.reference_type='.$ref_type.' AND delivery_order_details.reference_detail_id='.$ref_det_id.' AND delivery_orders.status NOT IN("Void")');
             $do_qty = $do_data[0]->do_qty ?? 0;
 
             DB::table('sales_order_items')->where('sales_order_items.id',$ref_det_id)->update(['sales_order_items.issued_qty' => $do_qty]);
         }
-        else if($ref_type == 601){
+        else if($ref_type == 603){
             $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.reference_type='.$ref_type.' AND delivery_order_details.reference_detail_id='.$ref_det_id.' AND delivery_orders.status NOT IN("Void")');
             $do_qty = $do_data[0]->do_qty ?? 0;
 
@@ -486,7 +508,7 @@ class DeliveryOrderController extends Controller
             $rec_data = delivery_order::where('id', $recId)->first();
 
             $currentNumber = DB::table('delivery_orders')
-                ->where('fiscalyear',$fyear)
+                ->where('fiscal_year',$fyear)
                 ->orderByDesc('current_document_no')
                 ->latest()
                 ->first();

@@ -380,12 +380,12 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row fl_class pricing_flag" style="display: none;">
-                                                                <div class="col-xl-8 col-lg-6 col-md-3 col-sm-3 col-12"></div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-9 col-sm-9 col-12 mt-1" style="text-align: right;">
+                                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
+                                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
                                                                     <table style="width: 100%;font-size:12px" class="rtable">
                                                                         <tr>
                                                                             <td style="text-align: right;width:55%;">
-                                                                                <label class="info_lbl">Total Price</label>
+                                                                                <label class="info_lbl">Grand Total</label>
                                                                             </td>
                                                                             <td style="text-align: center;width:45%;">
                                                                                 <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
@@ -672,8 +672,8 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-xl-9 col-lg-8 col-md-5 col-sm-5 col-12"></div>
-                            <div class="col-xl-3 col-lg-4 col-md-7 col-sm-7 col-12" style="text-align: right;">
+                            <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
                                 <table style="width:100%;" id="pricingTable" class="rtable pricing_column">
                                     <tr style="display: none;">
                                         <td style="text-align: right;width:45%">
@@ -824,6 +824,9 @@
                     {
                         data: 'reference_no',
                         name: 'reference_no',
+                        "render": function ( data, type, row, meta ) {
+                            return `<a style="text-decoration:underline;color:blue;" onclick=openReferenceDocLinkFn("${row.reference_type}","${row.id}")>${row.reference_type != 600 ? data : ""}</a>`;
+                        },
                         width:"11%"
                     },
                     {
@@ -1209,6 +1212,7 @@
                     $('#savebutton').text('Update');
                     $('#savebutton').prop("disabled", false);
                 }
+                toastrMessage('error',"Check your inputs","Error");
             }
             
             else if (data.errorv2) {
@@ -1266,6 +1270,9 @@
                 var oTable = $('#laravel-datatable-crud').dataTable();
                 oTable.fnDraw(false);
                 countDOStatusFn(data.fiscal_year);
+                if(parseInt(optype) == 2){
+                    createDOInfoFn(data.rec_id);
+                }
                 $("#inlineForm").modal('hide');
             }
         }
@@ -1676,6 +1683,7 @@
             var reference_type = null;
             var ref_type = $('#ReferenceType').val() || 0;
             var itm = $(`#itemNameSl${indx}`).val() || 0;
+            var record_id = null;
 
             $.ajax({
                 url: '/fetchDOItemInfo', 
@@ -1684,6 +1692,7 @@
                     itemid: $(`#itemNameSl${indx}`).val() || 0,
                     reference_id: $('#Reference').val() || 0,
                     reference_type: ref_type,
+                    record_id: $('#recordId').val() || 0,
                 },
                 success: function(data) {
                     $.each(data.item_info, function(key, value) {
@@ -1711,19 +1720,19 @@
 
                         if(ref_type == 601){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
+                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
                         else if(ref_type == 602){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
+                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
                         else if(ref_type == 603){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
+                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
                         }
@@ -2028,44 +2037,207 @@
             }
         }
 
-        function countDOStatusFn(fiscalyear){
-            var fyear = 0;
-            var do_void_cnt = 0;
-            
-            $.ajax({
-                url: '/countDOStatus',
-                type: 'POST',
-                data:{
-                    fyear: fiscalyear,
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $(".do_status_record_lbl").html("0");
-                    $.each(data.delivery_order_status, function(key, value) {
-                        if(value.status == "Draft"){
-                            $("#do_draft_record_lbl").html(value.status_count);
-                        }
-                        else if(value.status == "Pending"){
-                            $("#do_pending_record_lbl").html(value.status_count);
-                        }
-                        else if(value.status == "Verified"){
-                            $("#do_verified_record_lbl").html(value.status_count);
-                        }
-                        else if(value.status == "Approved"){
-                            $("#do_approved_record_lbl").html(value.status_count);
-                        }
-                        else if(value.status == "Total"){
-                            $("#do_total_record_lbl").html(value.status_count);
-                        }
-                        else {
-                            do_void_cnt += parseInt(value.status_count);
-                            $("#do_void_record_lbl").html(do_void_cnt);
-                        }
-                    });
+        function editDOFn(recordId){
+            resetDOFormFn();
 
-                    $("#do_ready_record_lbl").html(data.ready_do_cnt);
+            $.ajax({
+                type: "get",
+                url: "{{url('getDOData')}}"+'/'+recordId,
+                dataType: "json",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching delivery order data...');
+                },
+                success: async function(data) {
+                    await getEditDataFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
                 }
             });
+
+            $('#recordId').val(recordId);
+            $('#operationtypes').val(2);
+            $("#delivery_order_title").html('Edit Delivery Order');
+            $('#savebutton').text('Update');
+            $('#savebutton').prop("disabled",false);
+            $("#inlineForm").modal('show');
+        }
+
+        function getEditDataFn(data){
+            j = 0;
+            var remaining_qty = 0;
+            var item_options = null;
+            var product_type = null;
+            var options = null;
+            var ref_options = null;
+            var is_batch_req = null;
+            var is_expiry_req = null;
+            var is_serial_req = null;
+            var status_color = null;
+
+            $.each(data.reference_data, function(key, value) {
+                if(data.reference_type == 601){
+                    ref_options += `<option value="${value.proforma_id}">${value.proforma_data}</option>`;
+                }
+                else{
+                    ref_options += `<option value="${value.sales_id}">${value.sales_data}</option>`;
+                }
+            });
+            $('#Reference').append(ref_options).val(null).select2({placeholder: "Select reference here"});
+
+            $.each(data.do_data, function(key, value) {
+                $('#ReferenceType').val(value.reference_type).select2({minimumResultsForSearch: -1});
+                $('#DeliveryDate').val(value.delivery_date);
+                $('#OrderedBy').val(value.order_by).select2();
+                $('#DocumentNumber').val(value.supporting_doc_no);
+                $('#Remark').val(value.remark);
+                $('#VisiblePrice').prop('checked', value.show_pricing == 1);
+
+                $('#DeliverBy').val(value.delivery_by);
+                $('#PhoneNumber').val(value.phone_no);
+                $('#IdNumber').val(value.id_no);
+                $('#PlateNumber').val(value.plate_no);
+
+                product_type = value.product_type;
+
+                if(value.reference_type == 600){
+                    var product_type_options = `
+                        <option value="Goods">Goods</option>
+                        <option value="Commodity">Commodity</option>
+                        <option value="Metal">Metal</option>`;
+
+                    var customer_options = $("#default_customer > option").clone();
+                    var station_options = $("#default_station > option").clone();
+                    var sales_person_list = $("#DefaultSalesPerson > option").clone();
+
+                    $('#ProductType').empty().append(product_type_options).select2();
+                    $(`#ProductType option[value="${value.product_type}"]`).remove();
+                    $('#ProductType').append(`<option selected value="${value.product_type}">${value.product_type}</option>`).select2({minimumResultsForSearch: -1});
+
+                    $('#station').empty().append(station_options).select2();
+                    $(`#station option[value="${value.station}"]`).remove();
+                    $('#station').append(`<option selected value="${value.station}">${value.store_name}</option>`).select2();
+
+                    $('#customer').empty().append(customer_options).select2();
+                    $(`#customer option[value="${value.customers_id}"]`).remove();
+                    $('#customer').append(`<option selected value="${value.customers_id}">${value.customer_code}, ${value.customer_name}, ${value.TIN}</option>`).select2();
+
+                    $('#SalesPerson').empty().append(sales_person_list).select2();
+                    $(`#SalesPerson option[value="${value.sales_person}"]`).remove();
+                    $('#SalesPerson').append(`<option selected value="${value.sales_person}">${value.sales_person}</option>`).select2();
+
+                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date}); 
+                    $('#ExpiryDate').val(value.expiry_date);  
+
+                    $('#PaymentType').val(value.payment_type).select2({minimumResultsForSearch: -1});
+                    $('#PaymentTerm').val(value.payment_term).select2({minimumResultsForSearch: -1});
+                }
+                else if(value.reference_type != 600){
+                    
+                    $(`#Reference option[value="${value.reference_id}"]`).remove();
+                    $('#Reference').append(`<option selected value="${value.reference_id}">${value.reference_no}, ${value.customer_code}, ${value.customer_name}, ${value.TIN}</option>`).select2();
+
+                    $('#ProductType').empty().append(`<option selected value="${value.product_type}">${value.product_type}</option>`).select2({minimumResultsForSearch: -1});
+                    $('#station').empty().append(`<option selected value="${value.station}">${value.store_name}</option>`).select2({minimumResultsForSearch: -1});
+                    $('#customer').empty().append(`<option selected value="${value.customers_id}">${value.customer_code}, ${value.customer_name}, ${value.TIN}</option>`).select2({minimumResultsForSearch: -1});
+                    $('#SalesPerson').empty().append(`<option selected value="${value.sales_person}">${value.sales_person}</option>`).select2();
+
+                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                    $('#ExpiryDate').val(value.expiry_date);
+                }
+
+                if(value.status == "Draft"){
+                    status_color = "#A8AAAE";
+                }
+                else if(value.status == "Pending"){
+                    status_color = "#f6c23e";
+                }
+                else if(value.status == "Verified" || value.status == "Checked"){
+                    status_color = "#7367F0";
+                }
+                else if(value.status == "Approved" || value.status == "Confirmed"){
+                    status_color = "#1cc88a";
+                }
+                else{
+                    status_color = "#e74a3b";
+                }
+                $("#delivery_order_status").html(`<span class="form_title" style='color:${status_color};font-weight:bold;text-shadow;1px 1px 10px ${status_color};font-size:16px;'>${value.document_number},     ${value.status}</span>`);
+            });
+
+            $.each(data.detail_data, function(key, value) {
+                ++i;
+                ++j;
+                ++m;
+                remaining_qty = (parseFloat(value.ordered_qty || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(value.quantity || 0);
+
+                $("#dynamicTable > tbody").append(`<tr>
+                    <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
+                    <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
+                    <td style="width:14%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.regitems_id}">${value.items}</option></select></td>
+                    <td style="width:8%"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"><option selected value="${value.new_uom}">${value.UOM}</option></select></td>
+                    <td style="width:10%;" class="direct_reference"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][ordered_qty]" placeholder="Ordered quantity" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" value="${value.ordered_qty}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][remaining_qty]" placeholder="Remaining quantity" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" value="${remaining_qty >= 0 ? remaining_qty : 0}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.unit_price}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.total_price}" style="font-weight:bold;"/></td>
+                    <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here" value="${value.remark != null || value.remark != "" ? value.remark : ""}"/></td>
+                    <td style="width:5%;text-align:center;">
+                        <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
+                        <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>`);
+                
+                is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+
+                if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
+                    $(`#batch_serial_info${m}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
+                    $(`#batch_serial_info${m}`).show();
+                }
+
+                if(data.reference_type == 600){
+                    options = $("#item_default");
+                    $(`#itemNameSl${m}`).append(options.find(`option[data-type="${product_type}"]`).clone());
+                    $(`#itemNameSl option[value="${value.regitems_id}"]`).remove();
+                    $(`#itemNameSl${m}`).append(`<option selected value="${value.regitems_id}">${value.items}</option>`).select2();
+                    calcBalanceFn(m);
+                }
+                else if(data.reference_type != 600){
+                    $(`#itemNameSl${m}`).select2({minimumResultsForSearch: -1});
+                }
+
+                $(`#uom${m}`).select2({minimumResultsForSearch: -1});
+                $(`#select2-itemNameSl${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+            });
+
+            $.each(data.item_info, function(key, value) {
+                item_options += `<option value="${value.itemid}">${value.items}</option>`; 
+            });
+
+            if(data.reference_type == 600){
+                $('.non_direct_reference').hide();
+                $('.direct_reference').show();
+                $('.unitprice').prop("readonly",false);       
+                $('.pricing_inp').val("");
+                $('.direct-reference').show();
+            }
+            else if(data.reference_type != 600){
+                $('.non_direct_reference').show();
+                $('.direct_reference').hide();
+                $('.unitprice').prop("readonly",true);
+                $('#reference_doc_div').show();
+                $('.direct-reference').hide();
+            }
+
+            item_options += `<option selected disabled value=""></option>`;
+            $('#reference_item_default').empty().append(item_options).select2();
+
+            showCostColumnFn();
+            CalculateGrandTotal();
         }
 
         function doInfoFn(recordId){
@@ -2103,10 +2275,18 @@
             var action_links = "";
             var major_btn_link = `<li><hr class="dropdown-divider"></li>`;
             var status_btn_link = `<li><hr class="dropdown-divider"></li>`;
+            var edit_link = `
+                @can("Receiving-Edit")
+                    <li>
+                        <a class="dropdown-item editDORecord" href="javascript:void(0)" onclick="editDOFn(${data.rec_id})" data-id="editDOLink${data.rec_id}" id="editDOLink${data.rec_id}" title="Edit record">
+                        <span><i class="fa-solid fa-pencil"></i> Edit</span>  
+                        </a>
+                    </li>
+                @endcan`;
 
             $.each(data.do_data, function(key, value) {
                 $('#info_reference_type').html(value.reference_types);
-                $('#info_reference').html(value.reference_no);
+                $('#info_reference').html(`<a style="text-decoration:underline;color:blue;" onclick=openReferenceDocLinkFn("${value.reference_type}","${data.rec_id}")>${value.reference_no != null ? value.reference_no : ""}</a>`);
                 $('#info_product_type').html(value.product_type);
                 $('#info_station').html(value.store_name);
                 $('#info_delivery_date').html(value.delivery_date);
@@ -2135,15 +2315,19 @@
                 $('#info_total_price').html(numformat(parseFloat(value.total_price).toFixed(2)));
 
                 if(value.status == "Draft"){
+                    major_btn_link += edit_link;
                     status_color = "#A8AAAE";
                 }
                 else if(value.status == "Pending"){
+                    major_btn_link += edit_link;
                     status_color = "#f6c23e";
                 }
                 else if(value.status == "Verified"){
+                    major_btn_link += edit_link;
                     status_color = "#7367F0";
                 }
                 else if(value.status == "Approved"){
+                    major_btn_link += edit_link;
                     status_color = "#1cc88a";
                 }
                 else{
@@ -2230,7 +2414,7 @@
                 info:false,
                 searchHighlight: true,
                 searching: true,
-                "order": [[ 1, "asc" ]],
+                "order": [[ 0, "asc" ]],
                 language: { 
                     search: '', 
                     searchPlaceholder: "Search here"
@@ -2477,6 +2661,27 @@
             }
         }
 
+        function openReferenceDocLinkFn(reference_type,reference){
+            if(reference == null || reference == ""){
+                $('#reference-doc-error').html("Reference field is required");
+                toastrMessage('error',"Please fill required field","Error");
+            }
+            else{
+                var link = null;
+                if(reference_type == 601){
+                    link = `/proformadownload/${reference}`;
+                }
+                else if(reference_type == 602){
+                    
+                }
+                else if(reference_type == 603){
+                    link = `/salereport/${reference}`;
+                }
+                
+                window.open(link, '', 'width=1200,height=800,scrollbars=yes');
+            }
+        }
+
         function deliveryDateFn(){
             $('#delivery-date-error').html("");
         }
@@ -2594,6 +2799,46 @@
                 infoTarget.html(summaryHtml);
             }
         });
+
+        function countDOStatusFn(fiscalyear){
+            var fyear = 0;
+            var do_void_cnt = 0;
+            
+            $.ajax({
+                url: '/countDOStatus',
+                type: 'POST',
+                data:{
+                    fyear: fiscalyear,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $(".do_status_record_lbl").html("0");
+                    $.each(data.delivery_order_status, function(key, value) {
+                        if(value.status == "Draft"){
+                            $("#do_draft_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Pending"){
+                            $("#do_pending_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Verified"){
+                            $("#do_verified_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Approved"){
+                            $("#do_approved_record_lbl").html(value.status_count);
+                        }
+                        else if(value.status == "Total"){
+                            $("#do_total_record_lbl").html(value.status_count);
+                        }
+                        else {
+                            do_void_cnt += parseInt(value.status_count);
+                            $("#do_void_record_lbl").html(do_void_cnt);
+                        }
+                    });
+
+                    $("#do_ready_record_lbl").html(data.ready_do_cnt);
+                }
+            });
+        }
 
         function resetDOFormFn(){
             $('#ReferenceType').val(null).select2({
