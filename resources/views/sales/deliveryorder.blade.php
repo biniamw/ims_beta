@@ -208,7 +208,7 @@
                                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
-                                                            <h6 class="card-title mb-0"><i class="fas fa-database"></i> General</h6>
+                                                            <h6 class="card-title mb-0"><i class="fas fa-database"></i> General Information</h6>
                                                             <hr class="my-50">
                                                             <div class="row">
                                                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -276,7 +276,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1 allinfo purchaseinfo">
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1 allinfo">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
                                                             <h6 class="card-title mb-0"><i class="fas fa-user"></i> Customer Information</h6>
@@ -384,10 +384,10 @@
                                                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
                                                                     <table style="width: 100%;font-size:12px" class="rtable">
                                                                         <tr>
-                                                                            <td style="text-align: right;width:55%;">
+                                                                            <td style="text-align: right;width:50%;">
                                                                                 <label class="info_lbl">Grand Total</label>
                                                                             </td>
-                                                                            <td style="text-align: center;width:45%;">
+                                                                            <td style="text-align: center;width:50%;">
                                                                                 <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
                                                                             </td>
                                                                         </tr>
@@ -439,7 +439,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:right">
                                     <input type="hidden" class="form-control" name="dstockin_type_inp" id="dstockin_type_inp" readonly="true">
                                     <input type="hidden" class="form-control" name="dstockinid" id="dstockinid" readonly="true">
-                                    <input type="hidden" class="form-control" name="reqId" id="reqId" readonly="true">
+                                    <input type="hidden" class="form-control" name="recId" id="recId" readonly="true">
                                     <input type="hidden" class="form-control" name="currentStatus" id="currentStatus" readonly="true">
                                     <input type="hidden" class="form-control" name="forwardReqId" id="forwardReqId" readonly="true">
                                     <input type="hidden" class="form-control" name="newForwardStatusValue" id="newForwardStatusValue" readonly="true">
@@ -740,6 +740,72 @@
         </div>
     </div>
 
+    <!--Start Void modal -->
+    <div class="modal fade text-left fit-content" id="voidDOModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="voidreasonmodal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="void-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="voidDOForm">
+                    @csrf
+                    <div class="modal-body">
+                        <label class="form_lbl">Reason</label>
+                        <textarea type="text" placeholder="Enter reason here" class="form-control Reason" rows="3" name="Reason" id="Reason" onkeyup="voidReasonFn()"></textarea>
+                        <span class="text-danger">
+                            <strong id="void-error"></strong>
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" class="form-control voidid" name="voidid" id="voidid" readonly="true">
+                        <input type="hidden" class="form-control vstatus" name="vstatus" id="vstatus" readonly="true">
+                        <button id="voiddobtn" type="button" class="btn btn-info">Void</button>
+                        <button id="closebuttonvoid" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Void modal -->
+
+    <!--Start backward action modal -->
+    <div class="modal fade text-left fit-content" id="backwardActionModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="backwardActionModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="backwardActionForm">
+                    @csrf
+                    <div class="modal-body">
+                        <label style="font-size: 14px;" id="backwardActionLabel"></label>
+                        <div class="form-group">
+                            <textarea type="text" placeholder="Enter reason here" class="form-control" rows="3" name="CommentOrReason" id="CommentOrReason" onkeyup="backwardReasonFn()"></textarea>
+                            <span class="text-danger">
+                                <strong id="commentres-error"></strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" class="form-control" name="backwardReqId" id="backwardReqId" readonly="true">
+                        <input type="hidden" class="form-control" name="newBackwardStatusValue" id="newBackwardStatusValue" readonly="true">
+                        <input type="hidden" class="form-control" name="backwardBtnTextValue" id="backwardBtnTextValue" readonly="true">
+                        <input type="hidden" class="form-control" name="backwardActionValue" id="backwardActionValue" readonly="true">
+                        <button id="backwardActionBtn" type="button" class="btn btn-info"></button>
+                        <button id="closebuttonbackwardAction" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End backward action modal -->
+
     @include('layout.universal-component')
 
     <script type="text/javascript">
@@ -753,6 +819,52 @@
         var i = 0;
         var m = 0;
         var j = 0;
+
+        var statusTransitions = {
+            'Draft': {
+                forward: {
+                    status: 'Pending',
+                    text: 'Change to Pending',
+                    action: 'Change to Pending',
+                    message: 'Are you sure you want to change the status of this record to Pending?',
+                    forecolor: '#6e6b7b',
+                    backcolor: '#f6c23e'
+                }
+            },
+            'Pending': {
+                forward: {
+                    status: 'Verified',
+                    text: 'Verify',
+                    action: 'Verified',
+                    message: 'Are you sure you want to change the status of this record to Verified?',
+                },
+                backward: {
+                    status: 'Draft',
+                    text: 'Back to Draft',
+                    action: 'Back to Draft',
+                    message: 'Reason'
+                }
+            },
+            'Verified': {
+                forward: {
+                    status: 'Approved',
+                    text: 'Approve',
+                    action: 'Approved',
+                    message: 'Are you sure you want to change the status of this record to Approved?',
+                    forecolor: '#FFFFFF',
+                    backcolor: '#28c76f'
+                },
+                backward: {
+                    status: 'Pending',
+                    text: 'Back to Pending',
+                    action: 'Back to Pending',
+                    message: 'Reason'
+                },
+            },
+            'Approved': {
+                
+            },
+        };
 
         $(document).ready(async function() {
             $('.main_datatable').hide();
@@ -1158,7 +1270,7 @@
 
         function saveDeliveryOrderFn(data){
             var optype = $("#operationtypes").val();
-            if (data.errors) {
+            if(data.errors) {
                 if (data.errors.ReferenceType) {
                     $('#reference-type-error').html(data.errors.ReferenceType[0]);
                 }
@@ -1215,7 +1327,7 @@
                 toastrMessage('error',"Check your inputs","Error");
             }
             
-            else if (data.errorv2) {
+            else if(data.errorv2) {
                 var error_html = '';
                 var selecteditemsvar = '';
                 var reference_type =  $('#ReferenceType').val();
@@ -1263,6 +1375,18 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',"You should add atleast one item","Error");
+            }
+
+            else if(data.dberrors) {
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"Please contact administrator","Error");
             }
 
             else if(data.success) {
@@ -2284,6 +2408,70 @@
                     </li>
                 @endcan`;
 
+            var void_link = `
+                @can("Receiving-Void")
+                    <li>
+                        <a class="dropdown-item voidDORecord" href="javascript:void(0)" onclick="voidDOFn(${data.rec_id})" data-id="voidDOLink${data.rec_id}" id="voidDOLink${data.rec_id}" title="Void record">
+                        <span><i class="fa-solid fa-ban"></i> Void</span>  
+                        </a>
+                    </li>
+                @endcan`;
+
+            var undovoid_link = `
+                @can("Receiving-Void")
+                <li>
+                    <a class="dropdown-item undoVoidDORecord" href="javascript:void(0)" onclick="undoVoidDOFn(${data.rec_id})" data-id="undoVoidDOLink${data.rec_id}" id="undoVoidDOLink${data.rec_id}" title="Undo void record">
+                    <span><i class="fa fa-undo"></i> Undo Void</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+            var change_to_pending_link = `
+                @can("Receiving-ChangeToPending")
+                <li>
+                    <a class="dropdown-item changeToPending" onclick="forwardDOFn()" id="changeToPendingLink${data.rec_id}" title="Change record to pending">
+                    <span><i class="fa-solid fa-forward"></i> Change to Pending</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+            var back_to_draft_link = `
+                @can("Receiving-ChangeToPending")
+                <li>
+                    <a class="dropdown-item dobackward" id="backToDraftLink${data.rec_id}" title="Change record to draft">
+                    <span><i class="fa-solid fa-backward"></i> Back to Draft</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+            var verify_link = `
+                @can("Receiving-ChangeToPending")
+                <li>
+                    <a class="dropdown-item changeToVerified" onclick="forwardDOFn()" id="changeToVerifiedLink${data.rec_id}" title="Change record to verified">
+                    <span><i class="fa-solid fa-forward"></i> Verify</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+            var back_to_pending = `
+                @can("Receiving-ChangeToPending")
+                <li>
+                    <a class="dropdown-item dobackward" id="backToPendingLink${data.rec_id}" title="Change record to pending">
+                    <span><i class="fa-solid fa-backward"></i> Back to Pending</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+            var approve_link = `
+                @can("Receiving-ChangeToPending")
+                <li>
+                    <a class="dropdown-item changeToApproved" onclick="forwardDOFn()" id="changeToApprovedLink${data.rec_id}" title="Change record to approved">
+                    <span><i class="fa-solid fa-forward"></i> Approve</span>  
+                    </a>
+                </li>
+                @endcan`;
+
+
             $.each(data.do_data, function(key, value) {
                 $('#info_reference_type').html(value.reference_types);
                 $('#info_reference').html(`<a style="text-decoration:underline;color:blue;" onclick=openReferenceDocLinkFn("${value.reference_type}","${data.rec_id}")>${value.reference_no != null ? value.reference_no : ""}</a>`);
@@ -2314,21 +2502,43 @@
 
                 $('#info_total_price').html(numformat(parseFloat(value.total_price).toFixed(2)));
 
+                $('#recId').val(data.rec_id);
+                $('#currentStatus').val(value.status);
+
                 if(value.status == "Draft"){
                     major_btn_link += edit_link;
+                    major_btn_link += void_link;
+
+                    status_btn_link += change_to_pending_link;
                     status_color = "#A8AAAE";
                 }
                 else if(value.status == "Pending"){
                     major_btn_link += edit_link;
+                    major_btn_link += void_link;
+                    
+                    status_btn_link += verify_link;
+                    status_btn_link += back_to_draft_link;
+
                     status_color = "#f6c23e";
                 }
                 else if(value.status == "Verified"){
                     major_btn_link += edit_link;
+                    major_btn_link += void_link;
+
+                    status_btn_link += approve_link;
+                    status_btn_link += back_to_pending;
                     status_color = "#7367F0";
                 }
                 else if(value.status == "Approved"){
                     major_btn_link += edit_link;
+                    major_btn_link += void_link;
+
+                    status_btn_link = "";
                     status_color = "#1cc88a";
+                }
+                else if(value.status == "Void"){
+                    major_btn_link += undovoid_link;
+                    status_color = "#e74a3b";
                 }
                 else{
                     status_color = "#e74a3b";
@@ -2633,6 +2843,317 @@
             $("#action-log-universal-modal").modal('show');
         }
 
+        //-----Forward & backward action start--------
+        function forwardDOFn() {
+            const requestId = $('#recId').val();
+            const currentStatus = $('#currentStatus').val();
+            const transition = statusTransitions[currentStatus].forward;
+
+            $('#forwardReqId').val(requestId);
+            $('#newForwardStatusValue').val(transition.status);
+            $('#forwardActionLabel').html(transition.message);
+            $('#forwarkBtnTextValue').val(transition.text);
+            $('#forwardActionBtn').text(transition.text);
+            $('#forwardActionValue').val(transition.action);
+
+            Swal.fire({
+                title: confirmation_title,
+                text: transition.message,
+                icon: confirmation_icon,
+                showCloseButton: true,
+                showCancelButton: true,      
+                allowOutsideClick: false,
+                confirmButtonText: transition.text,
+                cancelButtonText: 'Close',
+                customClass: {
+                    confirmButton: 'btn btn-info',
+                    cancelButton: 'btn btn-danger'
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    doForwardActionFn();
+                }
+                else if (result.dismiss === Swal.DismissReason.cancel) {}
+            });
+        }
+
+        function doForwardActionFn(){
+            var forwardForm = $("#doInfoForm");
+            var formData = forwardForm.serialize();
+            var recordId = $('#recId').val();
+            $.ajax({
+                url: '/doForwardAction',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() {
+                    blockPage(cardSection, 'Forwarding delivery order record...');
+                },
+                error: function () { 
+                    unblockPage(cardSection); 
+                },
+                success: async function(data) {
+                    await doForwardRecordFn(data);
+                    unblockPage(cardSection); 
+                }
+            });
+        }
+
+        function doForwardRecordFn(data){
+            if (data.dberrors) {
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if (data.success) {
+                toastrMessage('success',"Successful","Success");
+                
+                createDOInfoFn(data.rec_id);
+                countDOStatusFn(data.fiscal_year);
+
+                var oTable = $('#laravel-datatable-crud').dataTable();
+                oTable.fnDraw(false);
+            }
+        }
+
+        $(document).on('click', '.dobackward', function(){
+            const requestId = $('#recId').val();
+            const currentStatus = $('#currentStatus').val();
+
+            const transition = $(this).attr('id') == "salrejectbtn" ? statusTransitions[currentStatus].reject : statusTransitions[currentStatus].backward;
+
+            $('#backwardReqId').val(requestId);
+            $('#newBackwardStatusValue').val(transition.status);
+            $('#backwardActionLabel').html(transition.message);
+            $('#backwardBtnTextValue').val(transition.text);
+            $('#backwardActionBtn').text(transition.text);
+            $('#backwardActionBtn').prop("disabled",false);
+            $('#backwardActionValue').val(transition.action);
+            $('#CommentOrReason').val("");
+            $('#commentres-error').html("");
+            $('#backwardActionModal').modal('show');
+        });
+
+        $("#backwardActionBtn").click(function() {
+            var registerForm = $("#backwardActionForm");
+            var formData = registerForm.serialize();
+            var btntxt = $('#backwardBtnTextValue').val();
+            var recordId = $('#backwardReqId').val();
+            $.ajax({
+                url: '/doBackwardAction',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() {
+                    blockPage(cardSection, 'Backwarding delivery order record...');
+
+                    $('#backwardActionBtn').text('Changing...');
+                    $('#backwardActionBtn').prop("disabled", true);
+                },
+                error: function () { 
+                    unblockPage(cardSection);
+
+                    $('#backwardActionBtn').text(btntxt);
+                    $('#backwardActionBtn').prop("disabled", false);
+                },
+                success:async function(data) {
+                    await backwardDORecordFn(data);
+                    unblockPage(cardSection);
+                }
+            });
+        });
+
+        function backwardDORecordFn(data){
+            var btntxt = $('#backwardBtnTextValue').val();
+            if (data.errors) {
+                if (data.errors.CommentOrReason) {
+                    var text = data.errors.CommentOrReason[0];
+                    text = text.replace("comment or ", "");       
+                    $('#commentres-error').html(text);
+                }
+                $('#backwardActionBtn').text(btntxt);
+                $('#backwardActionBtn').prop("disabled",false);
+                toastrMessage('error',"Please check your input","Error");
+            }
+            else if (data.dberrors) {
+                $('#backwardActionBtn').text(btntxt);
+                $('#backwardActionBtn').prop("disabled",false);
+                $('#backwardActionModal').modal('hide');
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if(data.success){
+                toastrMessage('success',"Successful","Success");
+                createDOInfoFn(data.rec_id);
+                countDOStatusFn(data.fiscal_year);
+
+                var oTable = $('#laravel-datatable-crud').dataTable();
+                oTable.fnDraw(false);
+                $('#backwardActionModal').modal('hide');
+            }
+        }
+        //-----Forward & backward action end----------
+
+        //-----Void & Undo Void Start------
+        function voidDOFn(recordId){
+            $.ajax({
+                type: "get",
+                url: "{{url('getDOData')}}"+'/'+recordId,
+                dataType: "json",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Preparing to void record...');
+                },
+                success: async function(data) {
+                    await getVoidDataFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function getVoidDataFn(data){
+            $.each(data.do_data, function(key, value) {
+                if(value.status == "Void"){
+                    toastrMessage('error',"This record cannot be voided again because its current status is Void","Error");
+                }
+                else{
+                    $("#voidid").val(data.rec_id);
+                    $('#vstatus').val(status);
+                    $('#voiddobtn').prop("disabled", false);
+                    $('#voiddobtn').text("Void");
+                    $('#void-error').html("");
+                    $('#Reason').val("");
+                    $("#voidDOModal").modal('show');
+                }
+            });
+        }
+
+        $('#voiddobtn').click(function(){ 
+            var registerForm = $("#voidDOForm");
+            var formData = registerForm.serialize();
+            $.ajax({
+                url: '/voidDeliveryOrder',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() { 
+                    $('#voiddobtn').text('Voiding...');
+                    $('#voiddobtn').prop("disabled", true);
+
+                    blockPage(cardSection,"Voiding delivery order record...");
+                },
+                success: async function(data) {
+                    await voidDeliveryOrderFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () { 
+                    unblockPage(cardSection);     
+                },
+            });
+        });
+
+        function voidDeliveryOrderFn(data){
+            if(data.errors) {
+                if(data.errors.Reason) {
+                    $('#void-error').html(data.errors.Reason[0]);
+                }
+                $('#voiddobtn').text('Void');
+                $('#voiddobtn').prop("disabled", false);
+                toastrMessage('error',"Check your inputs","Error");
+            }
+            else if(data.dberrors) {
+                $('#voiddobtn').text('Void');
+                $('#voiddobtn').prop("disabled", false);
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if(data.success) {
+                toastrMessage('success',"Successful","Success");
+                var oTable = $('#laravel-datatable-crud').dataTable();
+                oTable.fnDraw(false);
+                countDOStatusFn(data.fiscal_year);
+                createDOInfoFn(data.rec_id);
+
+                $("#voidDOModal").modal('hide');
+            }
+        }
+
+        function undoVoidDOFn(recordId){
+            $.ajax({
+                type: "get",
+                url: "{{url('getDOData')}}"+'/'+recordId,
+                dataType: "json",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Preparing to restore record...');
+                },
+                success: async function(data) {
+                    await getUndoVoidDataFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function getUndoVoidDataFn(data){
+            $.each(data.do_data, function(key, value) {
+                if(value.status == "Void"){
+                    Swal.fire({
+                        title: confirmation_title,
+                        text: undo_void_confirmation,
+                        icon: confirmation_icon,
+                        showCloseButton: true,
+                        showCancelButton: true,      
+                        allowOutsideClick: false,
+                        confirmButtonText: 'Undo Void',
+                        cancelButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'btn btn-info',
+                            cancelButton: 'btn btn-danger'
+                        }
+                    }).then(function (result) {
+                        if (result.value) {
+                            undoVoidDORecordFn(data.rec_id);
+                        }
+                        else if (result.dismiss === Swal.DismissReason.cancel) {}
+                    });
+                }
+                else{
+                    toastrMessage('error',"Record status should be void","Error");
+                }
+            });
+        }
+
+        function undoVoidDORecordFn(recordId){
+            var registerForm = $("#doInfoForm");
+            var formData = registerForm.serialize();
+            $.ajax({
+                url: '/undoVoidDeliveryOrder',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() { 
+                    blockPage(cardSection,"Restoring delivery order record...");
+                },
+                success: async function(data) {
+                    await undoVoidDeliveryOrderFn(data);
+                    unblockPage(cardSection);
+                },
+                error: function () { 
+                    unblockPage(cardSection);     
+                },
+            });
+        }
+
+        function undoVoidDeliveryOrderFn(data){
+            if(data.dberrors) {
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if(data.success){
+                toastrMessage('success',"Successful","Success");
+                createDOInfoFn(data.rec_id);
+                countDOStatusFn(data.fiscal_year);
+                var oTable = $('#laravel-datatable-crud').dataTable();
+                oTable.fnDraw(false);
+            }
+        }
+        //-----Void & Undo Void End------
+
         function productTypeFn(){
             $('#product-type-error').html("");
         }
@@ -2732,6 +3253,14 @@
 
         function plateNumFn(){
             $('#platenum-error').html("");
+        }
+
+        function voidReasonFn(){
+            $('#void-error').html("");
+        }
+
+        function backwardReasonFn(){
+            $('#commentres-error').html("");
         }
 
         function fillProductTypeDataFn(ref_type){

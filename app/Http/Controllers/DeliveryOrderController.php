@@ -346,6 +346,183 @@ class DeliveryOrderController extends Controller
         return response()->json(['item_info' => $item_info,'do_qty' => $do_qty]);
     }
 
+    public function voidDeliveryOrder(Request $request){
+        $settings = DB::table('settings')->latest()->first();
+        $setting_fyear = $settings->FiscalYear;
+        $findid = $request->voidid;
+        $do_data = delivery_order::find($findid);
+        $fyear = $do_data->fiscal_year;
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'Reason' => ['required'],
+        ]);
+
+        if($validator->passes()){
+            DB::beginTransaction();
+            try{
+                $do_data->status_old = $do_data->status;
+                $do_data->status = "Void";
+                $do_data->save();
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $findid,
+                    'pagename' => "delivery_order",
+                    'action' => "Void",
+                    'status' => "Void",
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "$request->Reason",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+
+                DB::commit();
+                return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+            }
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' =>  $e->getMessage()]);
+            }
+        }
+        else if($validator->fails()){
+            return Response::json(['errors' => $validator->errors()]);
+        }
+    }
+
+    public function undoVoidDeliveryOrder(Request $request){
+        $settings = DB::table('settings')->latest()->first();
+        $setting_fyear = $settings->FiscalYear;
+        $findid = $request->recId;
+        $do_data = delivery_order::find($findid);
+        $fyear = $do_data->fiscal_year;
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+
+        DB::beginTransaction();
+        try{
+            $do_data->status = $do_data->status_old;
+            $do_data->save();
+
+            DB::table('actions')->insert([
+                'user_id' => $userid,
+                'pageid' => $findid,
+                'pagename' => "delivery_order",
+                'action' => "Undo Void",
+                'status' => "Undo Void",
+                'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                'reason' => "",
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+
+            DB::commit();
+            return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+        }
+        catch(Exception $e){
+            DB::rollBack();
+            return Response::json(['dberrors' =>  $e->getMessage()]);
+        }
+    }
+
+    public function doForwardAction(Request $request){
+        $val_status = ["Draft","Pending","Checked","Confirmed"];
+
+        DB::beginTransaction();
+        try{
+            $user = Auth()->user()->username;
+            $userid = Auth()->user()->id;
+
+            $findid = $request->forwardReqId;
+            $do_data = delivery_order::find($findid);
+            $currentStatus = $do_data->status;
+            $newStatus = $request->newForwardStatusValue;
+            $action = $request->forwardActionValue;
+            $do_data->status = $newStatus;
+            $docnum = $do_data->document_number;
+            $product_type = $do_data->product_type;
+            $fyear = $do_data->fiscal_year;
+            $store_id = $do_data->station;
+
+            if($newStatus == "Pending"){
+
+            }
+            else if($newStatus == "Verified"){
+                $do_data->verified_by = $user;
+                $do_data->verified_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+            }
+            else if($newStatus == "Approved"){
+                $do_data->approved_by = $user;
+                $do_data->approved_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+            }
+
+            $do_data->save();
+
+            DB::table('actions')->insert([
+                'user_id' => $userid,
+                'pageid' => $findid,
+                'pagename' => "delivery_order",
+                'action' => "$action",
+                'status'=> "$action",
+                'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+
+            DB::commit();
+            return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+        }
+        catch(Exception $e){
+            DB::rollBack();
+            return Response::json(['dberrors' =>  $e->getMessage()]);
+        }
+    }
+
+    public function doBackwardAction(Request $request){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $findid = $request->backwardReqId;
+        $action = $request->backwardActionValue;
+        $newStatus = $request->newBackwardStatusValue;
+        $do_data = delivery_order::find($findid);
+        $fyear = $do_data->fiscal_year;
+        $validator = Validator::make($request->all(), [
+            'CommentOrReason'=>"required",
+        ]);
+
+        if($validator->passes()) {
+            DB::beginTransaction();
+            try{
+                $do_data->status = $newStatus;
+                $do_data->save();
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $findid,
+                    'pagename' => "delivery_order",
+                    'action' => "$action",
+                    'status' => "$action",
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "$request->CommentOrReason",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+                
+                DB::commit();
+                return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+            }
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' =>  $e->getMessage()]);
+            }  
+        }
+
+        if($validator->fails()){
+            return Response::json(['errors' => $validator->errors()]);
+        }
+    }
+
     public function getDOData($id){
         $item_info = null;
         $reference_data = null;
@@ -519,7 +696,7 @@ class DeliveryOrderController extends Controller
     }
 
     function countDOStatus(){
-        $fyear = $_POST['fyear']; 
+        $fyear = $_POST['fyear'] ?? 0; 
         $delivery_order_status = DB::select('SELECT delivery_orders.status,FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear.' GROUP BY delivery_orders.status UNION SELECT "Total",FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear);
 
         $ready_for_do = DB::select('SELECT (SELECT COUNT(proformas.id) FROM proformas WHERE proformas.Status="Pass") + (SELECT COUNT(sales_orders.id) FROM sales_orders WHERE sales_orders.status=8) + (SELECT COUNT(sales.id) FROM sales WHERE sales.Status="Confirmed") AS ready_do');

@@ -1135,6 +1135,10 @@ Route::post('/getDOStoreBalance','DeliveryOrderController@getDOStoreBalance');
 Route::post('saveDeliveryOrder','DeliveryOrderController@store');
 Route::get('/getDOData/{id}','DeliveryOrderController@getDOData');
 Route::post('/showDODetailData/{id}','DeliveryOrderController@showDODetailData');
+Route::post('voidDeliveryOrder','DeliveryOrderController@voidDeliveryOrder');
+Route::post('undoVoidDeliveryOrder','DeliveryOrderController@undoVoidDeliveryOrder');
+Route::post('doForwardAction','DeliveryOrderController@doForwardAction');
+Route::post('doBackwardAction','DeliveryOrderController@doBackwardAction');
 Route::post('/countDOStatus','DeliveryOrderController@countDOStatus');
 //---------------End DO--------------------
 
