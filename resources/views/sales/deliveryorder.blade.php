@@ -806,6 +806,66 @@
     </div>
     <!-- End backward action modal -->
 
+    <!-- start manage document modal-->
+    <div class="modal modal-slide-in event-sidebar fade fit-content" id="manageDocumentModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageDocumentModal" aria-hidden="true">
+        <form id="ManageDocumentForm">    
+            <div class="modal-dialog sidebar-xl" style="width: 95%;">
+                <div class="modal-content p-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ea5455 !important;font-weight:bold;">x</button>
+                    <div class="modal-header mb-1">
+                        <h5 class="modal-title form_title" id="manage-document-title">Manage Documents</h5>
+                        <div class="info_modal_title_lbl info_modal_title_lbl" style="text-align: center;padding-right:30px;"></div>
+                    </div>
+                    <div class="modal-body flex-grow-1 pb-sm-0 pb-3 scrdivhor scrollhor" style="overflow-y:auto;height:100vh;">
+                        <div class="row mr-1 ml-1">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 -1rem;padding: 0 1rem;">
+                                <table id="documentDynamicTable" class="mt-0 rtable form_dynamic_table" style="width: 100%;min-width: 900px;">
+                                    <thead>
+                                        <tr style="text-align:center;">
+                                            <th style="width:3%;">#</th>
+                                            <th style="width:20%;">Type</th>
+                                            <th style="width:20%;">Date</th>
+                                            <th style="width:20%;">Document</th>
+                                            <th style="width:20%;">Remark</th>
+                                            <th style="width:14%;">Status</th>
+                                            <th style="width:3%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="background-color:#FFFFFF;padding: 0px 0px 0px 0px">
+                                                <button type="button" name="docmnt_btn" id="docmnt_btn" class="btn btn-sm btn-light" style="color:#28c76f;background-color:#FFFFFF;border-color:#FFFFFF;padding: 4px 5px;font-weight:bold;"><i class="fa fa-plus fa-lg" aria-hidden="true" style="font-size: :14%;"></i></button>
+                                            </th>
+                                            <th colspan="5" style="background-color:#FFFFFF;border-color:#FFFFFF;"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <span class="text-danger">
+                                    <strong class="errordatalabel" id="docmnt-doc-error"></strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div style="display: none;">
+                            <select class="select2 form-control" name="DocumentTypeDefault" id="DocumentTypeDefault">
+                                <option selected disabled value=""></option>
+                                @foreach ($doc_type_data as $doc_type)
+                                    <option value="{{ $doc_type->id }}">{{ $doc_type->LookupName }}</option>
+                                @endforeach
+                            </select>
+                            <input type="hidden" class="form-control" name="uploadRecordDocId" id="uploadRecordDocId" readonly="true">
+                        </div>
+                        <button id="uploadDocButton" type="submit" class="btn btn-info form_btn">Upload</button>
+                        <button id="closebutton-doc" type="button" class="btn btn-danger form_btn" data-dismiss="modal">Close</button> 
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--/ end manage document modal-->
+
     @include('layout.universal-component')
 
     <script type="text/javascript">
@@ -819,6 +879,10 @@
         var i = 0;
         var m = 0;
         var j = 0;
+
+        var x3 = 0;
+        var y3 = 0;
+        var z3 = 0;
 
         var statusTransitions = {
             'Draft': {
@@ -1034,6 +1098,8 @@
                         });
                     });
                     $('#laravel-datatable-crud').DataTable().columns.adjust();
+                },
+                "initComplete": function(settings, json) {
                     unblockPage(cardSection);
                 },
                 fixedHeader: {
@@ -1259,7 +1325,6 @@
                     },
                     success: async function(data) {
                         await saveDeliveryOrderFn(data);
-                        unblockPage(cardSection);
                     },
                     error: function () { 
                         unblockPage(cardSection);     
@@ -1377,6 +1442,22 @@
                 toastrMessage('error',"You should add atleast one item","Error");
             }
 
+            else if (data.balance_error) {
+                var item_list = "";
+                $.each(data.items, function(index, value) {
+                    item_list += `<b>${++index},</b> ${value.name}</br>`;
+                });
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`These items cannot be updated, the requested change is not supported by the available quantity and would result negative balance.</br>-------------------</br>${item_list}`,"Error");
+            } 
+
             else if(data.dberrors) {
                 if(parseInt(optype) == 1){
                     $('#savebutton').text('Save');
@@ -1391,12 +1472,15 @@
 
             else if(data.success) {
                 toastrMessage('success',"Successful","Success");
-                var oTable = $('#laravel-datatable-crud').dataTable();
-                oTable.fnDraw(false);
                 countDOStatusFn(data.fiscal_year);
-                if(parseInt(optype) == 2){
-                    createDOInfoFn(data.rec_id);
+                if(parseInt(optype) == 1){
+                    refreshDTUpdateFn();
                 }
+                else if(parseInt(optype) == 2){
+                    createDOInfoFn(data.rec_id);
+                    tabMgtFn();
+                    refreshMainDatatbleFn();
+                }    
                 $("#inlineForm").modal('hide');
             }
         }
@@ -2366,6 +2450,7 @@
 
         function doInfoFn(recordId){
             createDOInfoFn(recordId);
+            tabMgtFn();
             $("#doInfoModal").modal('show');
         }
 
@@ -2385,7 +2470,6 @@
                 },
                 success: async function(data) {
                     await getInfoDataFn(data);
-                    unblockPage(cardSection);
                 },
                 error: function () {
                     unblockPage(cardSection);
@@ -2471,6 +2555,15 @@
                 </li>
                 @endcan`;
 
+            var upload_document_link = `
+                @can("Receiving-Confirm")
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" id="managedocumentBtn" onclick="openDocumentUploadFn(${data.rec_id})" title="Open document manage form">
+                    <span><i class="fas fa-sliders-h"></i> Manage Documents</span>
+                    </a>
+                </li>
+                @endcan`;
 
             $.each(data.do_data, function(key, value) {
                 $('#info_reference_type').html(value.reference_types);
@@ -2533,11 +2626,12 @@
                     major_btn_link += edit_link;
                     major_btn_link += void_link;
 
-                    status_btn_link = "";
+                    status_btn_link = ""; 
                     status_color = "#1cc88a";
                 }
                 else if(value.status == "Void"){
                     major_btn_link += undovoid_link;
+                    upload_document_link = "";
                     status_color = "#e74a3b";
                 }
                 else{
@@ -2563,6 +2657,7 @@
                     </a>
                 </li>
                 ${major_btn_link}
+                ${upload_document_link}
                 ${status_btn_link}`;
 
                 $("#do_action_ul").empty().append(action_links);
@@ -2597,13 +2692,12 @@
 
             $("#universal-action-log-canvas").empty().append(lidata);
 
+            getDocumentDataFn(data.rec_id);
             fetchDOItemFn(data.rec_id,data.is_price_vis);
-            tabMgtFn();
             $(".infoscl").collapse('show');
         }
 
         function fetchDOItemFn(recordId,is_price_vis){
-
             var visibility_flag = false;
             var column_index = [];
 
@@ -2748,12 +2842,13 @@
                         width:'3%',
                     }
                 ],
-                "columnDefs": [
-                    {
-                        "targets": column_index,
-                        "visible": visibility_flag,
-                    },
-                ],
+                "columnDefs": [{
+                    "targets": column_index,
+                    "visible": visibility_flag,
+                }],
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
             });
 
             $('#doInfoDataTbl').on('draw.dt', function () {
@@ -2893,23 +2988,35 @@
                 },
                 success: async function(data) {
                     await doForwardRecordFn(data);
-                    unblockPage(cardSection); 
                 }
             });
         }
 
         function doForwardRecordFn(data){
-            if (data.dberrors) {
+            if(data.dberrors) {
                 toastrMessage('error',"Please contact administrator","Error");
             }
-            else if (data.success) {
+            else if(data.item_variances){
+                var item_list = "";
+                $.each(data.item_variances, function(key, value) {
+                    item_list += `${++key}. ${value.item_name}</br>`;
+                });
+                toastrMessage('warning',`Please select all required batch and/or serial numbers for the items listed below</br>----------------</br>${item_list}`,"Warning");
+            }
+            else if(data.balance_error) {
+                var item_list = "";
+                $.each(data.items, function(index, value) {
+                    item_list += `<b>${++index},</b> ${value.name}</br>`;
+                });
+                toastrMessage('error',`There is no available quantity for the following items</br>-------------------</br>${item_list}`,"Error");
+            } 
+            else if(data.success) {
                 toastrMessage('success',"Successful","Success");
                 
                 createDOInfoFn(data.rec_id);
                 countDOStatusFn(data.fiscal_year);
 
-                var oTable = $('#laravel-datatable-crud').dataTable();
-                oTable.fnDraw(false);
+                refreshMainDatatbleFn();
             }
         }
 
@@ -2954,7 +3061,6 @@
                 },
                 success:async function(data) {
                     await backwardDORecordFn(data);
-                    unblockPage(cardSection);
                 }
             });
         });
@@ -2982,12 +3088,393 @@
                 createDOInfoFn(data.rec_id);
                 countDOStatusFn(data.fiscal_year);
 
-                var oTable = $('#laravel-datatable-crud').dataTable();
-                oTable.fnDraw(false);
+                refreshMainDatatbleFn();
                 $('#backwardActionModal').modal('hide');
             }
         }
         //-----Forward & backward action end----------
+
+        //-----Document start-------
+        function openDocumentUploadFn(rec_id){
+            var do_id = null;
+            
+            $.ajax({
+                url: '/fetchDODoc', 
+                type: 'POST',
+                data:{
+                    do_id:rec_id,
+                },
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching documents...');
+                },
+                error: function () { 
+                    unblockPage(cardSection);    
+                },
+                success:async function(data) {
+                    await fetchDocumentsFn(data);
+                    renumberDocRows();
+                    unblockPage(cardSection);
+                }
+            });
+
+            $('#uploadRecordDocId').val(rec_id);
+            $('#uploadDocButton').text('Upload');
+            $('#uploadDocButton').prop("disabled", false);
+            $('#manageDocumentModal').modal('show');
+        }
+
+        function fetchDocumentsFn(data){
+            var default_date = "1900-01-01";
+            $("#documentDynamicTable > tbody").empty();
+            $.each(data.document_data, function(key, value) {
+                ++y3;
+                ++z3;
+                ++x3;
+                $("#documentDynamicTable > tbody").append(`<tr id="docrowtr${z3}">
+                    <td style="font-weight:bold;width:3%;text-align:center;">${x3}</td>
+                    <td style="display:none;"><input type="hidden" name="docrow[${z3}][docvals]" id="docvals${z3}" class="docvals form-control" readonly="true" style="font-weight:bold;" value="${z3}"/></td>
+                    <td style="width:20%;"><select id="document_type${z3}" class="select2 form-control document_type" onchange="docTypeFn(this)" name="docrow[${z3}][document_type]"></select></td>
+                    <td style="width:20%;"><input type="text" id="upload_date${z3}" name="docrow[${z3}][upload_date]" class="form-control upload_date${z3}" value="${value.date}" placeholder="YYYY-MM-DD" readonly onchange="uploadDateFn(this)"/></td>
+                    <td style="width:20%;">
+                        <div class="input-group">
+                            <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:90%;">
+                            <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view view-doc" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:9%;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <input type="hidden" class="form-control" value="${value.doc_name}" name="docrow[${z3}][documents]" id="documents${z3}"/>
+                            <input type="hidden" class="form-control" value="${value.doc_name}" name="docrow[${z3}][doc_upload_hidden]" id="doc_upload_hidden${z3}"/>
+                            <input type="hidden" class="form-control" value="${value.actual_file_name}" name="docrow[${z3}][doc_actual_name]" id="doc_actual_name${z3}"/>
+                        <div>
+                    </td>
+                    <td style="width:20%;"><input type="text" name="docrow[${z3}][doc_remark]" id="cont_remark${z3}" class="cont_remark form-control" value="${value.remark == "" || value.remark == null ? "" : value.remark}" placeholder="Enter remark here"/></td>
+                    <td style="width:14%;"><select id="doc_status${z3}" class="select2 form-control doc_status" name="docrow[${z3}][doc_status]"></select></td>
+                    <td style="width:3%;text-align:center;"></td>
+                </tr>`);
+
+                var default_document_type = `<option selected value="${value.document_type}">${value.doc_type}</option>`;
+                
+                var doc_type_opt = $("#DocumentTypeDefault > option").clone();
+                $(`#document_type${z3}`).append(doc_type_opt);
+                $(`#document_type${z3} option[value="${value.document_type}"]`).remove(); 
+                $(`#document_type${z3}`).append(default_document_type);
+                $(`#document_type${z3}`).select2({dropdownCssClass : 'cusprop'});
+
+                var statusdefopt = `<option selected value="${value.status}">${value.status}</option>`;
+                var statusopt = '<option value="Active">Active</option><option value="Inactive">Inactive</option>';
+                $(`#doc_status${z3}`).append(statusopt);
+                $(`#doc_status${z3} option[value="${value.status}"]`).remove(); 
+                $(`#doc_status${z3}`).append(statusdefopt).select2({minimumResultsForSearch: -1});
+
+                flatpickr(`#upload_date${z3}`, { dateFormat: 'Y-m-d',allowInput: true,clickOpens:true,minDate:default_date,maxDate:current_date});
+                $(`#select2-document_type${z3}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-doc_status${z3}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+            });
+        }
+
+        $("#docmnt_btn").click(function() { 
+            var last_row_id = $('#documentDynamicTable > tbody tr:last').find('td').eq(1).find('input').val();
+            var default_date = "1900-01-01";
+            ++y3;
+            ++z3;
+            ++x3;
+
+            $("#documentDynamicTable > tbody").append(`<tr id="docrowtr${z3}">
+                <td style="font-weight:bold;width:3%;text-align:center;">${x3}</td>
+                <td style="display:none;"><input type="hidden" name="docrow[${z3}][docvals]" id="docvals${z3}" class="docvals form-control" readonly="true" style="font-weight:bold;" value="${z3}"/></td>
+                <td style="width:20%;"><select id="document_type${z3}" class="select2 form-control document_type" onchange="docTypeFn(this)" name="docrow[${z3}][document_type]"></select></td>
+                <td style="width:20%;"><input type="text" id="upload_date${z3}" name="docrow[${z3}][upload_date]" class="form-control upload_date${z3}" placeholder="YYYY-MM-DD" readonly onchange="uploadDateFn(this)"/></td>
+                <td style="width:20%;">
+                    <div class="input-group">
+                        <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:90%;">
+                        <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:9%;display:none;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <input type="hidden" class="form-control" name="docrow[${z3}][documents]" id="documents${z3}"/>
+                        <input type="hidden" class="form-control" name="docrow[${z3}][doc_upload_hidden]" id="doc_upload_hidden${z3}"/>
+                        <input type="hidden" class="form-control" name="docrow[${z3}][doc_actual_name]" id="doc_actual_name${z3}"/>
+                    <div>
+                </td>
+                <td style="width:20%;"><input type="text" name="docrow[${z3}][doc_remark]" id="cont_remark${z3}" class="cont_remark form-control" placeholder="Write Remark here..."/></td>
+                <td style="width:14%;"><select id="doc_status${z3}" class="select2 form-control doc_status" name="docrow[${z3}][doc_status]"></select></td>
+                <td style="width:3%;text-align:center;"><button type="button" id="remove_doc_btn${z3}" class="btn btn-light btn-sm remove_doc_btn" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+            </tr>`);
+
+            var default_option = `<option selected disabled value=""></option>`;
+            var doc_type_opt = $("#DocumentTypeDefault > option").clone();
+            $(`#document_type${z3}`).append(doc_type_opt);
+            $(`#document_type${z3}`).append(default_option);
+            $(`#document_type${z3}`).val(null).select2({
+                placeholder: "Select type here...",
+                dropdownCssClass : 'cusprop',
+            });
+
+            var statusopt = '<option value="Active">Active</option><option value="Inactive">Inactive</option>';
+            $(`#doc_status${z3}`).append(statusopt).select2({
+                placeholder: "Select status here",
+                minimumResultsForSearch: -1
+            });
+
+            renumberDocRows();
+            flatpickr(`#upload_date${z3}`, {dateFormat: 'Y-m-d',allowInput: true,clickOpens:true,minDate:default_date,maxDate:current_date});
+            $(`#select2-document_type${z3}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+            $(`#select2-doc_status${z3}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+            $("#docmnt-doc-error").html("");
+        });
+
+        $(document).on('click', '.remove_doc_btn', function() {
+            $(this).parents('tr').remove();
+            var last_row_id = $('#documentDynamicTable > tbody tr:last').find('td').eq(1).find('input').val();
+            renumberDocRows();
+            --x3;
+        });
+
+        function docmntUploadFn(ele) {
+            var cont_val = $(ele).closest('tr').find('.docvals').val();
+            $(`#doc_view${cont_val}`).show();
+            $(`#doc_upload${cont_val}`).css("background","white");
+            $(`#doc_upload_hidden${cont_val}`).val(cont_val);
+        }
+
+        function uploadDateFn(ele) {
+            var cont_val = $(ele).closest('tr').find('.docvals').val();
+            $(`#upload_date${cont_val}`).css("background","white");
+        }
+
+        function docTypeFn(ele) {
+            var doc_indx = $(ele).closest('tr').find('.docvals').val();
+            $(`#select2-document_type${doc_indx}-container`).parent().css({"background-color":"white","position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+        }
+
+        function previewDocFn(ele,type) {
+            var indx = "";
+            var rec_id = "";
+            var file_name = "";
+            var file_inp = "";
+            var document_folder = "";
+            if(type == "doc"){
+                indx = $(ele).closest('tr').find('.docvals').val();
+                rec_id = $(`#documents${indx}`).val();
+                file_name = $(`#documents${indx}`).val();
+                file_inp = `doc_upload${indx}`;
+                document_folder = "SupportingDocument";
+            }
+            if(type == "con"){
+                indx = $(ele).closest('tr').find('.contvals').val();
+                rec_id = $(`#contracts${indx}`).val();
+                file_name = $(`#contracts${indx}`).val();
+                file_inp = `cont_document${indx}`;
+                document_folder = "Contracts";
+            }
+             
+            const features = 'width=1000,height=700,scrollbars=yes,resizable=yes,location=yes,toolbar=yes,menubar=yes';
+
+            // =========================
+            // ADD / CREATE MODE
+            // =========================
+            if (!rec_id) {
+
+                const fileInput = $(`#${file_inp}`)[0];
+
+                if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                    toastrMessage('error', 'Please select a file first!', 'Error');
+                    return;
+                }
+
+                const file = fileInput.files[0];
+
+                const isImage = file.type.startsWith('image/');
+                const isPDF   = file.type === 'application/pdf';
+
+                if (!isImage && !isPDF) {
+                    toastrMessage('error', 'Only PDF and Image files can be opened in new window!', 'Error');
+                    return;
+                }
+
+                const blobUrl = URL.createObjectURL(file);
+                window.open(blobUrl, '_blank', features);
+
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+                return;
+            }
+
+            // =========================
+            // EDIT MODE
+            // =========================
+            if (!file_name) {
+                toastrMessage('error', 'No file found!', 'Error');
+                return;
+            }
+
+            const filePath = `/storage/uploads/DeliveryOrder/${document_folder}/${file_name}`;
+            window.open(filePath, '_blank', features);
+        }
+
+        function openDocFn(row_id,doc_name,doc_type){
+            var link = `../../../storage/uploads/Receiving/SupportingDocument/${doc_name}`;
+            window.open(link, '', 'width=1200,height=800,scrollbars=yes');
+        }
+
+        function renumberDocRows() {
+            $('#documentDynamicTable tr').each(function(index, el) {
+                $(this).children('td').first().text(index++);
+            });
+        }
+
+        $('#ManageDocumentForm').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $.ajax({
+                url: '/uploadDODocument',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    blockPage(cardSection, 'Uploading documents...');
+                    $('#uploadDocButton').text('Uploading...');
+                    $('#uploadDocButton').prop("disabled", true);
+                },
+                error: function () { 
+                    unblockPage(cardSection);    
+                },
+                success:async function(data) {
+                    await uploadDODocumentFn(data);
+                }
+            });
+        });
+
+        function uploadDODocumentFn(data){
+            if (data.errorv2) {
+                $('#documentDynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.docvals').val()
+                    var doc_type = $(`#document_type${k}`).val();
+                    var doc_date = $(`#upload_date${k}`).val();
+                    var docuplaod = $(`#doc_upload${k}`).val();
+                    var doc_upload = $(`#contract_hidden${k}`).val();
+                    
+                    if(isNaN(parseFloat(doc_type)) || parseFloat(doc_type) == 0){
+                        $(`#select2-document_type${k}-container`).parent().css('background-color',errorcolor);
+                    }
+                    if(($(`#upload_date${k}`).val()) != undefined){
+                        if(doc_date == "" || doc_date == null){
+                            $(`#upload_date${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(doc_upload == null || doc_upload == ""){
+                        $(`#doc_upload${k}`).css("background", errorcolor);
+                    }
+                });
+                
+                $('#uploadDocButton').text('Upload');
+                $('#uploadDocButton').prop("disabled", false);
+                toastrMessage('error',"Please fill all highlighted required fields","Error");
+            }
+            else if (data.dberrors){
+                $('#uploadDocButton').text('Upload');
+                $('#uploadDocButton').prop("disabled", false);
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if(data.emptyerror){
+                $('#uploadDocButton').text('Upload');
+                $('#uploadDocButton').prop("disabled", false);
+                toastrMessage('error',"You should add atleast one document","Error");
+            } 
+            else if(data.success){
+                toastrMessage('success',"Successful","Success");
+                createDOInfoFn(data.rec_id);
+                docTabMgtFn();
+                $("#manageDocumentModal").modal('hide');
+            }
+        }
+
+        function getDocumentDataFn(recordId){
+            $('#document_div').hide();
+            $('#info-document-datatable').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: true,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                "order": [[ 0, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-4 col-md-5 col-6'f><'col-sm-3 col-md-2 col-6'><'col-sm-3 col-md-2 col-6'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showDODocument/' + recordId,
+                    type: 'POST',
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        "render": function ( data, type, row, meta ) {
+                            return "";
+                        },
+                        'visible': false
+                    },
+                    {
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },    
+                    {
+                        data: 'doc_type',
+                        name: 'doc_type',
+                        width:'13%',
+                    },   
+                    {
+                        data: 'date',
+                        name: 'date',
+                        width:'10%',
+                    },
+                    {
+                        data: 'actual_file_name',
+                        name: 'actual_file_name',
+                        width:'40%',
+                        "render": function ( data, type, row, meta ) {
+                            return `<a style="text-decoration:underline;color:blue;" onclick=openDocFn("${row.id}","${row.doc_name}","${row.upload_type}")>${data}</a>`;
+                        } 
+                    },
+                    {
+                        data: 'remark',
+                        name: 'remark',
+                        width:'24%',
+                    },
+                    { data: 'status', name: 'status',
+                        "render": function ( data, type, row, meta ) {
+                            if(data == "Active"){
+                                return `<span class="badge bg-success bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Inactive"){
+                                return `<span class="badge bg-danger bg-glow">${data}</span>`;
+                            }
+                            else{
+                                return `<span class="badge bg-warning bg-glow">${data}</span>`;
+                            }
+                        },
+                        width:"10%"
+                    },
+                ]
+            });
+        }
+
+        function openDocFn(row_id,doc_name,doc_type){
+            var link = `../../../storage/uploads/DeliveryOrder/SupportingDocument/${doc_name}`;
+            window.open(link, '', 'width=1200,height=800,scrollbars=yes');
+        }
+
+        function docTabMgtFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            
+            $("#info_do_doc_tab").addClass("active");
+            $("#info_do_doc_view").addClass("active");
+        }
+        //-----Document end---------
 
         //-----Void & Undo Void Start------
         function voidDOFn(recordId){
@@ -3040,7 +3527,6 @@
                 },
                 success: async function(data) {
                     await voidDeliveryOrderFn(data);
-                    unblockPage(cardSection);
                 },
                 error: function () { 
                     unblockPage(cardSection);     
@@ -3064,11 +3550,9 @@
             }
             else if(data.success) {
                 toastrMessage('success',"Successful","Success");
-                var oTable = $('#laravel-datatable-crud').dataTable();
-                oTable.fnDraw(false);
                 countDOStatusFn(data.fiscal_year);
                 createDOInfoFn(data.rec_id);
-
+                refreshMainDatatbleFn();
                 $("#voidDOModal").modal('hide');
             }
         }
@@ -3083,7 +3567,6 @@
                 },
                 success: async function(data) {
                     await getUndoVoidDataFn(data);
-                    unblockPage(cardSection);
                 },
                 error: function () {
                     unblockPage(cardSection);
@@ -3132,7 +3615,6 @@
                 },
                 success: async function(data) {
                     await undoVoidDeliveryOrderFn(data);
-                    unblockPage(cardSection);
                 },
                 error: function () { 
                     unblockPage(cardSection);     
@@ -3148,8 +3630,7 @@
                 toastrMessage('success',"Successful","Success");
                 createDOInfoFn(data.rec_id);
                 countDOStatusFn(data.fiscal_year);
-                var oTable = $('#laravel-datatable-crud').dataTable();
-                oTable.fnDraw(false);
+                refreshMainDatatbleFn();
             }
         }
         //-----Void & Undo Void End------
@@ -3415,11 +3896,23 @@
         }
 
         function refreshDOFn(){
-            var f_year = $('#fiscalyear').val();
+            var f_year = $('#do_fy').val();
             countDOStatusFn(f_year);
 
-            var rTable = $('#laravel-datatable-crud').dataTable();
-            rTable.fnDraw(false);
+            table.ajax.reload(function() {
+                unblockPage(cardSection);
+            }, false); 
+        }
+
+        function refreshMainDatatbleFn(){
+            var oTable = $('#laravel-datatable-crud').dataTable(); 
+            oTable.fnDraw(false);
+        }
+
+        function refreshDTUpdateFn(){
+            table.ajax.reload(function() {
+                unblockPage(cardSection);
+            }, false); 
         }
         
         function numformat(val) {

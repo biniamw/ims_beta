@@ -1139,6 +1139,11 @@ Route::post('voidDeliveryOrder','DeliveryOrderController@voidDeliveryOrder');
 Route::post('undoVoidDeliveryOrder','DeliveryOrderController@undoVoidDeliveryOrder');
 Route::post('doForwardAction','DeliveryOrderController@doForwardAction');
 Route::post('doBackwardAction','DeliveryOrderController@doBackwardAction');
+
+Route::post('/fetchDODoc','DeliveryOrderController@fetchDODoc');
+Route::post('/uploadDODocument','DeliveryOrderController@uploadDODocument');
+Route::post('/showDODocument/{recid}','DeliveryOrderController@showDODocument');
+
 Route::post('/countDOStatus','DeliveryOrderController@countDOStatus');
 //---------------End DO--------------------
 

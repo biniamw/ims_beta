@@ -1629,7 +1629,7 @@ class ReceivingController extends Controller
                 $submitted_items = [];
                 if($receiving->Status == "Confirmed"){
                     foreach ($request->row as $key => $value){  
-                        $transaction = transactions::updateOrCreate([
+                        $transaction = transaction::updateOrCreate([
                             'HeaderId' => $request->receivingId,
                             'ItemId' => $value['ItemId'],
                             'TransactionsType' => "Receiving",
@@ -1716,8 +1716,7 @@ class ReceivingController extends Controller
         }
     }
 
-    public function saveHoldReceiving(Request $request)
-    {
+    public function saveHoldReceiving(Request $request){
         $settings = DB::table('settings')->latest()->first();
         $rprefix=$settings->GRVPrefix;
         $rnumber=$settings->GRVNumber;
@@ -1813,8 +1812,7 @@ class ReceivingController extends Controller
         }
     }
 
-    public function storeNewRecItem(Request $request)
-    {
+    public function storeNewRecItem(Request $request){
         $headerid=$request->recevingedit;
         $storeid=$request->receivingstoreid;
         $ss=$request->receivingidinput;
@@ -1894,8 +1892,7 @@ class ReceivingController extends Controller
         }
     }
 
-    public function SettleWitholdCon(Request $request)
-    {
+    public function SettleWitholdCon(Request $request){
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $receiving_id = $request->currRecId;
@@ -2163,11 +2160,10 @@ class ReceivingController extends Controller
         return response()->json(['sid'=>$amnt]);
     }
 
-    public function showReceivingDetailData($id)
-    {
-        $HeaderId=$id;
-        $columnName="HeaderId";
-        $detailTable=DB::select('SELECT receivingdetails.id,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKU,regitems.RequireSerialNumber,regitems.RequireExpireDate,uoms.Name AS UOM,receivingdetails.Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost,receivingdetails.StoreId,(SELECT COUNT(item_id) FROM serialandbatchnums WHERE item_id=receivingdetails.ItemId AND header_id=receivingdetails.HeaderId) AS ItemCount FROM receivingdetails INNER JOIN regitems ON receivingdetails.ItemId=regitems.id INNER JOIN uoms ON receivingdetails.NewUOMId=uoms.id where receivingdetails.HeaderId='.$HeaderId);
+    public function showReceivingDetailData($id){
+        $HeaderId = $id;
+        $columnName = "HeaderId";
+        $detailTable = DB::select('SELECT receivingdetails.id,receivingdetails.ItemId,receivingdetails.HeaderId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKU,regitems.RequireSerialNumber,regitems.RequireExpireDate,uoms.Name AS UOM,receivingdetails.Quantity,receivingdetails.UnitCost,receivingdetails.BeforeTaxCost,receivingdetails.TaxAmount,receivingdetails.TotalCost,receivingdetails.StoreId,(SELECT COUNT(item_id) FROM serialandbatchnums WHERE item_id=receivingdetails.ItemId AND header_id=receivingdetails.HeaderId) AS ItemCount FROM receivingdetails INNER JOIN regitems ON receivingdetails.ItemId=regitems.id INNER JOIN uoms ON receivingdetails.NewUOMId=uoms.id where receivingdetails.HeaderId='.$HeaderId);
         return datatables()->of($detailTable)
         ->addIndexColumn()
         ->addColumn('action', function($data)

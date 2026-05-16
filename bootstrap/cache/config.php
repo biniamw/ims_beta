@@ -738,7 +738,7 @@
         'tax_type' => 'percentage',
       ),
     ),
-    'due_date' => 'Aug 15th ,2026',
+    'due_date' => 'Aug 16th ,2026',
     'with_pagination' => true,
     'duplicate_header' => false,
   ),

@@ -16,6 +16,7 @@ use App\Models\ProformaItem;
 use App\Models\Salesitem;
 use App\Models\SalesOrderItems;
 use App\Models\actions;
+use App\Models\transaction;
 use Illuminate\Support\Facades\Validator;
 use Yajra\Datatables\Datatables;
 use Exception;
@@ -40,11 +41,12 @@ class DeliveryOrderController extends Controller
         $ref_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=200 AND lookuprefs.Status=1 ORDER BY lookuprefs.LookupName ASC'); 
         $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fyear.' ORDER BY fiscalyear.FiscalYear DESC');
+        $doc_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=102 AND lookuprefs.Status=1 ORDER BY lookuprefs.id ASC'); 
 
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
-            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears
+            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data
         ];
 
         if($request->ajax()) {
@@ -103,11 +105,21 @@ class DeliveryOrderController extends Controller
             DB::beginTransaction();
             try{
                 $submitted_ids = [];
+                $submitted_items = [];
                 $reference_type = $request->ReferenceType ?? 0;
                 $reference_id_val = $request->Reference ?? 0;
                 $reference_data = null;
                 $do_detail_rec_id = null;
                 $total_price = 0;
+
+                $validation = $this->validateItemBalances($request->row,$request->station,$fyear,$findid);
+                if (($validation['status'] ?? "") == 456) {
+                    return Response::json([
+                        'balance_error' => 404,
+                        'items' => $validation['negative_items']
+                    ]);
+                }
+
                 $DbData = delivery_order::where('id', $request->recordId)->first();
                 $document_number =  $this->generateDocumentNumberFn($fyear, $request->recordId);
                 preg_match('/-(\d+)\//', $document_number, $matches); 
@@ -224,10 +236,70 @@ class DeliveryOrderController extends Controller
                         array_merge($do_detail_permanent_data, $del_detail_db_data ? $do_detail_edited_data : $do_detail_created_data)
                     );
 
+                    $submitted_ids[] = $delivery_order_detail->id;
+
                     $this->updateIssuedQtyFn($delivery_order->id,$reference_id_val,$reference_type,$do_detail_rec_id);
                 }
 
                 DB::table('delivery_orders')->where('delivery_orders.id',$delivery_order->id)->update(['delivery_orders.total_price' => $total_price]);
+
+                DB::table('delivery_order_details')
+                    ->where('delivery_order_id', $delivery_order->id)
+                    ->whereNotIn('id', $submitted_ids)
+                    ->delete();
+
+                if($delivery_order->status == "Approved"){
+                    foreach ($request->row as $key => $value){  
+                        $transaction = transaction::updateOrCreate([
+                            'HeaderId' => $delivery_order->id,
+                            'ItemId' => $value['ItemId'],
+                            'TransactionType' => "Delivery-Order",
+                            'TransactionsType' => "Delivery-Order",
+                        ],[
+                            'HeaderId' => $delivery_order->id,
+                            'ItemId' => $value['ItemId'],
+                            'StockOut' => $value['Quantity'],
+                            'UnitPrice' => $value['UnitPrice'] ?? 0,
+                            'BeforeTaxPrice' => $value['TotalPrice'] ?? 0,
+                            'StoreId' => $delivery_order->station,
+                            'IsVoid' => 0,
+                            'TransactionType' => "Delivery-Order",
+                            'TransactionsType' => "Delivery-Order",
+                            'ItemType' => $delivery_order->product_type,
+                            'DocumentNumber' => $delivery_order->document_number,
+                            'FiscalYear' => $delivery_order->fiscal_year,
+                            'Date' => $delivery_order->approved_date,
+                        ]);
+
+                        DB::table('delivery_order_details')
+                            ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
+                            ->where('delivery_order_details.regitems_id',$value['ItemId'])
+                            ->where('delivery_order_details.TransactionsType',"Void")
+                            ->update([
+                                'delivery_orders.StockIn' => $value['Quantity'],
+                                'delivery_orders.UnitCost' => $value['UnitPrice'] ?? 0,
+                                'delivery_orders.BeforeTaxCost' => $value['TotalPrice'] ?? 0
+                            ]);
+
+                        DB::table('delivery_order_details')
+                            ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
+                            ->where('delivery_order_details.regitems_id',$value['ItemId'])
+                            ->where('delivery_order_details.TransactionsType',"Undo-Void")
+                            ->update([
+                                'delivery_orders.StockOut' => $value['Quantity'],
+                                'delivery_orders.UnitPrice' => $value['UnitPrice'] ?? 0,
+                                'delivery_orders.BeforeTaxPrice' => $value['TotalPrice'] ?? 0
+                            ]);
+
+                        $submitted_items[] = $value['ItemId'];
+                    }
+
+                    DB::table('transactions')
+                        ->where('HeaderId',$delivery_order->id)
+                        ->where('TransactionType', "Delivery-Order")
+                        ->whereNotIn('ItemId', $submitted_items)
+                        ->delete();
+                }
 
                 $actions = $findid == null ? "Created" : "Edited";
 
@@ -352,6 +424,11 @@ class DeliveryOrderController extends Controller
         $findid = $request->voidid;
         $do_data = delivery_order::find($findid);
         $fyear = $do_data->fiscal_year;
+        $status_old = $do_data->status_old;
+        $status_current = $do_data->status;
+        $docnum = $do_data->document_number;
+        $product_type = $do_data->product_type;
+        $store_id = $do_data->station;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
 
@@ -364,6 +441,10 @@ class DeliveryOrderController extends Controller
             try{
                 $do_data->status_old = $do_data->status;
                 $do_data->status = "Void";
+
+                if($status_current == "Approved"){
+                    DB::select('INSERT INTO transactions(HeaderId,ItemId,StockIn,UnitCost,BeforeTaxCost,StoreId,TransactionType,TransactionsType,ItemType,DocumentNumber,FiscalYear,IsVoid,Date)SELECT delivery_order_id,regitems_id,quantity,unit_price,total_price,"'.$store_id.'","Delivery-Order","Void","'.$product_type.'","'.$docnum.'","'.$fyear.'","0","'.Carbon::now()->toDateString().'" FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
+                }
                 $do_data->save();
 
                 DB::table('actions')->insert([
@@ -397,6 +478,11 @@ class DeliveryOrderController extends Controller
         $findid = $request->recId;
         $do_data = delivery_order::find($findid);
         $fyear = $do_data->fiscal_year;
+        $status_old = $do_data->status_old;
+        $status_current = $do_data->status;
+        $docnum = $do_data->document_number;
+        $product_type = $do_data->product_type;
+        $store_id = $do_data->station;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
 
@@ -404,6 +490,20 @@ class DeliveryOrderController extends Controller
         try{
             $do_data->status = $do_data->status_old;
             $do_data->save();
+
+            if($status_old == "Approved"){
+                $validation = $this->validateDOItems($store_id,$fyear,$findid);
+
+                if(($validation['status'] ?? "") == 456){
+                    return Response::json([
+                        'balance_error' => 404,
+                        'items' => $validation['negative_items']
+                    ]);
+                }
+                else{
+                    DB::select('INSERT INTO transactions(HeaderId,ItemId,StockOut,UnitPrice,BeforeTaxPrice,StoreId,TransactionType,TransactionsType,ItemType,DocumentNumber,FiscalYear,IsVoid,Date)SELECT delivery_order_id,regitems_id,quantity,unit_price,total_price,"'.$store_id.'","Delivery-Order","Undo-Void","'.$product_type.'","'.$docnum.'","'.$fyear.'","0","'.Carbon::now()->toDateString().'" FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
+                }
+            }
 
             DB::table('actions')->insert([
                 'user_id' => $userid,
@@ -448,13 +548,36 @@ class DeliveryOrderController extends Controller
             if($newStatus == "Pending"){
 
             }
-            else if($newStatus == "Verified"){
-                $do_data->verified_by = $user;
-                $do_data->verified_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
-            }
-            else if($newStatus == "Approved"){
-                $do_data->approved_by = $user;
-                $do_data->approved_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+            else if($newStatus == "Verified" || $newStatus == "Approved"){
+                $get_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE (regitems.RequireSerialNumber!="Not-Require" OR regitems.RequireExpireDate!="Not-Require") AND delivery_order_details.is_fully_entered=0 AND delivery_order_details.delivery_order_id='.$findid);
+                $total_item = count($get_do_item);
+
+                // if($total_item > 0){
+                //     return Response::json(['item_variances' => $get_do_item]);
+                // }
+
+                if($newStatus == "Verified"){
+                    $do_data->verified_by = $user;
+                    $do_data->verified_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+                }
+                if($newStatus == "Approved"){
+
+                    $validation = $this->validateDOItems($store_id,$fyear,$findid);
+
+                    if(($validation['status'] ?? "") == 456){
+                        return Response::json([
+                            'balance_error' => 404,
+                            'items' => $validation['negative_items']
+                        ]);
+                    }
+                    else{
+
+                        DB::select('INSERT INTO transactions(HeaderId,ItemId,StockOut,UnitPrice,BeforeTaxPrice,StoreId,TransactionType,TransactionsType,ItemType,DocumentNumber,FiscalYear,IsVoid,Date)SELECT delivery_order_id,regitems_id,quantity,unit_price,total_price,"'.$store_id.'","Delivery-Order","Delivery-Order","'.$product_type.'","'.$docnum.'","'.$fyear.'","0","'.Carbon::now()->toDateString().'" FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
+
+                        $do_data->approved_by = $user;
+                        $do_data->approved_date = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+                    }
+                }
             }
 
             $do_data->save();
@@ -563,6 +686,96 @@ class DeliveryOrderController extends Controller
         ->rawColumns(['action'])
         ->make(true);
     }
+
+    public function fetchDODoc(){
+        $do_id = $_POST['do_id'];
+        $document_data = DB::select('SELECT lookuprefs.LookupName AS doc_type,documents.* FROM documents LEFT JOIN lookuprefs ON documents.document_type=lookuprefs.id WHERE documents.record_id='.$do_id.' AND documents.record_type="delivery_order" ORDER BY documents.id ASC');
+    
+        return response()->json(['document_data' => $document_data]);
+    }
+
+    public function uploadDODocument(Request $request){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $findid = $request->uploadRecordDocId;
+        $rec = delivery_order::find($findid);
+        $document_upload_data = [];
+
+        $rules = array(
+            'docrow.*.document_type' => 'required',
+            'docrow.*.doc_upload_hidden' => 'required',
+            'docrow.*.doc_status' => 'required',
+        );
+        $v2 = Validator::make($request->all(), $rules);
+
+        if($v2->passes() && $request->docrow != null){
+            DB::beginTransaction();
+            try{
+                foreach ($request->docrow as $key => $value){
+                    $doc = $value['doc_upload'] ?? "";
+                    if($doc != null) {
+                        $doc_file = $value['doc_upload'];
+                        $actual_name = $doc_file->getClientOriginalName();
+                        $documentations = $this->randNumber().$findid.'_'.'doc.' . $value['doc_upload']->extension();
+                        $docPathIdentification = public_path() . '/storage/uploads/DeliveryOrder/SupportingDocument';
+                        $docpathnameIdentification = '/storage/uploads/DeliveryOrder/SupportingDocument/'.$documentations;
+                        $doc_file->move($docPathIdentification, $documentations);
+                    }
+                    if($doc == null) {
+                        $documentations = $value['documents'];
+                        $actual_name = $value['doc_actual_name'];
+                    }
+                    $document_upload_data[] = [
+                        "record_id" => $findid,
+                        "record_type" => "delivery_order",
+                        "document_type" => $value['document_type'],
+                        "date" => $value['upload_date'],
+                        "doc_name" => $documentations,
+                        "actual_file_name" => $actual_name,
+                        "remark" => $value['doc_remark'],
+                        "status" => $value['doc_status'],
+                        "created_at" => Carbon::now(),
+                        "updated_at" => Carbon::now()
+                    ];
+                }
+
+                DB::table('documents')->where('record_id',$findid)->where('record_type',"delivery_order")->delete();
+                DB::table('documents')->insert($document_upload_data);
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $findid,
+                    'pagename' => "delivery_order",
+                    'action' => "Document-Uploaded",
+                    'status' => "Document-Uploaded",
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+
+                DB::commit();
+                return Response::json(['success' => 1,'rec_id' => $findid]);
+            }
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' =>  $e->getMessage()]);
+            }
+        }
+        else if($v2->fails()){
+            return response()->json(['errorv2' => $v2->errors()->all()]);
+        }
+        else if($request->docrow == null){
+            return response()->json(['emptyerror' => "error"]);
+        }
+    }
+
+    public function showDODocument($id){
+        $document_data = DB::select('SELECT lookuprefs.LookupName AS doc_type,documents.* FROM documents LEFT JOIN lookuprefs ON documents.document_type=lookuprefs.id WHERE documents.record_id='.$id.' AND documents.record_type="delivery_order" ORDER BY documents.id ASC');
+        return datatables()->of($document_data)
+        ->addIndexColumn()
+        ->make(true);
+    }
+    
 
     public function calcDOBalance(Request $request){
         $settings = DB::table('settings')->latest()->first();
@@ -705,6 +918,117 @@ class DeliveryOrderController extends Controller
         $ready_do_cnt = number_format($ready_do_cnt);
 
         return response()->json(['delivery_order_status' => $delivery_order_status,'ready_do_cnt' => $ready_do_cnt]); 
+    }
+
+    function validateDOItems($storeId,$fyear, $transactionId = null){
+        $negativeItems = [];
+        $trn_type = ["Begining","Beginning","Receiving","Issue","Sales","Transfer","Requisition","Adjustment","Delivery-Order"];
+
+        $detail_item = DB::table('transactions')
+                ->where('HeaderId', $transactionId)
+                ->get();
+
+        foreach ($detail_item as $item) {
+            $itemId = $item->ItemId;
+            $soldQty = $item->Quantity ?? 0;
+
+            $availableQty = DB::table('transactions')
+                ->where('ItemId', $itemId)
+                ->where('StoreId', $storeId)
+                ->where('FiscalYear', $fyear)
+                ->selectRaw('COALESCE(SUM(StockIn), 0) - COALESCE(SUM(StockOut), 0) as balance')
+                ->value('balance') ?? 0;
+
+            if ($availableQty < $soldQty) {
+                $itemName = DB::table('regitems')
+                    ->where('id', $itemId)
+                    ->distinct()
+                    ->value('Name');
+
+                $negativeItems[] = [
+                    'id' => $itemId,
+                    'name' => $itemName,
+                    'balance' => $availableQty
+                ];
+            }
+        }
+
+        if (!empty($negativeItems)) {
+            return [
+                'status' => 456,
+                'negative_items' => $negativeItems
+            ];
+        }
+    }
+
+    function validateItemBalances($items, $storeId,$fyear, $transactionId = null){
+        $negativeItems = [];
+        $trn_type = ["Begining","Beginning","Receiving","Issue","Sales","Transfer","Requisition","Adjustment","Delivery-Order"];
+
+        $detail_item = DB::table('delivery_order_details')
+                ->where('delivery_order_id', $transactionId)
+                ->get();
+
+        foreach ($detail_item as $item) {
+            $itemId = $item->regitems_id;
+            $modifiedQuantity = 0;
+            $original_stock = $item->quantity ?? 0;
+
+            foreach ($items ?? [] as $key => $d_item) {
+                if ($d_item['ItemId'] == $item->regitems_id) {
+                    $modifiedQuantity = $d_item['Quantity'];
+                }
+            }
+
+            $transactions = DB::table('transactions')
+                ->where('ItemId', $itemId)
+                ->where('StoreId', $storeId)
+                ->where('FiscalYear', $fyear)
+                ->whereIn('TransactionsType',$trn_type)
+                ->orderBy('id')
+                ->get();
+
+            $runningBalance = 0;
+            $doFound = false;
+
+            foreach ($transactions as $transaction) {
+                $runningBalance += ($transaction->StockIn ?? 0);
+                $runningBalance -= ($transaction->StockOut ?? 0);
+
+                if ($transaction->HeaderId == $transactionId && $transaction->TransactionType == 'Delivery-Order') {
+                    $doFound = true;
+                    $voidqty = 0;
+                    
+                    // Instead of actual stock_in, use the new value for calculation
+                    $runningBalance = $runningBalance - ($transaction->StockOut ?? 0) + $modifiedQuantity;  
+                }
+
+                if ($doFound && $runningBalance < 0) {
+                    $itemName = DB::table('regitems')
+                        ->where('id', $itemId)
+                        ->distinct()
+                        ->value('Name');
+
+                    $negativeItems[] = [
+                        'id' => $itemId,
+                        'headerid' => $transactionId,
+                        'name' => $itemName,
+                        'running_balance' => $runningBalance
+                    ];
+                }
+            }
+        }
+
+        if (!empty($negativeItems)) {
+            return [
+                'status' => 456,
+                'negative_items' => $negativeItems
+            ];
+        }
+    }
+
+    public function randNumber(): int{
+        return random_int(100000, 999999);
     }
 
     /**
