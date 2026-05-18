@@ -120,7 +120,13 @@ class DeliveryOrderController extends Controller
                     ]);
                 }
 
-                $DbData = delivery_order::where('id', $request->recordId)->first();
+                $DbData = delivery_order::where('id', $findid)->first();
+
+                if($findid != null && $DbData->reference_id != 600){
+                    $this->resetDOQtyFn($findid,$DbData->reference_id,$DbData->reference_type);
+                    $this->updateReferenceFn($findid,$DbData->reference_id,$DbData->reference_type);
+                }
+
                 $document_number =  $this->generateDocumentNumberFn($fyear, $request->recordId);
                 preg_match('/-(\d+)\//', $document_number, $matches); 
                 $current_doc_number = intval($matches[1] ?? 0);
@@ -301,6 +307,10 @@ class DeliveryOrderController extends Controller
                         ->delete();
                 }
 
+                if($delivery_order->reference_type != 600){
+                    $this->updateReferenceFn($delivery_order->id,$delivery_order->reference_id,$delivery_order->reference_type);
+                }
+
                 $actions = $findid == null ? "Created" : "Edited";
 
                 DB::table('actions')->insert([
@@ -341,13 +351,13 @@ class DeliveryOrderController extends Controller
         $sales_invoice_data = "";
 
         if($reference_type == 601){
-            $proforma_invoice_data = DB::select('SELECT proformas.id AS proforma_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(proformas.DocumentNumber,""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS proforma_data FROM proformas LEFT JOIN customers ON proformas.CustomerId=customers.id WHERE proformas.Status="Pass" ORDER BY proformas.id DESC');
+            $proforma_invoice_data = DB::select('SELECT proformas.id AS proforma_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(proformas.DocumentNumber,""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS proforma_data FROM proformas LEFT JOIN customers ON proformas.CustomerId=customers.id WHERE proformas.Status="Pass" AND proformas.is_do_completed!=1 ORDER BY proformas.id DESC');
         }
         else if($reference_type == 602){
-            $sales_order_data = DB::select('SELECT sales_orders.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales_orders.docno, ""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales_orders LEFT JOIN customers ON sales_orders.customer_id=customers.id WHERE sales_orders.status=8 ORDER BY sales_orders.id DESC');
+            $sales_order_data = DB::select('SELECT sales_orders.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales_orders.docno, ""),NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales_orders LEFT JOIN customers ON sales_orders.customer_id=customers.id WHERE sales_orders.status=8 AND sales_orders.is_do_completed!=1 ORDER BY sales_orders.id DESC');
         }
         else if($reference_type == 603){
-            $sales_invoice_data = DB::select('SELECT sales.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales.VoucherNumber, ""), NULLIF(sales.invoiceNo, ""), NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales LEFT JOIN customers ON sales.CustomerId=customers.id WHERE sales.Status="Confirmed" ORDER BY sales.id DESC LIMIT 50');
+            $sales_invoice_data = DB::select('SELECT sales.id AS sales_id,customers.id AS customer_id,CONCAT_WS(", ", NULLIF(sales.VoucherNumber, ""), NULLIF(sales.invoiceNo, ""), NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS sales_data FROM sales LEFT JOIN customers ON sales.CustomerId=customers.id WHERE sales.Status="Confirmed" AND sales.is_do_completed!=1 ORDER BY sales.id DESC LIMIT 50');
         }
         return response()->json(['proforma_invoice_data' => $proforma_invoice_data,'sales_order_data' => $sales_order_data,'sales_invoice_data' => $sales_invoice_data]);
     }
@@ -447,6 +457,9 @@ class DeliveryOrderController extends Controller
                 }
                 $do_data->save();
 
+                $this->resetDOQtyFn($findid,$do_data->reference_id,$do_data->reference_type);
+                $this->updateReferenceFn($findid,$do_data->reference_id,$do_data->reference_type);
+
                 DB::table('actions')->insert([
                     'user_id' => $userid,
                     'pageid' => $findid,
@@ -483,42 +496,73 @@ class DeliveryOrderController extends Controller
         $docnum = $do_data->document_number;
         $product_type = $do_data->product_type;
         $store_id = $do_data->station;
+        $ref_type = $do_data->reference_type;
+        $ref_id = $do_data->reference_id;
+        $is_rec_created_after = 0;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
 
         DB::beginTransaction();
         try{
-            $do_data->status = $do_data->status_old;
-            $do_data->save();
 
-            if($status_old == "Approved"){
-                $validation = $this->validateDOItems($store_id,$fyear,$findid);
-
-                if(($validation['status'] ?? "") == 456){
-                    return Response::json([
-                        'balance_error' => 404,
-                        'items' => $validation['negative_items']
-                    ]);
-                }
-                else{
-                    DB::select('INSERT INTO transactions(HeaderId,ItemId,StockOut,UnitPrice,BeforeTaxPrice,StoreId,TransactionType,TransactionsType,ItemType,DocumentNumber,FiscalYear,IsVoid,Date)SELECT delivery_order_id,regitems_id,quantity,unit_price,total_price,"'.$store_id.'","Delivery-Order","Undo-Void","'.$product_type.'","'.$docnum.'","'.$fyear.'","0","'.Carbon::now()->toDateString().'" FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
-                }
+            if($ref_type == 601){
+                $proforma_data = Proforma::find($ref_id);
+                $is_rec_created_after = $proforma_data->is_do_completed;
+            }
+            else if($ref_type == 602){
+                $so_data = SalesOrder::find($ref_id);
+                $is_rec_created_after = $so_data->is_do_completed;
+            }
+            else if($ref_type == 603){
+                $si_data = Sales::find($ref_id);
+                $is_rec_created_after = $si_data->is_do_completed;
             }
 
-            DB::table('actions')->insert([
-                'user_id' => $userid,
-                'pageid' => $findid,
-                'pagename' => "delivery_order",
-                'action' => "Undo Void",
-                'status' => "Undo Void",
-                'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
-                'reason' => "",
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
+            if($is_rec_created_after == 1){
+                return Response::json(['create_error' => 465]);
+            }
+            else{
+                $do_data->status = $do_data->status_old;
+                $do_data->save();
 
-            DB::commit();
-            return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+                if($status_old == "Approved"){
+                    $validation = $this->validateDOItems($store_id,$fyear,$findid);
+
+                    if(($validation['status'] ?? "") == 456){
+                        return Response::json([
+                            'balance_error' => 404,
+                            'items' => $validation['negative_items']
+                        ]);
+                    }
+                    else{
+                        DB::select('INSERT INTO transactions(HeaderId,ItemId,StockOut,UnitPrice,BeforeTaxPrice,StoreId,TransactionType,TransactionsType,ItemType,DocumentNumber,FiscalYear,IsVoid,Date)SELECT delivery_order_id,regitems_id,quantity,unit_price,total_price,"'.$store_id.'","Delivery-Order","Undo-Void","'.$product_type.'","'.$docnum.'","'.$fyear.'","0","'.Carbon::now()->toDateString().'" FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
+                    }
+                }
+
+                if($ref_type != 600){
+                    $do_detial_data = DB::select('SELECT * FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$findid);
+                    foreach($do_detial_data as $det_data){
+                        $this->updateIssuedQtyFn($findid,$ref_id,$ref_type,$det_data->reference_detail_id);
+                    }
+                    $this->updateReferenceFn($findid,$ref_id,$ref_type);
+                }
+                
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $findid,
+                    'pagename' => "delivery_order",
+                    'action' => "Undo Void",
+                    'status' => "Undo Void",
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+
+                DB::commit();
+                return Response::json(['success' => 1,'fiscal_year' => $fyear,'rec_id' => $findid]);
+            }
         }
         catch(Exception $e){
             DB::rollBack();
@@ -774,8 +818,7 @@ class DeliveryOrderController extends Controller
         return datatables()->of($document_data)
         ->addIndexColumn()
         ->make(true);
-    }
-    
+    } 
 
     public function calcDOBalance(Request $request){
         $settings = DB::table('settings')->latest()->first();
@@ -854,7 +897,6 @@ class DeliveryOrderController extends Controller
     }
 
     function updateIssuedQtyFn($rec_id,$ref_id,$ref_type,$ref_det_id){
-
         if($ref_type == 601){
             $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.reference_type='.$ref_type.' AND delivery_order_details.reference_detail_id='.$ref_det_id.' AND delivery_orders.status NOT IN("Void")');
             $do_qty = $do_data[0]->do_qty ?? 0;
@@ -872,6 +914,94 @@ class DeliveryOrderController extends Controller
             $do_qty = $do_data[0]->do_qty ?? 0;
 
             DB::table('salesitems')->where('salesitems.id',$ref_det_id)->update(['salesitems.issued_qty' => $do_qty]);
+        }
+    }
+
+    function resetDOQtyFn($rec_id,$ref_id,$ref_type){
+        if($ref_type == 601){
+            $proforma_data = DB::select('SELECT * FROM proforma_regitem WHERE proforma_regitem.proforma_id='.$ref_id.' ORDER BY proforma_regitem.id ASC');
+            foreach($proforma_data as $pr_data){
+                DB::table('proforma_regitem')
+                ->where('proforma_regitem.id',$pr_data->id)
+                ->update([
+                    'proforma_regitem.issued_qty' => 
+                    DB::raw('proforma_regitem.issued_qty - (SELECT delivery_order_details.quantity FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$rec_id.' AND delivery_order_details.reference_detail_id='.$pr_data->id.')')
+                ]);
+            }
+        }
+        else if($ref_type == 602){
+            $sales_order_data = DB::select('SELECT * FROM sales_order_items WHERE sales_order_items.sales_order_id='.$ref_id.' ORDER BY sales_order_items.id ASC');
+            foreach($sales_order_data as $so_data){
+                DB::table('sales_order_items')
+                ->where('sales_order_items.id',$so_data->id)
+                ->update([
+                    'sales_order_items.issued_qty' => 
+                    DB::raw('sales_order_items.issued_qty - (SELECT delivery_order_details.quantity FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$rec_id.' AND delivery_order_details.reference_detail_id='.$so_data->id.')')
+                ]);
+            }
+        }
+        else if($ref_type == 603){
+            $sales_invoice_data = DB::select('SELECT * FROM salesitems WHERE salesitems.HeaderId='.$ref_id.' ORDER BY salesitems.id ASC');
+            foreach($sales_invoice_data as $si_data){
+                DB::table('salesitems')
+                ->where('salesitems.id',$si_data->id)
+                ->update([
+                    'salesitems.issued_qty' => 
+                    DB::raw('salesitems.issued_qty - (SELECT delivery_order_details.quantity FROM delivery_order_details WHERE delivery_order_details.delivery_order_id='.$rec_id.' AND delivery_order_details.reference_detail_id='.$si_data->id.')')
+                ]);
+            }
+        }
+    }
+
+    function updateReferenceFn($rec_id,$ref_id,$ref_type){
+        $flag = 0;
+        if($ref_type == 601){
+            $proforma_data = DB::select('SELECT SUM(COALESCE(proforma_regitem.Quantity,0)) AS proforma_qty,SUM(COALESCE(proforma_regitem.issued_qty,0)) AS issued_qty FROM proforma_regitem WHERE proforma_regitem.proforma_id='.$ref_id);
+            $proforma_qty = $proforma_data[0]->proforma_qty ?? 0;
+            $issued_qty = $proforma_data[0]->issued_qty ?? 0;
+            
+            if($proforma_qty == $issued_qty){
+                $flag = 1;
+            }
+            else{
+                $flag = 0;
+            }
+
+            DB::table('proformas')
+            ->where('proformas.id',$ref_id)
+            ->update(['proformas.is_do_completed' => $flag]);
+        }
+        else if($ref_type == 602){
+            $sales_order_data = DB::select('SELECT SUM(COALESCE(sales_order_items.quantity,0)) AS so_qty,SUM(COALESCE(sales_order_items.issued_qty,0)) AS issued_qty FROM sales_order_items WHERE sales_order_items.sales_order_id='.$ref_id);
+            $so_qty = $sales_order_data[0]->so_qty ?? 0;
+            $issued_qty = $sales_order_data[0]->issued_qty ?? 0;
+
+            if($so_qty == $issued_qty){
+                $flag = 1;
+            }
+            else{
+                $flag = 0;
+            }
+
+            DB::table('sales_orders')
+            ->where('sales_orders.id',$ref_id)
+            ->update(['sales_orders.is_do_completed' => $flag]);
+        }
+        else if($ref_type == 603){
+            $sales_invoice_data = DB::select('SELECT SUM(COALESCE(salesitems.Quantity,0)) AS si_qty,SUM(COALESCE(salesitems.issued_qty,0)) AS issued_qty FROM salesitems WHERE salesitems.HeaderId='.$ref_id);
+            $si_qty = $sales_invoice_data[0]->si_qty ?? 0;
+            $issued_qty = $sales_invoice_data[0]->issued_qty ?? 0;
+
+            if($si_qty == $issued_qty){
+                $flag = 1;
+            }
+            else{
+                $flag = 0;
+            }
+
+            DB::table('sales')
+            ->where('sales.id',$ref_id)
+            ->update(['sales.is_do_completed' => $flag]);
         }
     }
 

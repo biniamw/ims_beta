@@ -559,7 +559,6 @@
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 direct-reference" style="display: none;">
                                             <label class="form_lbl">Payment Type<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="PaymentType" id="PaymentType" onchange="paymentTypeFn()">
-                                                <option selected disabled value=""></option>
                                                 <option value="Cash">Cash</option>
                                                 <option value="Credit">Credit</option>
                                             </select>
@@ -1390,6 +1389,7 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',"Check your inputs","Error");
+                unblockPage(cardSection);
             }
             
             else if(data.errorv2) {
@@ -1428,6 +1428,7 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',`Please insert valid data on highlighted fields!</br>${error_html}`,"Error");
+                unblockPage(cardSection);
             }
             
             else if(data.empty_table){
@@ -1440,6 +1441,7 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',"You should add atleast one item","Error");
+                unblockPage(cardSection);
             }
 
             else if (data.balance_error) {
@@ -1456,6 +1458,7 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',`These items cannot be updated, the requested change is not supported by the available quantity and would result negative balance.</br>-------------------</br>${item_list}`,"Error");
+                unblockPage(cardSection);
             } 
 
             else if(data.dberrors) {
@@ -1468,6 +1471,7 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
             }
 
             else if(data.success) {
@@ -1672,8 +1676,8 @@
             $('.default_hidden_div').hide();
             $("#dynamicTable > tbody").empty();
             fillProductTypeDataFn(reference_type);
-            $('#PaymentType').val(null).select2({placeholder: "Select payment type here"});
-            $('#PaymentTerm').val(null).select2({placeholder: "Select payment term here"});
+            $('#PaymentType').val(null).select2({placeholder: "Select payment type here",minimumResultsForSearch: -1});
+            $('#PaymentTerm').val(null).select2({placeholder: "Select payment term here",minimumResultsForSearch: -1});
             $('#SalesPerson').empty().select2({placeholder: "Select sales person here"});
             if(reference_type == 600){
                 $('.non_direct_reference').hide();
@@ -3542,11 +3546,13 @@
                 $('#voiddobtn').text('Void');
                 $('#voiddobtn').prop("disabled", false);
                 toastrMessage('error',"Check your inputs","Error");
+                unblockPage(cardSection);
             }
             else if(data.dberrors) {
                 $('#voiddobtn').text('Void');
                 $('#voiddobtn').prop("disabled", false);
                 toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
             }
             else if(data.success) {
                 toastrMessage('success',"Successful","Success");
@@ -3625,6 +3631,11 @@
         function undoVoidDeliveryOrderFn(data){
             if(data.dberrors) {
                 toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
+            }
+            else if(data.create_error){
+                toastrMessage('error',"Cannot restore. Another record already exists with reference number.","Error");
+                unblockPage(cardSection);
             }
             else if(data.success){
                 toastrMessage('success',"Successful","Success");
@@ -3873,9 +3884,11 @@
             });
             $('#PaymentType').val(null).select2({
                 placeholder: "Select payment type here",
+                minimumResultsForSearch: -1
             });
             $('#PaymentTerm').val(null).select2({
                 placeholder: "Select payment term here",
+                minimumResultsForSearch: -1
             });
             $('#customer').val(null).select2({
                 placeholder: "Select reference type first",
