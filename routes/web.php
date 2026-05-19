@@ -1145,6 +1145,9 @@ Route::post('/uploadDODocument','DeliveryOrderController@uploadDODocument');
 Route::post('/showDODocument/{recid}','DeliveryOrderController@showDODocument');
 
 Route::post('/countDOStatus','DeliveryOrderController@countDOStatus');
+
+Route::post('getBatchAndSerialIssued','DeliveryOrderController@getBatchAndSerialIssued');
+Route::post('/getBatchQuantity','DeliveryOrderController@getBatchQuantity');
 //---------------End DO--------------------
 
 //---------------Start finance closing------------------

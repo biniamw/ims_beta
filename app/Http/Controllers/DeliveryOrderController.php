@@ -17,6 +17,12 @@ use App\Models\Salesitem;
 use App\Models\SalesOrderItems;
 use App\Models\actions;
 use App\Models\transaction;
+use App\Models\documents;
+use App\Models\batches;
+use App\Models\batch_inventory;
+use App\Models\serial_number;
+use App\Models\batch_serial_transaction;
+use App\Models\batch_inventories_issue;
 use Illuminate\Support\Facades\Validator;
 use Yajra\Datatables\Datatables;
 use Exception;
@@ -42,11 +48,13 @@ class DeliveryOrderController extends Controller
         $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fyear.' ORDER BY fiscalyear.FiscalYear DESC');
         $doc_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=102 AND lookuprefs.Status=1 ORDER BY lookuprefs.id ASC'); 
+        $item_instance = DB::select('SELECT CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,""),NULLIF(batches.batch_number,""),NULLIF(batches.expiry_date,"")) AS item_instance,batches.*,(COALESCE(receivings.StoreId)) AS store_id FROM batches LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN country ON brands.countries_id=country.id LEFT JOIN receivings ON batches.source_type="receiving" AND batches.source_id=receivings.id WHERE receivings.Status="Confirmed" ORDER BY batches.expiry_date ASC');
 
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
-            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data
+            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data,
+            'item_instance' => $item_instance
         ];
 
         if($request->ajax()) {
@@ -723,8 +731,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function showDODetailData($id){
-
-        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
+        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
         return datatables()->of($detailTable)
         ->addIndexColumn()
         ->rawColumns(['action'])
@@ -831,7 +838,7 @@ class DeliveryOrderController extends Controller
         $other_req_data = DB::select('SELECT SUM(COALESCE(requisitiondetails.Quantity,0)) AS others_req_qty FROM requisitiondetails LEFT JOIN requisitions ON requisitiondetails.HeaderId=requisitions.id WHERE requisitions.SourceStoreId='.$store_id.' AND requisitiondetails.ItemId='.$item_id.' AND requisitions.Status IN("Draft","Pending","Verified","Approved")');
         $sales_data = DB::select('SELECT SUM(COALESCE(salesitems.Quantity,0)) AS sales_qty FROM salesitems LEFT JOIN sales ON salesitems.HeaderId=sales.id WHERE sales.StoreId='.$store_id.' AND salesitems.ItemId='.$item_id.' AND sales.Status IN("pending..","Checked")');
         $transfer_data = DB::select('SELECT SUM(COALESCE(transferdetails.Quantity,0)) AS transfer_qty FROM transferdetails LEFT JOIN transfers ON transferdetails.HeaderId=transfers.id WHERE transfers.SourceStoreId='.$store_id.' AND transferdetails.ItemId='.$item_id.' AND transfers.Status IN("Draft","Pending","Verified","Reviewed","Approved")');
-        $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.id!='.$record_id.' AND delivery_order_details.regitems_id='.$item_id.' AND delivery_orders.status IN("Draft","Pending","Verified")');
+        $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.id!='.$record_id.' AND delivery_orders.station='.$store_id.' AND delivery_order_details.regitems_id='.$item_id.' AND delivery_orders.status IN("Draft","Pending","Verified")');
         
         $main_balance = $item_balance_data[0]->available_quantity ?? 0;
         $others_req_qty = $other_req_data[0]->others_req_qty ?? 0;
@@ -839,6 +846,7 @@ class DeliveryOrderController extends Controller
         $transfer_qty = $transfer_data[0]->transfer_qty ?? 0;
         $do_qty = $do_data[0]->do_qty ?? 0;
 
+        //dd($main_balance ." =  ". $others_req_qty ." =  ". $sales_qty ." =  ". $transfer_qty ." =  ". $do_qty);
         $available_qty = $main_balance - $others_req_qty - $sales_qty - $transfer_qty - $do_qty;
 
         $available_qty = $available_qty < 0 ? 0 : $available_qty;
@@ -851,6 +859,7 @@ class DeliveryOrderController extends Controller
         $fyear = $settings->FiscalYear;
         $store_id = $_POST['store_id'] ?? 0;
         $item_id = $_POST['item_id'] ?? 0;
+        $record_id = $_POST['record_id'] ?? 0;
 
         $result = DB::table('transactions')
             ->select([
@@ -884,6 +893,7 @@ class DeliveryOrderController extends Controller
                     WHERE d.station = transactions.StoreId 
                     AND dt.regitems_id = transactions.ItemId 
                     AND d.fiscal_year = transactions.FiscalYear 
+                    AND d.id != ".$record_id." 
                     AND d.status IN ('Draft','Pending','Verified'))
                 ) as available_quantity")
             ])
@@ -1038,19 +1048,7 @@ class DeliveryOrderController extends Controller
         }
     }
 
-    function countDOStatus(){
-        $fyear = $_POST['fyear'] ?? 0; 
-        $delivery_order_status = DB::select('SELECT delivery_orders.status,FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear.' GROUP BY delivery_orders.status UNION SELECT "Total",FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear);
-
-        $ready_for_do = DB::select('SELECT (SELECT COUNT(proformas.id) FROM proformas WHERE proformas.Status="Pass") + (SELECT COUNT(sales_orders.id) FROM sales_orders WHERE sales_orders.status=8) + (SELECT COUNT(sales.id) FROM sales WHERE sales.Status="Confirmed") AS ready_do');
-     
-        $ready_do_cnt = $ready_for_do[0]->ready_do ?? 0;
-        $ready_do_cnt = number_format($ready_do_cnt);
-
-        return response()->json(['delivery_order_status' => $delivery_order_status,'ready_do_cnt' => $ready_do_cnt]); 
-    }
-
-    function validateDOItems($storeId,$fyear, $transactionId = null){
+    function validateDOItems($storeId,$fyear,$transactionId = null){
         $negativeItems = [];
         $trn_type = ["Begining","Beginning","Receiving","Issue","Sales","Transfer","Requisition","Adjustment","Delivery-Order"];
 
@@ -1091,7 +1089,7 @@ class DeliveryOrderController extends Controller
         }
     }
 
-    function validateItemBalances($items, $storeId,$fyear, $transactionId = null){
+    function validateItemBalances($items,$storeId,$fyear,$transactionId = null){
         $negativeItems = [];
         $trn_type = ["Begining","Beginning","Receiving","Issue","Sales","Transfer","Requisition","Adjustment","Delivery-Order"];
 
@@ -1155,6 +1153,56 @@ class DeliveryOrderController extends Controller
                 'negative_items' => $negativeItems
             ];
         }
+    }
+
+    public function getBatchAndSerialIssued(Request $request){
+        $source_id = $_POST['source_id']; 
+        $itemId = $_POST['itemId']; 
+        $src_type = $_POST['source_type'];
+        $batch_ids = [0];
+
+        if($src_type == 11){
+            $source_type = "delivery_order";
+        }
+
+        $batch_data = DB::select('SELECT batches.*,batch_inventories_issues.sold_issued_qty,regitems.Name AS item_name,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batch_inventories_issues.source_type="'.$source_type.'"'); 
+        foreach($batch_data as $batch_row){
+            $batch_ids[] = $batch_row->id;
+        }
+        $batch_ids = implode(',', $batch_ids);
+
+        $serial_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.batches_id IN('.$batch_ids.') AND serial_numbers.is_sold_issued=1');
+
+        return response()->json(['batch_data' => $batch_data,'serial_data' => $serial_data]);
+    }
+
+    public function getBatchQuantity(Request $request){
+        $batch_id = $_POST['instance_id'];
+
+        $batch_in_data = DB::select('SELECT SUM(COALESCE(batch_inventories.received_qty,0)) AS received_qty FROM batch_inventories WHERE batch_inventories.batches_id='.$batch_id);
+        $batch_out_data = DB::select('SELECT SUM(COALESCE(batch_inventories_issues.sold_issued_qty,0)) AS sold_issued_qty FROM batch_inventories_issues WHERE batch_inventories_issues.batches_id='.$batch_id);
+
+        $received_qty = $batch_in_data[0]->received_qty ?? 0;
+        $sold_qty = $batch_out_data[0]->sold_issued_qty ?? 0;
+
+        $available_qty = $received_qty - $sold_qty;
+
+        $available_qty >= 0 ? $available_qty : 0;
+
+        return response()->json(['available_qty' => $available_qty]);
+    }
+
+
+    function countDOStatus(){
+        $fyear = $_POST['fyear'] ?? 0; 
+        $delivery_order_status = DB::select('SELECT delivery_orders.status,FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear.' GROUP BY delivery_orders.status UNION SELECT "Total",FORMAT(COUNT(*),0) AS status_count FROM delivery_orders WHERE delivery_orders.fiscal_year='.$fyear);
+
+        $ready_for_do = DB::select('SELECT (SELECT COUNT(proformas.id) FROM proformas WHERE proformas.Status="Pass") + (SELECT COUNT(sales_orders.id) FROM sales_orders WHERE sales_orders.status=8) + (SELECT COUNT(sales.id) FROM sales WHERE sales.Status="Confirmed") AS ready_do');
+     
+        $ready_do_cnt = $ready_for_do[0]->ready_do ?? 0;
+        $ready_do_cnt = number_format($ready_do_cnt);
+
+        return response()->json(['delivery_order_status' => $delivery_order_status,'ready_do_cnt' => $ready_do_cnt]); 
     }
 
     public function randNumber(): int{

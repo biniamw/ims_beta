@@ -867,6 +867,8 @@
 
     @include('layout.universal-component')
 
+    @include('parts.batch_serial_out')
+
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var fyears = $('#fiscalyearval').val();
@@ -1087,6 +1089,9 @@
                         }
                     });
                 },
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
                 drawCallback: function () { 
                     this.api().columns().every(function() {
                         var column = this;
@@ -1097,10 +1102,8 @@
                         });
                     });
                     $('#laravel-datatable-crud').DataTable().columns.adjust();
-                },
-                "initComplete": function(settings, json) {
                     unblockPage(cardSection);
-                },
+                },     
                 fixedHeader: {
                     header: true,
                     headerOffset: $('.header-navbar').outerHeight(),
@@ -1160,6 +1163,7 @@
                     var searchRegex = search.join('|'); // OR-separated values for regex
                     table.column(12).search(searchRegex, true, false).draw();
                 }
+                
             });
 
             var product_type_filter = $(`
@@ -2198,6 +2202,7 @@
         function getStoreBalanceFn(str_id){
             var store_id = null;
             var item_id = null;
+            var record_id = null;
             var selected_items = [];
             $('#dynamicTable > tbody > tr').each(function(index, tr) {
                 selected_items.push($(this).find('.itemName').val());
@@ -2210,6 +2215,7 @@
                     data:{
                         store_id : str_id,
                         item_id : selected_items,
+                        record_id : $('#recordId').val() || 0,
                     },      
                     beforeSend: function() {
                         blockPage(cardSection, 'Calculating available balance...');
@@ -2394,7 +2400,7 @@
                     <td style="width:10%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.unit_price}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
                     <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.total_price}" style="font-weight:bold;"/></td>
-                    <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here" value="${value.remark != null || value.remark != "" ? value.remark : ""}"/></td>
+                    <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here" value="${(value.remark == null || value.remark == "") ? "" : value.remark}"/></td>
                     <td style="width:5%;text-align:center;">
                         <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
                         <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -2831,7 +2837,7 @@
                                             <a 
                                                 class="addsernum" 
                                                 href="javascript:void(0)" 
-                                                onclick="mngBatchSerialExpireFn(${row.id},${row.delivery_order_id},${row.regitems_id},${row.quantity})" 
+                                                onclick="mngBatchSerialExpireFn(${row.id},${row.delivery_order_id},${row.regitems_id},${row.station},${row.quantity},${row.trn_type})" 
                                                 data-id="addsernum${row.id}" 
                                                 id="addsernum${row.id}" 
                                                 title="Add batch number, serial number, expiry date for ${row.ItemName} item!">
