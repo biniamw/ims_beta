@@ -28,6 +28,7 @@ use Yajra\Datatables\Datatables;
 use Exception;
 use Response;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class DeliveryOrderController extends Controller
 {
@@ -49,12 +50,13 @@ class DeliveryOrderController extends Controller
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fyear.' ORDER BY fiscalyear.FiscalYear DESC');
         $doc_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=102 AND lookuprefs.Status=1 ORDER BY lookuprefs.id ASC'); 
         $item_instance = DB::select('SELECT CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,""),NULLIF(batches.batch_number,""),NULLIF(batches.expiry_date,"")) AS item_instance,batches.*,(COALESCE(receivings.StoreId)) AS store_id FROM batches LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN country ON brands.countries_id=country.id LEFT JOIN receivings ON batches.source_type="receiving" AND batches.source_id=receivings.id WHERE receivings.Status="Confirmed" ORDER BY batches.expiry_date ASC');
+        $serial_number_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.is_sold_issued=0 ORDER BY serial_numbers.id ASC');
 
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
             'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data,
-            'item_instance' => $item_instance
+            'item_instance' => $item_instance,'serial_number_data' => $serial_number_data
         ];
 
         if($request->ajax()) {
@@ -1165,7 +1167,7 @@ class DeliveryOrderController extends Controller
             $source_type = "delivery_order";
         }
 
-        $batch_data = DB::select('SELECT batches.*,batch_inventories_issues.sold_issued_qty,regitems.Name AS item_name,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batch_inventories_issues.source_type="'.$source_type.'"'); 
+        $batch_data = DB::select('SELECT batches.*,batches.id AS batch_id,batch_inventories_issues.id AS batch_issue_id,batch_inventories_issues.sold_issued_qty,regitems.Name AS item_name,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,""),NULLIF(batches.batch_number,""),NULLIF(batches.expiry_date,"")) AS item_instance FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.source_id='.$source_id.' AND batches.item_id='.$itemId.' AND batch_inventories_issues.source_type="'.$source_type.'"'); 
         foreach($batch_data as $batch_row){
             $batch_ids[] = $batch_row->id;
         }
@@ -1192,6 +1194,291 @@ class DeliveryOrderController extends Controller
         return response()->json(['available_qty' => $available_qty]);
     }
 
+    public function issueBatchAndSerial(Request $request){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $is_serial_req = $request->IsSerialNumberRequired;
+        $issued_qty = $request->bs_item_qty;
+        $transaction_type = $request->bsTransactionType;
+        $header_id = $request->bsHeaderId;
+        $item_id = $request->bs_item_id;
+        $optype = $request->bs_operation_type;
+        $variance_ids = [];
+        $batch_row_no = 0;
+        $inserted_qty = 0;
+        $source_data = null;
+        $status = null;
+        $source_type = null;
+        $batch_number_list = [];
+        $duplicate_batch_number_row = [];
+        $serial_number_list = [];
+        $duplicate_serial_number_row = [];
+        $item_data = Regitem::find($item_id);
+        $store_id = null;
+        $reference_number = null;
+
+        $batchRules = array(
+            'batch_row.*.Instance' => 'required',
+            'batch_row.*.bactchQuantity' => 'required',
+        );
+        $batchValidation = Validator::make($request->all(), $batchRules);
+
+        $serialRules = array(
+            'serial_row.*.serialNumber' => 'required_if:IsSerialNumberRequired,Yes',
+        );
+        $serialValidation = Validator::make($request->all(), $serialRules);
+
+        if($transaction_type == 11){
+            $source_data = delivery_order::find($header_id);
+            $status = $source_data->status;
+            $store_id = $source_data->station;
+            $reference_number = $source_data->document_number;
+            $source_type = "delivery_order";
+        }
+
+        if($request->batch_row != null){
+            foreach ($request->batch_row as $batch_key => $batch_value){
+                $batch_qty = $batch_value['bactchQuantity'] ?? 0;
+                $batch_row_id = $batch_value['batch_index_col'] ?? 0;
+                $batch_number = trim($batch_value['Instance'] ?? "");
+                ++$batch_row_no;
+
+                $inserted_qty += (float)$batch_qty;
+                $serial_qty = 0;
+                
+                if($request->serial_row != null){
+                    foreach ($request->serial_row as $serial_key => $serial_value){
+                        $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+                        $serial_row_id = $serial_value['serial_index_col'] ?? 0;
+                        $serial_no = trim($serial_value['serialNumber'] ?? "");
+                        if($batch_row_id == $parent_row_id && $serial_no != null){
+                            ++$serial_qty;
+                        }  
+                    }
+                }
+
+                if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required" && ($status == "Verified" || $status == "Approved")){
+                    $variance_ids[] = $batch_row_no;
+                }
+            }
+        }
+
+        if(
+            $batchValidation->passes() &&
+            $serialValidation->passes() &&
+            $request->batch_row != null && 
+            empty($variance_ids) &&
+            ($issued_qty == $inserted_qty || $status == "Draft" || $status == "Pending")
+        ){
+            DB::beginTransaction();
+            try{
+                $submitted_ids = [];
+                $submitted_ser_ids = [];
+                $serial_number_count = 0;
+                $db_issued_qty = 0;
+                $is_fully_inserted = 0;
+
+
+                $batchRowCollection = collect($request->batch_row);
+                
+                $batchRowCollection->chunk(100)->each(function($chunkedBatchRows) use ($request, $item_id, $header_id, $source_type,$store_id,$reference_number,$status, &$submitted_ids, &$serial_number_count, &$submitted_ser_ids) {
+                    foreach ($chunkedBatchRows as $batch_key => $batch_value) {
+
+                        DB::table('serial_numbers')
+                            ->where('sold_issue_id',$header_id)
+                            ->where('source_type',$source_type)
+                            ->where('batches_id',$batch_value['Instance'])
+                            ->update([
+                                'is_sold_issued' => 0,
+                                'sold_issue_id' => 0,
+                                'source_type' => ""
+                            ]);
+
+                        $batch_row_id = $batch_value['batch_index_col'] ?? 0;
+
+                        $uuid = $batch_value['batch_uuid'] != null ? $batch_value['batch_uuid'] : Str::uuid()->toString();
+                        $batch_inv_id = $batch_value['batch_db_id'] != null ? $batch_value['batch_db_id'] : NULL;
+                        
+                        $common_data = [
+                            'batches_id' => $batch_value['Instance'],
+                            'sold_issued_qty' => $batch_value['bactchQuantity'],
+                        ];
+
+                        $db_data = batch_inventories_issue::where('id',$batch_inv_id)->first();
+
+                        $permanent_data = [
+                            'source_id' => $header_id,
+                            'source_type' => $source_type,
+                            'status' => "Sold/Issued",
+                            'created_at' => Carbon::now()
+                        ];
+
+                        $edited_data = ['updated_at' => Carbon::now()];
+
+                        $batch_parent = batch_inventories_issue::updateOrCreate([
+                            'id' => $batch_inv_id
+                        ],
+                            array_merge($common_data, $db_data ? $edited_data : $permanent_data)
+                        );
+
+                        
+                        if($status == "Approved"){
+                            batch_serial_transaction::updateOrCreate([
+                                'batches_id' => $batch_parent->batches_id,
+                                'is_batch_or_serial' => "batch",
+                                'transaction_type' => $source_type
+                            ],[
+                                'batches_id' => $batch_parent->batches_id,
+                                'stores_id' => $store_id,
+                                'reference_id' => $header_id,
+                                'reference_number' => $reference_number,
+                                'transaction_type' => $source_type,
+                                'transaction_date' => Carbon::today()->toDateString(),
+                                'is_batch_or_serial' => "batch",
+                                'out_quantity' => $batch_value['bactchQuantity']
+                            ]);
+                        }
+
+                        if($request->serial_row != null){        
+                            foreach ($request->serial_row as $serial_key => $serial_value){
+                                $parent_row_id = $serial_value['parent_row_id'] ?? 0;
+
+                                if($batch_row_id == $parent_row_id){
+
+                                    DB::table('serial_numbers')
+                                    ->where('batches_id',$batch_value['Instance'])
+                                    ->where('id',$serial_value['serialNumber'])
+                                    ->update([
+                                        'is_sold_issued' => 1,
+                                        'sold_issue_id' => $header_id,
+                                        'source_type' => $source_type
+                                    ]);
+
+                                    if($status == "Approved"){
+                                        batch_serial_transaction::updateOrCreate([
+                                            'batches_id' => $batch_parent->batches_id,
+                                            'is_batch_or_serial' => "serial",
+                                            'transaction_type' => $source_type
+                                        ],[
+                                            'batches_id' => $batch_parent->batches_id,
+                                            'serial_number_id' => $serial_value['serialNumber'],
+                                            'stores_id' => $store_id,
+                                            'reference_id' => $header_id,
+                                            'reference_number' => $reference_number,
+                                            'transaction_type' => $source_type,
+                                            'transaction_date' => Carbon::today()->toDateString(),
+                                            'is_batch_or_serial' => "serial",
+                                            'out_quantity' => 1
+                                        ]);
+                                    }
+
+                                    $submitted_ser_ids[] = $serial_value['serialNumber'];
+                                    $serial_number_count++;
+                                }
+                            }
+                        }
+                        $submitted_ids[] = $batch_parent->id;
+                    }
+                });
+
+                $serial_number_ids = [];
+                $serial_number_data = DB::select('SELECT serial_numbers.id FROM serial_numbers LEFT JOIN batches ON serial_numbers.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id WHERE serial_numbers.sold_issue_id='.$header_id.' AND batches.item_id='.$item_id.' AND serial_numbers.source_type="'.$source_type.'"');
+                foreach($serial_number_data as $ser_row){
+                    $serial_number_ids[] = $ser_row->id;
+                }
+                $to_be_removed = array_diff($serial_number_ids, $submitted_ser_ids);
+                
+                DB::table('batch_serial_transactions')
+                    ->leftJoin('batches','batch_serial_transactions.batches_id','batches.id')
+                    ->where('batches.source_id', $header_id)
+                    ->where('batches.item_id', $item_id)
+                    ->where('batches.source_type', $source_type)
+                    ->whereNotIn('batch_serial_transactions.batches_id', $submitted_ids)
+                    ->delete();
+
+                DB::table('batch_serial_transactions')
+                    ->leftJoin('batches','batch_serial_transactions.batches_id','batches.id')
+                    ->where('batch_serial_transactions.transaction_type', $source_type)
+                    ->where('batch_serial_transactions.reference_id', $header_id)
+                    ->whereIn('batch_serial_transactions.serial_number_id', $to_be_removed)
+                    ->where('batch_serial_transactions.is_batch_or_serial',"serial")
+                    ->delete();
+
+                if($transaction_type == 11){
+                    $do_detail_data = delivery_order_detail::where('delivery_order_id',$header_id)->where('regitems_id',$item_id)->first();
+                    $db_issued_qty = $do_detail_data->quantity;
+                }
+
+                if($item_data->RequireSerialNumber == "Required"){   
+                    if($db_issued_qty == $inserted_qty && $db_issued_qty == $serial_number_count){
+                        $is_fully_inserted = 1;
+                    }
+                    else{
+                        $is_fully_inserted = 0;
+                    }
+                }
+                else if($item_data->RequireSerialNumber == "Not-Require"){
+                    if($db_issued_qty == $inserted_qty){
+                        $is_fully_inserted = 1;
+                    }
+                    else{
+                        $is_fully_inserted = 0;
+                    }
+                }
+
+                if($transaction_type == 11){
+                    DB::table('delivery_order_details')
+                    ->where('delivery_order_id',$header_id)
+                    ->where('regitems_id',$item_id)
+                    ->update(['delivery_order_details.is_fully_entered' => $is_fully_inserted,'delivery_order_details.entered_qty' => $inserted_qty,'entered_serial_qty' => $serial_number_count]);
+                }
+
+                if($optype == 1){
+                    $actions = "Batch and/or Serial Numbers Created for [{$item_data->Name}] item";
+                    $log_status = "Created";
+                }
+                else{
+                    $actions = "Batch and/or Serial Numbers Edited for [{$item_data->Name}] item";
+                    $log_status = "Edited";
+                }
+
+                DB::table('actions')->insert([
+                    'user_id' => $userid,
+                    'pageid' => $header_id,
+                    'pagename' => $source_type,
+                    'action' => $actions,
+                    'status' => $log_status,
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+
+                DB::commit();
+                return Response::json(['success' => 1,'header_id' => $header_id,'trn_type' => $transaction_type]);
+            }
+            
+            catch(Exception $e){
+                DB::rollBack();
+                return Response::json(['dberrors' => $e->getMessage()]);
+            }
+        }
+        else if($batchValidation->fails()){
+            return response()->json(['errorbatch' => $batchValidation->errors()->all()]);
+        }
+        else if($serialValidation->fails()){
+            return response()->json(['errorserial'=> $serialValidation->errors()->all()]);
+        }
+        else if($request->batch_row == null){
+            return response()->json(['empty_batch' => 462]);
+        }
+        else if(!empty($variance_ids)){
+            return response()->json(['variances' => $variance_ids]);
+        }
+        else if ($issued_qty != $inserted_qty && ($status == "Verified" || $status == "Approved")){
+            return response()->json(['batch_variances' => 472]);
+        }
+    }
 
     function countDOStatus(){
         $fyear = $_POST['fyear'] ?? 0; 

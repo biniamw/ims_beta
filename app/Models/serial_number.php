@@ -11,5 +11,5 @@ class serial_number extends Model
     protected $table='serial_numbers';
     public $primarykey='id';
     public $timestamps=true; 
-    public $fillable = ['batches_id','serial_number','is_sold_issued','serial_uuid','created_at','updated_at'];
+    public $fillable = ['batches_id','serial_number','is_sold_issued','sold_issue_id','source_type','serial_uuid'];
 }

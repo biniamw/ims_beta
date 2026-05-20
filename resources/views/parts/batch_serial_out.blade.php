@@ -168,6 +168,13 @@
                                     <option data-expiry-date="{{$instance_data->expiry_date}}" data-store-id="{{$instance_data->store_id}}" data-item-id="{{$instance_data->item_id}}" value="{{ $instance_data->id }}">{{ $instance_data->item_instance }}</option>
                                 @endforeach
                             </select>
+
+                            <select class="select2 form-control" name="serialnumber_default" id="serialnumber_default">
+                                <option selected disabled value=""></option>
+                                @foreach ($serial_number_data as $serial_num_data)
+                                    <option data-batch-id="{{$serial_num_data->batches_id}}" data-sold-flag="{{$serial_num_data->is_sold_issued}}" data-sold-issued-id="{{$serial_num_data->sold_issue_id}}" data-source-type="{{ $serial_num_data->source_type }}" value="{{ $serial_num_data->id }}">{{ $serial_num_data->serial_number }}</option>
+                                @endforeach
+                            </select>
                             <input type="hidden" class="form-control" name="IsBatchNumberRequired" id="IsBatchNumberRequired" readonly="true">
                             <input type="hidden" class="form-control" name="IsSerialNumberRequired" id="IsSerialNumberRequired" readonly="true">
                             <input type="hidden" class="form-control" name="IsExpiryDateRequired" id="IsExpiryDateRequired" readonly="true">
@@ -188,7 +195,6 @@
     </div>
     <!--/ end batch,serial,expire date modal-->
 
-
     <script type="text/javascript">
         var b_i = 0;
         var b_m = 0;
@@ -200,10 +206,176 @@
         var START_YEAR = 1900;
         var END_YEAR = 2100;
 
+        $('#save_batch_and_serial_btn').click(function(){
+            var manageForm = $("#ManageBatchAndSerialForm");
+            var formData = manageForm.serialize();
+            var opt_type = $("#bs_operation_type").val();
+            $.ajax({
+                url: '/issueBatchAndSerial',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() { 
+                    var processing_msg = "";
+                    var btn_text = "";
+                    if(parseInt(opt_type) == 1){
+                        processing_msg = "Saving batch and/or serial number";
+                        btn_text = "Saving...";
+                    }
+                    else{
+                        processing_msg = "Updating batch and/or serial number";
+                        btn_text = "Updating...";
+                    }
+                    blockPage(cardSection,processing_msg);
+                    $('#save_batch_and_serial_btn').text(btn_text);
+                    $('#save_batch_and_serial_btn').prop("disabled", true);
+                },
+                error: function () { 
+                    unblockPage(cardSection);     
+                },
+                success:async function(data) {
+                    await saveBatchSerialFn(data);
+                }
+            });
+        });
+
+        function saveBatchSerialFn(data){
+            var opt_type = $("#bs_operation_type").val();
+
+            if(data.errorbatch) {
+                var is_batch_req =  $('#IsBatchNumberRequired').val();
+                var is_expiry_req =  $('#IsExpiryDateRequired').val();
+                $('#batch_no_dynamic_table > tbody > tr').each(function (index) {
+                    let row_id = $(this).find('.batch_index_col').val();
+                    var instance_id = $(`#Instance${row_id}`).val();
+                    var qty = $(`#bactchQuantity${row_id}`).val();
+
+                    if(isNaN(parseFloat(instance_id))){
+                        $(`#select2-Instance${row_id}-container`).parent().css('background-color',errorcolor);
+                    }
+                    if($(`#bactchQuantity${row_id}`).val() != undefined){
+                        if(isNaN(parseFloat(qty)) || parseFloat(qty) == 0){
+                            $(`#bactchQuantity${row_id}`).css("background", errorcolor);
+                        }
+                    }
+                });
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('error',"Please insert valid data on highlighted fields!","Error");
+            }
+            else if (data.errorserial) {
+                var is_serial_req =  $('#IsSerialNumberRequired').val();
+                $('.serial_no_dynamic_table > tbody > tr').each(function (index) {
+                    let row_id = $(this).find('.serial_index_col').val();
+                    let parent_row_id = $(this).find('.parent_row_id').val();
+                    var serial_number = $(`#serialNumber${row_id}`).val();
+                    if(serial_number !== undefined && is_serial_req == "Yes"){
+                        if(isNaN(parseInt(serial_number))){
+                            $(`#select2-serialNumber${row_id}-container`).parent().css('background-color',errorcolor);
+
+                            $(`#serialNumberDiv${parent_row_id}`).show();
+                            $(`#toggleSerialNum${parent_row_id}`).html('<i class="fa fa-chevron-up"></i> Hide Serial No.');
+                        }
+                    }
+                });
+
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('error',"Please insert valid data on highlighted fields!","Error");
+            }
+            else if(data.empty_batch){
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('error',"You should add atleast one batch group","Error");
+            }
+            else if(data.empty_serial){
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('error',"You should add atleast one serial number","Error");
+            }
+
+            else if(data.variances){
+                var list_of_rows = "";
+                $.each(data.variances, function(index, rowno) {
+                    list_of_rows += `Row #: <b>${rowno}</b></br>`;
+                });
+
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('warning',`Please match serial number and entered quantity for the specified rows below</br>--------------</br>${list_of_rows}`,"Warning");
+            }
+            else if(data.batch_variances){
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('warning',"The issued quantity does not match the total quantity entered.","Warning");
+            }
+            else if (data.dberrors) {
+                if(parseInt(opt_type) == 1){
+                    $('#save_batch_and_serial_btn').text('Save');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                else if(parseInt(opt_type) == 2){
+                    $('#save_batch_and_serial_btn').text('Update');
+                    $('#save_batch_and_serial_btn').prop("disabled", false);
+                }
+                unblockPage(cardSection);
+                toastrMessage('error',"Please contact administrator","Error");
+            }
+            else if (data.success) {
+                toastrMessage('success',"Successful","Success");
+                if(data.trn_type == 11){
+                    createDOInfoFn(data.header_id);
+                }
+                $('#manageItemModal').modal('hide');
+            }
+        }
+
         function mngBatchSerialExpireFn(indx,header_id,item_id,store_id,qty,trn_type){
             var source_id = null;
             var itemId = null;
             var source_type = null;
+            var default_serial_no = $("#serialnumber_default");
             $(".bs_only_serial_controls").hide();
             $("#bsItemRowId").val(indx);
             $("#batch_no_dynamic_table > tbody").empty();
@@ -285,7 +457,6 @@
                         source_type : trn_type,
                     },
                     success: function(data) {
-
                         if(parseInt(data.batch_data.length) > 0){
                             $("#bs_operation_type").val(2);
                             $("#manage-item-title").html("Update Batch and/or Serial Numbers");
@@ -314,27 +485,22 @@
                                     </td>
                                     <td style="width:96%">
                                         <div class="row">
-                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                                <label class="form_lbl"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand<b style="color: red; font-size:16px;">*</b></label>
-                                                <select class="select2 form-control" name="batch_row[${b_m}][bsBrand]" id="bsBrand${b_m}" onchange="bsBrandFn(this)"></select>
+                                            <div class="col-xl-8 col-lg-6 col-md-6 col-sm-4 col-12 mb-1">
+                                                <label class="form_lbl"><i class="fas fa-info-circle" title="✓ Brand &#10;✓ Generic/ Model Name &#10;✓ Batch Number &#10;✓ Expiry Date"></i> Item Instance<b style="color: red; font-size:16px;">*</b></label>
+                                                <select class="select2 form-control item_instance" name="batch_row[${b_m}][Instance]" id="Instance${b_m}" onchange="instanceFn(this)"></select>
                                                 <span class="text-danger">
-                                                    <strong id="bs-brand-error${b_m}" class="bs_error_cls"></strong>
+                                                    <strong id="bs-instance-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                                <label class="form_lbl" title="Generic/ model name">Generic/ Model Name<b style="color: red; font-size:16px;">*</b></label>
-                                                <select class="select2 form-control" name="batch_row[${b_m}][bsModel]" id="bsModel${b_m}" onchange="bsModelFn(this)"></select>
+
+                                            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 mb-1">
+                                                <label class="form_lbl">Quantity on Hand</label>
+                                                <input type="number" placeholder="Quantity on Hand" class="form-control" name="batch_row[${b_m}][quantity_on_hand]" readonly id="quantity_on_hand${b_m}" style="font-weight:bold;"/>
                                                 <span class="text-danger">
-                                                    <strong id="bs-model-error${b_m}" class="bs_error_cls"></strong>
+                                                    <strong id="bs-qtyonhand-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_batch_no_controls" id="bs_batch_no_controls${b_m}" style="display:none;">
-                                                <label class="form_lbl">Batch No.<b style="color: red; font-size:16px;">*</b></label>
-                                                <input type="text" placeholder="Enter Batch Number" class="bactchNumber form-control" name="batch_row[${b_m}][bactchNumber]" id="bactchNumber${b_m}" onkeyup="bactchNumberFn(this)" onblur="checkDuplicatesFn(this)"/>
-                                                <span class="text-danger">
-                                                    <strong id="bs-batchno-error${b_m}" class="bs_error_cls"></strong>
-                                                </span>
-                                            </div>
+
                                             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
                                                 <label class="form_lbl">Quantity<b style="color: red; font-size:16px;">*</b></label>
                                                 <input type="number" placeholder="Enter Quantity" class="bactchQuantity form-control" name="batch_row[${b_m}][bactchQuantity]" id="bactchQuantity${b_m}" onkeyup="bactchQuantityFn(this)" onkeypress="return ValidateOnlyNum(event);"/>
@@ -342,20 +508,7 @@
                                                     <strong id="bs-batchqty-error${b_m}" class="bs_error_cls"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1">
-                                                <label class="form_lbl">Manufacturing Date</label>
-                                                <input type="text" id="bsManufactureDate${b_m}" name="batch_row[${b_m}][bsManufactureDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsManufactureDateFn(this)"/>
-                                                <span class="text-danger">
-                                                    <strong id="bs-manufacture-date-error${b_m}" class="bs_error_cls"></strong>
-                                                </span>
-                                            </div>
-                                            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-6 mb-1 bs_expiry_date_controls" id="bs_expiry_date_controls${b_m}" style="display:none;">
-                                                <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
-                                                <input type="text" id="bsExpiryDate${b_m}" name="batch_row[${b_m}][bsExpiryDate]" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" onchange="bsExpiryDateFn(this)"/>
-                                                <span class="text-danger">
-                                                    <strong id="bs-expiry-date-error${b_m}" class="bs_error_cls"></strong>
-                                                </span>
-                                            </div>
+
                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 bs_only_serial_controls" id="toggleSerialNumberDiv${b_m}" style="text-align:right;display:none;">
                                                 <input type="hidden" id="batch_uuid${b_m}" name="batch_row[${b_m}][batch_uuid]" class="form-control batch_uuid"/>
                                                 <input type="hidden" id="batch_db_id${b_m}" name="batch_row[${b_m}][batch_db_id]" class="form-control batch_db_id"/>
@@ -372,7 +525,7 @@
                                         <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-0.5rem !important;">
                                             <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
                                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-8 mb-1">
-                                                <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table fit-content" style="width:100%;">
+                                                <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table" style="width:100%;">
                                                     <thead>
                                                         <tr>
                                                             <th class="form_lbl" style="width: 10%">#</th>
@@ -393,56 +546,19 @@
                                 </tr>`
                             );
 
-                            var default_brand = `<option selected value='${value.brand_id}'>${value.brand_name}</option>`;
-                            var default_model = `<option selected value='${value.model_id}'>${value.model_name}</option>`;
-
-                            var brand_options = $("#bs_brand_default > option").clone();
-                            $(`#bsBrand${b_m}`).empty().append(brand_options);
-                            $(`#bsBrand${b_m} option[value="${value.brand_id}"]`).remove();
-                            $(`#bsBrand${b_m}`).append(default_brand).select2();
-
-                            var model_option = $("#bs_model_default");
-                            $(`#bsModel${b_m}`).empty().append(model_option.find(`option[data-brand-id="${value.brand_id}"]`).clone());
-                            $(`#bsModel${b_m} option[value="${value.model_id}"]`).remove();
-                            $(`#bsModel${b_m}`).append(default_model).select2();
+                            var instance_data = `<option selected value='${value.batch_id}'>${value.item_instance}</option>`;
+ 
+                            $(`#Instance${b_m}`).empty().append(getClonedOption(item_id,store_id));
+                            $(`#Instance${b_m} option[value="${value.batch_id}"]`).remove();
+                            $(`#Instance${b_m}`).append(instance_data).select2();
 
                             $(`#bactchNumber${b_m}`).val(value.batch_number);
-                            $(`#bactchQuantity${b_m}`).val(value.received_qty);
-                            
-                            flatpickr(`#bsManufactureDate${b_m}`, { 
-                                dateFormat: 'Y-m-d',
-                                monthSelectorType: 'dropdown',
-                                showMonths: 1,
-                                clickOpens: true,
-                                maxDate: currentdate,
-                                plugins: [
-                                    yearSelectPlugin({
-                                        yearSelectorType: "dropdown", // This is the plugin-specific option
-                                        yearStart: START_YEAR,
-                                        yearEnd: CURRENT_YEAR
-                                    })
-                                ]
-                            });
-                            $(`#bsManufactureDate${b_m}`).val(value.manufacturing_date);
-
-                            flatpickr(`#bsExpiryDate${b_m}`, { 
-                                dateFormat: 'Y-m-d',
-                                monthSelectorType: 'dropdown',
-                                showMonths: 1,
-                                clickOpens:true,
-                                minDate:currentdate,
-                                plugins: [
-                                    yearSelectPlugin({
-                                        yearSelectorType: "dropdown", // This is the plugin-specific option
-                                        yearStart: CURRENT_YEAR,
-                                        yearEnd: END_YEAR
-                                    })
-                                ]
-                            });
-                            $(`#bsExpiryDate${b_m}`).val(value.expiry_date);
+                            $(`#bactchQuantity${b_m}`).val(value.sold_issued_qty);                       
 
                             $(`#batch_uuid${b_m}`).val(value.batch_uuid);
-                            $(`#batch_db_id${b_m}`).val(value.id);
+                            $(`#batch_db_id${b_m}`).val(value.batch_issue_id);
+
+                            fetchInstanceFn(b_m,value.sold_issued_qty);
 
                             $(`#serialNumberDiv${b_m}`).hide();
                             $(`#toggleSerialNum${b_m}`).html('<i class="fa fa-chevron-down"></i> Show Serial No.');
@@ -457,11 +573,8 @@
                                 $(".bs_expiry_date_controls").show();
                             }
 
-                            if(parseFloat(value.sold_issued_qty) > 0){
-                                $(`#remove-batch-tr${b_m}`).remove();
-                            }
-
                             $.each(data.serial_data, function (ser_index, ser_value) {
+                                var op_type = $("#bs_operation_type").val();
                                 if(parseFloat(value.id) == parseFloat(ser_value.batches_id)){
                                     ++s_i;
                                     ++s_m;
@@ -472,7 +585,7 @@
                                             <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][serial_index_col]" id="serial_index_col${s_m}" class="serial_index_col form-control" readonly="true" style="font-weight:bold;" value="${s_m}"/></td>
                                             <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][parent_row_id]" id="parent_row_id${s_m}" class="parent_row_id form-control" readonly="true" style="font-weight:bold;" value="${b_m}"/></td>
                                             <td style="width:80%">
-                                                <input type="text" placeholder="Enter Serial Number" class="serialNumber form-control" name="serial_row[${s_m}][serialNumber]" id="serialNumber${s_m}" onkeyup="serialNumberFn(this)" onblur="checkSerialNumDuplicatesFn(this)"/>
+                                                <select id="serialNumber${s_m}" class="select2 form-control serialNumber" onchange="serialNumberFn(this)" name="serial_row[${s_m}][serialNumber]"></select>
                                             </td>
                                             <td style="width:10%;text-align:center;">
                                                 <input type="hidden" id="serial_uuid${s_m}" name="serial_row[${s_m}][serial_uuid]" class="form-control serial_uuid"/>
@@ -482,13 +595,28 @@
                                         </tr>`
                                     );
 
-                                    $(`#serialNumber${s_m}`).val(ser_value.serial_number);
+                                    var default_selected_serial_no = `<option selected value='${ser_value.id}'>${ser_value.serial_number}</option>`;
+                                    var default_option = `<option selected disabled value=""></option>`;
+                                    $(`#serialNumber${s_m}`).append(default_option).select2();
+                                    if(parseInt(op_type) == 1){
+                                        $(`#serialNumber${s_m}`).append(default_serial_no.find(`option[data-batch-id="${ser_value.batches_id}"][data-sold-flag="0"]`).clone());
+                                    }
+                                    else if(parseInt(op_type) == 2){
+                                        var batch_flag = [0, 1];
+                                        $(`#serialNumber${s_m}`).append(default_serial_no.find(`option[data-batch-id="${ser_value.batches_id}"][data-sold-flag="0"]`).clone());
+                                        $(`#serialNumber${s_m}`).append(default_serial_no.find(`option[data-batch-id="${ser_value.batches_id}"][data-sold-flag="1"]`).clone());
+                                    }
+
+                                    $(`#serial_no_dynamic_table${b_m} > tbody > tr`).each(function(index, tr) {
+                                        let ser_id = $(this).find('.serialNumber').val();
+                                        $(`#serialNumber${s_m} option[value="${ser_id}"]`).remove(); 
+                                    });
+
+                                    $(`#serialNumber${s_m} option[value="${ser_value.id}"]`).remove();
+                                    $(`#serialNumber${s_m}`).append(default_selected_serial_no).select2();
+
                                     $(`#serial_uuid${s_m}`).val(ser_value.serial_uuid);
                                     $(`#serial_db_id${s_m}`).val(ser_value.id);
-
-                                    if(parseInt(ser_value.is_sold_issued) == 1){
-                                        $(`#remove_serial_tr${s_m}`).remove();
-                                    }
                                 } 
                             });
 
@@ -587,7 +715,7 @@
                             <div class="row" id="serialNumberDiv${b_m}" style="display:none;margin-top:-1rem !important;">
                                 <div class="col-xl-4 col-lg-3 col-md-3 col-sm-3 col-2 mb-1"></div>
                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-8 mb-1">
-                                    <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table fit-content" style="width:100%;">
+                                    <table id="serial_no_dynamic_table${b_m}" class="mb-0 serial_no_dynamic_table rtable form_dynamic_table" style="width:100%;">
                                         <thead>
                                             <tr>
                                                 <th class="form_lbl" style="width: 10%">#</th>
@@ -624,7 +752,6 @@
                 
                 $('#batch_no_dynamic_table > tbody > tr').each(function(index, tr) {
                     let instance_id = $(this).find('.item_instance').val();
-                    console.warn(instance_id);
                     $(`#Instance${b_m} option[value="${instance_id}"]`).remove(); 
                 });
 
@@ -711,14 +838,17 @@
 
         function addSerialNumberFn(row_id){
             var sn_last_row = $(`#serial_no_dynamic_table${row_id} tr:last`).find('td').eq(1).find('input').val();
-            //var current_index = $("#bs_current_index_value").val();
             var current_index = row_id;
+            var op_type = $("#bs_operation_type").val();
+            var record_id = $("#bsHeaderId").val();
+            var default_serial_no = $("#serialnumber_default");
             var serial_number = $(`#serialNumber${sn_last_row}`).val();
             var batch_qty = $(`#bactchQuantity${row_id}`).val();
+            var batch_id = $(`#Instance${row_id}`).val();
             var total_sn = $(`#serial_no_dynamic_table${row_id} > tbody > tr`).length;
 
-            if(serial_number != undefined && (serial_number == null || serial_number == "")){
-                $(`#serialNumber${sn_last_row}`).css("background",errorcolor);
+            if(serial_number !== undefined && serial_number === null){
+                $(`#select2-serialNumber${sn_last_row}-container`).parent().css('background-color',errorcolor);
                 toastrMessage('error',"Please fill a valid data on highlighted fields","Error");
             }
             else if(parseFloat(batch_qty) == parseFloat(total_sn)){
@@ -738,7 +868,7 @@
                         <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][serial_index_col]" id="serial_index_col${s_m}" class="serial_index_col form-control" readonly="true" style="font-weight:bold;" value="${s_m}"/></td>
                         <td style="display:none;"><input type="hidden" name="serial_row[${s_m}][parent_row_id]" id="parent_row_id${s_m}" class="parent_row_id form-control" readonly="true" style="font-weight:bold;" value="${row_id}"/></td>
                         <td style="width:80%">
-                            <input type="text" placeholder="Enter Serial Number" class="serialNumber form-control" name="serial_row[${s_m}][serialNumber]" id="serialNumber${s_m}" onkeyup="serialNumberFn(this)" onblur="checkSerialNumDuplicatesFn(this)"/>
+                            <select id="serialNumber${s_m}" class="select2 form-control serialNumber" onchange="serialNumberFn(this)" name="serial_row[${s_m}][serialNumber]"></select>
                         </td>
                         <td style="width:10%;text-align:center;">
                             <input type="hidden" id="serial_uuid${s_m}" name="serial_row[${s_m}][serial_uuid]" class="form-control serial_uuid"/>
@@ -747,6 +877,25 @@
                         </td>
                     </tr>`
                 );
+
+                var default_option = `<option selected disabled value=""></option>`;
+                $(`#serialNumber${s_m}`).append(default_option).select2();
+
+                if(parseInt(op_type) == 1){
+                    $(`#serialNumber${s_m}`).append(default_serial_no.find(`option[data-batch-id="${batch_id}"][data-sold-flag="0"]`).clone());
+                }
+                else if(parseInt(op_type) == 2){
+                    var batch_flag = [0, 1];
+                    $(`#serialNumber${s_m}`).append(default_serial_no.find(`option[data-batch-id="${batch_id}"][data-sold-flag="${JSON.stringify(batch_flag)}"]`).clone());
+                }
+
+                $(`#serial_no_dynamic_table${row_id} > tbody > tr`).each(function(index, tr) {
+                    let ser_id = $(this).find('.serialNumber').val();
+                    $(`#serialNumber${s_m} option[value="${ser_id}"]`).remove(); 
+                });
+                $(`#serialNumber${s_m}`).append(default_option).select2({placeholder: "Select serial number here"});
+
+                $(`#select2-serialNumber${s_m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
                 renumberSerialNumberRows(row_id);
             }
         }
@@ -758,9 +907,31 @@
             });
         }
 
-        function serialNumberFn(ele){
+        function serialNumberFn(ele){ 
             var row_id = $(ele).closest('tr').find('.serial_index_col').val();
-            $(`#serialNumber${row_id}`).css("background",'white');
+            var batch_row_id = $(ele).closest('tr').find('.parent_row_id').val();
+            var arr = [];
+            var found = 0;
+            $(`#serial_no_dynamic_table${batch_row_id} .serialNumber`).each(function() {
+                let ser_id = $(this).val();
+                if(arr.includes(ser_id)){
+                    found++;
+                }
+                else{
+                    arr.push(ser_id);
+                }
+            });
+
+            if(found){
+                $(`#serialNumber${row_id}`).val(null).select2({placeholder: "Select serial number here"});
+                $(`#select2-serialNumber${row_id}-container`).parent().css('background-color',errorcolor);
+                toastrMessage('error',"Duplicate serial number found","Error");
+            }
+            else{
+                countBatchAndSerialQtyFn(batch_row_id);
+                countTotalBatchAndSerialFn();
+                $(`#select2-serialNumber${row_id}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
+            }
         }
 
         function checkSerialNumDuplicatesFn(ele){
@@ -869,12 +1040,12 @@
             var found = 0;
 
             $('.item_instance').each(function(){ 
-                var name = $(this).val();
-                if(arr.includes(name)){
+                var instance = $(this).val();
+                if(arr.includes(instance)){
                     found++;
                 }
                 else{
-                    arr.push(name);
+                    arr.push(instance);
                 }
             });
 
@@ -901,15 +1072,31 @@
                         unblockPage(cardSection);
                     }
                 });
-
                 $(`#old_instance_id${row_id}`).val($(`#Instance${row_id}`).val());
-                $(`#select2-instanceFn${row_id}-container`).parent().css('background-color','white');
+                $(`#select2-Instance${row_id}-container`).parent().css('background-color','white');
+                $(`#serial_no_dynamic_table${row_id} > tbody`).empty();
+                countBatchAndSerialQtyFn(row_id);
+                countTotalBatchAndSerialFn();
                 $(`#bs-instance-error${row_id}`).html("");
             }
         }
 
         function getInstanceDataFn(data,row_id){
             $(`#quantity_on_hand${row_id}`).val(data.available_qty)
+        }
+
+        function fetchInstanceFn(row_id,qty){
+            var instance_id = null;
+            $.ajax({
+                url: '/getBatchQuantity', 
+                type: 'POST',
+                data:{
+                    instance_id: $(`#Instance${row_id}`).val() || 0,
+                },
+                success:function(data) {
+                    $(`#quantity_on_hand${row_id}`).val(parseFloat(data.available_qty) + parseFloat(qty))
+                },
+            });
         }
 
         function bsModelFn(ele){

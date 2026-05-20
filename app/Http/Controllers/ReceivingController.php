@@ -131,8 +131,7 @@ class ReceivingController extends Controller
     }
 
     //---------------------Start Receiving with Procurement---------------------------
-    public function saveProcReceiving(Request $request)
-    {
+    public function saveProcReceiving(Request $request){
         ini_set('max_execution_time', '30000');
         ini_set("pcre.backtrack_limit", "500000000");
         $currenttime=Carbon::now();

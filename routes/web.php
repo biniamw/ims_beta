@@ -1148,6 +1148,7 @@ Route::post('/countDOStatus','DeliveryOrderController@countDOStatus');
 
 Route::post('getBatchAndSerialIssued','DeliveryOrderController@getBatchAndSerialIssued');
 Route::post('/getBatchQuantity','DeliveryOrderController@getBatchQuantity');
+Route::post('issueBatchAndSerial','DeliveryOrderController@issueBatchAndSerial');
 //---------------End DO--------------------
 
 //---------------Start finance closing------------------
