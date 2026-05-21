@@ -334,12 +334,12 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </section>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="tab-pane do_info_tab tab-view" id="info-do-view" role="tabpanel" aria-labelledby="info-do-view">
@@ -373,6 +373,8 @@
                                                                                 <th style="width:10%;">Total Price</th>
                                                                                 <th style="width:16%;">Remark</th>
                                                                                 <th style="width:3%"></th>
+                                                                                <th style="display:none;"></th>
+                                                                                <th style="display:none;"></th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody class="table table-sm"></tbody>
@@ -884,6 +886,7 @@
         var x3 = 0;
         var y3 = 0;
         var z3 = 0;
+        var expand_flag = [];
 
         var statusTransitions = {
             'Draft': {
@@ -932,10 +935,8 @@
         };
 
         $(document).ready(async function() {
-            $('.main_datatable').hide();
             await getDODataFn(fyears);
             countDOStatusFn(fyears);
-            $('#delivery_order_tbl').show();
         });
 
         function getDODataFn(fy){
@@ -2488,6 +2489,7 @@
         }
 
         function getInfoDataFn(data){
+            expand_flag = [];
             var lidata = "";
             var status_color = "";
             var action_links = "";
@@ -2759,7 +2761,6 @@
                         "render": function ( data, type, row, meta ) {
                             if(row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require"){
                                 $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
-
                                 return `<i title="Show batch number, serial number, expiry date under ${row.ItemName} item!" class="fas fa-caret-right fa-xl"></i>`;
                             }
                             else{
@@ -2850,7 +2851,17 @@
                             }
                         },
                         width:'3%',
-                    }
+                    },
+                    {
+                        data: 'batch_numers',
+                        name: 'batch_numers',
+                        'visible': false
+                    },
+                    {
+                        data: 'serial_numbers',
+                        name: 'serial_numbers',
+                        'visible': false
+                    },
                 ],
                 "columnDefs": [{
                     "targets": column_index,
@@ -2947,6 +2958,222 @@
             $("#action-log-title").html("User Log Information");
             $("#action-log-universal-modal").modal('show');
         }
+
+        //-----Expand & collapse start--------
+        $('#doInfoDataTbl tbody').on('click', 'td.dt-show-1', async function () {
+            let tr = $(this).closest('tr');
+            let row = $('#doInfoDataTbl').DataTable().row(tr);
+            
+            if (row.child.isShown()) {
+                row.child.hide();
+                $(this).html('<i class="fas fa-caret-right fa-xl"></i>');
+            } else {
+                let data = row.data();
+                let html = await formatLevel1Fn(data.delivery_order_id,data.regitems_id);
+                
+                if(html != undefined){
+                    row.child('Loading...').show();
+                    row.child(html).show();
+                    $(this).html('<i class="fas fa-caret-down fa-xl"></i>');
+                }
+            }
+        }); 
+
+        async function formatLevel1Fn(header_id,item_id) {
+            var headerId = null;
+            var itemId = null;
+            var is_batch_req = null;
+            var is_expiry_req = null;
+            
+            let response = await $.ajax({ 
+                url: '/getItemBactchDataIssue', 
+                type: 'POST',
+                data:{
+                    headerId : header_id,
+                    itemId : item_id,
+                },
+            });
+
+            $.each(response.batch_data, function (index, value) {
+                is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+            });
+
+            let html = `<table class="first-level table-striped dt-responsive" width="100%">`;
+            html += `<tr>
+                <th style="width:2%"></th>
+                <th style="width:3%">#</th>
+                <th style="width:18%"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand</th>
+                <th style="width:17%">Generic/ Model Name</th>
+                <th class="batch_number_class" style="width:15%;display:${is_batch_req == "No" ? "none" : ""}">Batch Number</th>
+                <th style="width:15%">Quantity</th>
+                <th style="width:15%">Manufacturing Date</th>
+                <th class="expiry_date_class" style="width:15%;display:${is_expiry_req == "No" ? "none" : ""}">Expiry Date</th>
+            </tr><tbody>`;
+
+            $.each(response.batch_data, function (index, value) {
+                var class_name = "";
+                var batch_id = "";
+                
+                if(value.RequireSerialNumber == 'Required'){
+                    class_name = "dt-show-2";
+                    batch_id = '<i class="fas fa-caret-right fa-xl"></i>';
+                }
+
+                html += `<tr>
+                    <td class="${class_name}" data-batchid="${value.id}" data-sourceid="${header_id}">${batch_id}</td>
+                    <td>${++index}</td>
+                    <td>${value.brand_name}</td>
+                    <td>${value.model_name}</td>
+                    <td class="batch_number_class" style="display:${is_batch_req == "No" ? "none" : ""}">${value.batch_number}</td>
+                    <td>${value.sold_issued_qty}</td>
+                    <td>${value.manufacturing_date}</td>
+                    <td class="expiry_date_class" style="display:${is_expiry_req == "No" ? "none" : ""}">${value.expiry_date}</td>
+                </tr>`;
+            });
+
+            html += `</tbody></table>`;
+
+            expand_flag.push(response.batch_data.length);
+            var has_value = expand_flag.some(value => value > 0);
+
+            if(has_value){
+                return html;
+            }
+            else{
+                toastrMessage('info',"No batch and/or serial numbers are available to expand.","Info");
+            }
+        }
+
+        $(document).on('click', '.dt-show-2', async function () {
+            let tr = $(this).closest('tr');
+
+            if ($(this).hasClass('shown')) {
+                tr.next('.child-level-2').remove();
+                $(this).removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
+            } 
+            else {
+                let loadingRow = `<tr class="child-level-2">
+                        <td colspan="8" class="child-container">Loading...</td>
+                    </tr>`;
+
+                tr.after(loadingRow);
+                $(this).addClass('shown').html('<i class="fas fa-caret-down fa-xl"></i>');
+
+                try{
+                    let batchId = $(this).data('batchid');
+                    let sourceId = $(this).data('sourceid');
+                    let html = await formatLevel2Fn(batchId,sourceId);
+
+                    tr.next('.child-level-2').html(`<td colspan="8">${html}</td>`);
+                }
+                catch(e){
+                    tr.next('.child-level-2').html(`<td colspan="8" style="color:red;">Error loading data</td>`);
+                }  
+            }
+        });
+
+        async function formatLevel2Fn(batch_id,sourceId) {
+            var batchId = null;
+            var source_id = null;
+            var source_type = null;
+            let response = await $.ajax({ 
+                url: '/getItemSerialDataIssue', 
+                type: 'POST',
+                data:{
+                    batchId : batch_id,
+                    source_id : sourceId,
+                },
+            });
+
+            let html = `<table class="second-level table-striped dt-responsive" width="100%">`;
+            $.each(response.serial_data, function (index, value) {
+                html += `<tr><th>Serial Number (${value.count_serial})</th></tr>`;
+                html += `<tr style="background-color:#FFFFFF;"><td>${value.serial_number}</td></tr>`;
+            });
+
+            html += `</table>`;
+            return html;
+        }
+
+        async function expandAllLevel1Fn() {
+            let table = $('#doInfoDataTbl').DataTable();
+            var count_req = 0;
+
+            for (let i = 0; i < table.rows().count(); i++) {
+
+                let row = table.row(i);
+
+                if (!row || !row.node()) continue;
+
+                let tr = $(row.node());
+                let data = row.data();
+
+                if (!data) continue;
+
+                if(data.RequireSerialNumber != "Not-Require" || data.RequireExpireDate != "Not-Require"){
+                
+                    // 🔥 FIX: ensure HTML exists
+                    let html = await formatLevel1Fn(data.delivery_order_id,data.regitems_id);
+
+                    if (!html) continue; // ← IMPORTANT
+
+                    // 🔥 FIX: check child() exists
+                    let child = row.child(html);
+
+                    if (child && typeof child.show === 'function') {
+                        child.show();
+                        tr.find('.dt-show-1').html('<i class="fas fa-caret-down fa-xl"></i>');
+                    }
+                }
+                // else{
+                //     //toastrMessage('info',"No batch and/or serial numbers are available to expand.","Info");
+                // }
+            }
+        }
+
+        function expandAllLevel2Fn() {
+            // find only visible Level 1 rows
+            $('.dt-show-2').each(function () {
+                let el = $(this);
+                if (!el.hasClass('shown')) {
+                    el.trigger('click');
+                }
+            });
+        }
+
+        $(document).on('click', '#expandrow',async function() {
+            await expandAllLevel1Fn();
+
+            setTimeout(function () {
+                expandAllLevel2Fn();
+                var has_value = expand_flag.some(value => value > 0);
+                if(has_value){
+                    $('.expand-collapse-class').empty().append(`<a class="collapserow" href="javascript:void(0)" id="collapserow" style="color:#82868b;"><i class="far fa-minus"></i> Collapse All</a>`);
+                }
+            }, 300);
+        });
+
+        $(document).on('click', '#collapserow',async function() {
+            let table = $('#doInfoDataTbl').DataTable();
+
+            table.rows().every(function () {
+
+                let row = this;
+                let tr = $(row.node());
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.find('.dt-show-1').html('<i class="fas fa-caret-right fa-xl"></i>');
+                }
+            });
+
+            // remove all level 2 DOM rows
+            $('.child-level-2').remove();
+            $('.dt-show-2').removeClass('shown').html('<i class="fas fa-caret-right fa-xl"></i>');
+            $('.expand-collapse-class').empty().append(`<a class="expandrow" href="javascript:void(0)" id="expandrow" style="color:#82868b;"><i class="far fa-plus"></i> Expand All</a>`);
+        });
+        //-----Expand & collapse end---------
 
         //-----Forward & backward action start--------
         function forwardDOFn() {

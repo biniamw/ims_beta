@@ -16,6 +16,7 @@ class CreateBatchInventoriesIssuesTable extends Migration
         Schema::create('batch_inventories_issues', function (Blueprint $table) {
             $table->id();
             $table->foreignId('batches_id')->constrained();
+            $table->foreignId('regitems_id')->constrained();
             $table->bigInteger('sold_issued_qty')->nullable()->default(0);
             $table->bigInteger('source_id')->nullable()->default(0);
             $table->string('source_type')->nullable()->default("");

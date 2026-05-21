@@ -11,5 +11,5 @@ class batch_inventories_issue extends Model
     protected $table='batch_inventories_issues';
     public $primarykey='id';
     public $timestamps=true; 
-    public $fillable = ['batches_id','sold_issued_qty','source_id','source_type','status'];
+    public $fillable = ['batches_id','sold_issued_qty','regitems_id','source_id','source_type','status'];
 }

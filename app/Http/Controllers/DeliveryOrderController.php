@@ -49,14 +49,12 @@ class DeliveryOrderController extends Controller
         $itemSrcs = DB::select('SELECT regitems.id,regitems.Type,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items FROM regitems WHERE regitems.ActiveStatus="Active" AND regitems.Type!="Service" AND regitems.IsDeleted=1 ORDER BY regitems.Name ASC');
         $fiscalyears = DB::select('SELECT * FROM fiscalyear WHERE fiscalyear.FiscalYear<='.$fyear.' ORDER BY fiscalyear.FiscalYear DESC');
         $doc_type_data = DB::select('SELECT * FROM lookuprefs WHERE lookuprefs.Type=102 AND lookuprefs.Status=1 ORDER BY lookuprefs.id ASC'); 
-        $item_instance = DB::select('SELECT CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,""),NULLIF(batches.batch_number,""),NULLIF(batches.expiry_date,"")) AS item_instance,batches.*,(COALESCE(receivings.StoreId)) AS store_id FROM batches LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN country ON brands.countries_id=country.id LEFT JOIN receivings ON batches.source_type="receiving" AND batches.source_id=receivings.id WHERE receivings.Status="Confirmed" ORDER BY batches.expiry_date ASC');
-        $serial_number_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.is_sold_issued=0 ORDER BY serial_numbers.id ASC');
+        
 
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
-            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data,
-            'item_instance' => $item_instance,'serial_number_data' => $serial_number_data
+            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data
         ];
 
         if($request->ajax()) {
@@ -733,11 +731,33 @@ class DeliveryOrderController extends Controller
     }
 
     public function showDODetailData($id){
-        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
+        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type,delivery_order_details.is_fully_entered,delivery_order_details.entered_qty,delivery_orders.status,
+        (SELECT GROUP_CONCAT(" ",country.Name,IFNULL(brands.manufacturer,"")," ",IFNULL(batches.batch_number,"")," ",IFNULL(brands.Name,"")," ",IFNULL(models.Name,"")," ",IFNULL(batches.expiry_date,"")," ",IFNULL(batches.manufacturing_date,"")," ",batch_inventories_issues.sold_issued_qty) FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.regitems_id=delivery_order_details.regitems_id AND batch_inventories_issues.source_id=delivery_order_details.delivery_order_id AND batch_inventories_issues.source_type="delivery_order") AS batch_numers,
+        (SELECT GROUP_CONCAT(" ",serial_number) AS serial_number FROM serial_numbers LEFT JOIN batches ON serial_numbers.batches_id=batches.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE serial_numbers.is_sold_issued=1 AND serial_numbers.batches_id IN(SELECT batch_inventories_issues.batches_id FROM batch_inventories_issues WHERE batch_inventories_issues.source_id=delivery_order_details.delivery_order_id AND batch_inventories_issues.source_type="delivery_order")) AS serial_numbers
+        FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.new_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
+        
+        
         return datatables()->of($detailTable)
         ->addIndexColumn()
         ->rawColumns(['action'])
         ->make(true);
+    }
+
+    public function getItemBactchDataIssue(Request $request){
+        $headerId = $_POST['headerId']; 
+        $itemId = $_POST['itemId'];
+
+        $batch_data = DB::select('SELECT batches.*,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,batch_inventories_issues.sold_issued_qty,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name,regitems.RequireSerialNumber,regitems.RequireExpireDate FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.source_id='.$headerId.' AND batch_inventories_issues.regitems_id='.$itemId.' AND batch_inventories_issues.source_type="delivery_order" ORDER BY batch_inventories_issues.id ASC');
+        return response()->json(['batch_data' => $batch_data]);
+    }
+
+    public function getItemSerialDataIssue(Request $request){
+        $batchId = $_POST['batchId'];
+        $source_id = $_POST['source_id'];
+        $source_type = "delivery_order";
+
+        $serial_data = DB::select('SELECT IFNULL(GROUP_CONCAT(" ",serial_number),"") AS serial_number,COUNT(id) AS count_serial FROM serial_numbers WHERE serial_numbers.batches_id='.$batchId.' AND serial_numbers.sold_issue_id='.$source_id.' AND serial_numbers.source_type="'.$source_type.'" AND serial_numbers.is_sold_issued=1 ORDER BY serial_numbers.id ASC');
+        return response()->json(['serial_data' => $serial_data]);
     }
 
     public function fetchDODoc(){
@@ -1162,6 +1182,7 @@ class DeliveryOrderController extends Controller
         $itemId = $_POST['itemId']; 
         $src_type = $_POST['source_type'];
         $batch_ids = [0];
+        $received_batch_ids = [0];
 
         if($src_type == 11){
             $source_type = "delivery_order";
@@ -1173,9 +1194,17 @@ class DeliveryOrderController extends Controller
         }
         $batch_ids = implode(',', $batch_ids);
 
-        $serial_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.batches_id IN('.$batch_ids.') AND serial_numbers.is_sold_issued=1');
+        $rec_batch_data = DB::select('SELECT id FROM batches WHERE batches.item_id='.$itemId.' AND batches.status!="Sold/Issued"');
+        foreach($rec_batch_data as $rec_batch){
+            $received_batch_ids[] = $rec_batch->id;
+        }
+        $received_batch_ids = implode(',', $received_batch_ids);
 
-        return response()->json(['batch_data' => $batch_data,'serial_data' => $serial_data]);
+        $serial_data = DB::select('SELECT serial_numbers.* FROM serial_numbers WHERE serial_numbers.batches_id IN('.$received_batch_ids.') AND serial_numbers.sold_issue_id IN('.$source_id.') AND serial_numbers.source_type="'.$source_type.'" AND serial_numbers.is_sold_issued=1');
+        $item_instance = DB::select('SELECT CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,""),NULLIF(batches.batch_number,""),NULLIF(batches.expiry_date,"")) AS item_instance,batches.*,(COALESCE(receivings.StoreId)) AS store_id FROM batches LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN country ON brands.countries_id=country.id LEFT JOIN receivings ON batches.source_type="receiving" AND batches.source_id=receivings.id WHERE batches.id IN('.$received_batch_ids.') AND receivings.Status="Confirmed" ORDER BY batches.expiry_date ASC');
+        $serial_number_data = DB::select('SELECT * FROM serial_numbers WHERE serial_numbers.batches_id IN('.$received_batch_ids.') AND serial_numbers.is_sold_issued=0 ORDER BY serial_numbers.id ASC');
+
+        return response()->json(['batch_data' => $batch_data,'serial_data' => $serial_data,'item_instance' => $item_instance,'serial_number_data' => $serial_number_data]);
     }
 
     public function getBatchQuantity(Request $request){
@@ -1302,6 +1331,7 @@ class DeliveryOrderController extends Controller
                         $common_data = [
                             'batches_id' => $batch_value['Instance'],
                             'sold_issued_qty' => $batch_value['bactchQuantity'],
+                            'regitems_id' => $item_id,
                         ];
 
                         $db_data = batch_inventories_issue::where('id',$batch_inv_id)->first();
@@ -1377,7 +1407,7 @@ class DeliveryOrderController extends Controller
                                 }
                             }
                         }
-                        $submitted_ids[] = $batch_parent->id;
+                        $submitted_ids[] = $batch_parent->batches_id;
                     }
                 });
 
@@ -1387,6 +1417,14 @@ class DeliveryOrderController extends Controller
                     $serial_number_ids[] = $ser_row->id;
                 }
                 $to_be_removed = array_diff($serial_number_ids, $submitted_ser_ids);
+
+                DB::table('batch_inventories_issues')
+                    ->leftJoin('batches','batch_inventories_issues.batches_id','batches.id')
+                    ->where('batch_inventories_issues.source_id', $header_id)
+                    ->where('batches.item_id', $item_id)
+                    ->where('batch_inventories_issues.source_type', $source_type)
+                    ->whereNotIn('batch_inventories_issues.batches_id', $submitted_ids)
+                    ->delete();
                 
                 DB::table('batch_serial_transactions')
                     ->leftJoin('batches','batch_serial_transactions.batches_id','batches.id')

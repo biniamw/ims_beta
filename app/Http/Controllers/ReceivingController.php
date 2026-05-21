@@ -3514,10 +3514,6 @@ class ReceivingController extends Controller
         return response()->json(['purchase_receiving_status' => $purchase_receiving_status,'production_receiving_status' => $production_receiving_status,'ready_rec_cnt' => $ready_rec_cnt]); 
     }
 
-    public function randNumber(): int{
-        return random_int(100000, 999999);
-    }
-
     public function saveBatchAndSerial(Request $request){
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
@@ -3913,5 +3909,9 @@ class ReceivingController extends Controller
 
         $serial_data = DB::select('SELECT IFNULL(GROUP_CONCAT(" ",serial_number),"") AS serial_number,COUNT(id) AS count_serial FROM serial_numbers WHERE serial_numbers.batches_id='.$batchId.' ORDER BY serial_numbers.id ASC');
         return response()->json(['serial_data' => $serial_data]);
+    }
+
+    public function randNumber(): int{
+        return random_int(100000, 999999);
     }
 }
