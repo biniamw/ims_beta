@@ -643,64 +643,140 @@
                                 </fieldset>
                             </div>
                         </div>
-
                         <hr class="my-30"/>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
-                                    <table id="dynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
-                                        <thead>
-                                            <th style="width:3%;">#</th>
-                                            <th style="width:14%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                            <th style="width:8%;" title="Unit of Measurement">UOM</th>
-                                            <th style="width:10%;" class="direct_reference" title="Quantity on Hand">Qty. on Hand</th>
-                                            <th style="width:10%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
-                                            <th style="width:10%;" class="non_direct_reference" title="Remaining Quantity">Remaining Qty.</th>
-                                            <th style="width:10%;" title="Delivery Quantity">Delivery Qty.<b style="color: red; font-size:16px;">*</b></th>
-                                            <th style="width:9%;" class="pricing_column">Unit Price<b style="color: red; font-size:16px;">*</b></th>
-                                            <th style="width:9%;" class="pricing_column">Total Price</th>
-                                            <th style="width:12%;">Remark</th>
-                                            <th style="width:5%;"></th>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    <table style="width:100%">
-                                        <tr>
-                                            <td>
-                                                <button type="button" name="adds" id="adds" class="btn btn-success btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <div class="tab-pane do_form_tab tab-view" id="form-do-view" role="tabpanel" aria-labelledby="form-do-view">
+                                    <ul class="nav nav-tabs nav-fill" role="tablist">
+                                        <li class="nav-item formnavitm note">
+                                            <a class="nav-link active do-form-tabs form-tab-title active-tab-title" id="form_do_actual_tab" data-toggle="tab" href="#form_do_actual_view" aria-controls="form_do_actual_tab" role="tab" aria-selected="true" title="Actual"><i class="fas fa-database"></i><span class="tab-text">Actual</span></a>                                
+                                        </li>
+                                        <li class="nav-item formnavitm note">
+                                            <a class="nav-link do-form-tabs form-tab-title" id="form_do_standard_tab" data-toggle="tab" href="#form_do_standard_view" aria-controls="form_do_standard_tab" role="tab" aria-selected="true" title="Standard"><i class="fas fa-clipboard"></i><span class="tab-text">Standard</span></a>                                
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content formtabcon" style="margin-top:-14px;">
+                                        <div class="tab-pane do-form-view active form-tab-view active-form-tab-view border" id="form_do_actual_view" aria-labelledby="form_do_actual_view" role="tabpanel">
+                                            <div class="row mt-1 pr-1 pl-1 pb-1">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
+                                                        <table id="dynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
+                                                            <thead>
+                                                                <th style="width:3%;">#</th>
+                                                                <th style="width:14%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:8%;" title="Unit of Measurement">UOM</th>
+                                                                <th style="width:10%;" class="direct_reference" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:10%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
+                                                                <th style="width:10%;" class="non_direct_reference" title="Remaining Quantity">Remaining Qty.</th>
+                                                                <th style="width:10%;" title="Delivery Quantity">Delivery Qty.<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:9%;" class="pricing_column">Unit Price<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:9%;" class="pricing_column">Total Price</th>
+                                                                <th style="width:12%;">Remark</th>
+                                                                <th style="width:5%;"></th>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                        <table style="width:100%">
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" name="adds" id="adds" class="btn btn-success btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
+                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
+                                                    <table style="width:100%;" id="pricingTable" class="rtable pricing_column">
+                                                        <tr style="display: none;">
+                                                            <td style="text-align: right;width:45%">
+                                                                <label id="subGrandTotalLbl" class="form_lbl">Sub Total</label>
+                                                            </td>
+                                                            <td style="text-align: center; width:55%">
+                                                                <label id="subtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="display: none;">
+                                                            <td style="text-align: right;">
+                                                                <label class="form_lbl" id="pricing_tbl_tax">Tax</label>
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                <label id="taxLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;width:50%">
+                                                                <label class="form_lbl">Grand Total</label>
+                                                            </td>
+                                                            <td style="text-align: center;width:50%">
+                                                                <label id="grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane do-form-view form-tab-view border" id="form_do_standard_view" aria-labelledby="form_do_standard_view" role="tabpanel">
+                                            <div class="row mt-1 pr-1 pl-1 pb-1">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
+                                                        <table id="stdDynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
+                                                            <thead>
+                                                                <th style="width:2%;">#</th>
+                                                                <th style="width:16%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:11%;" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:8%;" title="Factor">Factor</th>
+                                                                <th style="width:12%;" title="Quantity per PCs">Qty. per PCs</th>
+                                                                <th style="width:12%;" title="Standard KG">Standard KG</th>
+                                                                <th style="width:11%;" class="pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:11%;" class="pricing_column">Total Price</th>
+                                                                <th style="width:14%;">Remark</th>
+                                                                <th style="width:3%;"></th>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                        <table style="width:100%">
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" name="std-adds" id="std-adds" class="btn btn-success btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
+                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
+                                                    <table style="width:100%;" id="stdPricingTable" class="rtable pricing_column">
+                                                        <tr style="display: none;">
+                                                            <td style="text-align: right;width:45%">
+                                                                <label id="stdSubGrandTotalLbl" class="form_lbl">Sub Total</label>
+                                                            </td>
+                                                            <td style="text-align: center; width:55%">
+                                                                <label id="stdSubtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="display: none;">
+                                                            <td style="text-align: right;">
+                                                                <label class="form_lbl" id="std_pricing_tbl_tax">Tax</label>
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                <label id="std_taxLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;width:50%">
+                                                                <label class="form_lbl">Grand Total</label>
+                                                            </td>
+                                                            <td style="text-align: center;width:50%">
+                                                                <label id="std_grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
-                                <table style="width:100%;" id="pricingTable" class="rtable pricing_column">
-                                    <tr style="display: none;">
-                                        <td style="text-align: right;width:45%">
-                                            <label id="subGrandTotalLbl" class="form_lbl">Sub Total</label>
-                                        </td>
-                                        <td style="text-align: center; width:55%">
-                                            <label id="subtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
-                                        </td>
-                                    </tr>
-                                    <tr style="display: none;">
-                                        <td style="text-align: right;">
-                                            <label class="form_lbl" id="pricing_tbl_tax">Tax</label>
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <label id="taxLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: right;width:50%">
-                                            <label class="form_lbl">Grand Total</label>
-                                        </td>
-                                        <td style="text-align: center;width:50%">
-                                            <label id="grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
-                                        </td>
-                                    </tr>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -882,6 +958,10 @@
         var i = 0;
         var m = 0;
         var j = 0;
+
+        var i1 = 0;
+        var m1 = 0;
+        var j1 = 0;
 
         var x3 = 0;
         var y3 = 0;
@@ -1761,6 +1841,7 @@
             });
         }
 
+        //-----Actual starts-----
         $("#adds").click(function() {
             var lastrowcount = $('#dynamicTable tr:last').find('td').eq(1).find('input').val();
             var itemids = $(`#itemNameSl${lastrowcount}`).val();
@@ -2126,6 +2207,132 @@
 
             $('#grandtotalLbl').html(numformat(parseFloat(grandTotal).toFixed(2)));
         }
+        //-------Actual ends-------
+
+        //-----Standard starts-----
+        $("#std-adds").click(function() {
+            var lastrowcount = $('#stdDynamicTable tr:last').find('td').eq(1).find('input').val();
+            var itemids = $(`#std_itemNameSl${lastrowcount}`).val();
+            var product_type = $("#ProductType").val();
+            var reference_type = $("#ReferenceType").val();
+            var station = $("#station").val();
+            var options = null;
+
+            if(itemids !== undefined && itemids === null){
+                $(`#select2-std_itemNameSl${lastrowcount}-container`).parent().css('background-color',errorcolor);
+                toastrMessage('error',"Please select item from highlighted field","Error");
+            }
+            else if((product_type !== undefined && (product_type == null || product_type == "")) || (station !== undefined && (station == null || station == ""))){
+                if(product_type !== undefined && (product_type == null || product_type == "")){
+                    $('#product-type-error').html("The product type field is required.");
+                }
+                if(station !== undefined && (station == null || station == "")){
+                    $('#station-error').html("The station field is required.");
+                }
+                toastrMessage('error',"Please fill required fields first","Error");
+            }
+            else{
+                ++i1;
+                ++m1;
+                j1 += 1;
+                
+                $("#stdDynamicTable > tbody").append(`<tr>
+                    <td style="font-weight:bold;text-align:center;width:2%">${j1}</td>
+                    <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
+                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="itemFn(this)" name="stdrow[${m1}][ItemId]"></select></td>
+                    <td style="width:11%;"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control"  style="font-weight:bold;"/></td>
+                    <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:14%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
+                    <td style="width:3%;text-align:center;">
+                        <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>`);
+
+                columnMgtFn();
+
+                var default_option = `<option selected disabled value=""></option>`;
+                if(reference_type == 600){
+                    options = $("#item_default");
+                    $(`#std_itemNameSl${m1}`).append(options.find(`option[data-type="${product_type}"]`).clone());
+                }
+                else if(reference_type != 600){
+                    options = $("#reference_item_default > option").clone();
+                    $(`#std_itemNameSl${m1}`).append(options);
+                }
+
+                $('#stdDynamicTable > tbody > tr').each(function(index, tr) {
+                    let item_id = $(this).find('.itemName').val();
+                    $(`#std_itemNameSl${m1} option[value="${item_id}"]`).remove(); 
+                });
+
+                $(`#std_itemNameSl${m1}`).append(default_option);
+                $(`#std_itemNameSl${m1}`).select2({
+                    placeholder: "Select item here",
+                });
+
+                $(`#select2-std_itemNameSl${m1}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+
+                renumberStdRows();
+            }
+        });
+
+        $(document).on('click', '.remove-std-tr', function() {
+            $(this).parents('tr').remove();
+            CalculateStdGrandTotal();
+            renumberStdRows();
+            --i2;
+        });
+
+        function renumberStdRows() {
+            $('#stdDynamicTable > tbody > tr').each(function(index, el) {
+                $(this).children('td').first().text(++index);
+            });
+            columnMgtFn();
+        }
+
+        function CalculateStdTotal(ele) {
+            var inputid = ele.getAttribute('id');
+            var cid = $(ele).closest('tr').find('.std_vals').val();
+            var unitprice = $(ele).closest('tr').find('.std_unitprice').val();
+            var factor = $(ele).closest('tr').find('.factor').val();
+            var quantity = $(ele).closest('tr').find('.std_quantity').val();
+
+            unitprice = unitprice == '' ? 0 : unitprice;
+            factor = factor == '' ? 0 : factor;
+            quantity = quantity == '' ? 0 : quantity;
+            
+            if(!isNaN(unitprice) && !isNaN(factor) && !isNaN(quantity)) {
+                var stadard_kg = parseFloat(factor) * parseFloat(quantity);
+                var total = parseFloat(unitprice) * parseFloat(stadard_kg);
+                $(`#standard_kg${cid}`).val(parseFloat(stadard_kg).toFixed(2));
+                $(`#std_total${cid}`).val(parseFloat(total).toFixed(2));
+
+                if(inputid === `std_unitprice${cid}`){
+                    $(`#std_unitprice${cid}`).css("background","white");
+                }
+                if(inputid === `std_quantity${cid}`){
+                    $(`#std_quantity${cid}`).css("background","white");
+                }
+            }
+            CalculateStdGrandTotal();
+        }
+
+        function CalculateStdGrandTotal() {
+            var grandTotal = 0;
+
+            $.each($('#stdDynamicTable').find('.std_total'), function() {
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    grandTotal += parseFloat($(this).val());
+                }
+            });
+
+            $('#std_grandtotalLbl').html(numformat(parseFloat(grandTotal).toFixed(2)));
+        }
+        //-----Standard ends-----
 
         $('.phone_number').on('input', function (e) {
             let input = $(this);
