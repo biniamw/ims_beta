@@ -345,7 +345,10 @@
                                     <div class="tab-pane do_info_tab tab-view" id="info-do-view" role="tabpanel" aria-labelledby="info-do-view">
                                         <ul class="nav nav-tabs nav-fill" role="tablist">
                                             <li class="nav-item formnavitm note">
-                                                <a class="nav-link active do-tabs tab-title active-tab-title" id="info_do_item_tab" data-toggle="tab" href="#info_do_item_view" aria-controls="info_do_item_tab" role="tab" aria-selected="true" title="Items"><i class="fas fa-list-ul"></i><span class="tab-text">Items</span></a>                                
+                                                <a class="nav-link active do-tabs tab-title active-tab-title" id="info_do_item_tab" data-toggle="tab" href="#info_do_item_view" aria-controls="info_do_item_tab" role="tab" aria-selected="true" title="Items"><i class="fas fa-database"></i><span class="tab-text">Items / Actual</span></a>                                
+                                            </li>
+                                            <li class="nav-item formnavitm note">
+                                                <a class="nav-link do-tabs tab-title" id="info_do_std_tab" data-toggle="tab" href="#info_do_std_view" aria-controls="info_do_std_tab" role="tab" aria-selected="true" title="Standard"><i class="fas fa-clipboard"></i><span class="tab-text">Items / Standard</span></a>                                
                                             </li>
                                             <li class="nav-item formnavitm note">
                                                 <a class="nav-link do-tabs tab-title" id="info_do_doc_tab" data-toggle="tab" href="#info_do_doc_view" aria-controls="info_do_doc_tab" role="tab" aria-selected="true" title="Documents"><i class="fas fa-file-alt"></i><span class="tab-text">Documents</span></a>                                
@@ -353,7 +356,7 @@
                                         </ul>
                                         <div class="tab-content formtabcon" style="margin-top:-14px;">
                                             <div class="tab-pane do-view active tab-view active-tab-view border" id="info_do_item_view" aria-labelledby="info_do_item_view" role="tabpanel">
-                                                <div class="row mt-0 mr-1 ml-1 mb-1">
+                                                <div class="row mt-0 pr-1 pl-1 pb-1">
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="table-responsive scroll scrdiv">
                                                             <div class="row infoRecDiv" id="do_item_div">
@@ -391,6 +394,52 @@
                                                                             </td>
                                                                             <td style="text-align: center;width:50%;">
                                                                                 <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane do-view tab-view border" id="info_do_std_view" aria-labelledby="info_do_std_view" role="tabpanel">
+                                                <div class="row mt-0 pr-1 pl-1 pb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div class="table-responsive scroll scrdiv">
+                                                            <div class="row">
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                    <table id="info-std-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable" style="width: 100%;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th style="display:none;"></th>
+                                                                                <th style="width:3%;">#</th>
+                                                                                <th style="width:8%;">Item Code</th>
+                                                                                <th style="width:20%;">Item Name</th>
+                                                                                <th style="width:8%;" title="Barcode Number">Barcode No.</th>
+                                                                                <th style="width:6%;" title="Unit of Measurement">UOM</th>
+                                                                                <th style="width:6%;">Factor</th>
+                                                                                <th style="width:10%;">Quantity per PCs</th>
+                                                                                <th style="width:10%;">Standard KG</th>
+                                                                                <th style="width:9%;">Price per KG</th>
+                                                                                <th style="width:10%;">Total Price</th>
+                                                                                <th style="width:10%;">Remark</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="table table-sm"></tbody>
+                                                                    </table>  
+                                                                </div>
+                                                            </div>
+                                                            <div class="row fl_class pricing_flag" style="display: none;">
+                                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
+                                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
+                                                                    <table style="width: 100%;font-size:12px" class="rtable">
+                                                                        <tr>
+                                                                            <td style="text-align: right;width:50%;">
+                                                                                <label class="info_lbl">Grand Total</label>
+                                                                            </td>
+                                                                            <td style="text-align: center;width:50%;">
+                                                                                <label id="info_std_total_price" class="info_lbl info_std_total_price" style="font-weight: bold;"></label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -643,16 +692,15 @@
                                 </fieldset>
                             </div>
                         </div>
-                        <hr class="my-30"/>
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="tab-pane do_form_tab tab-view" id="form-do-view" role="tabpanel" aria-labelledby="form-do-view">
                                     <ul class="nav nav-tabs nav-fill" role="tablist">
                                         <li class="nav-item formnavitm note">
-                                            <a class="nav-link active do-form-tabs form-tab-title active-tab-title" id="form_do_actual_tab" data-toggle="tab" href="#form_do_actual_view" aria-controls="form_do_actual_tab" role="tab" aria-selected="true" title="Actual"><i class="fas fa-database"></i><span class="tab-text">Actual</span></a>                                
+                                            <a class="nav-link active do-form-tabs form-tab-title active-form-tab-title" id="form_do_actual_tab" data-toggle="tab" href="#form_do_actual_view" aria-controls="form_do_actual_tab" role="tab" aria-selected="true" title="Actual"><i class="fas fa-database"></i><span class="tab-text">Items / Actual</span></a>                                
                                         </li>
                                         <li class="nav-item formnavitm note">
-                                            <a class="nav-link do-form-tabs form-tab-title" id="form_do_standard_tab" data-toggle="tab" href="#form_do_standard_view" aria-controls="form_do_standard_tab" role="tab" aria-selected="true" title="Standard"><i class="fas fa-clipboard"></i><span class="tab-text">Standard</span></a>                                
+                                            <a class="nav-link do-form-tabs form-tab-title" id="form_do_standard_tab" data-toggle="tab" href="#form_do_standard_view" aria-controls="form_do_standard_tab" role="tab" aria-selected="true" title="Standard"><i class="fas fa-clipboard"></i><span class="tab-text">Items / Standard</span></a>                                
                                         </li>
                                     </ul>
                                     <div class="tab-content formtabcon" style="margin-top:-14px;">
@@ -722,15 +770,17 @@
                                                     <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
                                                         <table id="stdDynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
                                                             <thead>
-                                                                <th style="width:2%;">#</th>
+                                                                <th style="width:3%;">#</th>
                                                                 <th style="width:16%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:11%;" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:14%;" class="direct_reference" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:7%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
+                                                                <th style="width:7%;" class="non_direct_reference" title="Remaining Quantity">Rem. Qty.</th>
                                                                 <th style="width:8%;" title="Factor">Factor</th>
                                                                 <th style="width:12%;" title="Quantity per PCs">Qty. per PCs</th>
                                                                 <th style="width:12%;" title="Standard KG">Standard KG</th>
                                                                 <th style="width:11%;" class="pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
                                                                 <th style="width:11%;" class="pricing_column">Total Price</th>
-                                                                <th style="width:14%;">Remark</th>
+                                                                <th style="width:10%;">Remark</th>
                                                                 <th style="width:3%;"></th>
                                                             </thead>
                                                             <tbody></tbody>
@@ -953,8 +1003,10 @@
         var current_date = $('#currentdateval').val();
         var table = "";
         var detail_table = "";
+        var std_table = "";
         var gblIndex = -1;
         var infoTblIndex = -1;
+        var infoStdTblIndex = -1;
         var i = 0;
         var m = 0;
         var j = 0;
@@ -1251,7 +1303,6 @@
                 <select class="selectpicker form-control dropdownclass" id="product_type_filter" name="product_type_filter[]" title="Select product type here..." data-style="btn btn-outline-secondary waves-effect" data-live-search="true" data-actions-box="true" multiple data-selected-text-format="count" data-count-selected-text="Product Type ({0})">
                     <option selected value="Goods">Goods</option>
                     <option selected value="Commodity">Commodity</option>
-                    <option selected value="Metal">Metal</option>
                 </select>
             `);
 
@@ -1477,11 +1528,12 @@
                 unblockPage(cardSection);
             }
             
-            else if(data.errorv2) {
+            else if(data.errorv2 || data.errorv3) {
                 var error_html = '';
                 var selecteditemsvar = '';
                 var reference_type =  $('#ReferenceType').val();
                 var isChecked = $('#VisiblePrice').is(':checked');
+               
 
                 $('#dynamicTable > tbody > tr').each(function (index) {
                     let k = $(this).find('.vals').val();
@@ -1503,6 +1555,40 @@
                         $(`#select2-itemNameSl${k}-container`).parent().css('background-color',errorcolor);
                     }
                 });
+
+                $('#stdDynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.std_vals').val();
+                    var itmid = ($(`#std_itemNameSl${k}`)).val();
+
+                    if(($(`#std_quantity${k}`).val())!=undefined){
+                        var qnt = $(`#std_quantity${k}`).val();
+                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                            $(`#std_quantity${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#std_unitprice${k}`).val()) != undefined && isChecked){
+                        var unit_price = $(`#std_unitprice${k}`).val();
+                        if(isNaN(parseFloat(unit_price)) || parseFloat(unit_price) == 0){
+                            $(`#std_unitprice${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(isNaN(parseFloat(itmid)) || parseFloat(itmid) == 0){
+                        $(`#select2-std_itemNameSl${k}-container`).parent().css('background-color',errorcolor);
+                    }
+                });
+
+                if(data.errorv3){
+                     $(".form-tab-title").removeClass("active");
+                    $(".form-tab-view").removeClass("active");
+                    $("#form_do_standard_tab").addClass("active");
+                    $("#form_do_standard_view").addClass("active");
+                }   
+                if(data.errorv2){
+                    $(".form-tab-title").removeClass("active");
+                    $(".form-tab-view").removeClass("active");
+                    $("#form_do_actual_tab").addClass("active");
+                    $("#form_do_actual_view").addClass("active");
+                }
 
                 if(parseInt(optype) == 1){
                     $('#savebutton').text('Save');
@@ -1526,6 +1612,32 @@
                     $('#savebutton').prop("disabled", false);
                 }
                 toastrMessage('error',"You should add atleast one item","Error");
+                unblockPage(cardSection);
+            }
+
+            else if(data.actual_std_variance){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"The number of selected items in Actual and Standard tabs must be equal.","Error");
+                unblockPage(cardSection);
+            }
+
+            else if(data.actual_std_similarity){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"The items selected in Actual and Standard tabs must be identical.","Error");
                 unblockPage(cardSection);
             }
 
@@ -1699,14 +1811,20 @@
 
         function listReferenceItemFn(detail_data){
             j = 0;
+            j1 = 0;
             var item_options = null;
             var remaining_qty = null;
             $("#dynamicTable > tbody").empty();
+            $("#stdDynamicTable > tbody").empty();
 
             $.each(detail_data, function(key, value) {
                 ++i;
                 ++j;
                 ++m;
+
+                ++i1;
+                ++j1;
+                ++m1;
                 
                 remaining_qty = parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0);
                 if(parseFloat(remaining_qty) > 0){
@@ -1728,8 +1846,6 @@
                         </td>
                     </tr>`);
 
-                    columnMgtFn();
-
                     $(`#itemNameSl${m}`).select2({minimumResultsForSearch: -1});
                     $(`#uom${m}`).select2({minimumResultsForSearch: -1});
                     $(`#select2-itemNameSl${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
@@ -1745,6 +1861,28 @@
                         $(`#batch_serial_info${m}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
                         $(`#batch_serial_info${m}`).show();
                     }
+
+                    $("#stdDynamicTable > tbody").append(`<tr>
+                        <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
+                        <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
+                        <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
+                        <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.Quantity} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" value="${value.standard_factor}" style="font-weight:bold;"/></td>
+                        <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                        <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                        <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
+                        <td style="width:3%;text-align:center;">
+                            <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>`);
+
+                    $(`#std_itemNameSl${m1}`).select2({minimumResultsForSearch: -1});
+
+                    columnMgtFn();
                 }
             });
 
@@ -1752,6 +1890,9 @@
             $('#reference_item_default').empty().append(item_options).select2();
             renumberRows();
             CalculateGrandTotal();
+
+            renumberStdRows();
+            CalculateStdGrandTotal();
         }
 
         $('#ReferenceType').on('change', function() {
@@ -1760,6 +1901,7 @@
             $('.reference_doc').hide();
             $('.default_hidden_div').hide();
             $("#dynamicTable > tbody").empty();
+            $("#stdDynamicTable > tbody").empty();
             fillProductTypeDataFn(reference_type);
             $('#PaymentType').val(null).select2({placeholder: "Select payment type here",minimumResultsForSearch: -1});
             $('#PaymentTerm').val(null).select2({placeholder: "Select payment term here",minimumResultsForSearch: -1});
@@ -2237,16 +2379,18 @@
                 j1 += 1;
                 
                 $("#stdDynamicTable > tbody").append(`<tr>
-                    <td style="font-weight:bold;text-align:center;width:2%">${j1}</td>
+                    <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
                     <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
-                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="itemFn(this)" name="stdrow[${m1}][ItemId]"></select></td>
-                    <td style="width:11%;"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control"  style="font-weight:bold;"/></td>
+                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"></select></td>
+                    <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:14%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
+                    <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
                     <td style="width:3%;text-align:center;">
                         <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                     </td>
@@ -2286,6 +2430,117 @@
             renumberStdRows();
             --i2;
         });
+
+        function stdItemFn(ele) {
+            var idval = $(ele).closest('tr').find('.std_vals').val();
+            var item_id = $(`#std_itemNameSl${idval}`).val();
+            
+            var arr = [];
+            var found = 0;
+            $('.std_itemName').each(function(){ 
+                var name = $(this).val();
+                if(arr.includes(name)){
+                    found++;
+                }
+                else{
+                    arr.push(name);
+                }
+            });
+            
+            if(found){
+                $(`#std_quantity${idval}`).val("");
+                $(`#factor${idval}`).val("");
+                $(`#std_unitprice${idval}`).val("");
+                $(`#std_total${idval}`).val("");
+                $(`#select2-std_itemNameSl${idval}-container`).parent().css('background-color',errorcolor);
+                toastrMessage('error',"Item already exist in the list","Error");
+                CalculateStdGrandTotal();
+            }
+            else{
+                fetchStdItemInfoFn(idval);
+                calcStdBalanceFn(idval);
+                $(`#select2-std_itemNameSl${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
+            }
+        }
+
+        function fetchStdItemInfoFn(indx){
+            var itemid = null;
+            var reference_id = null;
+            var reference_type = null;
+            var ref_type = $('#ReferenceType').val() || 0;
+            var itm = $(`#std_itemNameSl${indx}`).val() || 0;
+            var record_id = null;
+
+            $.ajax({
+                url: '/fetchDOItemInfo', 
+                type: 'POST',
+                data:{
+                    itemid: $(`#std_itemNameSl${indx}`).val() || 0,
+                    reference_id: $('#Reference').val() || 0,
+                    reference_type: ref_type,
+                    record_id: $('#recordId').val() || 0,
+                },
+                success: function(data) {
+                    $.each(data.item_info, function(key, value) {
+                        var tax_percent = 15;
+                        tax_percent = tax_percent == '' || tax_percent == null ? 0 : tax_percent;
+
+                        var factor = value.standard_factor;
+                        var quantity = $(`#std_quantity${indx}`).val() || 0;
+                        var unitprice = $(`#std_unitprice${indx}`).val() || 0;
+
+                        unitprice = unitprice == '' ? 0 : unitprice;
+                        factor = factor == '' ? 0 : factor;
+                        quantity = quantity == '' ? 0 : quantity;
+
+                        var stadard_kg = parseFloat(factor) * parseFloat(quantity);
+                        var total = parseFloat(unitprice) * parseFloat(stadard_kg);
+                        $(`#standard_kg${indx}`).val(parseFloat(stadard_kg).toFixed(2));
+                        $(`#std_total${indx}`).val(parseFloat(total).toFixed(2));
+                        $(`#factor${indx}`).val(factor);
+                        CalculateStdGrandTotal();
+                    });
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function calcStdBalanceFn(rowid){
+            var baseRecordId = null;
+            var storeval = null;
+            var itemid = null;
+            
+            $.ajax({
+                url: '/calcDOBalance', 
+                type: 'POST',
+                data:{
+                    baseRecordId:$('#recordId').val() || 0,
+                    storeval:$('#station').val(),
+                    itemid:$(`#std_itemNameSl${rowid}`).val(),
+                },
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching item data...');
+                },
+                success: async function(data) {
+                    await getStdBalanceFn(data,rowid);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function getStdBalanceFn(data,rowid){
+            var net_balance = null;
+            var qty = null;
+
+            net_balance = parseFloat(data.available_qty);
+            var uom_name = $(`#std_qty_on_hand${rowid}`).val() || "";
+            $(`#std_qty_on_hand${rowid}`).val(`${net_balance} ${data.uom_name}`);
+        }
 
         function renumberStdRows() {
             $('#stdDynamicTable > tbody > tr').each(function(index, el) {
@@ -2492,6 +2747,7 @@
 
         function getEditDataFn(data){
             j = 0;
+            j1 = 0;
             var remaining_qty = 0;
             var item_options = null;
             var product_type = null;
@@ -2530,8 +2786,7 @@
                 if(value.reference_type == 600){
                     var product_type_options = `
                         <option value="Goods">Goods</option>
-                        <option value="Commodity">Commodity</option>
-                        <option value="Metal">Metal</option>`;
+                        <option value="Commodity">Commodity</option>`;
 
                     var customer_options = $("#default_customer > option").clone();
                     var station_options = $("#default_station > option").clone();
@@ -2595,6 +2850,11 @@
                 ++i;
                 ++j;
                 ++m;
+
+                ++i1;
+                ++j1;
+                ++m1;
+
                 remaining_qty = (parseFloat(value.ordered_qty || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(value.quantity || 0);
 
                 $("#dynamicTable > tbody").append(`<tr>
@@ -2614,6 +2874,24 @@
                         <button type="button" id="remove_rec_item${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>`);
+
+                $("#stdDynamicTable > tbody").append(`<tr>
+                    <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
+                    <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
+                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.regitems_id}">${value.items}</option></select></td>
+                    <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.ordered_qty} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" value="${value.factor}" style="font-weight:bold;"/></td>
+                    <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
+                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_input form-control numeral-mask" value="${value.std_total_price}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here" value="${value.std_remark}"/></td>
+                    <td style="width:3%;text-align:center;">
+                        <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>`);
                 
                 is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                 is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
@@ -2629,14 +2907,21 @@
                     $(`#itemNameSl${m}`).append(options.find(`option[data-type="${product_type}"]`).clone());
                     $(`#itemNameSl option[value="${value.regitems_id}"]`).remove();
                     $(`#itemNameSl${m}`).append(`<option selected value="${value.regitems_id}">${value.items}</option>`).select2();
+
+                    $(`#std_itemNameSl${m1}`).append(options.find(`option[data-type="${product_type}"]`).clone());
+                    $(`#std_itemNameSl option[value="${value.regitems_id}"]`).remove();
+                    $(`#std_itemNameSl${m1}`).append(`<option selected value="${value.regitems_id}">${value.items}</option>`).select2();
                     calcBalanceFn(m);
+                    calcStdBalanceFn(m1);
                 }
                 else if(data.reference_type != 600){
                     $(`#itemNameSl${m}`).select2({minimumResultsForSearch: -1});
+                    $(`#std_itemNameSl${m1}`).select2({minimumResultsForSearch: -1});
                 }
 
                 $(`#uom${m}`).select2({minimumResultsForSearch: -1});
                 $(`#select2-itemNameSl${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-std_itemNameSl${m1}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
                 $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
             });
 
@@ -2664,6 +2949,7 @@
 
             showCostColumnFn();
             CalculateGrandTotal();
+            CalculateStdGrandTotal();
         }
 
         function doInfoFn(recordId){
@@ -2677,6 +2963,7 @@
             $("#recordIds").val(recordId);
             $('.fl_class').hide();
             infoTblIndex = -1;
+            infoStdTblIndex = -1;
             var visibilitymode = false;
             
             $.ajax({
@@ -2813,6 +3100,7 @@
                 $('#info_plate_no').html(value.plate_no);
 
                 $('#info_total_price').html(numformat(parseFloat(value.total_price).toFixed(2)));
+                $('#info_std_total_price').html(numformat(parseFloat(value.std_total_price).toFixed(2)));
 
                 $('#recId').val(data.rec_id);
                 $('#currentStatus').val(value.status);
@@ -2920,13 +3208,22 @@
             var visibility_flag = false;
             var column_index = [];
 
+            var std_visibility_flag = false;
+            var std_column_index = [];
+
             if(is_price_vis == 1){
                 column_index = [8,9];
                 visibility_flag = true;
+
+                std_column_index = [9,10];
+                std_visibility_flag = true;
             }
             else{
                 column_index = [8,9];
                 visibility_flag = false;
+
+                std_column_index = [9,10];
+                std_visibility_flag = false;
             }
 
             detail_table = $('#doInfoDataTbl').DataTable({
@@ -3073,6 +3370,104 @@
                 "columnDefs": [{
                     "targets": column_index,
                     "visible": visibility_flag,
+                }]
+            });
+
+            std_table = $('#info-std-datatable').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: false,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                searching: true,
+                "order": [[ 0, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showDODetailData/' + recordId,
+                    type: 'POST',
+                    complete: function () { 
+                        setFocusStdInfoTable('#info-std-datatable');
+                    },
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        'visible': false
+                    },
+                    {
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },
+                    {
+                        data: 'ItemCode',
+                        name: 'ItemCode',
+                        width:'8%',
+                    },
+                    {
+                        data: 'ItemName',
+                        name: 'ItemName',
+                        width:'20%',
+                    },
+                    {
+                        data: 'SKUNumber',
+                        name: 'SKUNumber',
+                        width:'8%',
+                    },
+                    {
+                        data: 'UOM',
+                        name: 'UOM',
+                        width:'6%',
+                    },
+                    {
+                        data: 'factor',
+                        name: 'factor',
+                        width:'6%'
+                    },
+                    {
+                        data: 'quantity_pcs',
+                        name: 'quantity_pcs',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    },
+                    {
+                        data: 'standard_kg',
+                        name: 'standard_kg',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: 'price_per_kg',
+                        name: 'price_per_kg',
+                        width:'9%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: 'std_total_price',
+                        name: 'std_total_price',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },   
+                    {
+                        data: 'std_remark',
+                        name: 'std_remark',
+                        width:'10%',
+                    },
+                ],
+                "columnDefs": [{
+                    "targets": std_column_index,
+                    "visible": std_visibility_flag,
                 }],
                 "initComplete": function(settings, json) {
                     unblockPage(cardSection);
@@ -3101,6 +3496,16 @@
 
         function setFocusInfoTable(targetTable) {
             $($(targetTable + ' tbody > tr')[infoTblIndex]).addClass('selected');
+        }
+
+        $('#info-std-datatable tbody').on('click', 'tr', function () {
+            $('#info-std-datatable tbody > tr').removeClass('selected');
+            $(this).addClass('selected');
+            infoStdTblIndex = $(this).index();
+        });
+
+        function setFocusStdInfoTable(targetTable) {
+            $($(targetTable + ' tbody > tr')[infoStdTblIndex]).addClass('selected');
         }
 
         function highlight(container, keyword) {
@@ -4199,8 +4604,7 @@
             if(ref_type == 600){
                 var product_type_options = `
                     <option value="Goods">Goods</option>
-                    <option value="Commodity">Commodity</option>
-                    <option value="Metal">Metal</option>`;
+                    <option value="Commodity">Commodity</option>`;
 
                 var customer_options = $("#default_customer > option").clone();
                 var station_options = $("#default_station > option").clone();
@@ -4260,6 +4664,14 @@
                 infoTarget.html(summaryHtml);
             }
         });
+
+        function formTabReset(){
+            $(".form-tab-title").removeClass("active");
+            $(".form-tab-view").removeClass("active");
+            
+            $(".active-form-tab-title").addClass("active");
+            $(".active-form-tab-view").addClass("active");
+        }
 
         function countDOStatusFn(fiscalyear){
             var fyear = 0;
@@ -4345,7 +4757,9 @@
             flatpickr('#DeliveryDate', { dateFormat: 'Y-m-d',clickOpens:true,maxDate:current_date});
             flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
             $("#dynamicTable > tbody").empty();
+            $("#stdDynamicTable > tbody").empty();
             $('#operationtypes').val(1);
+            formTabReset();
         }
 
         function refreshDOFn(){

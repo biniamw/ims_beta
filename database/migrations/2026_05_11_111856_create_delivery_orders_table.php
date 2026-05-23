@@ -34,6 +34,7 @@ class CreateDeliveryOrdersTable extends Migration
             $table->string('id_no')->nullable()->default("");
             $table->string('plate_no')->nullable()->default("");
             $table->double('total_price')->nullable()->default(0);
+            $table->double('std_total_price')->nullable()->default(0);
             $table->integer('fiscal_year')->nullable()->default(0);
             $table->bigInteger('current_document_no')->nullable()->default(0);
             $table->string('prepared_by')->nullable()->default("");
