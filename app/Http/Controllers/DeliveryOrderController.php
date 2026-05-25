@@ -129,7 +129,7 @@ class DeliveryOrderController extends Controller
 
         if($request->row != null){
             foreach ($request->row as $key => $value){
-                $item_id = $value['ItemId'];
+                $item_id = $value['ItemId'] ?? 0;
                 if($item_id != null){
                     $actual_item_ids[] = $item_id;
                 }
@@ -137,7 +137,7 @@ class DeliveryOrderController extends Controller
         }
         if($request->stdrow != null){
             foreach ($request->stdrow as $key => $value){
-                $item_id = $value['std_ItemId'];
+                $item_id = $value['std_ItemId'] ?? 0;
                 if($item_id != null){
                     $standard_item_ids[] = $item_id;
                 }
@@ -1693,6 +1693,7 @@ class DeliveryOrderController extends Controller
 
             $total_price = number_format($headerInfo->total_price ?? 0, 2, '.', ',');
             $std_total_price = number_format($headerInfo->std_total_price ?? 0, 2, '.', ',');
+            $can_view_price = auth()->user()->can('Delivery-Order-ShowORHide-Price') ? 1 : 0;
 
             $customerdata = customer::find($customerid);
             $customername = $customerdata->Name;
@@ -1752,6 +1753,7 @@ class DeliveryOrderController extends Controller
                 'reference' => $reference,
                 'total_price' => $total_price,
                 'std_total_price' => $std_total_price,
+                'can_view_price' => $can_view_price,
                 
                 'count' => $count,
                 'currentdate' => $currentdate,

@@ -223,8 +223,10 @@
                     <th style="width: 8%;" class="bordertables">Factor</th>
                     <th style="width: 10%;" class="bordertables">Qty. per PCs</th>
                     <th style="width: 10%;" class="bordertables">Standard KG</th>
+                    @if($can_view_price == 1)
                     <th style="width: 10%;" class="bordertables">Price per KG</th>
                     <th style="width: 10%;" class="bordertables">Total Price</th>
+                    @endif
                     <th style="width: 10%;" class="bordertables">Remark</th>
                 </tr>
             </thead>
@@ -239,12 +241,15 @@
                 <td style="text-align: center" class="bordertables">{{$item->factor}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_std_quantity}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_standardkg}}</td>
+                @if($can_view_price == 1)
                 <td style="text-align: center" class="bordertables">{{$item->format_price_per_kg}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_std_total_price}}</td>
+                @endif
                 <td style="text-align: center" class="bordertables">{{$item->std_remark}}</td>
             </tr>
             @endforeach
             </tbody>
+            @if($can_view_price == 1)
             <tfoot>
                 <tr>
                     <th colspan="9" style="text-align: right" class="bordertables">Total</th>
@@ -252,6 +257,7 @@
                     <th class="bordertables"></th>
                 </tr>
             </tfoot>
+            @endif
         </table>
         <br/>
         <div>Remark:  <u>{{$remark}}</u></div>

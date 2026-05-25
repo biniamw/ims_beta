@@ -266,10 +266,12 @@
                                                                             <td><label class="info_lbl">Remark</label></td>
                                                                             <td><label class="info_lbl" id="info_remark" style="font-weight: bold;"></label></td>
                                                                         </tr>
+                                                                        @can('Delivery-Order-ShowORHide-Price')
                                                                         <tr>
                                                                             <td><label class="info_lbl">Is Price Visible</label></td>
                                                                             <td><label class="info_lbl" id="info_price_column_vis" style="font-weight: bold;"></label></td>
                                                                         </tr>
+                                                                        @endcan
                                                                     </table>
                                                                 </div>
                                                             </div>
@@ -2297,8 +2299,9 @@
 
         function showCostColumnFn(){
             var reference_type = $("#ReferenceType").val(); 
+            var permission = $("#canviewprice").val(); 
             var isChecked = $('#VisiblePrice').is(':checked');
-            if(isChecked){
+            if(isChecked && permission == 1){
                 $('.pricing_column').show();
             }
             else{
