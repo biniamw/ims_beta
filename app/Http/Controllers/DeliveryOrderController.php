@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\customer;
+use App\Models\store;
 use App\Models\delivery_order;
 use App\Models\delivery_order_detail;
 use App\Models\Regitem;
@@ -23,6 +24,9 @@ use App\Models\batch_inventory;
 use App\Models\serial_number;
 use App\Models\batch_serial_transaction;
 use App\Models\batch_inventories_issue;
+use App\Models\companyinfo;
+use App\Models\systeminfo;
+use App\Models\lookupref;
 use Illuminate\Support\Facades\Validator;
 use Yajra\Datatables\Datatables;
 use Exception;
@@ -42,6 +46,7 @@ class DeliveryOrderController extends Controller
         $settings = DB::table('settings')->latest()->first();
         $fyear = $settings->FiscalYear;
         $currentdate = Carbon::today()->toDateString();
+        $can_view_price = auth()->user()->can('Delivery-Order-ShowORHide-Price') ? 1 : 0;
         $station_src = DB::select('SELECT * FROM stores WHERE stores.id>1 AND stores.ActiveStatus="Active" ORDER BY stores.Name ASC');
         $customer_src = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory IN("Customer","Customer&Supplier") AND customers.ActiveStatus="Active" AND customers.id>2 ORDER BY customers.Name ASC LIMIT 50');
         $uses_data = DB::select('SELECT * FROM users WHERE id>1 ORDER BY users.username ASC');
@@ -54,7 +59,8 @@ class DeliveryOrderController extends Controller
         $delivery_data = [
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
-            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data
+            'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data,
+            'can_view_price' => $can_view_price
         ];
 
         if($request->ajax()) {
@@ -195,7 +201,7 @@ class DeliveryOrderController extends Controller
                     'supporting_doc_no' => $request->DocumentNumber,
                     'payment_type' => $request->PaymentType,
                     'payment_term' => $request->PaymentTerm,
-                    'show_pricing' => $request->has('VisiblePrice'),
+                    'show_pricing' => $request->has('VisiblePrice') ?? 0,
                     'customers_id' => $request->customer,
                     'delivery_by' => $request->DeliverBy,
                     'phone_no' => $request->PhoneNumber,
@@ -1631,6 +1637,179 @@ class DeliveryOrderController extends Controller
 
     public function randNumber(): int{
         return random_int(100000, 999999);
+    }
+
+    public function doattachment($id,$type){
+        if(delivery_order_detail::where('delivery_order_id',$id)->exists()){
+            error_reporting(0); 
+            //---Start Header Info---
+            $st = "";
+            $reference = "";
+            $compId = 1;
+            $compInfo = companyinfo::find($compId);
+            $companyname = $compInfo->Name;
+            $companytin = $compInfo->TIN;
+            $companyvat = $compInfo->VATReg;
+            $companyphone = $compInfo->Phone;
+            $companyoffphone = $compInfo->OfficePhone;
+            $companyemail = $compInfo->Email;
+            $companyaddress = $compInfo->Address;
+            $companywebsite = $compInfo->Website;
+            $companycountry = $compInfo->Country;
+            $companyLogo = $compInfo->Logo;
+            $companyalladdress = $compInfo->AllAddress;
+            //---End Header Info----- 
+
+            //---Start Footer Info---
+            $sysId = 1;
+            $sysInfo = systeminfo::find($sysId);
+            $systemname = $sysInfo->Name;
+            $systemtin = $sysInfo->TIN;
+            $systemvat = $sysInfo->VATReg;
+            $systemphone = $sysInfo->Phone;
+            $systemoffphone = $sysInfo->OfficePhone;
+            $systememail = $sysInfo->Email;
+            $systemaddress = $sysInfo->Address;
+            $systemwebsite = $sysInfo->Website;
+            $systemcountry = $sysInfo->Country;
+            $systemalladdress = $sysInfo->AllAddress;
+            //---End Footer Info----- 
+
+            $headerInfo = delivery_order::find($id);
+            $docnum = $headerInfo->document_number;
+            $reference_type = $headerInfo->reference_type;
+            $product_type = $headerInfo->product_type;
+            $remark = $headerInfo->remark;
+            $delivery_date = $headerInfo->delivery_date;
+            $delivery_by = $headerInfo->delivery_by;
+            $preparedby = $headerInfo->prepared_by;
+            $prepareddate = $headerInfo->prepared_date;
+            $verifiedby = $headerInfo->verified_by;
+            $verifieddate = $headerInfo->verified_date;
+            $approvedby = $headerInfo->approved_by;
+            $approveddate = $headerInfo->approved_date;
+            $storeid = $headerInfo->station;
+            $customerid = $headerInfo->customers_id;
+
+            $total_price = number_format($headerInfo->total_price ?? 0, 2, '.', ',');
+            $std_total_price = number_format($headerInfo->std_total_price ?? 0, 2, '.', ',');
+
+            $customerdata = customer::find($customerid);
+            $customername = $customerdata->Name;
+            $customercategory = $customerdata->CustomerCategory;
+            $customertin = $customerdata->TinNumber;
+            $customervat = $customerdata->VatNumber;
+
+            $stationdata = store::find($storeid);
+            $station_name = $stationdata->Name;
+
+            $lookupreq = lookupref::find($reference_type);
+            $reference_type_name = $lookupreq->LookupName;
+
+            if($reference_type == 601){
+                $pi_data = Proforma::find($headerInfo->reference_id);
+                $reference = $pi_data->DocumentNumber;
+            }
+            else if($reference_type == 602){
+                $so_data = SalesOrder::find($headerInfo->reference_id);
+                $reference = $so_data->docno;
+            }
+            else if($reference_type == 603){
+                $si_data = Sales::find($headerInfo->reference_id);
+                $reference = $si_data->VoucherNumber;
+            }
+
+            $datetime = Carbon::createFromFormat('Y-m-d H:i:s', $headerInfo->created_at)
+            ->settings(['timezone' => 'Africa/Addis_Ababa'])->format('Y-m-d @ g:i:s A');
+
+            $status = $headerInfo->status;
+
+            $currentdate = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
+            $detailTable = DB::select('SELECT delivery_order_details.*,FORMAT(delivery_order_details.unit_price,2) AS format_unit_price,FORMAT(delivery_order_details.total_price,2) AS format_total_price,FORMAT(delivery_order_details.price_per_kg,2) AS format_price_per_kg,FORMAT(delivery_order_details.std_total_price,2) AS format_std_total_price,FORMAT(delivery_order_details.quantity,0) AS format_quantity,FORMAT(delivery_order_details.quantity_pcs,0) AS format_std_quantity,FORMAT(delivery_order_details.standard_kg,2) AS format_standardkg,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type,delivery_order_details.is_fully_entered,delivery_order_details.entered_qty,delivery_orders.status FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC');
+            $count = 0;
+
+            $data = [
+                'detailTable' => $detailTable,
+                'docnum' => $docnum,
+                'product_type' => $product_type,
+                'preparedby' => $preparedby,
+                'prepareddate' => $prepareddate,
+                'verifiedby' => $verifiedby,
+                'verifieddate' => $verifieddate,
+                'approvedby' => $approvedby,
+                'approveddate' => $approveddate,
+                'delivery_date' => $delivery_date,
+                'delivery_by' => $delivery_by,
+                'datetime' => $datetime,
+                'remark' => $remark,
+                'station_name' => $station_name,
+                'customername' => $customername,
+                'customercategory' => $customercategory,
+                'customertin' => $customertin,
+                'customervat' => $customervat,
+                'reference_type_name' => $reference_type_name,
+                'reference_type' => $reference_type,
+                'reference' => $reference,
+                'total_price' => $total_price,
+                'std_total_price' => $std_total_price,
+                
+                'count' => $count,
+                'currentdate' => $currentdate,
+
+                'companyname' => $companyname,
+                'companytin' => $companytin,
+                'companyvat' => $companyvat,
+                'companyphone' => $companyphone,
+                'companyoffphone' => $companyoffphone,
+                'companyemail' => $companyemail,
+                'companyaddress' => $companyaddress,
+                'companywebsite' => $companywebsite,
+                'companycountry' => $companycountry,
+                'companyLogo' => $companyLogo,
+                'companyalladdress' => $companyalladdress,
+                'systemname' => $systemname,
+                'systemtin' => $systemtin,
+                'systemvat' => $systemvat,
+                'systemphone' => $systemphone,
+                'systemoffphone' => $systemoffphone,
+                'systememail' => $systememail,
+                'systemaddress' => $systemaddress,
+                'systemwebsite' => $systemwebsite,
+                'systemcountry' => $systemcountry,
+                'systemalladdress' => $systemalladdress,
+            ];
+            $mpdf=new \Mpdf\Mpdf([
+                //'orientation' => 'L',
+                'margin_left' => 2,
+                'margin_right' => 2,
+                'margin_top' => 37,
+                'margin_bottom' => 25,
+                'margin_header' => 0,
+                'margin_footer' => 1
+            ]); 
+
+            if($type == 1){
+                $html = \View::make('sales.report.doatt')->with($data);
+                $output_name = "Delivery Order {$docnum}";
+                $title_name = "Delivery Order ({$docnum})";
+            }
+            else if($type == 2){
+                $html = \View::make('sales.report.do_order')->with($data);
+                $output_name = "Order Request {$docnum}";
+                $title_name = "Order Request ({$docnum})";
+            }
+            
+            $html = $html->render();  
+            $mpdf->SetTitle($title_name);
+            $mpdf->SetDisplayMode('fullpage');
+            $mpdf->list_indent_first_level = 0; 
+            $mpdf->SetAuthor($companyalladdress);
+            $mpdf->SetWatermarkText($status);
+            $mpdf->watermark_font = 'DejaVuSansCondensed';
+            $mpdf->showWatermarkText = true;
+            $mpdf->WriteHTML($html);
+            $mpdf->Output($output_name.'.pdf','I');
+        }
     }
 
     /**

@@ -136,6 +136,7 @@
                                                     <li><a href="#" onclick="moduleFn()"><i data-feather="shopping-bag"></i>   Sales & Marketing</a>
                                                         <ul class="opt">
                                                             <li><a href="#" onclick="salesFn('Sales')"><i data-feather="circle"></i>   Sales</a></li>
+                                                            <li><a href="#" onclick="deliveryOrderFn('DO')"><i data-feather="circle"></i>   Delivery Order</a></li>
                                                             <li><a href="#" onclick="proformaFn('Proforma')"><i data-feather="circle"></i>   Proforma</a></li>
                                                         </ul>
                                                     </li>
@@ -604,6 +605,20 @@
                                                     </div>
                                                     <div class="card-body">
                                                         @foreach ($salespermission as $data)
+                                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input userpermission" id="colorCheck{{ $data->id }}" name="permission[]" value="{{ $data->id }}"/>
+                                                            <label class="custom-control-label" for="colorCheck{{ $data->id }}">{{ $data->name }}</label>                                                
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+
+                                                <div class="card cardpermission" id="DO">
+                                                    <div class="card-header">
+                                                        <h6 class="card-title">Delivery Order Permission</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        @foreach ($deliveryorderpermission as $data)
                                                         <div class="custom-control custom-control-primary custom-checkbox">
                                                             <input type="checkbox" class="custom-control-input userpermission" id="colorCheck{{ $data->id }}" name="permission[]" value="{{ $data->id }}"/>
                                                             <label class="custom-control-label" for="colorCheck{{ $data->id }}">{{ $data->name }}</label>                                                
@@ -1637,6 +1652,11 @@
 
     function salesFn(name)
     {
+        $(".cardpermission").hide();
+        $("#"+name).show();
+    }
+
+    function deliveryOrderFn(name){
         $(".cardpermission").hide();
         $("#"+name).show();
     }

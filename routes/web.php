@@ -1152,6 +1152,8 @@ Route::post('issueBatchAndSerial','DeliveryOrderController@issueBatchAndSerial')
 
 Route::post('getItemBactchDataIssue','DeliveryOrderController@getItemBactchDataIssue');
 Route::post('getItemSerialDataIssue','DeliveryOrderController@getItemSerialDataIssue');
+
+Route::get('/doatt/{id}/{type}','DeliveryOrderController@doattachment');
 //---------------End DO--------------------
 
 //---------------Start finance closing------------------

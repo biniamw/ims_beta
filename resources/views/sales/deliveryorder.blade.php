@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-    @can('Dispatch-View')
+    @can('Delivery-Order-View')
         <div class="app-content content">
             <section id="responsive-datatable">
                 <div class="row">
@@ -165,6 +165,7 @@
                                     </div>
                                     <input type="hidden" class="form-control" name="fiscalyearval" id="fiscalyearval" value="{{$fiscalyr}}" readonly/>
                                     <input type="hidden" class="form-control" name="currentdateval" id="currentdateval" value="{{$curdate}}" readonly/>
+                                    <input type="hidden" class="form-control" name="canviewprice" id="canviewprice" value="{{$can_view_price}}" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -357,9 +358,14 @@
                                         <div class="tab-content formtabcon" style="margin-top:-14px;">
                                             <div class="tab-pane do-view active tab-view active-tab-view border" id="info_do_item_view" aria-labelledby="info_do_item_view" role="tabpanel">
                                                 <div class="row mt-0 pr-1 pl-1 pb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                        <div class="breadcrumb-path">
+                                                            <div class="crumb active"><a>Items / Actual</a></div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="table-responsive scroll scrdiv">
-                                                            <div class="row infoRecDiv" id="do_item_div">
+                                                            <div class="row infoRecDiv" id="do_item_div"> 
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                     <table id="doInfoDataTbl" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable" style="width: 100%">
                                                                         <thead>
@@ -405,6 +411,11 @@
                                             </div>
                                             <div class="tab-pane do-view tab-view border" id="info_do_std_view" aria-labelledby="info_do_std_view" role="tabpanel">
                                                 <div class="row mt-0 pr-1 pl-1 pb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                        <div class="breadcrumb-path">
+                                                            <div class="crumb active"><a>Items / Standard</a></div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="table-responsive scroll scrdiv">
                                                             <div class="row">
@@ -450,7 +461,12 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane do-view tab-view border" id="info_do_doc_view" aria-labelledby="info_do_doc_view" role="tabpanel">
-                                                <div class="row mt-0 mr-1 ml-1 mb-1">
+                                                <div class="row mt-0 pr-1 pl-1 pb-1">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                        <div class="breadcrumb-path">
+                                                            <div class="crumb active"><a>Documents</a></div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <table id="info-document-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable" style="width: 100%;">
                                                             <thead>
@@ -637,12 +653,14 @@
                                         </div>
 
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="do_cost_visibility">
+                                            @can('Delivery-Order-ShowORHide-Price')
                                             <div class="form-check form-check-inline">
                                                 <div class="custom-control custom-control-primary custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="VisiblePrice" name="VisiblePrice"/>
                                                     <label class="custom-control-label form_lbl" for="VisiblePrice">Show Price Columns</label>                                  
                                                 </div>
                                             </div>
+                                            @endcan
                                         </div>
                                     </div>
                                 </fieldset>
@@ -705,7 +723,12 @@
                                     </ul>
                                     <div class="tab-content formtabcon" style="margin-top:-14px;">
                                         <div class="tab-pane do-form-view active form-tab-view active-form-tab-view border" id="form_do_actual_view" aria-labelledby="form_do_actual_view" role="tabpanel">
-                                            <div class="row mt-1 pr-1 pl-1 pb-1">
+                                            <div class="row pt-1 pr-1 pl-1 pb-1">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 pb-1 section-path">
+                                                    <div class="breadcrumb-path">
+                                                        <div class="crumb active"><a>Items / Actual</a></div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                     <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
                                                         <table id="dynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
@@ -753,10 +776,10 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="text-align: right;width:50%">
+                                                            <td style="text-align: right;vertical-align: middle;width:50%">
                                                                 <label class="form_lbl">Grand Total</label>
                                                             </td>
-                                                            <td style="text-align: center;width:50%">
+                                                            <td style="text-align: center;vertical-align: middle;width:50%">
                                                                 <label id="grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
                                                             </td>
                                                         </tr>
@@ -765,9 +788,14 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane do-form-view form-tab-view border" id="form_do_standard_view" aria-labelledby="form_do_standard_view" role="tabpanel">
-                                            <div class="row mt-1 pr-1 pl-1 pb-1">
+                                            <div class="row pt-1 pr-1 pl-1 pb-1">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 pb-1 section-path">
+                                                    <div class="breadcrumb-path">
+                                                        <div class="crumb active"><a>Items / Standard</a></div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                    <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
+                                                    <div class="table-responsive pr-0 pl-0" style="width:100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
                                                         <table id="stdDynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
                                                             <thead>
                                                                 <th style="width:3%;">#</th>
@@ -798,10 +826,10 @@
                                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
                                                     <table style="width:100%;" id="stdPricingTable" class="rtable pricing_column">
                                                         <tr style="display: none;">
-                                                            <td style="text-align: right;width:45%">
+                                                            <td style="text-align: right;">
                                                                 <label id="stdSubGrandTotalLbl" class="form_lbl">Sub Total</label>
                                                             </td>
-                                                            <td style="text-align: center; width:55%">
+                                                            <td style="text-align: center;">
                                                                 <label id="stdSubtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
                                                             </td>
                                                         </tr>
@@ -814,11 +842,23 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="text-align: right;width:50%">
+                                                            <td style="text-align: right;vertical-align: middle;width:50%">
                                                                 <label class="form_lbl">Grand Total</label>
                                                             </td>
-                                                            <td style="text-align: center;width:50%">
+                                                            <td style="text-align: center;vertical-align: middle;width:50%">
                                                                 <label id="std_grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table style="width:100%;">
+                                                        <tr>
+                                                            <td>
+                                                                <div class="form-check form-check-inline" id="printOrderReqDiv">
+                                                                    <div class="custom-control custom-control-primary custom-checkbox mt-1">
+                                                                        <input type="checkbox" class="custom-control-input" id="printOrderReq" name="printOrderReq" checked/>
+                                                                        <label class="custom-control-label" for="printOrderReq" style="font-size:12px">Print Order Request</label>                                  
+                                                                    </div>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -1681,8 +1721,13 @@
                     createDOInfoFn(data.rec_id);
                     tabMgtFn();
                     refreshMainDatatbleFn();
-                }    
-                $("#inlineForm").modal('hide');
+                }   
+                $("#inlineForm").modal('hide'); 
+                var isChecked = $('#printOrderReq').is(':checked');
+                if(isChecked == true) {
+                    var link = `/doatt/${data.rec_id}/2`;
+                    window.open(link, 'Delivery Order', 'width=1200,height=800,scrollbars=yes');
+                }
             }
         }
 
@@ -2264,6 +2309,7 @@
         function columnMgtFn(){
             var reference_type = $("#ReferenceType").val(); 
             var isChecked = $('#VisiblePrice').is(':checked');
+            var permission = $("#canviewprice").val(); 
 
             if(reference_type == 600){
                 $('.non_direct_reference').hide();
@@ -2276,10 +2322,10 @@
                 $('.unitprice').prop("readonly",true);
             }
 
-            if(isChecked){
+            if(isChecked && permission == 1){
                 $('.pricing_column').show();
             }
-            else if(!isChecked){
+            else if(!isChecked || permission != 1){
                 $('.pricing_column').hide();
             }
         }
@@ -2742,6 +2788,7 @@
             $("#delivery_order_title").html('Edit Delivery Order');
             $('#savebutton').text('Update');
             $('#savebutton').prop("disabled",false);
+            $('#printOrderReq').prop('checked', false);
             $("#inlineForm").modal('show');
         }
 
@@ -2990,7 +3037,7 @@
             var major_btn_link = `<li><hr class="dropdown-divider"></li>`;
             var status_btn_link = `<li><hr class="dropdown-divider"></li>`;
             var edit_link = `
-                @can("Receiving-Edit")
+                @can("Delivery-Order-Edit")
                     <li>
                         <a class="dropdown-item editDORecord" href="javascript:void(0)" onclick="editDOFn(${data.rec_id})" data-id="editDOLink${data.rec_id}" id="editDOLink${data.rec_id}" title="Edit record">
                         <span><i class="fa-solid fa-pencil"></i> Edit</span>  
@@ -2999,7 +3046,7 @@
                 @endcan`;
 
             var void_link = `
-                @can("Receiving-Void")
+                @can("Delivery-Order-Void")
                     <li>
                         <a class="dropdown-item voidDORecord" href="javascript:void(0)" onclick="voidDOFn(${data.rec_id})" data-id="voidDOLink${data.rec_id}" id="voidDOLink${data.rec_id}" title="Void record">
                         <span><i class="fa-solid fa-ban"></i> Void</span>  
@@ -3008,7 +3055,7 @@
                 @endcan`;
 
             var undovoid_link = `
-                @can("Receiving-Void")
+                @can("Delivery-Order-Void")
                 <li>
                     <a class="dropdown-item undoVoidDORecord" href="javascript:void(0)" onclick="undoVoidDOFn(${data.rec_id})" data-id="undoVoidDOLink${data.rec_id}" id="undoVoidDOLink${data.rec_id}" title="Undo void record">
                     <span><i class="fa fa-undo"></i> Undo Void</span>  
@@ -3017,7 +3064,7 @@
                 @endcan`;
 
             var change_to_pending_link = `
-                @can("Receiving-ChangeToPending")
+                @can("Delivery-Order-ChangeToPending")
                 <li>
                     <a class="dropdown-item changeToPending" onclick="forwardDOFn()" id="changeToPendingLink${data.rec_id}" title="Change record to pending">
                     <span><i class="fa-solid fa-forward"></i> Change to Pending</span>  
@@ -3026,7 +3073,7 @@
                 @endcan`;
 
             var back_to_draft_link = `
-                @can("Receiving-ChangeToPending")
+                @can("Delivery-Order-ChangeToPending")
                 <li>
                     <a class="dropdown-item dobackward" id="backToDraftLink${data.rec_id}" title="Change record to draft">
                     <span><i class="fa-solid fa-backward"></i> Back to Draft</span>  
@@ -3035,7 +3082,7 @@
                 @endcan`;
 
             var verify_link = `
-                @can("Receiving-ChangeToPending")
+                @can("Delivery-Order-Verify")
                 <li>
                     <a class="dropdown-item changeToVerified" onclick="forwardDOFn()" id="changeToVerifiedLink${data.rec_id}" title="Change record to verified">
                     <span><i class="fa-solid fa-forward"></i> Verify</span>  
@@ -3044,7 +3091,7 @@
                 @endcan`;
 
             var back_to_pending = `
-                @can("Receiving-ChangeToPending")
+                @can("Delivery-Order-Verify")
                 <li>
                     <a class="dropdown-item dobackward" id="backToPendingLink${data.rec_id}" title="Change record to pending">
                     <span><i class="fa-solid fa-backward"></i> Back to Pending</span>  
@@ -3053,7 +3100,7 @@
                 @endcan`;
 
             var approve_link = `
-                @can("Receiving-ChangeToPending")
+                @can("Delivery-Order-Approve")
                 <li>
                     <a class="dropdown-item changeToApproved" onclick="forwardDOFn()" id="changeToApprovedLink${data.rec_id}" title="Change record to approved">
                     <span><i class="fa-solid fa-forward"></i> Approve</span>  
@@ -3062,14 +3109,27 @@
                 @endcan`;
 
             var upload_document_link = `
-                @can("Receiving-Confirm")
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item" id="managedocumentBtn" onclick="openDocumentUploadFn(${data.rec_id})" title="Open document manage form">
                     <span><i class="fas fa-sliders-h"></i> Manage Documents</span>
                     </a>
-                </li>
-                @endcan`;
+                </li>`;
+
+            var print_doatt_link = `
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/1" data-id="printdoatt${data.rec_id}" id="printdoatt${data.rec_id}" title="Print Delivery Order Note">
+                    <span><i class="fa fa-file"></i> Print Delivery Order Note</span>  
+                    </a>
+                </li>`;
+
+            var print_order_request_link = `
+                <li>
+                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/2" data-id="printdordereq${data.rec_id}" id="printdordereq{data.rec_id}" title="Print Order Request">
+                    <span><i class="fa fa-file"></i> Print Order Request</span>  
+                    </a>
+                </li>`;
 
             $.each(data.do_data, function(key, value) {
                 $('#info_reference_type').html(value.reference_types);
@@ -3165,7 +3225,9 @@
                 </li>
                 ${major_btn_link}
                 ${upload_document_link}
-                ${status_btn_link}`;
+                ${status_btn_link}
+                ${print_doatt_link}
+                ${print_order_request_link}`;
 
                 $("#do_action_ul").empty().append(action_links);
             });
@@ -3205,13 +3267,14 @@
         }
 
         function fetchDOItemFn(recordId,is_price_vis){
+            var permission = $("#canviewprice").val();
             var visibility_flag = false;
             var column_index = [];
 
             var std_visibility_flag = false;
             var std_column_index = [];
 
-            if(is_price_vis == 1){
+            if(is_price_vis == 1 && permission == 1){
                 column_index = [8,9];
                 visibility_flag = true;
 
@@ -4635,6 +4698,14 @@
             }
         }
 
+        //Start Print Attachment
+        $('body').on('click', '.printDoAttLink', function() {
+            var id = $(this).data('id');
+            var link = $(this).data('link');
+            window.open(link, 'Delivery Order', 'width=1200,height=800,scrollbars=yes');
+        });
+        //End Print Attachment
+
         $(document).on('show.bs.collapse hide.bs.collapse', '.collapse', function (e) {
             e.stopPropagation();
             const collapse = $(this);
@@ -4759,6 +4830,7 @@
             $("#dynamicTable > tbody").empty();
             $("#stdDynamicTable > tbody").empty();
             $('#operationtypes').val(1);
+            $('#printOrderReq').prop('checked', false);
             formTabReset();
         }
 

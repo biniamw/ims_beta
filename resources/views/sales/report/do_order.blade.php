@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr">
+    <head>
+        <style>
+           
+           body 
+           { 
+               margin:-35;
+               padding:14; 
+            }
+            h1,h2,h3,h4,h5,h6,p,span,div { 
+                font-family: Arial, Helvetica, sans-serif;  
+                font-size:14px;
+                font-weight: normal;
+            }
+            th,td { 
+                font-family: Arial, Helvetica, sans-serif;  
+                font-size:14px;
+            }
+            
+            table {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 0px;
+                border-spacing: 0;
+                border-collapse: collapse;
+                background-color: transparent;
+                margin-left: 0%;
+                table-layout:fixed;
+            }
+            thead  {
+                text-align: left;
+                display: table-header-group;
+                vertical-align: middle;
+            }
+            th, td  {
+               
+                padding: 6px;
+            }
+           
+            .headers
+            {
+                text-align:center;
+            }
+            
+            .bordertables
+            {
+                border: 1px solid black;
+            }
+            .bordertableswhite
+            {
+                border: 1px solid white;
+                color:white;
+            }
+            .bordertablessign
+            {
+                border: 1px solid white;
+            }
+            .headerHeight
+            {
+                height: 100px;
+            }
+            table thead th { 
+                background-color: #EEEEEE;
+                text-align: center;
+                border: 0.1mm solid #000000;
+            }
+            .headerTable
+            {
+                border-bottom: 1px solid black; 
+                margin-top:1px;
+            }
+            .doctitle
+            {
+                font-size:1.5rem;
+            }
+            .headerTitles
+            {
+                text-align:center;
+                font-size:1.7rem;
+            }
+            table td img {
+                display: inline-block;  
+                float: left;
+                width: 100%;
+                height: 120px;
+                table-layout: fixed; 
+            }
+        </style>
+    </head>
+    <body>
+        <htmlpageheader name="myheader">
+            <table>
+                <tr>
+                    <td colspan="3">
+                        <table class="headerTable">
+                            <tr>
+                                <td colspan="6" class="headerTitles" style="text-align: center;"><b>{{$companyname}}</b></td>
+                                {{-- <td rowspan="4" style="width:15%;border:none;"><img src="data:image/png;base64,{{ chunk_split(base64_encode($compInfo->Logo)) }}" width="150" height="150"></td> --}}
+                            </tr>
+                            <tr>
+                                <td><b>TIN: </b></td>
+                                <td colspan="2">{{$companytin}}</td>
+                                <td><b>Address: </b></td>
+                                <td colspan="2">{{$companyaddress}}</td>
+                                
+                            </tr>
+                            <tr>
+                                <td><b>VAT No.: </b></td>
+                                <td colspan="2">{{$companyvat}}</td>
+                                <td><b>Email: </b></td>
+                                <td colspan="2">{{$companyemail}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 10%;"><b>Phone: </b></td>
+                                <td style="width: 40%;" colspan="2">{{$companyphone}},{{$companyoffphone}}</td>
+                                <td style="width: 10%;"><b>Website: </b></td>
+                                <td style="width: 40%;" colspan="2">{{$companywebsite}}</td>   
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </htmlpageheader>
+        <htmlpagefooter name="myfooter">
+        <div style="border-top: 1px solid #000000; font-size: 9pt;padding-top: 3mm;">
+            <table style="width: 100%">
+                <tr>
+                    <td><b>Printed on: </b>{{$currentdate}}</td>
+                    <td style="text-align: right;">Page {PAGENO} of {nb}</td>
+                </tr>
+            </table>
+        </div>
+        </htmlpagefooter>
+        <sethtmlpageheader name="myheader" value="on" show-this-page="1"/>
+        <sethtmlpagefooter name="myfooter" value="on"/>
+        <table>
+            <tr>
+                <td colspan="3" class="headers doctitle"><b>Delivery Order Request</b></td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%" class="bordertables">
+                        <tbody>
+                            <tr class="headerHeight">
+                                <td class="headers bordertables" style="height:20px;" colspan="2"><div style="height:20px;"><b>General Information</b></div></td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Reference Type</b></td>
+                                <td class="bordertables">{{$reference_type_name}}</td>
+                            </tr>
+                            @if($reference_type != 600)
+                            <tr>
+                                <td class="bordertables"><b>Reference</b></td>
+                                <td class="bordertables">{{$reference}}</td>
+                            </tr>
+                            @endif
+                            <tr>
+                                <td class="bordertables"><b>Delivery Order No.</b></td>
+                                <td class="bordertables">{{$docnum}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Product Type</b></td>
+                                <td class="bordertables">{{$product_type}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Station</b></td>
+                                <td class="bordertables">{{$station_name}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Date</b></td>
+                                <td class="bordertables">{{$delivery_date}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table style="width: 100%;" class="bordertables">
+                        <tbody>
+                            <tr class="headerHeight">
+                                <td class="headers bordertables" style="height:20px;" colspan="2"><div style="height:20px;"><b>Customer Information</b></div></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 25%;" class="bordertables"><b>Category</b></td>
+                                <td style="width: 75%;" class="bordertables">{{$customercategory}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Name</b></td>
+                                <td class="bordertables">{{$customername}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>TIN</b></td>
+                                <td class="bordertables">{{$customertin}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>VAT No.</b></td>
+                                <td class="bordertables">{{$customervat}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                            </tr>
+                            @if($reference_type != 600)
+                            <tr>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
+            <thead>
+                <tr>
+                    <th style="width: 3%;" class="bordertables">#</th>
+                    <th style="width: 10%;" class="bordertables">Item Code</th>
+                    <th style="width: 11%;" class="bordertables">Item Name</th>
+                    <th style="width: 10%;" class="bordertables">Barcode No.</th>
+                    <th style="width: 8%;" class="bordertables">UOM</th>
+                    <th style="width: 8%;" class="bordertables">Factor</th>
+                    <th style="width: 10%;" class="bordertables">Qty. per PCs</th>
+                    <th style="width: 10%;" class="bordertables">Standard KG</th>
+                    <th style="width: 10%;" class="bordertables">Price per KG</th>
+                    <th style="width: 10%;" class="bordertables">Total Price</th>
+                    <th style="width: 10%;" class="bordertables">Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($detailTable as $item)
+            <tr>           
+                <td style="text-align: center" class="bordertables">{{++$count}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->ItemCode}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->ItemName}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->SKUNumber}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->UOM}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->factor}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->format_std_quantity}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->format_standardkg}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->format_price_per_kg}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->format_std_total_price}}</td>
+                <td style="text-align: center" class="bordertables">{{$item->std_remark}}</td>
+            </tr>
+            @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="9" style="text-align: right" class="bordertables">Total</th>
+                    <th style="text-align: center" class="bordertables">{{$std_total_price}}</th>
+                    <th class="bordertables"></th>
+                </tr>
+            </tfoot>
+        </table>
+        <br/>
+        <div>Remark:  <u>{{$remark}}</u></div>
+        <br/>
+        <table style="width: 100%">
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td class="headers bordertables" style="height:15px;" colspan="2"><div style="height:15px;"><b>Prepared By</b></div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Name: </b><u>{{$preparedby}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Date: </b><u>{{$prepareddate}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Signature: </b>________</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td class="headers bordertables" style="height:15px;" colspan="2"><div style="height:15px;"><b>Verified By</b></div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Name: </b><u>{{$verifiedby}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Date: </b><u>{{$verifieddate}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Signature: </b>________</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td class="headers bordertables" style="height:15px;" colspan="2"><div style="height:15px;"><b>Approved By</b></div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Name: </b><u>{{$approvedby}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Date: </b><u>{{$approveddate}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Signature: </b>________</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td class="headers bordertables" style="height:15px;" colspan="2"><div style="height:15px;"><b>Delivered By</b></div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><b>Name: </b><u>{{$delivery_by}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Date: </b><u>{{$delivery_date}}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="bordertablessign"><b>Signature: </b>________</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

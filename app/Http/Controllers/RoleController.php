@@ -83,6 +83,8 @@ class RoleController extends Controller
         $directstockin = Permission::where('Page','direct-stockin')->get();
         $directstockout = Permission::where('Page','direct-stockout')->get();
         $directstockbalance = Permission::where('Page','direct-stock-balance')->get();
+        $deliveryorderpermission = Permission::where('Page','Delivery-Order')->get();
+
 
         if($request->ajax()) {
             return view('account.role',compact('categorypermission','uompermission','itempermission','customerpermission','storerpermission','brandpermission',
@@ -93,7 +95,7 @@ class RoleController extends Controller
                 'incomefollowuppermission','devicepermission','branchpermission','departmentpermission','salarypermission','positionpermission','shiftpermission','proformapermission',
                 'trainerpermission','staffpermission','leaverequestpermission','holidaypermission','timetablepermission','leavetypepermission','shiftschpermission','salarytypepermission',
                 'attendancepermission','otlevelpermission','payrolladdpermission','payrollpermission','commoditybegpermission','commoditystockbalancepermission','bompermission',
-                'regionpermission','zonepermission','woredapermission','prorderpermission','dispatchpermission','directstockin','directstockout','directstockbalance'))->renderSections()['content'];
+                'regionpermission','zonepermission','woredapermission','prorderpermission','dispatchpermission','directstockin','directstockout','directstockbalance','deliveryorderpermission'))->renderSections()['content'];
         }
         else{
             return view('account.role',compact('categorypermission','uompermission','itempermission','customerpermission','storerpermission','brandpermission',
@@ -104,7 +106,7 @@ class RoleController extends Controller
                 'incomefollowuppermission','devicepermission','branchpermission','departmentpermission','salarypermission','positionpermission','shiftpermission','proformapermission',
                 'trainerpermission','staffpermission','leaverequestpermission','holidaypermission','timetablepermission','leavetypepermission','shiftschpermission','salarytypepermission',
                 'attendancepermission','otlevelpermission','payrolladdpermission','payrollpermission','commoditybegpermission','commoditystockbalancepermission','bompermission',
-                'regionpermission','zonepermission','woredapermission','prorderpermission','dispatchpermission','directstockin','directstockout','directstockbalance'));
+                'regionpermission','zonepermission','woredapermission','prorderpermission','dispatchpermission','directstockin','directstockout','directstockbalance','deliveryorderpermission'));
         }
     }
 

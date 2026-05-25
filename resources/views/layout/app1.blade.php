@@ -771,10 +771,10 @@
         <div class="shadow-bottom"></div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                @if (auth()->user()->can('sales-show') || auth()->user()->can('sale-holdView'))
+                @if (auth()->user()->can('sales-show') || auth()->user()->can('sale-holdView') || auth()->user()->can('Delivery-Order-View'))
                     <li class="nav-item"><a class="d-flex align-items-center" href="#"><i
                                 data-feather="shopping-bag"></i><span class="menu-title text-truncate"
-                                data-i18n="Sales & Marketing">Salesss & Marketing</span><span
+                                data-i18n="Sales & Marketing">Sales & Marketing</span><span
                                 class="badge badge-light-warning badge-pill ml-auto mr-1"></span></a>
                         <ul class="menu-content">
                             @if (auth()->user()->can('sales-show') || auth()->user()->can('sale-holdView'))
@@ -782,6 +782,13 @@
                                     <a class="d-flex align-items-center" href="sales"><i
                                             data-feather="circle"></i><span class="menu-item text-truncate"
                                             data-i18n="Sales">Sales</span></a>
+                                </li>
+                            @endif
+                            @if (auth()->user()->can('Delivery-Order-View'))
+                                <li>
+                                    <a class="d-flex align-items-center" href="deliveryorder"><i
+                                            data-feather="circle"></i><span class="menu-item text-truncate"
+                                            data-i18n="Delivery Order">Delivery Order</span></a>
                                 </li>
                             @endif
                             <li>

@@ -4108,14 +4108,12 @@
                 @endcan`;
 
             var upload_document_link = `
-                @can("Receiving-Confirm")
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item" id="managedocumentBtn" onclick="openDocumentUploadFn(${recordId})" title="Open document manage form">
                     <span><i class="fas fa-sliders-h"></i> Manage Documents</span>
                     </a>
-                </li>
-                @endcan`;
+                </li>`;
 
             var print_purchase_link = `
                 <li>
