@@ -1069,8 +1069,7 @@
             oTable.fnDraw(false);
         }
 
-        function closeInfoModal()
-        {
+        function closeInfoModal(){
             //var tabletr = $('#stockbalancedatatable').DataTable(); tabletr.search('');
             var oTable = $('#stockbalancedatatable').dataTable(); 
             oTable.fnDraw(false);

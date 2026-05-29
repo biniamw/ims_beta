@@ -221,7 +221,7 @@
                     <th style="width: 12%;" class="bordertables">Barcode No.</th>
                     <th style="width: 8%;" class="bordertables">UOM</th>
                     <th style="width: 10%;" class="bordertables">Quantity</th>
-                    @if($can_view_price == 1)
+                    @if($can_view_price == 1 && $show_price == 1)
                     <th style="width: 12%;" class="bordertables">Unit Price</th>
                     <th style="width: 12%;" class="bordertables">Total Price</th>
                     @endif
@@ -237,7 +237,7 @@
                 <td style="text-align: center" class="bordertables">{{$item->SKUNumber}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->UOM}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_quantity}}</td>
-                @if($can_view_price == 1)
+                @if($can_view_price == 1 && $show_price == 1)
                 <td style="text-align: center" class="bordertables">{{$item->format_unit_price}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_total_price}}</td>
                 @endif
@@ -245,7 +245,7 @@
             </tr>
             @endforeach
             </tbody>
-            @if($can_view_price == 1)
+            @if($can_view_price == 1 && $show_price == 1)
             <tfoot>
                 <tr>
                     <th colspan="7" style="text-align: right" class="bordertables">Total</th>

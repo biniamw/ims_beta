@@ -206,7 +206,7 @@
                                         </div>
                                         <div class="collapse show infoscl shadow pl-1 pr-1">
                                             <div class="row mb-1">
-                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1">
+                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 mb-1">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
                                                             <h6 class="card-title mb-0"><i class="fas fa-database"></i> General Information</h6>
@@ -234,7 +234,7 @@
                                                                             <td><label class="info_lbl">Delivery Date</label></td>
                                                                             <td><label class="info_lbl" id="info_delivery_date" style="font-weight: bold;"></label></td>
                                                                         </tr>
-                                                                        <tr>
+                                                                        <tr style="display: none;">
                                                                             <td><label class="info_lbl">Expiry Date</label></td>
                                                                             <td><label class="info_lbl" id="info_expiry_date" style="font-weight: bold;"></label></td>
                                                                         </tr>
@@ -258,7 +258,7 @@
                                                                             <td><label class="info_lbl">Payment Type</label></td>
                                                                             <td><label class="info_lbl" id="info_payment_type" style="font-weight: bold;"></label></td>
                                                                         </tr>
-                                                                        <tr class="fl_class info_direct_ref">
+                                                                        <tr class="fl_class info_payment_direct_ref">
                                                                             <td><label class="info_lbl">Payment Term</label></td>
                                                                             <td><label class="info_lbl" id="info_payment_term" style="font-weight: bold;"></label></td>
                                                                         </tr>
@@ -279,7 +279,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1 allinfo">
+                                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 mt-1 mb-1 allinfo">
                                                     <div class="card shadow-none border m-0">
                                                         <div class="card-body">
                                                             <h6 class="card-title mb-0"><i class="fas fa-user"></i> Customer Information</h6>
@@ -398,7 +398,7 @@
                                                                     <table style="width: 100%;font-size:12px" class="rtable">
                                                                         <tr>
                                                                             <td style="text-align: right;width:50%;">
-                                                                                <label class="info_lbl">Grand Total</label>
+                                                                                <label class="info_lbl">Subtotal</label>
                                                                             </td>
                                                                             <td style="text-align: center;width:50%;">
                                                                                 <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
@@ -449,7 +449,7 @@
                                                                     <table style="width: 100%;font-size:12px" class="rtable">
                                                                         <tr>
                                                                             <td style="text-align: right;width:50%;">
-                                                                                <label class="info_lbl">Grand Total</label>
+                                                                                <label class="info_lbl">Subtotal</label>
                                                                             </td>
                                                                             <td style="text-align: center;width:50%;">
                                                                                 <label id="info_std_total_price" class="info_lbl info_std_total_price" style="font-weight: bold;"></label>
@@ -567,6 +567,9 @@
                                                        <i class="fas fa-info fa-lg" style="color: #00cfe8;"></i>
                                                     </a>
                                                 </div>
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mr-0 pr-0" style="display: none;" id="expiry_date_div">
+                                                    <label class="form_lbl" id="expiry_date_lbl"></label>
+                                                </div>
                                             </div>
                                             <span class="text-danger">
                                                 <strong id="reference-doc-error" class="errordatalabel"></strong>
@@ -593,13 +596,7 @@
                                                 <strong id="delivery-date-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
-                                            <label class="form_lbl">Expiry Date<b style="color: red; font-size:16px;">*</b></label>
-                                            <input type="text" id="ExpiryDate" name="ExpiryDate" class="form-control flatpickr-basicl reg_form" placeholder="YYYY-MM-DD" onchange="expiryDateFn()"/>
-                                            <span class="text-danger">
-                                                <strong id="expiry-date-error" class="errordatalabel"></strong>
-                                            </span>
-                                        </div>
+                                        
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
                                             <label class="form_lbl">Order By<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="OrderedBy" id="OrderedBy" onchange="orderedByFn()">
@@ -635,7 +632,7 @@
                                                 <strong id="paymentType-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 direct-reference" style="display: none;">
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1 payment-direct-reference" style="display: none;">
                                             <label class="form_lbl">Payment Term<b style="color: red; font-size:16px;">*</b></label>
                                             <select class="select2 form-control" name="PaymentTerm" id="PaymentTerm" onchange="PaymentTermFn()">
                                                 <option selected disabled value=""></option>
@@ -733,7 +730,7 @@
                                                 </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                     <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
-                                                        <table id="dynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
+                                                        <table id="dynamicTable" class="mb-0 rtable form_dynamic_table fit-content" style="width:100%;min-width: 950px;">
                                                             <thead>
                                                                 <th style="width:3%;">#</th>
                                                                 <th style="width:14%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
@@ -779,7 +776,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: right;vertical-align: middle;width:50%">
-                                                                <label class="form_lbl">Grand Total</label>
+                                                                <label class="form_lbl">Subtotal</label>
                                                             </td>
                                                             <td style="text-align: center;vertical-align: middle;width:50%">
                                                                 <label id="grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
@@ -798,7 +795,7 @@
                                                 </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                     <div class="table-responsive pr-0 pl-0" style="width:100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
-                                                        <table id="stdDynamicTable" class="mb-0 rtable fit-content" style="width:100%;">
+                                                        <table id="stdDynamicTable" class="mb-0 rtable form_dynamic_table fit-content" style="width:100%;min-width: 950px;">
                                                             <thead>
                                                                 <th style="width:3%;">#</th>
                                                                 <th style="width:16%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
@@ -845,7 +842,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: right;vertical-align: middle;width:50%">
-                                                                <label class="form_lbl">Grand Total</label>
+                                                                <label class="form_lbl">Subtotal</label>
                                                             </td>
                                                             <td style="text-align: center;vertical-align: middle;width:50%">
                                                                 <label id="std_grandtotalLbl" class="formattedNum form_lbl form_reset_cls" style="font-weight: bold;"></label>
@@ -898,9 +895,11 @@
                             <select class="select2 form-control" name="reference_item_default" id="reference_item_default">
                                 <option selected disabled value=""></option>
                             </select>
+                            <input type="hidden" id="ExpiryDate" name="ExpiryDate" class="form-control flatpickr-basicl reg_form" placeholder="YYYY-MM-DD"/>
+                            <input type="hidden" class="form-control reg_form" name="recordId" id="recordId" readonly="true"/>
+                            <input type="hidden" class="form-control reg_form" name="operationtypes" id="operationtypes" readonly="true" value="1"/>
+                            <input type="hidden" class="form-control reg_form" name="formstatus" id="formstatus" readonly="true"/>
                         </div>
-                        <input type="hidden" class="form-control reg_form" name="recordId" id="recordId" readonly="true"/>
-                        <input type="hidden" class="form-control reg_form" name="operationtypes" id="operationtypes" readonly="true" value="1"/>
                         <button id="savebutton" type="button" class="btn btn-info">Save</button>
                         <button id="closebutton" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
@@ -1038,7 +1037,6 @@
     @include('layout.universal-component')
 
     @include('parts.batch_serial_out')
-
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var fyears = $('#fiscalyearval').val();
@@ -1532,9 +1530,6 @@
                 if (data.errors.DeliveryDate) {
                     $('#delivery-date-error').html(data.errors.DeliveryDate[0]);
                 }
-                if (data.errors.ExpiryDate) {
-                    $('#expiry-date-error').html(data.errors.ExpiryDate[0]);
-                }
                 if (data.errors.OrderedBy) {
                     $('#orderby-error').html(data.errors.OrderedBy[0]);
                 }
@@ -1620,7 +1615,7 @@
                 });
 
                 if(data.errorv3){
-                     $(".form-tab-title").removeClass("active");
+                    $(".form-tab-title").removeClass("active");
                     $(".form-tab-view").removeClass("active");
                     $("#form_do_standard_tab").addClass("active");
                     $("#form_do_standard_view").addClass("active");
@@ -1698,7 +1693,36 @@
                 }
                 toastrMessage('error',`These items cannot be updated, the requested change is not supported by the available quantity and would result negative balance.</br>-------------------</br>${item_list}`,"Error");
                 unblockPage(cardSection);
-            } 
+            }
+
+            else if(data.get_empty_qty_list){
+                var item_list = "";
+                $.each(data.get_empty_qty_list, function(key, value) {
+                    item_list += `${++key}. ${value.Name}</br>`;
+                });
+
+                $('#dynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.vals').val();
+                    if(($(`#quantity${k}`).val())!=undefined){
+                        var qnt = $(`#quantity${k}`).val();
+                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                            $(`#quantity${k}`).css("background", errorcolor);
+                        }
+                    }
+                });
+
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`Please enter a valid quantity on highlighted fields`,"Error");
+                formTabReset();
+                unblockPage(cardSection);
+            }
 
             else if(data.dberrors) {
                 if(parseInt(optype) == 1){
@@ -1774,6 +1798,12 @@
             var station = null;
             var customer_option = null;
             var payment_type_option = null;
+            var expiry_flag_color = "";
+            var expiry_info = "";
+            var expiry_date = null;
+            var current_dates = new Date(current_date);
+            $("#ExpiryDate").val("");
+            $("#expiry_date_lbl").html("");
             
             if(ref_type == 601){
                 $.each(data.customer_data, function(key, value) {
@@ -1781,8 +1811,17 @@
                 });
 
                 $.each(data.main_data, function(key, value) {
-                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
-                    $('#ExpiryDate').val(value.expireDate);
+                    expiry_date = new Date(value.expireDate);
+                    if(expiry_date < current_dates){
+                        expiry_flag_color = "#ea5455";
+                        expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Proforma invoice expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                    }
+                    else{
+                        expiry_flag_color = "#5e5873";
+                        expiry_info = "";
+                    }
+                    $("#ExpiryDate").val(value.expireDate);
+                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
 
                     station = `<option selected value="${value.store_id}">${value.station}</option>`;
                     product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
@@ -1797,8 +1836,17 @@
                 });
 
                 $.each(data.main_data, function(key, value) {
-                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
-                    $('#ExpiryDate').val(value.expiredate);
+                    expiry_date = new Date(value.expireDate);
+                    if(expiry_date < current_dates){
+                        expiry_flag_color = "#ea5455";
+                        expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Sales order expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                    }
+                    else{
+                        expiry_flag_color = "#5e5873";
+                        expiry_info = "";
+                    }
+                    $("#ExpiryDate").val(value.expireDate);
+                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
 
                     station = `<option selected value="${value.store_id}">${value.station}</option>`;
                     product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
@@ -1813,8 +1861,17 @@
                 });
 
                 $.each(data.main_data, function(key, value) {
-                    flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
-                    $('#ExpiryDate').val(value.expiredate);
+                    expiry_date = new Date(value.expireDate);
+                    if(expiry_date < current_dates){
+                        expiry_flag_color = "#ea5455";
+                        expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                    }
+                    else{
+                        expiry_flag_color = "#5e5873";
+                        expiry_info = "";
+                    }
+                    $("#ExpiryDate").val(value.expireDate);
+                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
 
                     station = `<option selected value="${value.store_id}">${value.station}</option>`;
                     product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
@@ -1916,7 +1973,7 @@
                         <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.Quantity} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" value="${value.standard_factor}" style="font-weight:bold;"/></td>
+                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.standard_factor}" style="font-weight:bold;"/></td>
                         <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -1926,8 +1983,9 @@
                             <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
                         </td>
                     </tr>`);
-
+                    
                     $(`#std_itemNameSl${m1}`).select2({minimumResultsForSearch: -1});
+                    $(`#select2-std_itemNameSl${m1}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
 
                     columnMgtFn();
                 }
@@ -1958,8 +2016,8 @@
                 $('.direct_reference').show();
                 $('.unitprice').prop("readonly",false);       
                 $('.pricing_inp').val("");
-                $('#ExpiryDate').val("");
                 $('.direct-reference').show();
+                $('#expiry_date_div').hide();
                 sales_person = $("#DefaultSalesPerson > option").clone();
                 $('#SalesPerson').append(sales_person).val(null).select2({placeholder: "Select sales person here"});
             }
@@ -1969,6 +2027,7 @@
                 $('.unitprice').prop("readonly",true);
                 $('#reference_doc_div').show();
                 $('.direct-reference').hide();
+                $('#expiry_date_div').show();
                 fetchReferenceDocFn();
             }
             CalculateGrandTotal();
@@ -2434,7 +2493,7 @@
                     <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" style="font-weight:bold;"/></td>
                     <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -2807,6 +2866,12 @@
             var is_expiry_req = null;
             var is_serial_req = null;
             var status_color = null;
+            var expiry_flag_color = "";
+            var expiry_info = "";
+            var expiry_date = null;
+            var current_dates = new Date(current_date);
+            $('#expiry_date_div').hide();
+            $('.payment-direct-reference').hide();
 
             $.each(data.reference_data, function(key, value) {
                 if(data.reference_type == 601){
@@ -2830,6 +2895,7 @@
                 $('#PhoneNumber').val(value.phone_no);
                 $('#IdNumber').val(value.id_no);
                 $('#PlateNumber').val(value.plate_no);
+                $('#formstatus').val(value.status);
 
                 product_type = value.product_type;
 
@@ -2858,11 +2924,13 @@
                     $(`#SalesPerson option[value="${value.sales_person}"]`).remove();
                     $('#SalesPerson').append(`<option selected value="${value.sales_person}">${value.sales_person}</option>`).select2();
 
-                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date}); 
-                    $('#ExpiryDate').val(value.expiry_date);  
-
                     $('#PaymentType').val(value.payment_type).select2({minimumResultsForSearch: -1});
-                    $('#PaymentTerm').val(value.payment_term).select2({minimumResultsForSearch: -1});
+                    if(value.payment_type == "Credit"){
+                        $('.payment-direct-reference').show();
+                        $('#PaymentTerm').val(value.payment_term).select2({minimumResultsForSearch: -1});
+                    }
+                    $('#ExpiryDate').val(value.expiry_date);  
+                    $('#expiry_date_div').hide();
                 }
                 else if(value.reference_type != 600){
                     
@@ -2874,8 +2942,18 @@
                     $('#customer').empty().append(`<option selected value="${value.customers_id}">${value.customer_code}, ${value.customer_name}, ${value.TIN}</option>`).select2({minimumResultsForSearch: -1});
                     $('#SalesPerson').empty().append(`<option selected value="${value.sales_person}">${value.sales_person}</option>`).select2();
 
-                    flatpickr('#ExpiryDate', {dateFormat: 'Y-m-d',clickOpens:false});
+                    if(expiry_date < current_dates){
+                        expiry_flag_color = "#ea5455";
+                        expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Reference expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                    }
+                    else{
+                        expiry_flag_color = "#5e5873";
+                        expiry_info = "";
+                    }
+
                     $('#ExpiryDate').val(value.expiry_date);
+                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expiry_date}</b> ${expiry_info}`);
+                    $('#expiry_date_div').show();
                 }
 
                 if(value.status == "Draft"){
@@ -2932,7 +3010,7 @@
                     <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.ordered_qty} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" value="${value.factor}" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.factor}" style="font-weight:bold;"/></td>
                     <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -3034,6 +3112,8 @@
 
         function getInfoDataFn(data){
             expand_flag = [];
+            var permission = $("#canviewprice").val();
+            $('.info_payment_direct_ref').hide();
             var lidata = "";
             var status_color = "";
             var action_links = "";
@@ -3141,12 +3221,11 @@
                 $('#info_station').html(value.store_name);
                 $('#info_delivery_date').html(value.delivery_date);
                 $('#info_expiry_date').html(value.expiry_date);
-
                 $('#info_order_by').html(value.order_by);
                 $('#info_sales_person').html(value.sales_person);
                 $('#info_doc_no').html(value.supporting_doc_no);
                 $('#info_payment_type').html(value.payment_type);
-                $('#info_payment_term').html(value.payment_term);
+                
                 $('#info_remark').html(value.remark);
                 $('#info_price_column_vis').html(value.show_pricing == 1 ? "Yes" : "No");
 
@@ -3202,6 +3281,7 @@
                 else if(value.status == "Void"){
                     major_btn_link += undovoid_link;
                     upload_document_link = "";
+                    status_btn_link = ""; 
                     status_color = "#e74a3b";
                 }
                 else{
@@ -3211,12 +3291,16 @@
 
                 if(value.reference_type == 600){
                     $('.info_direct_ref').show();
+                    if(value.payment_type == "Credit"){
+                        $('.info_payment_direct_ref').show();
+                        $('#info_payment_term').html(value.payment_term);
+                    }
                 }
                 if(value.reference_type != 600){
                     $('.info_non_direct_ref').show();
                 }
 
-                if(value.show_pricing == 1){
+                if(value.show_pricing == 1 && permission == 1){
                     $('.pricing_flag').show();
                 }
 
@@ -3398,7 +3482,7 @@
                         "render": function ( data, type, row, meta ) {
                             if((row.RequireSerialNumber != "Not-Require" || row.RequireExpireDate != "Not-Require") && row.status != "Void"){
                                 var fore_color = "";
-                                if(parseInt(row.is_fully_entered) == 1){
+                                if(parseInt(row.is_fully_entered) == 1 && parseFloat(row.quantity) > 0){
                                     fore_color = "#28c76f";
                                 }
                                 else{
@@ -3910,6 +3994,15 @@
         function doForwardRecordFn(data){
             if(data.dberrors) {
                 toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection); 
+            }
+            else if(data.empty_qty_item){
+                var item_list = "";
+                $.each(data.empty_qty_item, function(key, value) {
+                    item_list += `${++key}. ${value.item_name}</br>`;
+                });
+                toastrMessage('warning',`Please enter a valid quantity for the following items</br>----------------</br>${item_list}`,"Warning");
+                unblockPage(cardSection); 
             }
             else if(data.item_variances){
                 var item_list = "";
@@ -3917,6 +4010,7 @@
                     item_list += `${++key}. ${value.item_name}</br>`;
                 });
                 toastrMessage('warning',`Please select all required batch and/or serial numbers for the items listed below</br>----------------</br>${item_list}`,"Warning");
+                unblockPage(cardSection); 
             }
             else if(data.balance_error) {
                 var item_list = "";
@@ -3924,6 +4018,7 @@
                     item_list += `<b>${++index},</b> ${value.name}</br>`;
                 });
                 toastrMessage('error',`There is no available quantity for the following items</br>-------------------</br>${item_list}`,"Error");
+                unblockPage(cardSection);
             } 
             else if(data.success) {
                 toastrMessage('success',"Successful","Success");
@@ -3991,12 +4086,14 @@
                 $('#backwardActionBtn').text(btntxt);
                 $('#backwardActionBtn').prop("disabled",false);
                 toastrMessage('error',"Please check your input","Error");
+                unblockPage(cardSection);
             }
             else if (data.dberrors) {
                 $('#backwardActionBtn').text(btntxt);
                 $('#backwardActionBtn').prop("disabled",false);
                 $('#backwardActionModal').modal('hide');
                 toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
             }
             else if(data.success){
                 toastrMessage('success',"Successful","Success");
@@ -4052,8 +4149,8 @@
                     <td style="width:20%;"><input type="text" id="upload_date${z3}" name="docrow[${z3}][upload_date]" class="form-control upload_date${z3}" value="${value.date}" placeholder="YYYY-MM-DD" readonly onchange="uploadDateFn(this)"/></td>
                     <td style="width:20%;">
                         <div class="input-group">
-                            <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:90%;">
-                            <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view view-doc" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:9%;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:70%;">
+                            <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view view-doc" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:14%;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
                             <input type="hidden" class="form-control" value="${value.doc_name}" name="docrow[${z3}][documents]" id="documents${z3}"/>
                             <input type="hidden" class="form-control" value="${value.doc_name}" name="docrow[${z3}][doc_upload_hidden]" id="doc_upload_hidden${z3}"/>
                             <input type="hidden" class="form-control" value="${value.actual_file_name}" name="docrow[${z3}][doc_actual_name]" id="doc_actual_name${z3}"/>
@@ -4098,8 +4195,8 @@
                 <td style="width:20%;"><input type="text" id="upload_date${z3}" name="docrow[${z3}][upload_date]" class="form-control upload_date${z3}" placeholder="YYYY-MM-DD" readonly onchange="uploadDateFn(this)"/></td>
                 <td style="width:20%;">
                     <div class="input-group">
-                        <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:90%;">
-                        <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:9%;display:none;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <input class="form-control fileuploads" type="file" id="doc_upload${z3}" name="docrow[${z3}][doc_upload]" onchange="docmntUploadFn(this)" accept=".jpg, .jpeg, .png,.pdf" style="width:70%;">
+                        <button type="button" id="doc_view${z3}" class="btn btn-light btn-sm doc_view" onclick="previewDocFn(this,'doc')" style="color:#00cfe8;background-color:#FFFFFF;border-color:#FFFFFF;padding: 1px 1px;width:14%;display:none;" title="Open uploaded document"><i class="fas fa-eye fa-lg" aria-hidden="true"></i></button>
                         <input type="hidden" class="form-control" name="docrow[${z3}][documents]" id="documents${z3}"/>
                         <input type="hidden" class="form-control" name="docrow[${z3}][doc_upload_hidden]" id="doc_upload_hidden${z3}"/>
                         <input type="hidden" class="form-control" name="docrow[${z3}][doc_actual_name]" id="doc_actual_name${z3}"/>
@@ -4627,6 +4724,16 @@
         }
 
         function paymentTypeFn(){
+            var payment_type = $('#PaymentType').val();
+            $('.payment-direct-reference').hide();
+            $('#PaymentTerm').val(null).select2({
+                placeholder: "Select payment term here",
+                minimumResultsForSearch: -1
+            });
+            if(payment_type == "Credit"){
+                $('.payment-direct-reference').show();
+            }
+            $('#paymentTerm-error').html("");
             $('#paymentType-error').html("");
         }
 
@@ -4829,9 +4936,9 @@
             $('#delivery_order_status').html("");
             $('.errordatalabel').html("");
             flatpickr('#DeliveryDate', { dateFormat: 'Y-m-d',clickOpens:true,maxDate:current_date});
-            flatpickr('#ExpiryDate', { dateFormat: 'Y-m-d',clickOpens:true,minDate:current_date});
             $("#dynamicTable > tbody").empty();
             $("#stdDynamicTable > tbody").empty();
+            $('#expiry_date_div').hide();
             $('#operationtypes').val(1);
             $('#printOrderReq').prop('checked', false);
             formTabReset();

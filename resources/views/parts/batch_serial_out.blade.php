@@ -150,18 +150,6 @@
                     </div>
                     <div class="modal-footer">
                         <div style="display: none;">
-                            {{-- <select class="select2 form-control" name="bs_country_default" id="bs_country_default">
-                                <option selected disabled value=""></option>
-                                @foreach ($countries as $cnt)
-                                    <option value="{{ $cnt->id }}">{{ $cnt->Name }}</option>
-                                @endforeach
-                            </select>
-                            <select class="select2 form-control" name="bs_brand_default" id="bs_brand_default">
-                                <option selected disabled value=""></option>
-                                @foreach ($brand as $brand_opt)
-                                    <option value="{{ $brand_opt->id }}">{{ $brand_opt->brand_name }}</option>
-                                @endforeach
-                            </select> --}}
                             <select class="select2 form-control" name="bs_item_instance_default" id="bs_item_instance_default"></select>
                             <select class="select2 form-control" name="serialnumber_default" id="serialnumber_default"></select>
                             <select class="select2 form-control" name="serialnumber_default_issue" id="serialnumber_default_issue"></select>

@@ -216,18 +216,17 @@
             <thead>
                 <tr>
                     <th style="width: 3%;" class="bordertables">#</th>
-                    <th style="width: 10%;" class="bordertables">Item Code</th>
-                    <th style="width: 11%;" class="bordertables">Item Name</th>
+                    <th style="width: 12%;" class="bordertables">Item Code</th>
+                    <th style="width: 15%;" class="bordertables">Item Name</th>
                     <th style="width: 10%;" class="bordertables">Barcode No.</th>
                     <th style="width: 8%;" class="bordertables">UOM</th>
-                    <th style="width: 8%;" class="bordertables">Factor</th>
                     <th style="width: 10%;" class="bordertables">Qty. per PCs</th>
                     <th style="width: 10%;" class="bordertables">Standard KG</th>
-                    @if($can_view_price == 1)
+                    @if($can_view_price == 1 && $show_price == 1)
                     <th style="width: 10%;" class="bordertables">Price per KG</th>
                     <th style="width: 10%;" class="bordertables">Total Price</th>
                     @endif
-                    <th style="width: 10%;" class="bordertables">Remark</th>
+                    <th style="width: 12%;" class="bordertables">Remark</th>
                 </tr>
             </thead>
             <tbody>
@@ -238,10 +237,9 @@
                 <td style="text-align: center" class="bordertables">{{$item->ItemName}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->SKUNumber}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->UOM}}</td>
-                <td style="text-align: center" class="bordertables">{{$item->factor}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_std_quantity}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_standardkg}}</td>
-                @if($can_view_price == 1)
+                @if($can_view_price == 1 && $show_price == 1)
                 <td style="text-align: center" class="bordertables">{{$item->format_price_per_kg}}</td>
                 <td style="text-align: center" class="bordertables">{{$item->format_std_total_price}}</td>
                 @endif
@@ -249,7 +247,7 @@
             </tr>
             @endforeach
             </tbody>
-            @if($can_view_price == 1)
+            @if($can_view_price == 1 && $show_price == 1)
             <tfoot>
                 <tr>
                     <th colspan="9" style="text-align: right" class="bordertables">Total</th>

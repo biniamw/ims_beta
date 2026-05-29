@@ -88,12 +88,15 @@ class DeliveryOrderController extends Controller
         $settings = DB::table('settings')->latest()->first();
         $fyear = $settings->FiscalYear;
         $findid = $request->recordId;
+        $current_status = $request->formstatus;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $actual_item_ids = [];
         $standard_item_ids = [];
+        $empty_item_qty = [];
         $is_valid_actual_std = true;
         $is_actual_std_similar = true;
+        $is_item_qty_valid = true;
 
         $validator = Validator::make($request->all(), [
             'ReferenceType' => ['required'],
@@ -130,8 +133,12 @@ class DeliveryOrderController extends Controller
         if($request->row != null){
             foreach ($request->row as $key => $value){
                 $item_id = $value['ItemId'] ?? 0;
+                $qty = $value['Quantity'] ?? 0;
                 if($item_id != null){
                     $actual_item_ids[] = $item_id;
+                }
+                if($qty == 0){
+                    $empty_item_qty[] = $item_id;
                 }
             }
         }
@@ -157,8 +164,11 @@ class DeliveryOrderController extends Controller
                 $is_actual_std_similar = false;
             }
         }
+        if(count($empty_item_qty) > 0 && ($current_status == "Verified" || $current_status == "Approved")){
+            $is_item_qty_valid = false;
+        }
 
-        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar){
+        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar && $is_item_qty_valid){
             DB::beginTransaction();
             try{
                 $submitted_ids = [];
@@ -239,6 +249,7 @@ class DeliveryOrderController extends Controller
 
                         $item_prop = Regitem::where('id', $item_id)->first();
                         $default_uom = $item_prop->MeasurementId;
+                        $factor = $item_prop->standard_factor ?? 0;
                         $new_uom = $value['uom'] ?? $default_uom;
                         $conversion_factor = 1;
                         $serial_qty = 0;
@@ -262,7 +273,7 @@ class DeliveryOrderController extends Controller
                         $do_detail_rec_id = $reference_data->id ?? 0;
         
                         $del_detail_db_data = delivery_order_detail::where('delivery_order_id',$delivery_order->id)->where('regitems_id',$value['ItemId'])->first();
-                        $ent_quantity = $del_detail_db_data->entered_quantity ?? 0;
+                        $ent_quantity = $del_detail_db_data->entered_qty ?? 0;
 
                         if($item_prop->RequireSerialNumber == "Required"){
                             $serial_qty = $del_detail_db_data->entered_serial_qty ?? 0;
@@ -274,13 +285,14 @@ class DeliveryOrderController extends Controller
                         $do_detail_permanent_data = [
                             'regitems_id' => $item_id,
                             'quantity' => $quantity,
+                            'factor' => $factor,
                             'unit_price' => $value['UnitPrice'] ?? 0,
                             'total_price' => $value['TotalPrice'] ?? 0,
                             'default_uom' => $default_uom,
                             'new_uom' => $new_uom,
                             'converted_quantity' => $converted_qty,
                             'reference_detail_id' => $do_detail_rec_id,
-                            'remark' => $value['remark'],
+                            'remark' => $value['remark'] ?? "",
                         ];
 
                         $do_detail_created_data = [
@@ -316,18 +328,19 @@ class DeliveryOrderController extends Controller
 
                         $item_prop = Regitem::where('id', $item_id)->first();
                         $default_uom = $item_prop->MeasurementId;
+                        $factor = $item_prop->standard_factor ?? 0;
 
                         $std_del_detail_db_data = delivery_order_detail::where('delivery_order_id',$delivery_order->id)->where('regitems_id',$item_id)->first();
 
                         $std_do_detail_permanent_data = [
                             'regitems_id' => $item_id,
                             'default_uom' => $default_uom,
-                            'factor' => $value['factor'] ?? 0,
+                            'factor' => $value['factor'] == null || $value['factor'] == 0 ? $factor : $value['factor'],
                             'quantity_pcs' => $quantity,
                             'standard_kg' => $value['std_kg'] ?? 0,
                             'price_per_kg' => $value['std_unitprice'] ?? 0,
                             'std_total_price' => $value['std_totalprice'] ?? 0,
-                            'std_remark' => $value['std_remark'],
+                            'std_remark' => $value['std_remark'] ?? "",
                         ];
 
                         $std_do_detail_created_data = [
@@ -452,6 +465,11 @@ class DeliveryOrderController extends Controller
         }
         else if(!$is_actual_std_similar){
             return Response::json(['actual_std_similarity' => 466]);
+        }
+        else if(!$is_item_qty_valid){
+            $empty_item_qty = implode(',',$empty_item_qty);
+            $get_empty_qty_list = DB::select('SELECT regitems.Name FROM regitems WHERE regitems.id IN('.$empty_item_qty.') ORDER BY regitems.Name ASC');
+            return Response::json(['empty_qty_item' => 467,'get_empty_qty_list' => $get_empty_qty_list]);
         }
     }
 
@@ -704,12 +722,17 @@ class DeliveryOrderController extends Controller
 
             }
             else if($newStatus == "Verified" || $newStatus == "Approved"){
+                $get_empty_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE delivery_order_details.quantity=0 AND delivery_order_details.delivery_order_id='.$findid);
+                $total_empty_item = count($get_empty_do_item);
+                if($total_empty_item > 0){
+                    return Response::json(['empty_qty_item' => $get_empty_do_item]);
+                }
+
                 $get_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE (regitems.RequireSerialNumber!="Not-Require" OR regitems.RequireExpireDate!="Not-Require") AND delivery_order_details.is_fully_entered=0 AND delivery_order_details.delivery_order_id='.$findid);
                 $total_item = count($get_do_item);
-
-                // if($total_item > 0){
-                //     return Response::json(['item_variances' => $get_do_item]);
-                // }
+                if($total_item > 0){
+                    return Response::json(['item_variances' => $get_do_item]);
+                }
 
                 if($newStatus == "Verified"){
                     $do_data->verified_by = $user;
@@ -834,7 +857,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function showDODetailData($id){
-        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type,delivery_order_details.is_fully_entered,delivery_order_details.entered_qty,delivery_orders.status,
+        $detailTable = DB::select('SELECT delivery_order_details.*,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,regitems.TaxTypeId,uoms.Name AS UOM,delivery_orders.station,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,11 AS trn_type,delivery_order_details.is_fully_entered,delivery_order_details.entered_qty,delivery_orders.status,IFNULL(delivery_order_details.remark,"") AS remark,IFNULL(delivery_order_details.std_remark,"") AS std_remark,
         (SELECT GROUP_CONCAT(" ",country.Name,IFNULL(brands.manufacturer,"")," ",IFNULL(batches.batch_number,"")," ",IFNULL(brands.Name,"")," ",IFNULL(models.Name,"")," ",IFNULL(batches.expiry_date,"")," ",IFNULL(batches.manufacturing_date,"")," ",batch_inventories_issues.sold_issued_qty) FROM batch_inventories_issues LEFT JOIN batches ON batch_inventories_issues.batches_id=batches.id LEFT JOIN regitems ON batches.item_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id WHERE batch_inventories_issues.regitems_id=delivery_order_details.regitems_id AND batch_inventories_issues.source_id=delivery_order_details.delivery_order_id AND batch_inventories_issues.source_type="delivery_order") AS batch_numers,
         (SELECT GROUP_CONCAT(" ",serial_number) AS serial_number FROM serial_numbers LEFT JOIN batches ON serial_numbers.batches_id=batches.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id WHERE serial_numbers.is_sold_issued=1 AND serial_numbers.batches_id IN(SELECT batch_inventories_issues.batches_id FROM batch_inventories_issues WHERE batch_inventories_issues.source_id=delivery_order_details.delivery_order_id AND batch_inventories_issues.source_type="delivery_order")) AS serial_numbers
         FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC'); 
@@ -1694,6 +1717,7 @@ class DeliveryOrderController extends Controller
             $total_price = number_format($headerInfo->total_price ?? 0, 2, '.', ',');
             $std_total_price = number_format($headerInfo->std_total_price ?? 0, 2, '.', ',');
             $can_view_price = auth()->user()->can('Delivery-Order-ShowORHide-Price') ? 1 : 0;
+            $show_price = $headerInfo->show_pricing;
 
             $customerdata = customer::find($customerid);
             $customername = $customerdata->Name;
@@ -1754,6 +1778,7 @@ class DeliveryOrderController extends Controller
                 'total_price' => $total_price,
                 'std_total_price' => $std_total_price,
                 'can_view_price' => $can_view_price,
+                'show_price' => $show_price,
                 
                 'count' => $count,
                 'currentdate' => $currentdate,
