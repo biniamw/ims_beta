@@ -395,13 +395,13 @@
                                                             <div class="row fl_class pricing_flag" style="display: none;">
                                                                 <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
                                                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
-                                                                    <table style="width: 100%;font-size:12px" class="rtable">
+                                                                    <table style="width: 100%;" class="rtable">
                                                                         <tr>
-                                                                            <td style="text-align: right;width:50%;">
-                                                                                <label class="info_lbl">Subtotal</label>
+                                                                            <td style="text-align: right;width:45%;">
+                                                                                <label class="form_lbl">Subtotal</label>
                                                                             </td>
-                                                                            <td style="text-align: center;width:50%;">
-                                                                                <label id="info_total_price" class="info_lbl info_total_price" style="font-weight: bold;"></label>
+                                                                            <td style="text-align: center;width:55%;">
+                                                                                <label id="info_total_price" class="form_lbl info_total_price" style="font-weight: bold;"></label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -446,13 +446,13 @@
                                                             <div class="row fl_class pricing_flag" style="display: none;">
                                                                 <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
                                                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
-                                                                    <table style="width: 100%;font-size:12px" class="rtable">
+                                                                    <table style="width: 100%;" class="rtable">
                                                                         <tr>
-                                                                            <td style="text-align: right;width:50%;">
-                                                                                <label class="info_lbl">Subtotal</label>
+                                                                            <td style="text-align: right;width:45%;">
+                                                                                <label class="form_lbl">Subtotal</label>
                                                                             </td>
-                                                                            <td style="text-align: center;width:50%;">
-                                                                                <label id="info_std_total_price" class="info_lbl info_std_total_price" style="font-weight: bold;"></label>
+                                                                            <td style="text-align: center;width:55%;">
+                                                                                <label id="info_std_total_price" class="form_lbl info_std_total_price" style="font-weight: bold;"></label>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -849,7 +849,7 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    <table style="width:100%;">
+                                                    <table style="width:100%;display:none;">
                                                         <tr>
                                                             <td>
                                                                 <div class="form-check form-check-inline" id="printOrderReqDiv">
@@ -881,7 +881,7 @@
                                     <option value="{{ $default_st->id }}">{{ $default_st->Name }}</option>
                                 @endforeach
                             </select>
-                            <select class="select2 form-control" name="DefaultSalesPerson" id="DefaultSalesPerson">
+                            <select class="select2 form-control" name="default_sales_person" id="default_sales_person">
                                 @foreach ($uses_data as $salesperson)
                                     <option value="{{ $salesperson->username }}">{{ $salesperson->username }}</option>
                                 @endforeach
@@ -895,7 +895,7 @@
                             <select class="select2 form-control" name="reference_item_default" id="reference_item_default">
                                 <option selected disabled value=""></option>
                             </select>
-                            <input type="hidden" id="ExpiryDate" name="ExpiryDate" class="form-control flatpickr-basicl reg_form" placeholder="YYYY-MM-DD"/>
+                            <input type="hidden" class="form-control flatpickr-basicl reg_form" name="ExpiryDate" id="ExpiryDate"/>
                             <input type="hidden" class="form-control reg_form" name="recordId" id="recordId" readonly="true"/>
                             <input type="hidden" class="form-control reg_form" name="operationtypes" id="operationtypes" readonly="true" value="1"/>
                             <input type="hidden" class="form-control reg_form" name="formstatus" id="formstatus" readonly="true"/>
@@ -1571,23 +1571,22 @@
                 var reference_type =  $('#ReferenceType').val();
                 var isChecked = $('#VisiblePrice').is(':checked');
                
-
                 $('#dynamicTable > tbody > tr').each(function (index) {
                     let k = $(this).find('.vals').val();
-                    var itmid = ($(`#itemNameSl${k}`)).val();
+                    var itmid = $(`#itemNameSl${k}`).val();
 
-                    if(($(`#quantity${k}`).val())!=undefined){
-                        var qnt = $(`#quantity${k}`).val();
-                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
-                            $(`#quantity${k}`).css("background", errorcolor);
-                        }
-                    }
-                    if(($(`#unitprice${k}`).val()) != undefined && isChecked){
-                        var unit_price = $(`#unitprice${k}`).val();
-                        if(isNaN(parseFloat(unit_price)) || parseFloat(unit_price) == 0){
-                            $(`#unitprice${k}`).css("background", errorcolor);
-                        }
-                    }
+                    // if(($(`#quantity${k}`).val())!=undefined){
+                    //     var qnt = $(`#quantity${k}`).val();
+                    //     if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                    //         $(`#quantity${k}`).css("background", errorcolor);
+                    //     }
+                    // }
+                    // if(($(`#unitprice${k}`).val()) != undefined && isChecked){
+                    //     var unit_price = $(`#unitprice${k}`).val();
+                    //     if(isNaN(parseFloat(unit_price)) || parseFloat(unit_price) == 0){
+                    //         $(`#unitprice${k}`).css("background", errorcolor);
+                    //     }
+                    // }
                     if(isNaN(parseFloat(itmid)) || parseFloat(itmid) == 0){
                         $(`#select2-itemNameSl${k}-container`).parent().css('background-color',errorcolor);
                     }
@@ -1696,17 +1695,16 @@
             }
 
             else if(data.get_empty_qty_list){
-                var item_list = "";
-                $.each(data.get_empty_qty_list, function(key, value) {
-                    item_list += `${++key}. ${value.Name}</br>`;
-                });
-
                 $('#dynamicTable > tbody > tr').each(function (index) {
                     let k = $(this).find('.vals').val();
-                    if(($(`#quantity${k}`).val())!=undefined){
+                    if(($(`#quantity${k}`).val()) !== undefined || ($(`#unitprice${k}`).val()) !== undefined){
                         var qnt = $(`#quantity${k}`).val();
+                        var up = $(`#unitprice${k}`).val();
                         if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
                             $(`#quantity${k}`).css("background", errorcolor);
+                        }
+                        if(isNaN(parseFloat(up)) || parseFloat(up) == 0){
+                            $(`#unitprice${k}`).css("background", errorcolor);
                         }
                     }
                 });
@@ -1973,7 +1971,7 @@
                         <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.Quantity} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.standard_factor}" style="font-weight:bold;"/></td>
+                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.standard_factor}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -2018,7 +2016,7 @@
                 $('.pricing_inp').val("");
                 $('.direct-reference').show();
                 $('#expiry_date_div').hide();
-                sales_person = $("#DefaultSalesPerson > option").clone();
+                sales_person = $("#default_sales_person > option").clone();
                 $('#SalesPerson').append(sales_person).val(null).select2({placeholder: "Select sales person here"});
             }
             else{
@@ -2493,7 +2491,7 @@
                     <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -2906,7 +2904,7 @@
 
                     var customer_options = $("#default_customer > option").clone();
                     var station_options = $("#default_station > option").clone();
-                    var sales_person_list = $("#DefaultSalesPerson > option").clone();
+                    var sales_person_list = $("#default_sales_person > option").clone();
 
                     $('#ProductType').empty().append(product_type_options).select2();
                     $(`#ProductType option[value="${value.product_type}"]`).remove();
@@ -3010,7 +3008,7 @@
                     <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.ordered_qty} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.factor}" style="font-weight:bold;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.factor}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
                     <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
@@ -3120,13 +3118,11 @@
             var major_btn_link = `<li><hr class="dropdown-divider"></li>`;
             var status_btn_link = `<li><hr class="dropdown-divider"></li>`;
             var edit_link = `
-                @can("Delivery-Order-Edit")
-                    <li>
-                        <a class="dropdown-item editDORecord" href="javascript:void(0)" onclick="editDOFn(${data.rec_id})" data-id="editDOLink${data.rec_id}" id="editDOLink${data.rec_id}" title="Edit record">
-                        <span><i class="fa-solid fa-pencil"></i> Edit</span>  
-                        </a>
-                    </li>
-                @endcan`;
+                <li>
+                    <a class="dropdown-item editDORecord" href="javascript:void(0)" onclick="editDOFn(${data.rec_id})" data-id="editDOLink${data.rec_id}" id="editDOLink${data.rec_id}" title="Edit record">
+                    <span><i class="fa-solid fa-pencil"></i> Edit</span>  
+                    </a>
+                </li>`;
 
             var void_link = `
                 @can("Delivery-Order-Void")
@@ -3209,8 +3205,8 @@
 
             var print_order_request_link = `
                 <li>
-                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/2" data-id="printdordereq${data.rec_id}" id="printdordereq{data.rec_id}" title="Print Order Request">
-                    <span><i class="fa fa-file"></i> Print Order Request</span>  
+                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/2" data-id="printdordereq${data.rec_id}" id="printdordereq${data.rec_id}" title="Print Delivery Order Note (Request)">
+                    <span><i class="fa fa-file"></i> Print Delivery Order Note (R)</span>  
                     </a>
                 </li>`;
 
@@ -3248,14 +3244,14 @@
                 $('#currentStatus').val(value.status);
 
                 if(value.status == "Draft"){
-                    major_btn_link += edit_link;
+                    major_btn_link += `@can("Delivery-Order-Edit")${edit_link}@endcan`;
                     major_btn_link += void_link;
 
                     status_btn_link += change_to_pending_link;
                     status_color = "#A8AAAE";
                 }
                 else if(value.status == "Pending"){
-                    major_btn_link += edit_link;
+                    major_btn_link += `@can("Delivery-Order-Edit")${edit_link}@endcan`;
                     major_btn_link += void_link;
                     
                     status_btn_link += verify_link;
@@ -3264,7 +3260,7 @@
                     status_color = "#f6c23e";
                 }
                 else if(value.status == "Verified"){
-                    major_btn_link += edit_link;
+                    major_btn_link += `@can("Delivery-Order-Edit")${edit_link}@endcan`;;
                     major_btn_link += void_link;
 
                     status_btn_link += approve_link;
@@ -3272,7 +3268,7 @@
                     status_color = "#7367F0";
                 }
                 else if(value.status == "Approved"){
-                    major_btn_link += edit_link;
+                    major_btn_link += `@can("Delivery-Order-Edit-After-Approve")${edit_link}@endcan`;;
                     major_btn_link += void_link;
 
                     status_btn_link = ""; 
@@ -4001,7 +3997,7 @@
                 $.each(data.empty_qty_item, function(key, value) {
                     item_list += `${++key}. ${value.item_name}</br>`;
                 });
-                toastrMessage('warning',`Please enter a valid quantity for the following items</br>----------------</br>${item_list}`,"Warning");
+                toastrMessage('warning',`Please enter a valid quantity or unit price for the following items</br>----------------</br>${item_list}`,"Warning");
                 unblockPage(cardSection); 
             }
             else if(data.item_variances){
@@ -4022,7 +4018,6 @@
             } 
             else if(data.success) {
                 toastrMessage('success',"Successful","Success");
-                
                 createDOInfoFn(data.rec_id);
                 countDOStatusFn(data.fiscal_year);
 

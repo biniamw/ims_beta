@@ -136,7 +136,7 @@
         <sethtmlpagefooter name="myfooter" value="on"/>
         <table>
             <tr>
-                <td colspan="3" class="headers doctitle"><b>Delivery Order Request</b></td>
+                <td colspan="3" class="headers doctitle"><b>Delivery Order Note (Request)</b></td>
             </tr>
             <tr>
                 <td>

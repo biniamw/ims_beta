@@ -89,14 +89,17 @@ class DeliveryOrderController extends Controller
         $fyear = $settings->FiscalYear;
         $findid = $request->recordId;
         $current_status = $request->formstatus;
+        $show_price_flag = $request->VisiblePrice;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $actual_item_ids = [];
         $standard_item_ids = [];
         $empty_item_qty = [];
+        $empty_item_unitprice = [];
         $is_valid_actual_std = true;
         $is_actual_std_similar = true;
         $is_item_qty_valid = true;
+        $is_item_unitprice_valid = true;
 
         $validator = Validator::make($request->all(), [
             'ReferenceType' => ['required'],
@@ -105,12 +108,11 @@ class DeliveryOrderController extends Controller
             'station' => ['required'],
 
             'DeliveryDate' => ['required'],
-            'ExpiryDate' => ['required'],
             'OrderedBy' => ['required'],
             'SalesPerson' => ['required'],
 
             'PaymentType' => ['required_if:ReferenceType,600'],
-            'PaymentTerm' => ['required_if:ReferenceType,600'],
+            'PaymentTerm' => ['required_if:PaymentType,Credit'],
             
             'customer' => ['required'],
         ]);
@@ -118,7 +120,7 @@ class DeliveryOrderController extends Controller
         $rules = array(
             'row.*.ItemId' => 'required',
             'row.*.Quantity' => 'nullable',
-            'row.*.UnitPrice' => 'required_if:VisiblePrice,true,1,on,yes',
+            'row.*.UnitPrice' => 'nullable',
         );
 
         $stdrules = array(
@@ -134,11 +136,15 @@ class DeliveryOrderController extends Controller
             foreach ($request->row as $key => $value){
                 $item_id = $value['ItemId'] ?? 0;
                 $qty = $value['Quantity'] ?? 0;
+                $unit_price = $value['UnitPrice'] ?? 0;
                 if($item_id != null){
                     $actual_item_ids[] = $item_id;
                 }
                 if($qty == 0){
                     $empty_item_qty[] = $item_id;
+                }
+                if($unit_price == 0){
+                    $empty_item_unitprice[] = $item_id;
                 }
             }
         }
@@ -167,8 +173,11 @@ class DeliveryOrderController extends Controller
         if(count($empty_item_qty) > 0 && ($current_status == "Verified" || $current_status == "Approved")){
             $is_item_qty_valid = false;
         }
+        if(count($empty_item_unitprice) > 0 && $show_price_flag == "on" && ($current_status == "Verified" || $current_status == "Approved")){
+            $is_item_unitprice_valid = false;
+        }
 
-        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar && $is_item_qty_valid){
+        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar && $is_item_qty_valid && $is_item_unitprice_valid){
             DB::beginTransaction();
             try{
                 $submitted_ids = [];
@@ -466,10 +475,8 @@ class DeliveryOrderController extends Controller
         else if(!$is_actual_std_similar){
             return Response::json(['actual_std_similarity' => 466]);
         }
-        else if(!$is_item_qty_valid){
-            $empty_item_qty = implode(',',$empty_item_qty);
-            $get_empty_qty_list = DB::select('SELECT regitems.Name FROM regitems WHERE regitems.id IN('.$empty_item_qty.') ORDER BY regitems.Name ASC');
-            return Response::json(['empty_qty_item' => 467,'get_empty_qty_list' => $get_empty_qty_list]);
+        else if(!$is_item_qty_valid || !$is_item_unitprice_valid){
+            return Response::json(['get_empty_qty_list' => 467]);
         }
     }
 
@@ -722,7 +729,7 @@ class DeliveryOrderController extends Controller
 
             }
             else if($newStatus == "Verified" || $newStatus == "Approved"){
-                $get_empty_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE delivery_order_details.quantity=0 AND delivery_order_details.delivery_order_id='.$findid);
+                $get_empty_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE delivery_order_details.quantity=0 OR (delivery_order_details.unit_price=0 AND delivery_orders.show_pricing=1) AND delivery_order_details.delivery_order_id='.$findid);
                 $total_empty_item = count($get_empty_do_item);
                 if($total_empty_item > 0){
                     return Response::json(['empty_qty_item' => $get_empty_do_item]);
