@@ -136,9 +136,45 @@
         <sethtmlpagefooter name="myfooter" value="on"/>
         <table>
             <tr>
-                <td colspan="3" class="headers doctitle"><b>Delivery Order Note (Request)</b></td>
+                <td colspan="3" class="headers doctitle"><b>Delivery Order</b></td>
             </tr>
             <tr>
+                <td>
+                    <div><u>Standard</u></div>
+                    <table style="width: 100%;" class="bordertables">
+                        <tbody>
+                            <tr class="headerHeight">
+                                <td class="headers bordertables" style="height:20px;" colspan="2"><div style="height:20px;"><b>Customer Information</b></div></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 25%;" class="bordertables"><b>Category</b></td>
+                                <td style="width: 75%;" class="bordertables">{{$customercategory}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>Name</b></td>
+                                <td class="bordertables">{{$customername}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>TIN</b></td>
+                                <td class="bordertables">{{$customertin}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertables"><b>VAT No.</b></td>
+                                <td class="bordertables">{{$customervat}}</td>
+                            </tr>
+                            <tr>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                            </tr>
+                            @if($reference_type != 600)
+                            <tr>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                                <td class="bordertableswhite" style="color:white;">.</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </td>
                 <td>
                     <table style="width: 100%" class="bordertables">
                         <tbody>
@@ -174,44 +210,9 @@
                         </tbody>
                     </table>
                 </td>
-                <td>
-                    <table style="width: 100%;" class="bordertables">
-                        <tbody>
-                            <tr class="headerHeight">
-                                <td class="headers bordertables" style="height:20px;" colspan="2"><div style="height:20px;"><b>Customer Information</b></div></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 25%;" class="bordertables"><b>Category</b></td>
-                                <td style="width: 75%;" class="bordertables">{{$customercategory}}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordertables"><b>Name</b></td>
-                                <td class="bordertables">{{$customername}}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordertables"><b>TIN</b></td>
-                                <td class="bordertables">{{$customertin}}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordertables"><b>VAT No.</b></td>
-                                <td class="bordertables">{{$customervat}}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordertableswhite" style="color:white;">.</td>
-                                <td class="bordertableswhite" style="color:white;">.</td>
-                            </tr>
-                            @if($reference_type != 600)
-                            <tr>
-                                <td class="bordertableswhite" style="color:white;">.</td>
-                                <td class="bordertableswhite" style="color:white;">.</td>
-                            </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </td>
+                
             </tr>
         </table>
-        <br/>
         <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
             <thead>
                 <tr>
@@ -250,7 +251,7 @@
             @if($can_view_price == 1 && $show_price == 1)
             <tfoot>
                 <tr>
-                    <th colspan="9" style="text-align: right" class="bordertables">Total</th>
+                    <th colspan="8" style="text-align: right" class="bordertables">Total</th>
                     <th style="text-align: center" class="bordertables">{{$std_total_price}}</th>
                     <th class="bordertables"></th>
                 </tr>
@@ -310,21 +311,10 @@
                         </tr>
                     </table>
                 </td>
-                <td>
-                    <table style="width: 100%">
-                        <tr>
-                            <td class="headers bordertables" style="height:15px;" colspan="2"><div style="height:15px;"><b>Delivered By</b></div></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Name: </b><u>{{$delivery_by}}</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="bordertablessign"><b>Date: </b><u>{{$delivery_date}}</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="bordertablessign"><b>Signature: </b>________</td>
-                        </tr>
-                    </table>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Received By: <b>{{$received_by}}</b>, Date: <b>{{$delivery_date}}</b>, Signature: _________I received the above Goods/Service in a good condition.
                 </td>
             </tr>
         </table>

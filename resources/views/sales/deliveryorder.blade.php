@@ -175,7 +175,7 @@
         </div>
     @endcan
 
-    <!--Start Info Modal -->
+    <!--Start info modal -->
     <div class="modal fade text-left fit-content" id="doInfoModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="dispatchinfotitle" aria-hidden="true" style=" overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -229,6 +229,10 @@
                                                                         <tr>
                                                                             <td><label class="info_lbl">Station</label></td>
                                                                             <td><label class="info_lbl" id="info_station" style="font-weight: bold;"></label></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><label class="info_lbl">Deliver By</label></td>
+                                                                            <td><label class="info_lbl" id="info_delivery_by" style="font-weight: bold;"></label></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><label class="info_lbl">Delivery Date</label></td>
@@ -316,8 +320,8 @@
                                                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                                                     <table class="infotbl" style="width:100%;font-size:12px;">
                                                                         <tr>
-                                                                            <td><label class="info_lbl">Deliver By</label></td>
-                                                                            <td><label class="info_lbl" id="info_delivery_by" style="font-weight: bold;"></label></td>
+                                                                            <td><label class="info_lbl">Received By</label></td>
+                                                                            <td><label class="info_lbl" id="info_received_by" style="font-weight: bold;"></label></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><label class="info_lbl" title="Phone Number">Phone No.</label></td>
@@ -393,8 +397,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row fl_class pricing_flag" style="display: none;">
-                                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
-                                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
+                                                                <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
+                                                                <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8 mt-1" style="text-align: right;">
                                                                     <table style="width: 100%;" class="rtable">
                                                                         <tr>
                                                                             <td style="text-align: right;width:45%;">
@@ -444,8 +448,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row fl_class pricing_flag" style="display: none;">
-                                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
-                                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mt-1" style="text-align: right;">
+                                                                <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
+                                                                <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8 mt-1" style="text-align: right;">
                                                                     <table style="width: 100%;" class="rtable">
                                                                         <tr>
                                                                             <td style="text-align: right;width:45%;">
@@ -523,8 +527,9 @@
             </div>
         </div>
     </div>
-    <!-- End Info -->
+    <!-- End info modal-->
 
+    <!--Start form -->
     <div class="modal fade text-left fit-content" id="inlineForm" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -557,7 +562,14 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1 reference_doc default_hidden_div" id="reference_doc_div">
-                                            <label class="form_lbl" title="Reference Document">Reference<b style="color: red; font-size:16px;">*</b></label>
+                                            <div class="row">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 mr-0 pr-0">
+                                                    <label class="form_lbl" title="Reference Document">Reference<b style="color: red; font-size:16px;">*</b></label>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 pr-2" style="display: none;text-align:right;" id="expiry_date_div">
+                                                    <label class="form_lbl" id="expiry_date_lbl"></label>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mr-0 pr-0">
                                                     <select class="select2 form-control" name="Reference" id="Reference"></select>
@@ -566,9 +578,6 @@
                                                     <a id="show_reference" href="javascript:void(0)" class="show_reference" onclick="openReferenceDocFn()" title="Open reference document">
                                                        <i class="fas fa-info fa-lg" style="color: #00cfe8;"></i>
                                                     </a>
-                                                </div>
-                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mr-0 pr-0" style="display: none;" id="expiry_date_div">
-                                                    <label class="form_lbl" id="expiry_date_lbl"></label>
                                                 </div>
                                             </div>
                                             <span class="text-danger">
@@ -587,6 +596,13 @@
                                             <select class="select2 form-control" name="station" id="station"></select>
                                             <span class="text-danger">
                                                 <strong id="station-error" class="errordatalabel"></strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
+                                            <label class="form_lbl">Deliver By</label>
+                                            <input type="text" placeholder="Enter deliver by here" class="form-control reg_form" name="DeliverBy" id="DeliverBy" onkeyup="deliverByFn()"/>
+                                            <span class="text-danger">
+                                                <strong id="deliverby-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
@@ -678,10 +694,10 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
-                                            <label class="form_lbl">Deliver By</label>
-                                            <input type="text" placeholder="Enter deliver by here" class="form-control reg_form" name="DeliverBy" id="DeliverBy" onkeyup="deliverByFn()"/>
+                                            <label class="form_lbl">Received By<b style="color: red; font-size:16px;">*</b></label>
+                                            <input type="text" placeholder="Enter received by here" class="form-control reg_form" name="ReceivedBy" id="ReceivedBy" onkeyup="receivedByFn()"/>
                                             <span class="text-danger">
-                                                <strong id="deliverby-error" class="errordatalabel"></strong>
+                                                <strong id="receivedby-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-1">
@@ -734,13 +750,13 @@
                                                             <thead>
                                                                 <th style="width:3%;">#</th>
                                                                 <th style="width:14%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:8%;" title="Unit of Measurement">UOM</th>
-                                                                <th style="width:10%;" class="direct_reference" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:6%;" title="Unit of Measurement">UOM</th>
+                                                                <th style="width:10%;" title="Quantity on Hand">Qty. on Hand</th>
                                                                 <th style="width:10%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
                                                                 <th style="width:10%;" class="non_direct_reference" title="Remaining Quantity">Remaining Qty.</th>
                                                                 <th style="width:10%;" title="Delivery Quantity">Delivery Qty.<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:9%;" class="pricing_column">Unit Price<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:9%;" class="pricing_column">Total Price</th>
+                                                                <th style="width:10%;" class="pricing_column">Unit Price<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:10%;" class="pricing_column">Total Price</th>
                                                                 <th style="width:12%;">Remark</th>
                                                                 <th style="width:5%;"></th>
                                                             </thead>
@@ -755,8 +771,8 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
-                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
+                                                <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
+                                                <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8" style="text-align: right;">
                                                     <table style="width:100%;" id="pricingTable" class="rtable pricing_column">
                                                         <tr style="display: none;">
                                                             <td style="text-align: right;width:45%">
@@ -798,15 +814,15 @@
                                                         <table id="stdDynamicTable" class="mb-0 rtable form_dynamic_table fit-content" style="width:100%;min-width: 950px;">
                                                             <thead>
                                                                 <th style="width:3%;">#</th>
-                                                                <th style="width:16%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:14%;" class="direct_reference" title="Quantity on Hand">Qty. on Hand</th>
-                                                                <th style="width:7%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
-                                                                <th style="width:7%;" class="non_direct_reference" title="Remaining Quantity">Rem. Qty.</th>
+                                                                <th style="width:10%;">Item Name<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:10%;" title="Quantity on Hand">Qty. on Hand</th>
+                                                                <th style="width:10%;" class="non_direct_reference" title="Ordered Quantity">Ordered Qty.</th>
+                                                                <th style="width:10%;" class="non_direct_reference" title="Remaining Quantity">Rem. Qty.</th>
                                                                 <th style="width:8%;" title="Factor">Factor</th>
-                                                                <th style="width:12%;" title="Quantity per PCs">Qty. per PCs</th>
-                                                                <th style="width:12%;" title="Standard KG">Standard KG</th>
-                                                                <th style="width:11%;" class="pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:11%;" class="pricing_column">Total Price</th>
+                                                                <th style="width:8%;" title="Quantity per PCs">Qty. per PCs</th>
+                                                                <th style="width:8%;" title="Standard KG">Standard KG</th>
+                                                                <th style="width:10%;" class="pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:10%;" class="pricing_column">Total Price</th>
                                                                 <th style="width:10%;">Remark</th>
                                                                 <th style="width:3%;"></th>
                                                             </thead>
@@ -821,8 +837,8 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-10 col-lg-9 col-md-8 col-sm-6 col-12"></div>
-                                                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12" style="text-align: right;">
+                                                <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
+                                                <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8" style="text-align: right;">
                                                     <table style="width:100%;" id="stdPricingTable" class="rtable pricing_column">
                                                         <tr style="display: none;">
                                                             <td style="text-align: right;">
@@ -907,8 +923,9 @@
             </div>
         </div>
     </div>
+    <!-- End form -->
 
-    <!--Start Void modal -->
+    <!--Start void modal -->
     <div class="modal fade text-left fit-content" id="voidDOModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="voidreasonmodal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -937,7 +954,7 @@
             </div>
         </div>
     </div>
-    <!-- End Void modal -->
+    <!-- End void modal -->
 
     <!--Start backward action modal -->
     <div class="modal fade text-left fit-content" id="backwardActionModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="backwardActionModal" aria-hidden="true">
@@ -975,14 +992,14 @@
     <!-- End backward action modal -->
 
     <!-- start manage document modal-->
-    <div class="modal modal-slide-in event-sidebar fade fit-content" id="manageDocumentModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageDocumentModal" aria-hidden="true">
+    <div class="modal fade modal-slide-in event-sidebar fit-content" id="manageDocumentModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageDocumentModal" aria-hidden="true">
         <form id="ManageDocumentForm">    
             <div class="modal-dialog sidebar-xl" style="width: 95%;">
                 <div class="modal-content p-0">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ea5455 !important;font-weight:bold;">x</button>
                     <div class="modal-header mb-1">
                         <h5 class="modal-title form_title" id="manage-document-title">Manage Documents</h5>
-                        <div class="info_modal_title_lbl info_modal_title_lbl" style="text-align: center;padding-right:30px;"></div>
+                        <div class="info_modal_title_lbl" style="text-align: center;padding-right:30px;"></div>
                     </div>
                     <div class="modal-body flex-grow-1 pb-sm-0 pb-3 scrdivhor scrollhor" style="overflow-y:auto;height:100vh;">
                         <div class="row mr-1 ml-1">
@@ -1032,7 +1049,7 @@
             </div>
         </form>
     </div>
-    <!--/ end manage document modal-->
+    <!-- end manage document modal-->
 
     @include('layout.universal-component')
 
@@ -1101,9 +1118,7 @@
                     message: 'Reason'
                 },
             },
-            'Approved': {
-                
-            },
+            'Approved': {},
         };
 
         $(document).ready(async function() {
@@ -1539,6 +1554,9 @@
                 if (data.errors.DocumentNumber) {
                     $('#docnumber-error').html(data.errors.DocumentNumber[0]);
                 }
+                if (data.errors.ReceivedBy) {
+                    $('#receivedby-error').html(data.errors.ReceivedBy[0]);
+                }
                 if (data.errors.PaymentType) {
                     var text = data.errors.PaymentType[0];
                     text = text.replace("600", "direct");
@@ -1826,7 +1844,7 @@
                     sales_person = `<option selected value="${value.Username}">${value.Username}</option>`;
                 });
 
-                listReferenceItemFn(data.detail_data);
+                listReferenceItemFn(data.detail_data,data.store_id);
             }
             else if(ref_type == 602){
                 $.each(data.customer_data, function(key, value) {
@@ -1851,7 +1869,7 @@
                     sales_person = `<option selected value="${value.username}">${value.username}</option>`;
                 });
 
-                listReferenceItemFn(data.detail_data);
+                listReferenceItemFn(data.detail_data,data.store_id);
             }
             else if(ref_type == 603){
                 $.each(data.customer_data, function(key, value) {
@@ -1877,7 +1895,7 @@
                 });
 
                 //populateReferenceItemFn(data.detail_data);
-                listReferenceItemFn(data.detail_data);
+                listReferenceItemFn(data.detail_data,data.store_id);
             }
             
             $('#customer').empty().append(customer_option).select2({
@@ -1911,7 +1929,7 @@
             $('#reference_item_default').empty().append(item_options).select2();
         }
 
-        function listReferenceItemFn(detail_data){
+        function listReferenceItemFn(detail_data,store_id){
             j = 0;
             j1 = 0;
             var item_options = null;
@@ -1934,13 +1952,13 @@
                         <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                         <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                         <td style="width:14%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
-                        <td style="width:8%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"><option selected value="${value.uom}">${value.uom_name}</option></select></td>
-                        <td style="width:10%;" class="direct_reference"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:6%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"><option selected value="${value.uom}">${value.uom_name}</option></select></td>
+                        <td style="width:10%;"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][ordered_qty]" placeholder="Ordered quantity" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" value="${value.Quantity}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][remaining_qty]" placeholder="Remaining quantity" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" value="${remaining_qty >= 0 ? remaining_qty : 0}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:10%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                        <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.UnitPrice}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                        <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.UnitPrice}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                        <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here"/></td>
                         <td style="width:5%;text-align:center;">
                             <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
@@ -1963,19 +1981,20 @@
                         $(`#batch_serial_info${m}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
                         $(`#batch_serial_info${m}`).show();
                     }
+                    calcBalanceFn(m,store_id);
 
                     $("#stdDynamicTable > tbody").append(`<tr>
                         <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
                         <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
-                        <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
-                        <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.Quantity} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.itemid}">${value.items}</option></select></td>
+                        <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.Quantity} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.standard_factor}" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                        <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                        <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                        <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                        <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
                         <td style="width:3%;text-align:center;">
                             <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -1985,7 +2004,9 @@
                     $(`#std_itemNameSl${m1}`).select2({minimumResultsForSearch: -1});
                     $(`#select2-std_itemNameSl${m1}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
 
+                    calcStdBalanceFn(m1,store_id);
                     columnMgtFn();
+                    
                 }
             });
 
@@ -2118,13 +2139,13 @@
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                     <td style="width:14%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"></select></td>
-                    <td style="width:8%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
-                    <td style="width:10%;" class="direct_reference"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:6%"><select id="uom${m}" class ="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
+                    <td style="width:10%;"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][ordered_qty]" placeholder="Ordered quantity" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][remaining_qty]" placeholder="Remaining quantity" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here"/></td>
                     <td style="width:5%;text-align:center;">
                         <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
@@ -2184,6 +2205,7 @@
         function itemFn(ele) {
             var idval = $(ele).closest('tr').find('.vals').val();
             var item_id = $(`#itemNameSl${idval}`).val();
+            var store_id = $("#station").val();
             
             var arr = [];
             var found = 0;
@@ -2210,7 +2232,7 @@
             else{
                 fetchItemInfoFn(idval);
                 fetchUOMListFn(idval);
-                calcBalanceFn(idval);
+                calcBalanceFn(idval,store_id);
                 $(`#select2-itemNameSl${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
                 $(`#select2-uom${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
             }
@@ -2311,7 +2333,7 @@
             });
         }
 
-        function calcBalanceFn(rowid){
+        function calcBalanceFn(rowid,store_id){
             var baseRecordId = null;
             var storeval = null;
             var itemid = null;
@@ -2321,7 +2343,7 @@
                 type: 'POST',
                 data:{
                     baseRecordId:$('#recordId').val() || 0,
-                    storeval:$('#station').val(),
+                    storeval:$('#station').val() || store_id,
                     itemid:$(`#itemNameSl${rowid}`).val(),
                 },
                 beforeSend: function() {
@@ -2346,7 +2368,7 @@
             $(`#qty_on_hand${rowid}`).val(net_balance);
 
             if(parseFloat(qty) > parseFloat(net_balance)){
-                $(`#qty_on_hand${rowid}`).val("");
+                $(`#quantity${rowid}`).val("");
             }
         }
 
@@ -2408,10 +2430,13 @@
                 }
                 if(inputid === `quantity${cid}`){
                     var reference_type = $("#ReferenceType").val();
-                    if(reference_type == 600){
-                        var qty_on_hand = $(`#qty_on_hand${cid}`).val();
-                        qty_on_hand = qty_on_hand == '' ? 0 : qty_on_hand;
+                    var qty_on_hand = $(`#qty_on_hand${cid}`).val();
+                    var remaining_qty = $(`#remaining_qty${cid}`).val();
+                    qty_on_hand = qty_on_hand == '' ? 0 : qty_on_hand;
+                    remaining_qty = remaining_qty == '' ? 0 : remaining_qty;
+                    var comp_number = parseFloat(qty_on_hand) < parseFloat(remaining_qty) ? qty_on_hand : remaining_qty;
 
+                    if(reference_type == 600){
                         if(parseFloat(quantity) > parseFloat(qty_on_hand)){
                             $(`#quantity${cid}`).css("background",errorcolor);
                             $(`#quantity${cid}`).val("");
@@ -2422,15 +2447,23 @@
                             $(`#quantity${cid}`).css("background","white");
                         }
                     }
+                    else if(reference_type == 601 || reference_type == 602){
+                        if(parseFloat(quantity) > parseFloat(comp_number)){
+                            $(`#quantity${cid}`).css("background",errorcolor);
+                            $(`#quantity${cid}`).val("");
+                            $(`#total${cid}`).val("");
+                            toastrMessage('error',"Quantity exceeds available stock or remaining quantity","Error");
+                        }
+                        else{
+                            $(`#quantity${cid}`).css("background","white");
+                        }
+                    }
                     else{
-                        var remaining_qty = $(`#remaining_qty${cid}`).val();
-                        remaining_qty = remaining_qty == '' ? 0 : remaining_qty;
-
                         if(parseFloat(quantity) > parseFloat(remaining_qty)){
                             $(`#quantity${cid}`).css("background",errorcolor);
                             $(`#quantity${cid}`).val("");
                             $(`#total${cid}`).val("");
-                            toastrMessage('error',"Quantity exceeds remaining balance.","Error");
+                            toastrMessage('error',"Quantity exceeds remaining quantity","Error");
                         }
                         else{
                             $(`#quantity${cid}`).css("background","white");
@@ -2487,15 +2520,15 @@
                 $("#stdDynamicTable > tbody").append(`<tr>
                     <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
                     <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
-                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"></select></td>
-                    <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:7%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"></select></td>
+                    <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="number" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                    <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
                     <td style="width:3%;text-align:center;">
                         <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -2540,6 +2573,7 @@
         function stdItemFn(ele) {
             var idval = $(ele).closest('tr').find('.std_vals').val();
             var item_id = $(`#std_itemNameSl${idval}`).val();
+            var store_id = $('#station').val();
             
             var arr = [];
             var found = 0;
@@ -2564,7 +2598,7 @@
             }
             else{
                 fetchStdItemInfoFn(idval);
-                calcStdBalanceFn(idval);
+                calcStdBalanceFn(idval,store_id);
                 $(`#select2-std_itemNameSl${idval}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%","background-color":"white"});
             }
         }
@@ -2613,7 +2647,7 @@
             });
         }
 
-        function calcStdBalanceFn(rowid){
+        function calcStdBalanceFn(rowid,store_id){
             var baseRecordId = null;
             var storeval = null;
             var itemid = null;
@@ -2623,7 +2657,7 @@
                 type: 'POST',
                 data:{
                     baseRecordId:$('#recordId').val() || 0,
-                    storeval:$('#station').val(),
+                    storeval:$('#station').val() || store_id,
                     itemid:$(`#std_itemNameSl${rowid}`).val(),
                 },
                 beforeSend: function() {
@@ -2883,13 +2917,14 @@
 
             $.each(data.do_data, function(key, value) {
                 $('#ReferenceType').val(value.reference_type).select2({minimumResultsForSearch: -1});
+                $('#DeliverBy').val(value.delivery_by);
                 $('#DeliveryDate').val(value.delivery_date);
                 $('#OrderedBy').val(value.order_by).select2();
                 $('#DocumentNumber').val(value.supporting_doc_no);
                 $('#Remark').val(value.remark);
                 $('#VisiblePrice').prop('checked', value.show_pricing == 1);
 
-                $('#DeliverBy').val(value.delivery_by);
+                $('#ReceivedBy').val(value.received_by);
                 $('#PhoneNumber').val(value.phone_no);
                 $('#IdNumber').val(value.id_no);
                 $('#PlateNumber').val(value.plate_no);
@@ -2987,13 +3022,13 @@
                     <td style="font-weight:bold;text-align:center;width:3%">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
                     <td style="width:14%"><select id="itemNameSl${m}" class="select2 form-control itemName" onchange="itemFn(this)" name="row[${m}][ItemId]"><option selected value="${value.regitems_id}">${value.items}</option></select></td>
-                    <td style="width:8%"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"><option selected value="${value.new_uom}">${value.UOM}</option></select></td>
-                    <td style="width:10%;" class="direct_reference"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:6%"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name = "row[${m}][uom]"><option selected value="${value.new_uom}">${value.UOM}</option></select></td>
+                    <td style="width:10%;"><input type="text" name="row[${m}][qty_on_hand]" placeholder="Quantity on hand" id="qty_on_hand${m}" class="qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][ordered_qty]" placeholder="Ordered quantity" id="ordered_qty${m}" class="ordered_qty form-control numeral-mask" value="${value.ordered_qty}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%" class="non_direct_reference"><input type="number" name="row[${m}][remaining_qty]" placeholder="Remaining quantity" id="remaining_qty${m}" class="remaining_qty form-control numeral-mask" value="${remaining_qty >= 0 ? remaining_qty : 0}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%"><input type="number" name="row[${m}][Quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="CalculateTotal(this)" value="${value.quantity}" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.unit_price}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:9%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.total_price}" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][UnitPrice]" placeholder="Enter unit price here" id="unitprice${m}" class="unitprice form-control numeral-mask" value="${value.unit_price}" onkeyup="CalculateTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="row[${m}][TotalPrice]" placeholder="Total price" id="total${m}" class="total form-control numeral-mask" readonly="true" value="${value.total_price}" style="font-weight:bold;"/></td>
                     <td style="width:12%;"><input type="text" name="row[${m}][remark]" id="remark${m}" class="remark form-control" placeholder="Enter remark here" value="${(value.remark == null || value.remark == "") ? "" : value.remark}"/></td>
                     <td style="width:5%;text-align:center;">
                         <a id="batch_serial_info${m}" href="javascript:void(0)" class="batch_serial_info" style="display:none;"><i class="fas fa-info-circle" style="color: #82868b;"></i></a>
@@ -3004,15 +3039,15 @@
                 $("#stdDynamicTable > tbody").append(`<tr>
                     <td style="font-weight:bold;text-align:center;width:3%">${j1}</td>
                     <td style="display:none;"><input type="hidden" name="stdrow[${m1}][std_vals]" id="std_vals${m1}" class="std_vals form-control" readonly="true" style="font-weight:bold;" value="${m1}"/></td>
-                    <td style="width:16%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.regitems_id}">${value.items}</option></select></td>
-                    <td style="width:14%;" class="direct_reference"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.ordered_qty} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:7%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%"><select id="std_itemNameSl${m1}" class="select2 form-control std_itemName" onchange="stdItemFn(this)" name="stdrow[${m1}][std_ItemId]"><option selected value="${value.regitems_id}">${value.items}</option></select></td>
+                    <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_qty_on_hand]" placeholder="Quantity on hand" id="std_qty_on_hand${m1}" class="std_qty_on_hand form-control" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_ordered_qty]" placeholder="Ordered quantity" id="std_ordered_qty${m1}" class="std_ordered_qty form-control" value="${value.ordered_qty} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="non_direct_reference"><input type="text" name="stdrow[${m1}][std_remaining_qty]" placeholder="Remaining quantity" id="std_remaining_qty${m1}" class="std_remaining_qty form-control" value="${remaining_qty >= 0 ? remaining_qty : 0} ${value.uom_name}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.factor}" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:12%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
-                    <td style="width:12%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
-                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:11%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_input form-control numeral-mask" value="${value.std_total_price}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
+                    <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_input form-control numeral-mask" value="${value.std_total_price}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here" value="${value.std_remark}"/></td>
                     <td style="width:3%;text-align:center;">
                         <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -3037,13 +3072,14 @@
                     $(`#std_itemNameSl${m1}`).append(options.find(`option[data-type="${product_type}"]`).clone());
                     $(`#std_itemNameSl option[value="${value.regitems_id}"]`).remove();
                     $(`#std_itemNameSl${m1}`).append(`<option selected value="${value.regitems_id}">${value.items}</option>`).select2();
-                    calcBalanceFn(m);
-                    calcStdBalanceFn(m1);
+                    
                 }
                 else if(data.reference_type != 600){
                     $(`#itemNameSl${m}`).select2({minimumResultsForSearch: -1});
                     $(`#std_itemNameSl${m1}`).select2({minimumResultsForSearch: -1});
                 }
+                calcBalanceFn(m,data.store_id);
+                calcStdBalanceFn(m1,data.store_id);
 
                 $(`#uom${m}`).select2({minimumResultsForSearch: -1});
                 $(`#select2-itemNameSl${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
@@ -3198,15 +3234,15 @@
             var print_doatt_link = `
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/1" data-id="printdoatt${data.rec_id}" id="printdoatt${data.rec_id}" title="Print Delivery Order Note">
-                    <span><i class="fa fa-file"></i> Print Delivery Order Note</span>  
+                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/1" data-id="printdoatt${data.rec_id}" id="printdoatt${data.rec_id}" title="Print Delivery Order">
+                    <span><i class="fa fa-file"></i> Print Delivery Order <i>(Actual)</i></span>  
                     </a>
                 </li>`;
 
             var print_order_request_link = `
                 <li>
-                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/2" data-id="printdordereq${data.rec_id}" id="printdordereq${data.rec_id}" title="Print Delivery Order Note (Request)">
-                    <span><i class="fa fa-file"></i> Print Delivery Order Note (R)</span>  
+                    <a class="dropdown-item printDoAttLink" href="javascript:void(0)" data-link="/doatt/${data.rec_id}/2" data-id="printdordereq${data.rec_id}" id="printdordereq${data.rec_id}" title="Print Delivery Order">
+                    <span><i class="fa fa-file"></i> Print Delivery Order <i>(Standard)</i></span>  
                     </a>
                 </li>`;
 
@@ -3215,6 +3251,7 @@
                 $('#info_reference').html(`<a style="text-decoration:underline;color:blue;" onclick=openReferenceDocLinkFn("${value.reference_type}","${data.rec_id}")>${value.reference_no != null ? value.reference_no : ""}</a>`);
                 $('#info_product_type').html(value.product_type);
                 $('#info_station').html(value.store_name);
+                $('#info_delivery_by').html(value.delivery_by);
                 $('#info_delivery_date').html(value.delivery_date);
                 $('#info_expiry_date').html(value.expiry_date);
                 $('#info_order_by').html(value.order_by);
@@ -3232,7 +3269,7 @@
                 $('#info_vat_no').html(value.VatNumber);
                 $('#info_customer_phone').html(`${value.PhoneNumber}, ${value.OfficePhone}`);
 
-                $('#info_delivery_by').html(value.delivery_by);
+                $('#info_received_by').html(value.received_by);
                 $('#info_phone_no').html(value.phone_no);
                 $('#info_id_no').html(value.id_no);
                 $('#info_plate_no').html(value.plate_no);
@@ -4742,6 +4779,10 @@
 
         function customerFn(){
             $('#customer-error').html("");
+        }
+
+        function receivedByFn(){
+            $('#receivedby-error').html("");
         }
 
         function deliverByFn(){

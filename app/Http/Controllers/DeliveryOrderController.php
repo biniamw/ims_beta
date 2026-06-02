@@ -115,6 +115,7 @@ class DeliveryOrderController extends Controller
             'PaymentTerm' => ['required_if:PaymentType,Credit'],
             
             'customer' => ['required'],
+            'ReceivedBy' => ['required'],
         ]);
 
         $rules = array(
@@ -213,6 +214,7 @@ class DeliveryOrderController extends Controller
                     'reference_id' => $request->Reference,
                     'product_type' => $request->ProductType,
                     'station' => $request->station,
+                    'delivery_by' => $request->DeliverBy,
                     'delivery_date' => $request->DeliveryDate,
                     'expiry_date' => $request->ExpiryDate,
                     'order_by' => $request->OrderedBy,
@@ -222,7 +224,7 @@ class DeliveryOrderController extends Controller
                     'payment_term' => $request->PaymentTerm,
                     'show_pricing' => $request->has('VisiblePrice') ?? 0,
                     'customers_id' => $request->customer,
-                    'delivery_by' => $request->DeliverBy,
+                    'received_by' => $request->ReceivedBy,
                     'phone_no' => $request->PhoneNumber,
                     'id_no' => $request->IdNumber,
                     'plate_no' => $request->PlateNumber,
@@ -404,25 +406,23 @@ class DeliveryOrderController extends Controller
                             'Date' => $delivery_order->approved_date,
                         ]);
 
-                        DB::table('delivery_order_details')
-                            ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
-                            ->where('delivery_order_details.regitems_id',$value['ItemId'])
-                            ->where('delivery_order_details.TransactionsType',"Void")
-                            ->update([
-                                'delivery_orders.StockIn' => $value['Quantity'],
-                                'delivery_orders.UnitCost' => $value['UnitPrice'] ?? 0,
-                                'delivery_orders.BeforeTaxCost' => $value['TotalPrice'] ?? 0
-                            ]);
+                        // DB::table('delivery_order_details')
+                        //     ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
+                        //     ->where('delivery_order_details.regitems_id',$value['ItemId'])
+                        //     ->update([
+                        //         'delivery_orders.StockIn' => $value['Quantity'],
+                        //         'delivery_orders.UnitCost' => $value['UnitPrice'] ?? 0,
+                        //         'delivery_orders.BeforeTaxCost' => $value['TotalPrice'] ?? 0
+                        //     ]);
 
-                        DB::table('delivery_order_details')
-                            ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
-                            ->where('delivery_order_details.regitems_id',$value['ItemId'])
-                            ->where('delivery_order_details.TransactionsType',"Undo-Void")
-                            ->update([
-                                'delivery_orders.StockOut' => $value['Quantity'],
-                                'delivery_orders.UnitPrice' => $value['UnitPrice'] ?? 0,
-                                'delivery_orders.BeforeTaxPrice' => $value['TotalPrice'] ?? 0
-                            ]);
+                        // DB::table('delivery_order_details')
+                        //     ->where('delivery_order_details.delivery_order_id',$delivery_order->id)
+                        //     ->where('delivery_order_details.regitems_id',$value['ItemId'])
+                        //     ->update([
+                        //         'delivery_orders.StockOut' => $value['Quantity'],
+                        //         'delivery_orders.UnitPrice' => $value['UnitPrice'] ?? 0,
+                        //         'delivery_orders.BeforeTaxPrice' => $value['TotalPrice'] ?? 0
+                        //     ]);
 
                         $submitted_items[] = $value['ItemId'];
                     }
@@ -508,10 +508,12 @@ class DeliveryOrderController extends Controller
         $customer_data = "";
         $main_data = "";
         $detail_data = "";
+        $store_id = null;
 
         if($reference_type == 601){
             $proforma_data = DB::select('SELECT proformas.CustomerId AS customer_id,proformas.expireDate,proformas.Username,"Goods" AS product_type,proformas.store_id,stores.Name AS station FROM proformas LEFT JOIN stores ON proformas.store_id=stores.id WHERE proformas.id='.$reference_id);
             $customer_id = $proforma_data[0]->customer_id;
+            $store_id = $proforma_data[0]->store_id;
             $customer_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.id='.$customer_id);
             $main_data = $proforma_data;
 
@@ -520,6 +522,7 @@ class DeliveryOrderController extends Controller
         else if($reference_type == 602){
             $sales_order_data = DB::select('SELECT sales_orders.customer_id,sales_orders.expiredate,users.username,"Goods" AS product_type,sales_orders.store_id,stores.Name AS station FROM sales_orders LEFT JOIN stores ON sales_orders.store_id=stores.id LEFT JOIN users ON sales_orders.user_id=users.id WHERE sales_orders.id='.$reference_id);
             $customer_id = $sales_order_data[0]->customer_id;
+            $store_id = $sales_order_data[0]->store_id;
             $customer_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.id='.$customer_id);
             $main_data = $sales_order_data;
 
@@ -528,13 +531,14 @@ class DeliveryOrderController extends Controller
         else if($reference_type == 603){
             $sales_invoice_data = DB::select('SELECT sales.CustomerId AS customer_id,sales.PaymentType,sales.Username,"Goods" AS product_type,sales.StoreId AS store_id,stores.Name AS station FROM sales LEFT JOIN stores ON sales.StoreId=stores.id WHERE sales.id='.$reference_id);
             $customer_id = $sales_invoice_data[0]->customer_id;
+            $store_id = $sales_invoice_data[0]->store_id;
             $customer_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.id='.$customer_id);
             $main_data = $sales_invoice_data;
 
             $detail_data = DB::select('SELECT salesitems.id,salesitems.ItemId AS itemid,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.TaxTypeId,uoms.Name AS uom_name,uoms.id AS uom,regitems.standard_factor,salesitems.Quantity,salesitems.issued_qty,salesitems.UnitPrice,salesitems.BeforeTaxPrice FROM salesitems LEFT JOIN regitems ON salesitems.ItemId=regitems.id LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE salesitems.HeaderId='.$reference_id.' ORDER BY salesitems.id ASC');
         }
 
-        return response()->json(['customer_data' => $customer_data,'main_data' => $main_data,'detail_data' => $detail_data]);
+        return response()->json(['customer_data' => $customer_data,'main_data' => $main_data,'detail_data' => $detail_data,'store_id' => $store_id]);
     }
 
     public function fetchDOItemInfo(Request $request){
@@ -838,6 +842,7 @@ class DeliveryOrderController extends Controller
         $is_price_vis = $do_data[0]->show_pricing ?? 0;
         $reference_type = $do_data[0]->reference_type ?? 0;
         $reference_id = $do_data[0]->reference_id ?? 0;
+        $store_id = $do_data[0]->station ?? 0;
 
         $detail_data = DB::select('SELECT delivery_order_details.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS items,regitems.TaxTypeId,uoms.Name AS UOM,regitems.RequireSerialNumber,regitems.RequireExpireDate,delivery_orders.status,COALESCE(salesitems.Quantity,sales_order_items.quantity,proforma_regitem.Quantity) AS ordered_qty,COALESCE(salesitems.issued_qty,sales_order_items.issued_qty,proforma_regitem.issued_qty) AS issued_qty FROM delivery_order_details LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id LEFT JOIN uoms ON delivery_order_details.default_uom=uoms.id LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id LEFT JOIN salesitems ON delivery_order_details.reference_detail_id=salesitems.id AND delivery_orders.reference_type=603 LEFT JOIN sales_order_items ON delivery_order_details.reference_detail_id=sales_order_items.id AND delivery_orders.reference_type=602 LEFT JOIN proforma_regitem ON delivery_order_details.reference_detail_id=proforma_regitem.id AND delivery_orders.reference_type=601 WHERE delivery_order_details.delivery_order_id='.$id.' ORDER BY delivery_order_details.id ASC');
 
@@ -860,7 +865,7 @@ class DeliveryOrderController extends Controller
             ->orderBy('actions.id','DESC')
             ->get(['actions.*','users.FullName','users.username']);
 
-        return response()->json(['do_data' => $do_data,'detail_data' => $detail_data,'reference_data' => $reference_data,'item_info' => $item_info,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'reference_type' => $reference_type,'rec_id' => $id]);
+        return response()->json(['do_data' => $do_data,'detail_data' => $detail_data,'reference_data' => $reference_data,'item_info' => $item_info,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'reference_type' => $reference_type,'rec_id' => $id,'store_id' => $store_id]);
     }
 
     public function showDODetailData($id){
@@ -1719,6 +1724,7 @@ class DeliveryOrderController extends Controller
             $approvedby = $headerInfo->approved_by;
             $approveddate = $headerInfo->approved_date;
             $storeid = $headerInfo->station;
+            $received_by = $headerInfo->received_by;
             $customerid = $headerInfo->customers_id;
 
             $total_price = number_format($headerInfo->total_price ?? 0, 2, '.', ',');
@@ -1774,6 +1780,7 @@ class DeliveryOrderController extends Controller
                 'delivery_by' => $delivery_by,
                 'datetime' => $datetime,
                 'remark' => $remark,
+                'received_by' => $received_by,
                 'station_name' => $station_name,
                 'customername' => $customername,
                 'customercategory' => $customercategory,
