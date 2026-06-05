@@ -46,7 +46,8 @@ class DeliveryOrderController extends Controller
         $settings = DB::table('settings')->latest()->first();
         $fyear = $settings->FiscalYear;
         $currentdate = Carbon::today()->toDateString();
-        $can_view_price = auth()->user()->can('Delivery-Order-ShowORHide-Price') ? 1 : 0;
+        $can_view_price = auth()->user()->can('Delivery-Order-ShowORHide-Actual-Price') ? 1 : 0;
+        $can_view_std_price = auth()->user()->can('Delivery-Order-ShowORHide-Standard-Price') ? 1 : 0;
         $station_src = DB::select('SELECT * FROM stores WHERE stores.id>1 AND stores.ActiveStatus="Active" ORDER BY stores.Name ASC');
         $customer_src = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory IN("Customer","Customer&Supplier") AND customers.ActiveStatus="Active" AND customers.id>2 ORDER BY customers.Name ASC LIMIT 50');
         $uses_data = DB::select('SELECT * FROM users WHERE id>1 ORDER BY users.username ASC');
@@ -60,7 +61,7 @@ class DeliveryOrderController extends Controller
             'fiscalyr' => $fyear,'curdate' => $currentdate,'station_src' => $station_src,
             'customer_src' => $customer_src,'uses_data' => $uses_data,'ref_type_data' => $ref_type_data,
             'itemSrcs' => $itemSrcs,'fiscalyears' => $fiscalyears,'doc_type_data' => $doc_type_data,
-            'can_view_price' => $can_view_price
+            'can_view_price' => $can_view_price,'can_view_std_price' => $can_view_std_price
         ];
 
         if($request->ajax()) {
@@ -90,16 +91,21 @@ class DeliveryOrderController extends Controller
         $findid = $request->recordId;
         $current_status = $request->formstatus;
         $show_price_flag = $request->VisiblePrice;
+        $show_std_price_flag = $request->VisibleStdPrice;
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $actual_item_ids = [];
         $standard_item_ids = [];
         $empty_item_qty = [];
+        $empty_std_item_qty = [];
         $empty_item_unitprice = [];
+        $empty_std_item_unitprice = [];
         $is_valid_actual_std = true;
         $is_actual_std_similar = true;
         $is_item_qty_valid = true;
+        $is_std_item_qty_valid = true;
         $is_item_unitprice_valid = true;
+        $is_std_item_unitprice_valid = true;
 
         $validator = Validator::make($request->all(), [
             'ReferenceType' => ['required'],
@@ -127,7 +133,7 @@ class DeliveryOrderController extends Controller
         $stdrules = array(
             'stdrow.*.std_ItemId' => 'required',
             'stdrow.*.quantity_pcs' => 'nullable',
-            'stdrow.*.std_unitprice' => 'required_if:VisiblePrice,true,1,on,yes',
+            'stdrow.*.std_unitprice' => 'required_if:VisibleStdPrice,true,1,on,yes',
         );
 
         $v2 = Validator::make($request->all(), $rules);
@@ -152,8 +158,16 @@ class DeliveryOrderController extends Controller
         if($request->stdrow != null){
             foreach ($request->stdrow as $key => $value){
                 $item_id = $value['std_ItemId'] ?? 0;
+                $qty = $value['quantity_pcs'] ?? 0;
+                $unit_price = $value['std_unitprice'] ?? 0;
                 if($item_id != null){
                     $standard_item_ids[] = $item_id;
+                }
+                if($qty == 0){
+                    $empty_std_item_qty[] = $item_id;
+                }
+                if($unit_price == 0){
+                    $empty_std_item_unitprice[] = $item_id;
                 }
             }
         }
@@ -174,11 +188,17 @@ class DeliveryOrderController extends Controller
         if(count($empty_item_qty) > 0 && ($current_status == "Verified" || $current_status == "Approved")){
             $is_item_qty_valid = false;
         }
+        if(count($empty_std_item_qty) > 0 && ($current_status == "Verified" || $current_status == "Approved")){
+            $is_std_item_qty_valid = false;
+        }
         if(count($empty_item_unitprice) > 0 && $show_price_flag == "on" && ($current_status == "Verified" || $current_status == "Approved")){
             $is_item_unitprice_valid = false;
         }
+        if(count($empty_std_item_unitprice) > 0 && $show_std_price_flag == "on" && ($current_status == "Verified" || $current_status == "Approved")){
+            $is_std_item_unitprice_valid = false;
+        }
 
-        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar && $is_item_qty_valid && $is_item_unitprice_valid){
+        if($validator->passes() && $v2->passes() && $v3->passes() && ($request->row != null || $request->stdrow != null) && $is_valid_actual_std && $is_actual_std_similar && $is_item_qty_valid && $is_item_unitprice_valid && $is_std_item_qty_valid && $is_std_item_unitprice_valid){
             DB::beginTransaction();
             try{
                 $submitted_ids = [];
@@ -223,6 +243,7 @@ class DeliveryOrderController extends Controller
                     'payment_type' => $request->PaymentType,
                     'payment_term' => $request->PaymentTerm,
                     'show_pricing' => $request->has('VisiblePrice') ?? 0,
+                    'show_std_pricing' => $request->has('VisibleStdPrice') ?? 0,
                     'customers_id' => $request->customer,
                     'received_by' => $request->ReceivedBy,
                     'phone_no' => $request->PhoneNumber,
@@ -477,6 +498,9 @@ class DeliveryOrderController extends Controller
         }
         else if(!$is_item_qty_valid || !$is_item_unitprice_valid){
             return Response::json(['get_empty_qty_list' => 467]);
+        }
+        else if(!is_std_item_qty_valid || !$is_std_item_unitprice_valid){
+            return Response::json(['get_std_empty_qty_list' => 467]);
         }
     }
 
@@ -733,7 +757,7 @@ class DeliveryOrderController extends Controller
 
             }
             else if($newStatus == "Verified" || $newStatus == "Approved"){
-                $get_empty_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE delivery_order_details.quantity=0 OR (delivery_order_details.unit_price=0 AND delivery_orders.show_pricing=1) AND delivery_order_details.delivery_order_id='.$findid);
+                $get_empty_do_item = DB::select('SELECT regitems.Name AS item_name FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id LEFT JOIN regitems ON delivery_order_details.regitems_id=regitems.id WHERE delivery_order_details.quantity=0 AND delivery_order_details.delivery_order_id='.$findid);
                 $total_empty_item = count($get_empty_do_item);
                 if($total_empty_item > 0){
                     return Response::json(['empty_qty_item' => $get_empty_do_item]);
@@ -840,6 +864,7 @@ class DeliveryOrderController extends Controller
         $reference_data = null;
         $do_data = DB::select('SELECT delivery_orders.*,customers.Name AS customer_name,customers.TinNumber AS TIN, customers.Code AS customer_code,customers.CustomerCategory,customers.VatNumber,customers.PhoneNumber,customers.OfficePhone,stores.Name AS store_name,lookuprefs.LookupName AS reference_types,COALESCE(sales.VoucherNumber,sales_orders.docno,proformas.DocumentNumber) AS reference_no FROM delivery_orders LEFT JOIN customers ON delivery_orders.customers_id=customers.id LEFT JOIN stores ON delivery_orders.station=stores.id LEFT JOIN lookuprefs ON delivery_orders.reference_type=lookuprefs.id LEFT JOIN sales ON delivery_orders.reference_id=sales.id AND delivery_orders.reference_type=603 LEFT JOIN sales_orders ON delivery_orders.reference_id=sales_orders.id AND delivery_orders.reference_type=602 LEFT JOIN proformas ON delivery_orders.reference_id=proformas.id AND delivery_orders.reference_type=601 WHERE delivery_orders.id='.$id); 
         $is_price_vis = $do_data[0]->show_pricing ?? 0;
+        $is_std_price_vis = $do_data[0]->show_std_pricing ?? 0;
         $reference_type = $do_data[0]->reference_type ?? 0;
         $reference_id = $do_data[0]->reference_id ?? 0;
         $store_id = $do_data[0]->station ?? 0;
@@ -865,7 +890,7 @@ class DeliveryOrderController extends Controller
             ->orderBy('actions.id','DESC')
             ->get(['actions.*','users.FullName','users.username']);
 
-        return response()->json(['do_data' => $do_data,'detail_data' => $detail_data,'reference_data' => $reference_data,'item_info' => $item_info,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'reference_type' => $reference_type,'rec_id' => $id,'store_id' => $store_id]);
+        return response()->json(['do_data' => $do_data,'detail_data' => $detail_data,'reference_data' => $reference_data,'item_info' => $item_info,'activitydata' => $activitydata,'is_price_vis' => $is_price_vis,'is_std_price_vis' => $is_std_price_vis,'reference_type' => $reference_type,'rec_id' => $id,'store_id' => $store_id]);
     }
 
     public function showDODetailData($id){

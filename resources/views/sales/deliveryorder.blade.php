@@ -166,6 +166,7 @@
                                     <input type="hidden" class="form-control" name="fiscalyearval" id="fiscalyearval" value="{{$fiscalyr}}" readonly/>
                                     <input type="hidden" class="form-control" name="currentdateval" id="currentdateval" value="{{$curdate}}" readonly/>
                                     <input type="hidden" class="form-control" name="canviewprice" id="canviewprice" value="{{$can_view_price}}" readonly/>
+                                    <input type="hidden" class="form-control" name="canViewStdPrice" id="canViewStdPrice" value="{{$can_view_std_price}}" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -270,8 +271,8 @@
                                                                             <td><label class="info_lbl">Remark</label></td>
                                                                             <td><label class="info_lbl" id="info_remark" style="font-weight: bold;"></label></td>
                                                                         </tr>
-                                                                        @can('Delivery-Order-ShowORHide-Price')
-                                                                        <tr>
+                                                                        @can('Delivery-Order-ShowORHide-Actual-Price')
+                                                                        <tr style="display: none;">
                                                                             <td><label class="info_lbl">Is Price Visible</label></td>
                                                                             <td><label class="info_lbl" id="info_price_column_vis" style="font-weight: bold;"></label></td>
                                                                         </tr>
@@ -447,7 +448,7 @@
                                                                     </table>  
                                                                 </div>
                                                             </div>
-                                                            <div class="row fl_class pricing_flag" style="display: none;">
+                                                            <div class="row fl_class std_pricing_flag" style="display: none;">
                                                                 <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
                                                                 <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8 mt-1" style="text-align: right;">
                                                                     <table style="width: 100%;" class="rtable">
@@ -563,10 +564,10 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-6 col-sm-6 col-12 mb-1 reference_doc default_hidden_div" id="reference_doc_div">
                                             <div class="row">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 mr-0 pr-0">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-4 mr-0 pr-0">
                                                     <label class="form_lbl" title="Reference Document">Reference<b style="color: red; font-size:16px;">*</b></label>
                                                 </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 pr-2" style="display: none;text-align:right;" id="expiry_date_div">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 pr-2" style="display: none;text-align:right;" id="expiry_date_div">
                                                     <label class="form_lbl" id="expiry_date_lbl"></label>
                                                 </div>
                                             </div>
@@ -666,17 +667,6 @@
                                                 <strong id="remark-error" class="errordatalabel"></strong>
                                             </span>
                                         </div>
-
-                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-1" id="do_cost_visibility">
-                                            @can('Delivery-Order-ShowORHide-Price')
-                                            <div class="form-check form-check-inline">
-                                                <div class="custom-control custom-control-primary custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="VisiblePrice" name="VisiblePrice"/>
-                                                    <label class="custom-control-label form_lbl" for="VisiblePrice">Show Price Columns</label>                                  
-                                                </div>
-                                            </div>
-                                            @endcan
-                                        </div>
                                     </div>
                                 </fieldset>
                             </div>
@@ -732,9 +722,11 @@
                                         <li class="nav-item formnavitm note">
                                             <a class="nav-link active do-form-tabs form-tab-title active-form-tab-title" id="form_do_actual_tab" data-toggle="tab" href="#form_do_actual_view" aria-controls="form_do_actual_tab" role="tab" aria-selected="true" title="Actual"><i class="fas fa-database"></i><span class="tab-text">Items / Actual</span></a>                                
                                         </li>
+                                        @can('Delivery-Order-Standard-Tab-View')
                                         <li class="nav-item formnavitm note">
                                             <a class="nav-link do-form-tabs form-tab-title" id="form_do_standard_tab" data-toggle="tab" href="#form_do_standard_view" aria-controls="form_do_standard_tab" role="tab" aria-selected="true" title="Standard"><i class="fas fa-clipboard"></i><span class="tab-text">Items / Standard</span></a>                                
                                         </li>
+                                        @endcan
                                     </ul>
                                     <div class="tab-content formtabcon" style="margin-top:-14px;">
                                         <div class="tab-pane do-form-view active form-tab-view active-form-tab-view border" id="form_do_actual_view" aria-labelledby="form_do_actual_view" role="tabpanel">
@@ -743,6 +735,16 @@
                                                     <div class="breadcrumb-path">
                                                         <div class="crumb active"><a>Items / Actual</a></div>
                                                     </div>
+                                                </div>
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pb-1 d-flex justify-content-end" id="do_cost_visibility">
+                                                    @can('Delivery-Order-ShowORHide-Actual-Price')
+                                                    <div class="form-check form-check-inline">
+                                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="VisiblePrice" name="VisiblePrice"/>
+                                                            <label class="custom-control-label form_lbl" for="VisiblePrice">Show Price Columns</label>                                  
+                                                        </div>
+                                                    </div>
+                                                    @endcan
                                                 </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                     <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
@@ -809,6 +811,16 @@
                                                         <div class="crumb active"><a>Items / Standard</a></div>
                                                     </div>
                                                 </div>
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pb-1 d-flex justify-content-end" id="do_cost_visibility">
+                                                    @can('Delivery-Order-ShowORHide-Standard-Price')
+                                                    <div class="form-check form-check-inline">
+                                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="VisibleStdPrice" name="VisibleStdPrice"/>
+                                                            <label class="custom-control-label form_lbl" for="VisibleStdPrice">Show Price Columns</label>                                  
+                                                        </div>
+                                                    </div>
+                                                    @endcan
+                                                </div>
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                     <div class="table-responsive pr-0 pl-0" style="width:100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
                                                         <table id="stdDynamicTable" class="mb-0 rtable form_dynamic_table fit-content" style="width:100%;min-width: 950px;">
@@ -821,8 +833,8 @@
                                                                 <th style="width:8%;" title="Factor">Factor</th>
                                                                 <th style="width:8%;" title="Quantity per PCs">Qty. per PCs</th>
                                                                 <th style="width:8%;" title="Standard KG">Standard KG</th>
-                                                                <th style="width:10%;" class="pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
-                                                                <th style="width:10%;" class="pricing_column">Total Price</th>
+                                                                <th style="width:10%;" class="std_pricing_column">Price per KG<b style="color: red; font-size:16px;">*</b></th>
+                                                                <th style="width:10%;" class="std_pricing_column">Total Price</th>
                                                                 <th style="width:10%;">Remark</th>
                                                                 <th style="width:3%;"></th>
                                                             </thead>
@@ -839,7 +851,7 @@
                                                 </div>
                                                 <div class="col-xl-10 col-lg-8 col-md-5 col-sm-5 col-4"></div>
                                                 <div class="col-xl-2 col-lg-4 col-md-7 col-sm-7 col-8" style="text-align: right;">
-                                                    <table style="width:100%;" id="stdPricingTable" class="rtable pricing_column">
+                                                    <table style="width:100%;" id="stdPricingTable" class="rtable std_pricing_column">
                                                         <tr style="display: none;">
                                                             <td style="text-align: right;">
                                                                 <label id="stdSubGrandTotalLbl" class="form_lbl">Sub Total</label>
@@ -1050,7 +1062,6 @@
         </form>
     </div>
     <!-- end manage document modal-->
-
     @include('layout.universal-component')
 
     @include('parts.batch_serial_out')
@@ -1139,7 +1150,8 @@
                     search: '', 
                     searchPlaceholder: "Search here"
                 },
-                scrollY:'100%',
+                //scrollY:'100%',
+                scrollY:'60vh',
                 scrollX: true,
                 scrollCollapse: true, 
                 deferRender: true,
@@ -1712,6 +1724,34 @@
                 unblockPage(cardSection);
             }
 
+            else if(data.get_std_empty_qty_list){
+                $('#stdDynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.std_vals').val();
+                    if(($(`#std_quantity${k}`).val()) !== undefined || ($(`#std_unitprice${k}`).val()) !== undefined){
+                        var qnt = $(`#std_quantity${k}`).val();
+                        var up = $(`#std_unitprice${k}`).val();
+                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                            $(`#std_quantity${k}`).css("background", errorcolor);
+                        }
+                        if(isNaN(parseFloat(up)) || parseFloat(up) == 0){
+                            $(`#std_unitprice${k}`).css("background", errorcolor);
+                        }
+                    }
+                });
+
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`Please enter a valid quantity on highlighted fields`,"Error");
+                stdFormTabReset();
+                unblockPage(cardSection);
+            }
+
             else if(data.get_empty_qty_list){
                 $('#dynamicTable > tbody > tr').each(function (index) {
                     let k = $(this).find('.vals').val();
@@ -1852,7 +1892,7 @@
                 });
 
                 $.each(data.main_data, function(key, value) {
-                    expiry_date = new Date(value.expireDate);
+                    expiry_date = new Date(value.expiredate);
                     if(expiry_date < current_dates){
                         expiry_flag_color = "#ea5455";
                         expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Sales order expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
@@ -1861,8 +1901,8 @@
                         expiry_flag_color = "#5e5873";
                         expiry_info = "";
                     }
-                    $("#ExpiryDate").val(value.expireDate);
-                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
+                    $("#ExpiryDate").val(value.expiredate);
+                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expiredate}</b> ${expiry_info}`);
 
                     station = `<option selected value="${value.store_id}">${value.station}</option>`;
                     product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
@@ -1877,17 +1917,19 @@
                 });
 
                 $.each(data.main_data, function(key, value) {
-                    expiry_date = new Date(value.expireDate);
-                    if(expiry_date < current_dates){
-                        expiry_flag_color = "#ea5455";
-                        expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
-                    }
-                    else{
-                        expiry_flag_color = "#5e5873";
-                        expiry_info = "";
-                    }
-                    $("#ExpiryDate").val(value.expireDate);
-                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
+                    // expiry_date = new Date(value.expireDate);
+                    // if(expiry_date < current_dates){
+                    //     expiry_flag_color = "#ea5455";
+                    //     expiry_info = '<a id="expiry_info_btn" href="javascript:void(0)" class="expiry_info_btn" title="Expired."><i class="fas fa-info-circle" style="color: #82868b;"></i></a>';
+                    // }
+                    // else{
+                    //     expiry_flag_color = "#5e5873";
+                    //     expiry_info = "";
+                    // }
+                    // $("#ExpiryDate").val(value.expireDate);
+                    //$("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expireDate}</b> ${expiry_info}`);
+
+                    $("#expiry_date_lbl").html("");
 
                     station = `<option selected value="${value.store_id}">${value.station}</option>`;
                     product_type = `<option selected value="${value.product_type}">${value.product_type}</option>`;
@@ -1993,8 +2035,8 @@
                         <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.standard_factor}" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                         <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
-                        <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                        <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                        <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                        <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                         <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
                         <td style="width:3%;text-align:center;">
                             <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -2050,6 +2092,7 @@
                 fetchReferenceDocFn();
             }
             CalculateGrandTotal();
+            $("#expiry_date_lbl").html("");
             $('#reference-type-error').html("");
         });
 
@@ -2360,15 +2403,35 @@
         }
 
         function getBalanceFn(data,rowid){
+            var reference_type = $("#ReferenceType").val();
             var net_balance = null;
             var qty = null;
+            var remaining_qty = null;
 
             net_balance = parseFloat(data.available_qty);
             qty = $(`#quantity${rowid}`).val();
-            $(`#qty_on_hand${rowid}`).val(net_balance);
+            remaining_qty = $(`#remaining_qty${rowid}`).val();
+            
+            net_balance = net_balance == '' ? 0 : net_balance;
+            remaining_qty = remaining_qty == '' ? 0 : remaining_qty;
 
-            if(parseFloat(qty) > parseFloat(net_balance)){
-                $(`#quantity${rowid}`).val("");
+            var comp_number = parseFloat(net_balance) < parseFloat(remaining_qty) ? net_balance : remaining_qty;
+
+            $(`#qty_on_hand${rowid}`).val(net_balance);
+            if(reference_type == 600){
+                if(parseFloat(qty) > parseFloat(net_balance)){
+                    $(`#quantity${rowid}`).val("");
+                }
+            }
+            else if(reference_type == 601 || reference_type == 602){
+                if(parseFloat(qty) > parseFloat(comp_number)){
+                    $(`#quantity${rowid}`).val("");
+                }
+            }
+            else{
+                if(parseFloat(qty) > parseFloat(remaining_qty)){
+                    $(`#quantity${rowid}`).val("");
+                }
             }
         }
 
@@ -2388,10 +2451,29 @@
             }
         }
 
+        $('#VisibleStdPrice').on('change', function() {
+            showStdCostColumnFn();
+        });
+
+        function showStdCostColumnFn(){
+            var reference_type = $("#ReferenceType").val(); 
+            var permission = $("#canViewStdPrice").val(); 
+            var isChecked = $('#VisibleStdPrice').is(':checked');
+            if(isChecked && permission == 1){
+                $('.std_pricing_column').show();
+            }
+            else{
+                $('.std_pricing_column').hide();
+            }
+        }
+
         function columnMgtFn(){
             var reference_type = $("#ReferenceType").val(); 
             var isChecked = $('#VisiblePrice').is(':checked');
-            var permission = $("#canviewprice").val(); 
+            var permission = $("#canviewprice").val();
+
+            var isStdChecked = $('#VisibleStdPrice').is(':checked');
+            var std_permission = $("#canViewStdPrice").val(); 
 
             if(reference_type == 600){
                 $('.non_direct_reference').hide();
@@ -2409,6 +2491,13 @@
             }
             else if(!isChecked || permission != 1){
                 $('.pricing_column').hide();
+            }
+
+            if(isStdChecked && std_permission == 1){
+                $('.std_pricing_column').show();
+            }
+            else if(!isStdChecked || std_permission != 1){
+                $('.std_pricing_column').hide();
             }
         }
 
@@ -2527,8 +2616,8 @@
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" style="font-weight:bold;"/></td>
-                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" class="std_unitprice pricing_inp form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_inp form-control numeral-mask" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here"/></td>
                     <td style="width:3%;text-align:center;">
                         <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -2860,7 +2949,6 @@
 
         function editDOFn(recordId){
             resetDOFormFn();
-
             $.ajax({
                 type: "get",
                 url: "{{url('getDOData')}}"+'/'+recordId,
@@ -2923,6 +3011,7 @@
                 $('#DocumentNumber').val(value.supporting_doc_no);
                 $('#Remark').val(value.remark);
                 $('#VisiblePrice').prop('checked', value.show_pricing == 1);
+                $('#VisibleStdPrice').prop('checked', value.show_std_pricing == 1);
 
                 $('#ReceivedBy').val(value.received_by);
                 $('#PhoneNumber').val(value.phone_no);
@@ -2985,7 +3074,7 @@
                     }
 
                     $('#ExpiryDate').val(value.expiry_date);
-                    $("#expiry_date_lbl").html(`Expiry Date: <b style="color:${expiry_flag_color}">${value.expiry_date}</b> ${expiry_info}`);
+                    $("#expiry_date_lbl").html(value.reference_type == 603 ? "" : `Expiry Date: <b style="color:${expiry_flag_color}">${value.expiry_date}</b> ${expiry_info}`);
                     $('#expiry_date_div').show();
                 }
 
@@ -3046,8 +3135,8 @@
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][factor]" placeholder="Factor" id="factor${m1}" class="factor form-control" value="${value.factor}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:8%"><input type="number" name="stdrow[${m1}][quantity_pcs]" placeholder="Enter quantity here" id="std_quantity${m1}" class="std_quantity form-control numeral-mask" value="${value.quantity_pcs}" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);" ondrop="return false;" onpaste="return false;"/></td>
                     <td style="width:8%;"><input type="text" name="stdrow[${m1}][std_kg]" placeholder="Standard KG" id="standard_kg${m1}" class="standard_kg form-control" readonly="true" value="${value.standard_kg}" style="font-weight:bold;"/></td>
-                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:10%" class="pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_input form-control numeral-mask" value="${value.std_total_price}" readonly="true" style="font-weight:bold;"/></td>
+                    <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_unitprice]" placeholder="Enter price per KG here" id="std_unitprice${m1}" value="${value.price_per_kg}" class="std_unitprice pricing_input form-control numeral-mask" onkeyup="CalculateStdTotal(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:10%" class="std_pricing_column"><input type="number" name="stdrow[${m1}][std_totalprice]" placeholder="Total price" id="std_total${m1}" class="std_total pricing_input form-control numeral-mask" value="${value.std_total_price}" readonly="true" style="font-weight:bold;"/></td>
                     <td style="width:10%;"><input type="text" name="stdrow[${m1}][std_remark]" id="std_remark${m1}" class="remark form-control" placeholder="Enter remark here" value="${value.std_remark}"/></td>
                     <td style="width:3%;text-align:center;">
                         <button type="button" id="std_remove_std_item${m1}" class="btn btn-light btn-sm remove-std-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button>
@@ -3110,6 +3199,7 @@
             $('#reference_item_default').empty().append(item_options).select2();
 
             showCostColumnFn();
+            showStdCostColumnFn();
             CalculateGrandTotal();
             CalculateStdGrandTotal();
         }
@@ -3147,6 +3237,7 @@
         function getInfoDataFn(data){
             expand_flag = [];
             var permission = $("#canviewprice").val();
+            var std_permission = $("#canViewStdPrice").val();
             $('.info_payment_direct_ref').hide();
             var lidata = "";
             var status_color = "";
@@ -3337,6 +3428,10 @@
                     $('.pricing_flag').show();
                 }
 
+                if(value.show_std_pricing == 1 && std_permission == 1){
+                    $('.std_pricing_flag').show();
+                }
+
                 action_links = `
                 <li>
                     <a class="dropdown-item viewDOAction" onclick="viewDOActionFn(${data.rec_id})" data-id="view_do_actionbtn${recordId}" id="view_do_actionbtn${recordId}" title="View user log">
@@ -3382,12 +3477,13 @@
             $("#universal-action-log-canvas").empty().append(lidata);
 
             getDocumentDataFn(data.rec_id);
-            fetchDOItemFn(data.rec_id,data.is_price_vis);
+            fetchDOItemFn(data.rec_id,data.is_price_vis,data.is_std_price_vis);
             $(".infoscl").collapse('show');
         }
 
-        function fetchDOItemFn(recordId,is_price_vis){
+        function fetchDOItemFn(recordId,is_price_vis,is_std_price_vis){
             var permission = $("#canviewprice").val();
+            var std_permission = $("#canViewStdPrice").val();
             var visibility_flag = false;
             var column_index = [];
 
@@ -3397,14 +3493,17 @@
             if(is_price_vis == 1 && permission == 1){
                 column_index = [8,9];
                 visibility_flag = true;
+            }
+            else if(is_price_vis != 1 || permission != 1){
+                column_index = [8,9];
+                visibility_flag = false;
+            }
 
+            if(is_std_price_vis == 1 && std_permission == 1){
                 std_column_index = [9,10];
                 std_visibility_flag = true;
             }
-            else{
-                column_index = [8,9];
-                visibility_flag = false;
-
+            else if(is_std_price_vis != 1 || std_permission != 1){
                 std_column_index = [9,10];
                 std_visibility_flag = false;
             }
@@ -4890,6 +4989,14 @@
             $(".active-form-tab-view").addClass("active");
         }
 
+        function stdFormTabReset(){
+            $(".form-tab-title").removeClass("active");
+            $(".form-tab-view").removeClass("active");
+            
+            $("#form_do_standard_tab").addClass("active");
+            $("#form_do_standard_view").addClass("active");
+        }
+
         function countDOStatusFn(fiscalyear){
             var fyear = 0;
             var do_void_cnt = 0;
@@ -4966,7 +5073,9 @@
             $('.direct-reference').hide();
             $('.reg_form').val("");
             $('#VisiblePrice').prop('checked', false);
+            $('#VisibleStdPrice').prop('checked', false);
             showCostColumnFn();
+            showStdCostColumnFn();
             $('.non_direct_reference').hide();
             $('.direct_reference').hide();
             $('#delivery_order_status').html("");

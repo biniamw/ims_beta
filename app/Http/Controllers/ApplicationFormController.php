@@ -2440,7 +2440,7 @@ class ApplicationFormController extends Controller
         ->where('applications.id', $id)
         ->get(['applications.id','applications.groupmembers_id','applications.paymentterms_id','applications.stores_id','groupmembers.GroupName','paymentterms.PaymentTermName','paymentterms.PaymentTermAmount','stores.Name AS POS','stores.IsAllowedCreditSales','groupmembers.GroupSize',DB::raw("'$datetime' AS CreatedDateTime"),'applications.*']);
 
-        $memdata = appmember::join('memberships','appmembers.memberships_id','=','memberships.id')
+        $memdata = appmember::join('smemberships','appmembers.memberships_id','=','memberships.id')
         ->where('appmembers.applications_id',$id)
         ->get(['appmembers.*','memberships.Name',DB::raw('IFNULL(memberships.Mobile,"") AS Mobile'),DB::raw('IFNULL(memberships.Phone,"") AS Phone'),'memberships.Picture','memberships.MemberId','appmembers.LoyalityStatus','memberships.LoyalityStatus AS LoyalityStatusMem',
             DB::raw('(SELECT COALESCE(SUM(paymentterms.PaymentTermAmount),0) FROM appconsolidates INNER JOIN applications ON appconsolidates.applications_id=applications.id INNER JOIN paymentterms ON applications.paymentterms_id=paymentterms.id WHERE appconsolidates.memberships_id=memberships.id AND appconsolidates.applications_id<'.$id.' AND applications.Status NOT IN("Archived","Void","Refund") AND applications.ApplicationType!="Trainer-Fee") AS StayDay'),

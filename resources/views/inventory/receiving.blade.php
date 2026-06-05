@@ -148,7 +148,7 @@
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div class="row main_datatable" id="receiving_tbl" style="display: none;">
                                             <div style="width:99%; margin-left:0.5%;">
-                                                <table id="laravel-datatable-crud" class="display table-bordered table-striped table-hover defaultdatatable mb-0 mobile-dt" style="width: 100%;">
+                                                <table id="laravel-datatable-crud" class="display table-bordered table-striped table-hover defaultdatatable mb-0 mobile-dt transaction_tbl" style="width: 100%;">
                                                     <thead>
                                                         <tr>
                                                             <th style="width: 0%;display:none;"></th>
@@ -323,7 +323,7 @@
                 </div>
                 <form id="receivingInfoForm">
                     @csrf
-                    <div class="modal-body">
+                    <div class="modal-body" style="overflow-y:auto;max-height:calc(100vh - 200px);">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -1559,10 +1559,9 @@
                     search: '', 
                     searchPlaceholder: "Search here"
                 },
-                scrollY:'100%',
+                scrollY:'calc(100vh - 200px)',
                 scrollX: true,
                 scrollCollapse: true, 
-                deferRender: true,
                 dom: "<'row'<'col-sm-3 col-md-2 col-6'f><'col-sm-3 col-md-2 col-6 mt-1 custom-1'><'col-sm-3 col-md-2 col-6 mt-1 custom-2'><'col-sm-3 col-md-2 col-6 mt-1 custom-3'><'col-sm-3 col-md-2 col-6 mt-1 custom-4'><'col-sm-3 col-md-2 col-6 mt-1 custom-5'>>" +
                     "<'row'<'col-sm-12 margin_top_class'tr>>" +
                     "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
@@ -1731,12 +1730,12 @@
                             $(this).attr('data-title', header);
                         });
                     });
-
                     unblockPage(cardSection);  
 
                     $('#receiving_tbl').show();
                     $('#laravel-datatable-crud').DataTable().columns.adjust();
                 },
+
                 fixedHeader: {
                     header: true,
                     headerOffset: $('.header-navbar').outerHeight(),
@@ -1923,7 +1922,7 @@
                     search: '', 
                     searchPlaceholder: "Search here"
                 },
-                scrollY:'100%',
+                scrollY:'50vh',
                 scrollX: true,
                 scrollCollapse: true,
                 deferRender: true,

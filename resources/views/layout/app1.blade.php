@@ -18,7 +18,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/selectpicker/css/bootstrap-select.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/spinner/jquery.bootstrap-touchspin.css') }}">
     <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('customcss/fixedHeader.dataTables.min.css') }}" />
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('customcss/fixedHeader.dataTables.min.css') }}" /> --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.2/css/fixedHeader.dataTables.min.css">
     <!-- END: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css') }}">
@@ -61,8 +62,7 @@
   <!-- END: Page CSS-->
     {{-- css data picker --}}
 
-    {{-- end css date picker --}}
-
+  {{-- end css date picker --}}
   <link rel="stylesheet" type="text/css" href="{{ asset('customcss/daterangepicker.css') }}" />
   <link rel="stylesheet" type="text/css" href="{{ asset('customcss/jsPlumb.css') }}" />
   <link rel="stylesheet" type="text/css" href="{{ asset('customcss/main.css') }}" />
@@ -90,11 +90,9 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-menu.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
   @yield('styles')
 
   <style>
-
     table.dataTable span.highlight {
         background-color: #FFFF88; 
     }
@@ -408,6 +406,23 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .dataTables_scrollBody {
+        max-height: 55vh !important;
+        overflow-y: auto !important;
+    }
+
+    @media (min-height: 800px) {
+        .dataTables_scrollBody {
+            max-height: 51vh !important;
+        }
+    }
+
+    @media (min-height: 1000px) {
+        .dataTables_scrollBody {
+            max-height: 40vh !important;
+        }
     }
 
     @media print{
@@ -1771,7 +1786,7 @@
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
     <!-- BEGIN: Footer-->
-    <footer class="footer footer-static footer-light fit-content"></footer>
+    <footer class="footer footer-static footer-light fit-content" style="position: relative;margin-top: -5px;"></footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
     <!-- END: Footer-->
 
@@ -1784,7 +1799,7 @@
     <script src="{{ asset('app-assets/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{ asset('app-assets/js/dataTables.bootstrap5.min.js')}}"></script>
     <script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js')}}"></script>
-    <script src="{{ asset('app-assets/js/dataTables.fixedHeader.min.js')}}"></script>
+    {{-- <script src="{{ asset('app-assets/js/dataTables.fixedHeader.min.js')}}"></script> --}}
     <script src="{{ asset('app-assets/js/dataTables.buttons.min.js')}}"></script>
     <script src="{{ asset('app-assets/js/jszip.min.js')}}"></script>
     <script src="{{ asset('app-assets/js/pdfmake.min.js')}}"></script>
@@ -1792,6 +1807,7 @@
     <script src="{{ asset('app-assets/js/buttons.html5.min.js')}}"></script>
     <script src="{{ asset('app-assets/js/buttons.print.min.js')}}"></script>
     <script src="{{ asset('app-assets/js/dataTables.select.min.js')}}"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.2.2/js/dataTables.fixedHeader.min.js"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
@@ -1897,8 +1913,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
-    <script type="text/javascript">
 
+    <script type="text/javascript">
         $(function () {
             cardSection = $('#page-block');
         });
@@ -2196,6 +2212,25 @@
                 fixSelect2Position();
             }
         });
+
+        function forceScrollHeightFn() {
+            var $scrollBody = $('.dataTables_scrollBody');
+            if ($scrollBody.length) {
+                // Use native JavaScript to set !important
+                $scrollBody[0].style.setProperty('height', '50vh', 'important');
+                $scrollBody[0].style.setProperty('max-height', '50vh', 'important');
+                $scrollBody[0].style.setProperty('overflow-y', 'auto', 'important');
+                
+                // For cross-browser compatibility
+                $scrollBody.css({
+                    'height': '50vh',
+                    'max-height': '50vh !important',
+                    'overflow-y': 'auto'
+                });
+                
+                console.log('Scroll height forced to 50vh with !important');
+            }
+        }
 
     </script>
 
