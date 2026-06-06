@@ -592,6 +592,24 @@ class DeliveryOrderController extends Controller
         return response()->json(['item_info' => $item_info,'do_qty' => $do_qty]);
     }
 
+    public function fetchLastPrice(Request $request){
+        $item_id = $_POST['item_id'];
+        $customer_id = $_POST['customer_id'];
+        $reference_type = $_POST['reference_type'];
+        $record_id = $_POST['record_id'];
+        $latest_id = DB::table('delivery_orders')->max('id');
+        $actual_unit_price = 0;
+        $standard_unit_price = 0;
+        $id = $record_id == 0 ? $latest_id : $record_id;
+
+        if($reference_type == 600){
+            $unit_price_data = DB::select('SELECT delivery_order_details.unit_price,delivery_order_details.price_per_kg FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.customers_id='.$customer_id.' AND delivery_order_details.regitems_id='.$item_id.' AND delivery_orders.status IN("Draft","Verified","Approved") AND delivery_orders.id<='.$id.' ORDER BY delivery_orders.id DESC LIMIT 1');
+            $actual_unit_price = $unit_price_data[0]->unit_price ?? 0;
+            $standard_unit_price = $unit_price_data[0]->price_per_kg ?? 0;
+        }
+        return response()->json(['actual_unit_price' => $actual_unit_price,'standard_unit_price' => $standard_unit_price]);
+    }
+
     public function voidDeliveryOrder(Request $request){
         $settings = DB::table('settings')->latest()->first();
         $setting_fyear = $settings->FiscalYear;

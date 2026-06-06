@@ -1131,6 +1131,7 @@ Route::post('/fetchReferenceData','DeliveryOrderController@fetchReferenceData');
 Route::post('/fetchDOItemInfo','DeliveryOrderController@fetchDOItemInfo');
 Route::post('/calcDOBalance','DeliveryOrderController@calcDOBalance');
 Route::post('/getDOStoreBalance','DeliveryOrderController@getDOStoreBalance');
+Route::post('/fetchLastPrice','DeliveryOrderController@fetchLastPrice');
 
 Route::post('saveDeliveryOrder','DeliveryOrderController@store');
 Route::get('/getDOData/{id}','DeliveryOrderController@getDOData');
