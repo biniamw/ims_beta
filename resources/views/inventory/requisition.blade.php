@@ -1450,7 +1450,7 @@
                         </tr>`);
 
                         var selectedoptions = `<option selected value="${value.ItemId}">${value.ItemCode}, ${value.ItemName}, ${value.SKUNumber}</option>`;
-                        var options = $("#allitems"); 
+                        var options = $("#allitems");
                         $(`#itemNameSl${m}`).append(options.find(`option[data-storeid="${sourcestr}"]`).clone()); 
                         $(`#itemNameSl${m} option[data-balance = 0]`).remove();
                         $('#dynamicTable > tbody > tr').each(function(index, tr) {

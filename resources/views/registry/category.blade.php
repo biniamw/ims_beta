@@ -403,7 +403,7 @@
                         resetButton(button, action, optype);
                         toastrMessage('error',"Check your inputs","Error");
                     }
-                    else if (data.dberrors) {
+                    else if(data.dberrors) {
                         resetButton(button, action, optype);
                         toastrMessage('error',"Please contact administrator","Error");
                     }
@@ -440,7 +440,7 @@
                 button.text('Save & Close');
             }
 
-            if(optype === 2){
+            if(optype == 2){
                 button.text('Update');
             }
         }

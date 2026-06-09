@@ -2144,18 +2144,22 @@
             var product_type = $("#ProductType").val();
             var reference_type = $("#ReferenceType").val();
             var station = $("#station").val();
+            var customer = $("#customer").val();
             var options = null;
 
             if(itemids !== undefined && itemids === null){
                 $(`#select2-itemNameSl${lastrowcount}-container`).parent().css('background-color',errorcolor);
                 toastrMessage('error',"Please select item from highlighted field","Error");
             }
-            else if((product_type !== undefined && (product_type == null || product_type == "")) || (station !== undefined && (station == null || station == ""))){
+            else if((product_type !== undefined && (product_type == null || product_type == "")) || (station !== undefined && (station == null || station == "")) || (customer !== undefined && (customer == null || customer == ""))){
                 if(product_type !== undefined && (product_type == null || product_type == "")){
                     $('#product-type-error').html("The product type field is required.");
                 }
                 if(station !== undefined && (station == null || station == "")){
                     $('#station-error').html("The station field is required.");
+                }
+                if(customer !== undefined && (customer == null || customer == "")){
+                    $('#customer-error').html("The customer field is required.");
                 }
                 toastrMessage('error',"Please fill required fields first","Error");
             }
@@ -2302,19 +2306,14 @@
                         var is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
                         var is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
                         var tax_percent = 15;
+                        var quantity;
+                        var unitprice;
+                        var total;
+                        var remaining_qty;
                         tax_percent = tax_percent == '' || tax_percent == null ? 0 : tax_percent;
 
                         $(`#uom${indx}`).empty().append(`<option selected value='${value.uom}'>${value.uom_name}</option>`).select2();
-                        $(`#unitprice${indx}`).val(value.UnitPrice);
-
-                        var quantity = $(`#quantity${indx}`).val() || 0;
-                        var unitprice = $(`#unitprice${indx}`).val() || 0;
-
-                        var total = parseFloat(value.UnitPrice || 0) * parseFloat(quantity);
-
-                        $(`#total${indx}`).val(parseFloat(total).toFixed(2));
-                        CalculateGrandTotal();
-
+                        
                         if(is_batch_req == "Yes" || is_expiry_req == "Yes" || is_serial_req == "Yes"){
                             $(`#batch_serial_info${indx}`).attr("title",`Is Batch No. Req.: ${is_batch_req}\nIs Expiry Date Req.: ${is_expiry_req}\nIs Serial No. Req.: ${is_serial_req}`);
                             $(`#batch_serial_info${indx}`).show();
@@ -2322,22 +2321,51 @@
 
                         if(ref_type == 601){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
+                            remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
+
+                            $(`#unitprice${indx}`).val(value.UnitPrice);
+
+                            quantity = $(`#quantity${indx}`).val() || 0;
+                            unitprice = $(`#unitprice${indx}`).val() || 0;
+
+                            total = parseFloat(value.UnitPrice || 0) * parseFloat(quantity);
+
+                            $(`#total${indx}`).val(parseFloat(total).toFixed(2));
                         }
                         else if(ref_type == 602){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
+                            remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
+
+                            $(`#unitprice${indx}`).val(value.UnitPrice);
+
+                            quantity = $(`#quantity${indx}`).val() || 0;
+                            unitprice = $(`#unitprice${indx}`).val() || 0;
+
+                            total = parseFloat(value.UnitPrice || 0) * parseFloat(quantity);
+
+                            $(`#total${indx}`).val(parseFloat(total).toFixed(2));
                         }
                         else if(ref_type == 603){
                             $(`#ordered_qty${indx}`).val(value.Quantity);
-                            var remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
+                            remaining_qty = (parseFloat(value.Quantity || 0) - parseFloat(value.issued_qty || 0)) + parseFloat(data.do_qty || 0);
                             remaining_qty >= 0 ? remaining_qty : 0;
                             $(`#remaining_qty${indx}`).val(remaining_qty);
+
+                            $(`#unitprice${indx}`).val(value.UnitPrice);
+
+                            quantity = $(`#quantity${indx}`).val() || 0;
+                            unitprice = $(`#unitprice${indx}`).val() || 0;
+
+                            total = parseFloat(value.UnitPrice || 0) * parseFloat(quantity);
+
+                            $(`#total${indx}`).val(parseFloat(total).toFixed(2));
                         }
+                        
+                        CalculateGrandTotal();
                     });
                 },
                 error: function () {
@@ -2610,18 +2638,22 @@
             var product_type = $("#ProductType").val();
             var reference_type = $("#ReferenceType").val();
             var station = $("#station").val();
+            var customer = $("#customer").val();
             var options = null;
 
             if(itemids !== undefined && itemids === null){
                 $(`#select2-std_itemNameSl${lastrowcount}-container`).parent().css('background-color',errorcolor);
                 toastrMessage('error',"Please select item from highlighted field","Error");
             }
-            else if((product_type !== undefined && (product_type == null || product_type == "")) || (station !== undefined && (station == null || station == ""))){
+            else if((product_type !== undefined && (product_type == null || product_type == "")) || (station !== undefined && (station == null || station == "")) || (customer !== undefined && (customer == null || customer == ""))){
                 if(product_type !== undefined && (product_type == null || product_type == "")){
                     $('#product-type-error').html("The product type field is required.");
                 }
                 if(station !== undefined && (station == null || station == "")){
                     $('#station-error').html("The station field is required.");
+                }
+                if(customer !== undefined && (customer == null || customer == "")){
+                    $('#customer-error').html("The customer field is required.");
                 }
                 toastrMessage('error',"Please fill required fields first","Error");
             }
@@ -2857,7 +2889,7 @@
                 var stadard_kg = parseFloat(factor) * parseFloat(quantity);
                 var total = parseFloat(unitprice) * parseFloat(stadard_kg);
                 $(`#standard_kg${cid}`).val(parseFloat(stadard_kg));
-                $(`#std_total${cid}`).val(parseFloat(total));
+                $(`#std_total${cid}`).val(parseFloat(total).toFixed(2));
 
                 if(inputid === `std_unitprice${cid}`){
                     $(`#std_unitprice${cid}`).css("background","white");
@@ -3480,7 +3512,7 @@
                     $('.info_direct_ref').show();
                     if(value.payment_type == "Credit"){
                         $('.info_payment_direct_ref').show();
-                        $('#info_payment_term').html(value.payment_term);
+                        $('#info_payment_term').html(`${value.payment_term} Month`);
                     }
                 }
                 if(value.reference_type != 600){

@@ -20,7 +20,7 @@ class StockBalanceController extends Controller
         return view('inventory.stockbalance',['settingsval' => $settingsval]);
     }
 
-        public function showStockBalanceData()
+    public function showStockBalanceData()
     {
         $user = Auth()->user();
         $settingsval = DB::table('settings')->latest()->first();
@@ -70,6 +70,11 @@ class StockBalanceController extends Controller
             ->pluck('id')
             ->toArray();
 
+        $pendingdo = DB::table('delivery_orders')
+            ->whereIn('status', ['Draft','Pending','Verified'])
+            ->pluck('id')
+            ->toArray();
+
         // Convert arrays to comma-separated strings (only if needed for raw query)
         $activestoreStr = implode(',', array_merge($activestore, ['00']));
         $nondeletestoreStr = implode(',', array_merge($nondeletestore, ['00']));
@@ -79,6 +84,7 @@ class StockBalanceController extends Controller
 
         $pendingReq = implode(',', array_merge($pendingrequisition, ['00']));
         $pendingTrn = implode(',', array_merge($pendingtransfer, ['00']));
+        $pendingDeliveryOrd = implode(',', array_merge($pendingdo, ['00']));
 
         // Main query - rewritten using Laravel query builder where possible
 
@@ -118,6 +124,13 @@ class StockBalanceController extends Controller
         ])
         ->groupBy('ItemId');
 
+        $deliveryOrderSummaries = DB::table('delivery_order_details')
+        ->select([
+            'regitems_id',
+            DB::raw("SUM(CASE WHEN delivery_order_id IN ({$pendingDeliveryOrd}) THEN quantity ELSE 0 END) as pending_quantity"),
+        ])
+        ->groupBy('regitems_id');
+
         // Main query with optimized joins
         $stbalance = DB::table('regitems')
         ->select([
@@ -142,6 +155,7 @@ class StockBalanceController extends Controller
             DB::raw("COALESCE(ss.pending_quantity, 0) AS pendingbalance"),
             DB::raw("COALESCE(rs.pending_quantity, 0) AS req_pendingbalance"),
             DB::raw("COALESCE(tn.pending_quantity, 0) AS trn_pendingbalance"),
+            DB::raw("COALESCE(do.pending_quantity, 0) AS do_pendingbalance"),
             DB::raw("COALESCE(ts.assigned_store_shipment, 0) AS ShipmentQnt")
         ])
         ->leftJoin('categories', 'regitems.CategoryId', '=', 'categories.id')
@@ -158,13 +172,16 @@ class StockBalanceController extends Controller
         ->leftJoinSub($transferSummaries, 'tn', function ($join) {
             $join->on('regitems.id', '=', 'tn.ItemId');
         })
+        ->leftJoinSub($deliveryOrderSummaries, 'do', function ($join) {
+            $join->on('regitems.id', '=', 'do.regitems_id');
+        })
         ->where('regitems.IsDeleted', 1)
         ->havingRaw('(totalbalance - pendingbalance) > 0 OR ShipmentQnt > 0');
 
         return datatables()->of($stbalance)
            ->addIndexColumn()
             ->addColumn('AvailableQuantityReg', function ($row) {
-                return $row->totalbalancereg - $row->pendingbalancereg;
+                return $row->totalbalancereg - $row->pendingbalancereg - $row->do_pendingbalance;
             })
             ->addColumn('AvailableQuantity', function ($row) {
                 return $row->totalbalance - $row->pendingbalance;
@@ -195,7 +212,7 @@ class StockBalanceController extends Controller
         $userid = Auth()->user()->id;
         $settingsval = DB::table('settings')->latest()->first();
         $fiscalyr = $settingsval->FiscalYear;
-        $detailTable = DB::select('select transactions.ItemId,transactions.StoreId, stores.Name as StoreName,regitems.Code as ItemCode,regitems.Name as ItemName,uoms.Name as UOM,categories.Name as Category,CONCAT(SUM(COALESCE(StockIn,0))-SUM(COALESCE(StockOut,0))) AS StoreBalance,(SUM(COALESCE(StockIn,0))-SUM(COALESCE(StockOut,0))) AS StrBalance,COALESCE((SELECT DISTINCT UserId FROM storeassignments WHERE StoreId=transactions.StoreId and storeassignments.UserId='.$userid.' and Type=6),0) AS UserIds,(SELECT IFNULL(SUM(salesitems.Quantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.StoreId=transactions.StoreId AND sales.Status IN("pending..","Checked"))) AS PendingQuantity,(SELECT COALESCE(SUM(transactions.ShipmentQuantity),0) FROM transactions WHERE transactions.IsOnShipment=1 AND transactions.IsVoid=0 AND transactions.StoreId=stores.id AND transactions.ItemId=regitems.id AND transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings)) AS QtyOnDelivery from transactions LEFT JOIN stores on transactions.StoreId=stores.Id LEFT JOIN regitems on transactions.ItemId=regitems.Id LEFT JOIN uoms ON regitems.MeasurementId=uoms.Id LEFT JOIN categories ON regitems.CategoryId=categories.Id where ItemId='.$id.' and transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and ((SELECT COALESCE((sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))),0) FROM transactions WHERE StoreId=stores.id AND transactions.ItemId=regitems.id and transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings)))>=0 group by stores.Name,regitems.Code,regitems.Name,uoms.Name,categories.Name,transactions.ItemId,transactions.StoreId order by stores.Name asc');
+        $detailTable = DB::select('SELECT transactions.ItemId,transactions.StoreId, stores.Name AS StoreName,regitems.Code AS ItemCode,regitems.Name AS ItemName,uoms.Name AS UOM,categories.Name AS Category,CONCAT(SUM(COALESCE(StockIn,0))-SUM(COALESCE(StockOut,0))) AS StoreBalance,(SUM(COALESCE(StockIn,0))-SUM(COALESCE(StockOut,0))) AS StrBalance,COALESCE((SELECT DISTINCT UserId FROM storeassignments WHERE StoreId=transactions.StoreId and storeassignments.UserId='.$userid.' and Type=6),0) AS UserIds,((SELECT IFNULL(SUM(salesitems.Quantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.StoreId=transactions.StoreId AND sales.Status IN("pending..","Checked"))) + (SELECT IFNULL(SUM(delivery_order_details.quantity),0) FROM delivery_order_details WHERE delivery_order_details.regitems_id=regitems.id AND delivery_order_details.delivery_order_id IN(SELECT delivery_orders.id FROM delivery_orders WHERE delivery_orders.station=transactions.StoreId AND delivery_orders.status IN("Draft","Pending","Verified")))) AS PendingQuantity,(SELECT COALESCE(SUM(transactions.ShipmentQuantity),0) FROM transactions WHERE transactions.IsOnShipment=1 AND transactions.IsVoid=0 AND transactions.StoreId=stores.id AND transactions.ItemId=regitems.id AND transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings)) AS QtyOnDelivery from transactions LEFT JOIN stores on transactions.StoreId=stores.Id LEFT JOIN regitems on transactions.ItemId=regitems.Id LEFT JOIN uoms ON regitems.MeasurementId=uoms.Id LEFT JOIN categories ON regitems.CategoryId=categories.Id where ItemId='.$id.' and transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and ((SELECT COALESCE((sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))),0) FROM transactions WHERE StoreId=stores.id AND transactions.ItemId=regitems.id and transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings)))>=0 GROUP BY stores.Name,regitems.Code,regitems.Name,uoms.Name,categories.Name,transactions.ItemId,transactions.StoreId ORDER BY stores.Name ASC');
         return datatables()->of($detailTable)
         ->addIndexColumn()
         ->addColumn('action', function($data){})

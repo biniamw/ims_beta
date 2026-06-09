@@ -2102,6 +2102,8 @@ class ReceivingController extends Controller
         $reference_type = $_POST['reference_type'];
         $reference_id = $_POST['reference_id'];
         $itemid = $_POST['itemid'];
+        $avg_unit_cost = $this->getCurrentAverageCost($itemid);
+
         $uuid = Str::uuid()->toString();
 
         $item_info = "";
@@ -2116,7 +2118,7 @@ class ReceivingController extends Controller
             $item_info = DB::select('SELECT regitems.*,uoms.id AS uom,uoms.Name AS uom_name FROM regitems LEFT JOIN uoms ON regitems.MeasurementId=uoms.id WHERE regitems.id='.$itemid);
         }
 
-        return response()->json(['item_info' => $item_info,'uuid' => $uuid]);
+        return response()->json(['item_info' => $item_info,'uuid' => $uuid,'avg_unit_cost' => $avg_unit_cost]);
     }
 
     public function getAllUoms(Request $request,$id){
@@ -2650,6 +2652,7 @@ class ReceivingController extends Controller
             $rec->Status = $newStatus;
             $docnum = $rec->DocumentNumber;
             $product_type = $rec->ProductType;
+            $source_type = $rec->source_type;
             $fiscalyr = $rec->fiscalyear;
             $store_id = $rec->StoreId;
             
@@ -2671,7 +2674,7 @@ class ReceivingController extends Controller
                     $rec->ConfirmedBy = $user;
                     $rec->ConfirmedDate = Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A');
                     
-                    if($product_type == "Goods"){
+                    if($product_type == "Goods" || $source_type == "Production"){
                         $syncToTransactions = DB::select('INSERT INTO transactions(HeaderId,ItemId,StockIn,UnitCost,BeforeTaxCost,TaxAmountCost,TotalCost,StoreId,TransactionType,ItemType,DocumentNumber,TransactionsType,FiscalYear,Date)SELECT HeaderId,ItemId,Quantity,UnitCost,BeforeTaxCost,TaxAmount,TotalCost,StoreId,TransactionType,ItemType,"'.$docnum.'","Receiving","'.$fiscalyr.'","'.Carbon::now()->toDateString().'" FROM receivingdetails WHERE receivingdetails.HeaderId='.$findid);
 
                         $batch_db_data = [];
@@ -2973,19 +2976,17 @@ class ReceivingController extends Controller
         $rec=receiving::find($findid);
         $vnumber=$rec->VoucherNumber;//get voucher number
         $user=Auth()->user()->username;
-        $userid=Auth()->user()->id;
-        $vtype=$rec->VoucherType;
-        $custid=$rec->CustomerId;
-        $custmrc=$rec->CustomerMRC;
-        $newvouchernumber=str_replace("(void".$findid.")","",$vnumber);
+        $userid = Auth()->user()->id;
+        $vtype = $rec->VoucherType;
+        $custid = $rec->CustomerId;
+        $custmrc = $rec->CustomerMRC;
+        $newvouchernumber = str_replace("(void".$findid.")","",$vnumber);
 
-        $getCountedVouchernum=DB::select('select count(id) as VoucherCount from receivings where receivings.VoucherType="'.$vtype.'" and receivings.VoucherNumber="'.$newvouchernumber.'" and receivings.CustomerId='.$custid.' and receivings.CustomerMRC="'.$custmrc.'"');
-        foreach($getCountedVouchernum as $row)
-        {
-            $vcount=$row->VoucherCount;
-        }
+        $getCountedVouchernum = DB::select('SELECT count(id) AS VoucherCount FROM receivings WHERE receivings.VoucherType="'.$vtype.'" and receivings.VoucherNumber="'.$newvouchernumber.'" and receivings.CustomerId='.$custid.' and receivings.CustomerMRC="'.$custmrc.'"');
+        $vcount = $getCountedVouchernum[0]->VoucherCount;
+
         $vcounts = (float)$vcount;
-        if($vcounts>=1){
+        if($vcounts >= 1){
             return Response::json(['undoerror' =>  "error"]);
         }
         else{
@@ -3023,12 +3024,21 @@ class ReceivingController extends Controller
                 $updateAverageCost=DB::select('UPDATE regitems as b1 INNER JOIN transactions as b2 ON b1.id = b2.ItemId SET b1.averageCost = (SELECT ROUND(COALESCE(SUM(BeforeTaxCost),0)/(COALESCE(SUM(StockIn),0))*1.15,2) FROM transactions WHERE transactions.ItemId=b2.ItemId AND transactions.TransactionsType IN("Begining","Receiving","Adjustment","Undo-Void") AND transactions.IsPriceVoid=0)');
                 $updateMinCost=DB::select('UPDATE regitems as b1 INNER JOIN transactions as b2 ON b1.id = b2.ItemId SET b1.minCost = (SELECT ROUND(COALESCE(MIN(UnitCost*1.15),0),2) FROM transactions WHERE transactions.ItemId=b2.ItemId AND transactions.TransactionsType IN("Begining","Receiving","Adjustment","Undo-Void") AND transactions.IsPriceVoid=0)');
                 
-                actions::insert(['user_id'=>$userid,'pageid'=>$findid,'pagename'=>"receiving",'action'=>"Undo Void",'status'=>"Undo Void",'time'=>Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),'reason'=>"",'created_at'=>Carbon::now(),'updated_at'=>Carbon::now()]);
+                actions::insert([
+                    'user_id' => $userid,
+                    'pageid' => $findid,
+                    'pagename' => "receiving",
+                    'action' => "Undo Void",
+                    'status' => "Undo Void",
+                    'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+                    'reason' => "",
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
                 DB::commit();
                 return Response::json(['success' => 1, 'fiscalyr' => $rec->fiscalyear, 'vstatus' => $rec->VoucherStatus]);
             }
-            catch(Exception $e)
-            {
+            catch(Exception $e){
                 DB::rollBack();
                 return Response::json(['dberrors' =>  $e->getMessage()]);
             }
@@ -3058,7 +3068,7 @@ class ReceivingController extends Controller
         $poid = !empty($poid) ? $poid : 0;
         $poprop = PurchaseOrder::find($poid);
 
-        $getpocount = DB::select('SELECT COUNT(id) AS PoCount FROM receivings WHERE receivings.PoId='.$poid.' AND receivings.Status IN("Draft","Pending","Verified","Received","Confirmed") AND receivings.id>'.$findid);
+        $getpocount = DB::select('SELECT COUNT(id) AS PoCount FROM receivings WHERE receivings.PoId='.$poid.' AND receivings.Type!=500 AND receivings.Status IN("Draft","Pending","Verified","Received","Confirmed") AND receivings.id>'.$findid);
         $pocnt = $getpocount[0]->PoCount;
 
         $getCountedVouchernum = DB::select('SELECT count(id) AS VoucherCount FROM receivings WHERE receivings.VoucherType="'.$vtype.'" AND receivings.VoucherNumber="'.$newvouchernumber.'" AND receivings.CustomerId='.$custid.' AND receivings.CustomerMRC="'.$custmrc.'"');
@@ -3158,6 +3168,42 @@ class ReceivingController extends Controller
                 return Response::json(['dberrors' =>  $e->getMessage()]);
             }
         }
+    }
+
+    public function getCurrentAverageCost($itemId){
+        $settingsval = DB::table('settings')->latest()->first();
+        $fiscalyr = $settingsval->FiscalYear;
+
+        $rows = DB::table('transactions')
+            ->where('ItemId', $itemId)
+            ->where('FiscalYear', $fiscalyr)
+            ->orderBy('id')
+            ->get(['StockIn', 'StockOut', 'UnitCost']);
+
+        $currentQty  = 0;
+        $currentAvg  = 0;
+        $totalInCost = 0;
+
+        foreach ($rows as $r) {
+            if ($r->StockIn > 0) {
+                // Purchase → recalc weighted avg
+                $totalInCost = ($currentQty * $currentAvg) + ($r->StockIn * $r->UnitCost);
+                $currentQty  += $r->StockIn;
+                $currentAvg  = $totalInCost / $currentQty;
+            }
+
+            if ($r->StockOut > 0 && $currentQty > 0) {
+                // Sale/Requisition → reduce qty, avg stays the same
+                $currentQty -= $r->StockOut;
+
+                if ($currentQty <= 0) {
+                    $currentQty = 0;
+                    $currentAvg = 0; // reset if stock is depleted
+                }
+            }
+        }
+
+        return round($currentAvg, 2);
     }
 
     public function showModelsConRec($id){
@@ -3409,7 +3455,6 @@ class ReceivingController extends Controller
             return Response::json(['errors' => $validator->errors()]);
         }
     }
-
 
     public function uploadDocument(Request $request){
         $user = Auth()->user()->username;

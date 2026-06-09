@@ -142,9 +142,7 @@
             </section>
         </div>
     @endcan
-@endsection
 
-@section('scripts')
     <script type="text/javascript">
         var fy = $('#fiscalyears').val();
         var table = null;
@@ -1459,46 +1457,54 @@
                 var link = "/tref/" + transactionid;
                 window.open(link, 'Transfer', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="Receiving"){
+            if(transactiontype === "Receiving"){
                 var link = "/grv/" + transactionid;
                 window.open(link, 'GRV', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="Requisition"){
+            if(transactiontype === "Requisition"){
                 var link = "/req/" + transactionid;
                 window.open(link, 'Requisition', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="HandIn"){
+            if(transactiontype == "HandIn"){
                 var link = "/dshi/" + transactionid;
                 window.open(link, 'D S HandIn', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="PullOut"){
+            if(transactiontype === "PullOut"){
                 var link = "/dspo/" + transactionid;
                 window.open(link, 'D S PullOut', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="Sales"){
+            if(transactiontype === "Sales"){
                 var link = "/salereport/" + transactionid;
                 window.open(link, 'Sales', 'width=1200,height=800,scrollbars=yes');
             }
-            if(transactiontype==="Void"||transactiontype==="Undo-Void"){
-                if(transactionstype==="Adjustment"){
+            if(transactiontype === "Delivery-Order"){
+                var link = `/doatt/${transactionid}/1`;
+                window.open(link, 'Delivery Order', 'width=1200,height=800,scrollbars=yes');
+            }
+            if(transactiontype === "Void" || transactiontype === "Undo-Void"){
+                if(transactionstype === "Adjustment"){
                     var link = "/adj/" + transactionid;
                     window.open(link, 'Adjustment', 'width=1200,height=800,scrollbars=yes');
                 }
-                if(transactionstype==="Sales"){
+                if(transactionstype === "Sales"){
                     var link = "/salereport/" + transactionid;
                     window.open(link, 'Sales', 'width=1200,height=800,scrollbars=yes');
                 }
-                if(transactionstype==="Transfer"||transactionstype==="Issue"){
+                if(transactionstype === "Transfer" || transactionstype === "Issue"){
                     var link = "/isstr/" + transactionid;
                     window.open(link, 'Transfer', 'width=1200,height=800,scrollbars=yes');
                 }
-                if(transactionstype==="Receiving"){
+                if(transactionstype === "Receiving"){
                     var link = "/grv/" + transactionid;
                     window.open(link, 'GRV', 'width=1200,height=800,scrollbars=yes');
                 }
-                if(transactionstype==="Requisition"){
+                if(transactionstype === "Requisition"){
                     var link = "/rref/" + transactionid;
                     window.open(link, 'Requisition', 'width=1200,height=800,scrollbars=yes');
+                }
+                if(transactiontype === "Delivery-Order"){
+                    var link = `/doatt/${transactionid}/1`;
+                    window.open(link, 'Delivery Order', 'width=1200,height=800,scrollbars=yes');
                 }
             }
         }

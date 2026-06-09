@@ -518,8 +518,7 @@ class StoreRequisition extends Controller
         return response()->json(['itemdata' => $itemdata,'available_qty' => $available_qty,'avcost' => $avcost]);       
     }
 
-    public function getCurrentAverageCost($itemId)
-    {
+    public function getCurrentAverageCost($itemId){
         $rows = DB::table('transactions')
             ->where('ItemId', $itemId)
             ->where('customers_id', 1)
@@ -1443,8 +1442,7 @@ class StoreRequisition extends Controller
         return response()->json(['reqheader'=>$reqheader,'recData'=>$recdata,'count'=>$getCountItem,'reqdetail'=>$data,'bal'=>$getallbalnces,'fyear'=>$fyear,'fyearstr'=>$fiscalyears,'srcstores'=>$srcstores,'desstores'=>$desstores]);
     }
 
-    public function showRequisitionDetailData($id)
-    {
+    public function showRequisitionDetailData($id){
         $detailTable=DB::select('SELECT requisitiondetails.id,requisitiondetails.ItemId,requisitiondetails.HeaderId,regitems.Name AS ItemName,regitems.Code AS Code,requisitiondetails.PartNumber,uoms.Name as UOM,requisitiondetails.Quantity,requisitiondetails.Memo FROM requisitiondetails INNER JOIN regitems ON requisitiondetails.ItemId=regitems.id inner join uoms on regitems.MeasurementId=uoms.id where requisitiondetails.HeaderId='.$id);
         return datatables()->of($detailTable)
         ->addIndexColumn()
@@ -1458,14 +1456,12 @@ class StoreRequisition extends Controller
         ->make(true);
     }
 
-    public function editRequisitionItem($id)
-    {
+    public function editRequisitionItem($id){
         $recdataId = requisitiondetail::find($id);
         return response()->json(['recDataId'=>$recdataId]);
     }
 
-    public function undorequistion(Request $request)
-    {
+    public function undorequistion(Request $request){
         $findid = $request->undovoidid;
         $req = requisition::find($findid);
         $statusval = $req->Status;
@@ -1473,7 +1469,7 @@ class StoreRequisition extends Controller
         $storeId = $req->SourceStoreId;
         $fiscalyr = $req->fiscalyear;
         $fiscalyearval = $req->fiscalyear;
-        $docnum = $req->IssueDocNumber; 
+        $docnum = $req->DocumentNumber; 
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $reqtype = "Transfer";
@@ -1491,12 +1487,11 @@ class StoreRequisition extends Controller
         
         DB::beginTransaction();
         try{
-            if($oldstatusval == "Issued")
-            {
+            if($oldstatusval == "Issued"){
                 // $issuecon = DB::table('issues')->where('ReqId',$findid)->where('Type','!=',$reqtype)->latest()->first();
                 // $issid=$issuecon->id;
 
-                $dropTable=DB::unprepared( DB::raw('DROP TEMPORARY TABLE IF EXISTS reqtemp'.$userid.''));
+                $dropTable=DB::unprepared(DB::raw('DROP TEMPORARY TABLE IF EXISTS reqtemp'.$userid.''));
                 $creatingtemptables =DB::statement('CREATE TEMPORARY TABLE reqtemp'.$userid.' SELECT transactions.id,transactions.HeaderId,transactions.ItemId,regitems.Code AS ItemCode,regitems.Name AS ItemName,regitems.SKUNumber AS SKUNumber,stores.Name AS StoreName,transactions.StoreId,uoms.Name AS UOM,transactions.StockIn,transactions.StockOut,(SUM(COALESCE(StockIn,0)-COALESCE(StockOut,0))OVER(PARTITION BY transactions.ItemId,transactions.StoreId ORDER BY transactions.id ASC)) AS AvailableQuantity,transactions.TransactionsType,transactions.FiscalYear FROM transactions INNER JOIN regitems ON transactions.ItemId=regitems.id INNER JOIN stores ON transactions.StoreId=stores.id INNER JOIN uoms ON regitems.MeasurementId=uoms.Id WHERE transactions.ItemId IN(SELECT requisitiondetails.ItemId FROM requisitiondetails WHERE requisitiondetails.HeaderId='.$findid.') AND transactions.FiscalYear='.$fiscalyearval.'');
                 $modifytemptable=DB::statement('ALTER TABLE reqtemp'.$userid.' MODIFY id INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
                 $recdetails=requisitiondetail::where('HeaderId',$findid)->get(['ItemId','Quantity']);
@@ -1535,7 +1530,7 @@ class StoreRequisition extends Controller
                     //$updateTransactios=DB::select('update transactions set IsVoid=0 where HeaderId='.$issid.' AND TransactionType="Requisition" AND TransactionsType="Requisition"');
                 }
             }
-            $updateStatus=DB::select('UPDATE requisitions SET Status=OldStatus,UndoVoidBy="'.$user.'",UndoVoidDate="'.Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A').'",OldStatus="" WHERE id='.$findid.'');
+            $updateStatus=DB::select('UPDATE requisitions SET requisitions.Status=OldStatus,UndoVoidBy="'.$user.'",UndoVoidDate="'.Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A').'",OldStatus="" WHERE id='.$findid.'');
             
             actions::insert([
                 'user_id' => $userid,
@@ -1559,30 +1554,29 @@ class StoreRequisition extends Controller
         }
     }
 
-    public function reqUndoVoidComm(Request $request)
-    {
-        $findid=$request->undovoidid;
-        $req=requisition::find($findid);
-        $statusval=$req->Status;
-        $oldstatusval=$req->OldStatus;
-        $storeId=$req->SourceStoreId;
-        $fiscalyr=$req->fiscalyear;
-        $fiscalyearval=$req->fiscalyear;
-        $docnum=$req->IssueDocNumber; 
-        $user=Auth()->user()->username;
-        $userid=Auth()->user()->id;
-        $reqtype="Transfer";
-        $itemidvals="";
-        $itemqnt="0";
-        $runqnt="0";
-        $totalqnt="0";
-        $eachqntval="0";
-        $avaq="0";
-        $tempcntitemid=[];
-        $totalitemid=[];
-        $eachqnt=[];
-        $tempididval="";
-        $totalitemidval="";
+    public function reqUndoVoidComm(Request $request){
+        $findid = $request->undovoidid;
+        $req = requisition::find($findid);
+        $statusval = $req->Status;
+        $oldstatusval = $req->OldStatus;
+        $storeId = $req->SourceStoreId;
+        $fiscalyr = $req->fiscalyear;
+        $fiscalyearval = $req->fiscalyear;
+        $docnum = $req->IssueDocNumber; 
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $reqtype = "Transfer";
+        $itemidvals = "";
+        $itemqnt = 0;
+        $runqnt = 0;
+        $totalqnt = 0;
+        $eachqntval = 0;
+        $avaq = 0;
+        $tempcntitemid = [];
+        $totalitemid = [];
+        $eachqnt = [];
+        $tempididval = "";
+        $totalitemidval = "";
         // if($oldstatusval=="Issued")
         // {
         //     $issuecon = DB::table('issues')->where('ReqId',$findid)->where('Type','!=',$reqtype)->latest()->first();
@@ -1627,14 +1621,13 @@ class StoreRequisition extends Controller
         //         $updateTransactios=DB::select('update transactions set IsVoid=0 where HeaderId='.$issid.' AND TransactionType="Requisition" AND TransactionsType="Requisition"');
         //     }
         // }
-        $updateStatus=DB::select('UPDATE requisitions SET requisitions.Status=OldStatus,UndoVoidBy="'.$user.'",UndoVoidDate="'.Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A').'",OldStatus="" where id='.$findid.'');
+        $updateStatus = DB::select('UPDATE requisitions SET requisitions.Status=OldStatus,UndoVoidBy="'.$user.'",UndoVoidDate="'.Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A').'",OldStatus="" where id='.$findid.'');
         actions::insert(['user_id'=>$userid,'pageid'=>$findid,'pagename'=>"requisition",'action'=>"Undo Void",'status'=>"Undo Void",'time'=>Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),'created_at'=>Carbon::now(),'updated_at'=>Carbon::now()]);
-        return Response::json(['success' => '1']);    
+        return Response::json(['success' => 1]);    
     }
 
-    public function deleteRequisitionItem(Request $request, $id)
-    {
-        $headerid=$request->reqremoveheaderid;
+    public function deleteRequisitionItem(Request $request, $id){
+        $headerid = $request->reqremoveheaderid;
         $reqItem = requisitiondetail::find($id);
         $reqItem->delete();
         $countitem = DB::table('requisitiondetails')->where('HeaderId', '=', $headerid)->get();
@@ -1642,8 +1635,7 @@ class StoreRequisition extends Controller
         return Response::json(['success' => 'Item Removed','Totalcount'=>$getCountItem]);
     }
 
-    public function deleteRequisitionData(Request $request, $id)
-    {
+    public function deleteRequisitionData(Request $request, $id){
         $user=Auth()->user()->username;
         $userid=Auth()->user()->id;
         $reqtype="Transfer";
@@ -1651,7 +1643,7 @@ class StoreRequisition extends Controller
         $statusval=$req->Status;
         $storeId=$req->SourceStoreId;
         $fiscalyr=$req->fiscalyear;
-        $docnum=$req->IssueDocNumber;    
+        $docnum=$req->DocumentNumber;    
         $validator = Validator::make($request->all(), [
             'Reason' => 'required',
         ]);

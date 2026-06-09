@@ -2514,6 +2514,7 @@
                     unblockPage(cardSection);
                 },
                 success: function(data) {
+                    $(`#unitcost${indx}`).val(data.avg_unit_cost);
                     $.each(data.item_info, function(key, value) {
                         
                         reqsn = value.RequireSerialNumber;
