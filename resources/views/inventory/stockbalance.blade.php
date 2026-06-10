@@ -162,7 +162,8 @@
                                                         <th style="width: 3%">#</th>
                                                         <th style="width: 35%">Station</th>
                                                         <th style="width: 30%">Stock Balance</th>
-                                                        <th style="width: 32%">Waiting for Delivery</th>
+                                                        <th style="width: 29%">Waiting for Delivery</th>
+                                                        <th style="width: 3%"></th>
                                                         <th style="display: none;"></th>
                                                     </thead>
                                                     <tbody class="table table-sm"></tbody>
@@ -187,6 +188,7 @@
                         </div>  
                     </div>
                     <div class="modal-footer">
+                        <input type="hidden" class="form-control" name="batch_serial_flag" id="batch_serial_flag" readonly="true">
                         <input type="hidden" class="form-control" name="uom_inp" id="uom_inp" readonly="true">
                         <input type="hidden" class="form-control" name="wholesalemaxinp" id="wholesalemaxinp" readonly="true">
                         <input type="hidden" class="form-control" name="wholesalemininp" id="wholesalemininp" readonly="true">
@@ -711,6 +713,7 @@
                         $(".categoryval").html(value.category_name);
                         $(".uomval").html(value.uom_name);
                         $("#uom_inp").val(value.uom_name);
+                        $("#batch_serial_flag").val((value.RequireSerialNumber != "Not-Require" || value.RequireExpireDate != "Not-Require") ? 1 : 0);
 
                         totalq = parseFloat(value.AvailableQuantity) - parseFloat(value.PendingQuantity);
                         wholemax = parseFloat(totalq) - parseFloat(minstock);
@@ -809,6 +812,7 @@
             var uom = $('#uom_inp').val();
             var wholemin = $("#wholesalemininp").val();
             var wholemax = $("#wholesalemaxinp").val();
+            var batch_serial_fl = $("#batch_serial_flag").val();
 
             $('#stockinfodetail').DataTable({
                 destroy: true,
@@ -895,6 +899,27 @@
                         },
                         width:"32%"
                     },
+                    { data: null,
+                        "render": function (data, type, row, meta) {
+                            if(parseInt(batch_serial_fl) == 1){
+                                return `<div class="text-center">
+                                            <a 
+                                                class="viewsernum" 
+                                                href="javascript:void(0)" 
+                                                onclick="viewBatchSerialExpireFn(${row.StoreId},${row.ItemId})" 
+                                                data-id="viewsernum${row.StoreId}" 
+                                                id="viewsernum${row.StoreId}" 
+                                                title="View batch number, serial number, expiry date for ${row.ItemName} item!">
+                                                <i class="fa-sharp fa-regular fa-circle-info fa-xl" style="color: #00cfe8;"></i>
+                                            </a>
+                                        </div>`;
+                            }
+                            else{
+                                return "";
+                            }
+                        },
+                        width:"3%"
+                    },
                     { data: null, className: "sum",'visible': false,
                         "render": function (data, type, row, meta) {
                             var pen = row.PendingQuantity > 0 ? row.PendingQuantity : 0;
@@ -923,8 +948,7 @@
                     },
                 ],
                 
-                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) 
-                {
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     var qtydel = aData.QtyOnDelivery > 0 ? aData.QtyOnDelivery : 0;
                     var pen = aData.PendingQuantity > 0 ? aData.PendingQuantity : 0;
                     var bal = aData.StoreBalance > 0 ? aData.StoreBalance : 0;
