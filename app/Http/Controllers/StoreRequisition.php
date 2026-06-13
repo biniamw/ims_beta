@@ -498,13 +498,15 @@ class StoreRequisition extends Controller
         $other_req_data = DB::select('SELECT SUM(COALESCE(requisitiondetails.Quantity,0)) AS others_req_qty FROM requisitiondetails LEFT JOIN requisitions ON requisitiondetails.HeaderId=requisitions.id WHERE requisitions.id!='.$record_id.' AND requisitions.SourceStoreId='.$store_id.' AND requisitiondetails.ItemId='.$item_id.' AND requisitions.Status IN("Draft","Pending","Verified","Approved")');
         $sales_data = DB::select('SELECT SUM(COALESCE(salesitems.Quantity,0)) AS sales_qty FROM salesitems LEFT JOIN sales ON salesitems.HeaderId=sales.id WHERE sales.StoreId='.$store_id.' AND salesitems.ItemId='.$item_id.' AND sales.Status IN("pending..","Checked")');
         $transfer_data = DB::select('SELECT SUM(COALESCE(transferdetails.Quantity,0)) AS transfer_qty FROM transferdetails LEFT JOIN transfers ON transferdetails.HeaderId=transfers.id WHERE transfers.SourceStoreId='.$store_id.' AND transferdetails.ItemId='.$item_id.' AND transfers.Status IN("Draft","Pending","Verified","Reviewed","Approved")');
+        $do_data = DB::select('SELECT SUM(COALESCE(delivery_order_details.quantity,0)) AS do_qty FROM delivery_order_details LEFT JOIN delivery_orders ON delivery_order_details.delivery_order_id=delivery_orders.id WHERE delivery_orders.station='.$store_id.' AND delivery_order_details.regitems_id='.$item_id.' AND delivery_orders.status IN("Draft","Pending","Verified")');
 
         $main_balance = $item_balance_data[0]->available_quantity ?? 0;
         $others_req_qty = $other_req_data[0]->others_req_qty ?? 0;
         $sales_qty = $sales_data[0]->sales_qty ?? 0;
         $transfer_qty = $transfer_data[0]->transfer_qty ?? 0;
+        $do_qty = $do_data[0]->do_qty ?? 0;
 
-        $available_qty = $main_balance - $others_req_qty - $sales_qty - $transfer_qty;
+        $available_qty = $main_balance - $others_req_qty - $sales_qty - $transfer_qty - $do_qty;
 
         $available_qty = $available_qty < 0 ? 0 : $available_qty;
 

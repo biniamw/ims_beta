@@ -1471,7 +1471,7 @@ class DeliveryOrderController extends Controller
                     }
                 }
 
-                if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required" && ($status == "Verified" || $status == "Approved")){
+                if($batch_qty != $serial_qty && $item_data->RequireSerialNumber == "Required"){
                     $variance_ids[] = $batch_row_no;
                 }
             }
@@ -1482,7 +1482,7 @@ class DeliveryOrderController extends Controller
             $serialValidation->passes() &&
             $request->batch_row != null && 
             empty($variance_ids) &&
-            ($issued_qty == $inserted_qty || $status == "Draft" || $status == "Pending")
+            ($issued_qty == $inserted_qty)
         ){
             DB::beginTransaction();
             try{

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\stockbalance;
+use App\Models\store;
+use App\Models\Regitem;
 
 class StockBalanceController extends Controller
 {
@@ -206,8 +208,7 @@ class StockBalanceController extends Controller
         //return datatables()->of($stbalance)->addIndexColumn()->toJson();
     }
 
-    public function showStockDetailData($id)
-    {
+    public function showStockDetailData($id){
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $settingsval = DB::table('settings')->latest()->first();
@@ -220,8 +221,31 @@ class StockBalanceController extends Controller
         ->make(true);
     }
 
-    public function showDeliveredQty($itid,$stid)
-    {
+    public function fetchItemAndStore(Request $request){
+        $str_id = $_POST['str_id'];
+        $itm_id = $_POST['itm_id'];
+
+        $store_data = store::find($str_id);
+        $item_data = Regitem::find($itm_id);
+
+        $store_name = $store_data->Name;
+        $item_code = $item_data->Code;
+        $item_name = $item_data->Name;
+
+        return response()->json(['store_name' => $store_name,'item_code' => $item_code,'item_name' => $item_name]);
+    }
+
+    public function fetchBatchSerialData(Request $request){
+        $str_id = $_POST['str_id'];
+        $itm_id = $_POST['itm_id'];
+
+        $batchserialdata = DB::select('SELECT batches.*,IFNULL(batches.expiry_date,"") AS expiry_date,IFNULL(batches.manufacturing_date,"") AS manufacturing_date,CONCAT_WS(", ",CASE WHEN country.Name="--" THEN NULL ELSE country.Name END,NULLIF(brands.manufacturer,""),NULLIF(brands.Name,"")) AS brand_name,IFNULL(models.Name,"") AS model_name,(batch_inventories.received_qty - (SELECT COALESCE(SUM(batch_inventories_issues.sold_issued_qty),0) FROM batch_inventories_issues WHERE batch_inventories_issues.batches_id=batches.id)) AS available_qty,CASE WHEN batches.expiry_date IS NULL OR "" THEN "" ELSE DATEDIFF(batches.expiry_date,CURDATE()) END AS remaining_day,(SELECT IFNULL(GROUP_CONCAT(" ",serial_number),"") FROM serial_numbers WHERE serial_numbers.batches_id=batches.id AND serial_numbers.is_sold_issued=0) AS serial_numbers FROM batch_inventories LEFT JOIN batches ON batch_inventories.batches_id=batches.id LEFT JOIN brands ON batches.brand_id=brands.id LEFT JOIN models ON batches.model_id=models.id LEFT JOIN country ON brands.countries_id=country.id LEFT JOIN receivings ON batches.source_id=receivings.id AND batches.source_type="receiving" WHERE batches.item_id='.$itm_id.' AND ((receivings.StoreId='.$str_id.' AND receivings.Status="Confirmed")) HAVING available_qty > 0 ORDER BY batches.expiry_date ASC');
+        return datatables()->of($batchserialdata)
+        ->addIndexColumn()
+        ->make(true);
+    }
+
+    public function showDeliveredQty($itid,$stid){
         $user = Auth()->user()->username;
         $userid = Auth()->user()->id;
         $settingsval = DB::table('settings')->latest()->first();

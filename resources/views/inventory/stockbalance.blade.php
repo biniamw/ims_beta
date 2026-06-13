@@ -14,7 +14,6 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: left !important;align-items: center;padding: 10px 5px;">
                                         <h3 class="card-title form_title">Stock Balance</h3>
                                     </div>
-                                    
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: right !important;align-items: center;padding: 10px 5px;">
                                         <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-sm" onclick="refreshtbl()"><i class="fas fa-sync-alt"></i></button>
                                         <input type="hidden" class="form-control" name="costtype" id="costtype" value="{{ $settingsval->costType }}" readonly/>
@@ -33,7 +32,7 @@
                                                     <th style="width:3%;">#</th>
                                                     <th style="width:8%;">Item Type</th>
                                                     <th style="width:8%;">Item Code</th>
-                                                    <th style="width:16%;">Item Name</th>
+                                                    <th style="width:17%;">Item Name</th>
                                                     <th style="width:8%;" title="Barcode Number">Barcode No.</th>
                                                     <th style="width:9%;">Category</th>
                                                     <th style="width:5%;" title="Unit of Measurement">UOM</th>
@@ -42,7 +41,7 @@
                                                     <th style="width:7%;" title="Wholesale Minimum Quantity">WS. Min. Qty.</th> 
                                                     <th style="width:7%;" title="Wholesale Maximum Quantity">WS. Max. Qty.</th>  
                                                     <th style="width:10%;">Avaliable Stock</th>
-                                                    <th style="width:4%;">Action</th>
+                                                    <th style="width:3%;">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table table-sm"></tbody>
@@ -192,7 +191,7 @@
                         <input type="hidden" class="form-control" name="uom_inp" id="uom_inp" readonly="true">
                         <input type="hidden" class="form-control" name="wholesalemaxinp" id="wholesalemaxinp" readonly="true">
                         <input type="hidden" class="form-control" name="wholesalemininp" id="wholesalemininp" readonly="true">
-                        <button id="closebutton" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" id="closebutton" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -201,7 +200,7 @@
     <!-- End Info -->
 
     <!--Start delivery modal -->
-    <div class="modal modal-slide-in event-sidebar fade fit-content" id="deliveryqtymodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+    <div class="modal modal-slide-in event-sidebar fade fit-content" id="deliveryqtymodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="deliveryqtymodal" aria-hidden="true">
         <form id="deliveryqtyform">
         @csrf
             <div class="modal-dialog modal-xl" role="document" style="width: 96%;">
@@ -333,17 +332,180 @@
     </div>
     <!-- End delivery modal -->
 
+    <!--Start batch serial modal -->
+    <div class="modal modal-slide-in event-sidebar fade fit-content" id="serialBatchModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="serialBatchModal" aria-hidden="true">
+        <form id="serialBatchForm">
+            @csrf
+            <div class="modal-dialog modal-xl" role="document" style="width: 96%;">
+                <div class="modal-content p-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ea5455 !important;font-weight:bold;">x</button>
+                    <div class="modal-header mb-1">
+                        <h4 class="modal-title form_title">Batch and/or Serial Numbers Information</h4>
+                    </div>
+                    <div class="modal-body flex-grow-1 pb-sm-0 pb-3 scrdivhor scrollhor">
+                        <div class="row mb-1">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <section id="batch_serial_item_info_section">
+                                    <div class="d-flex justify-content-between align-items-center cursor-pointer border-bottom" data-toggle="collapse" data-target=".batch_serial_collapse" aria-expanded="true">
+                                        <h5 class="mb-0 form_title batch_serial_item_header_info"><i class="far fa-info-circle"></i> Basic Information</h5>
+                                        <div class="d-flex align-items-center header-tab">
+                                            <span class="text-uppercase font-weight-bold mr-50 toggle-text-label tab-text">Collapse</span>
+                                            <div class="collapse-icon">
+                                                <i class="fas text-secondary fa-minus-circle"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="collapse batch_coll show batch_serial_collapse shadow pl-1 pr-1">
+                                        <div class="row mb-1">
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1">
+                                                <div class="card shadow-none border m-0">
+                                                    <div class="card-body mb-0">
+                                                        <h6 class="card-title mb-0"><i class="fas fa-database"></i> General Information</h6>
+                                                        <hr class="my-50">
+                                                        <div class="row">
+                                                            <div class="col-xl-6 col-lg-6 col-md-7 col-sm-7 col-12">
+                                                                <table class="infotbl mb-0" style="width:100%;font-size:12px;">
+                                                                    <tr>
+                                                                        <td><label class="info_lbl">Item Type</label></td>
+                                                                        <td><label class="info_lbl itemtypeval" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl">Item Code</label></td>
+                                                                        <td><label class="info_lbl itemcodeval" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl">Item Name</label></td>
+                                                                        <td><label class="info_lbl itemnameval" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl" title="Barcode Number">Barcode No.</label></td>
+                                                                        <td><label class="info_lbl skunumberval" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-5 col-sm-5 col-12">
+                                                                <table class="infotbl mb-0" style="width:100%;font-size:12px;">
+                                                                    <tr>
+                                                                        <td><label class="info_lbl">Category</label></td>
+                                                                        <td><label class="info_lbl categoryval" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl" title="Unit of Measurement">UOM</label></td>
+                                                                        <td><label class="info_lbl uomval" id="uom_lbl" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl" title="Is Batch Number Required">Is Batch No. Req.</label></td>
+                                                                        <td><label class="info_lbl is_batch_req" id="is_batch_req" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl" title="Is Serial Number Required">Is Serial No. Req.</label></td>
+                                                                        <td><label class="info_lbl is_serial_req" id="is_serial_req" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="info_lbl" title="Is Expiry Date Required">Is Expiry Date Req.</label></td>
+                                                                        <td><label class="info_lbl is_expiry_date_req" id="is_expiry_date_req" style="font-weight: bold;"></label></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mt-1 mb-1">
+                                                <div class="card shadow-none border m-0">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title mb-0"><i class="fa-sharp fa-solid fa-file-invoice-dollar"></i> Sales Pricing</h6>
+                                                        <hr class="my-50">
+                                                        <table class="infotbl" style="width:100%;font-size:12px;">
+                                                            <tr>
+                                                                <td><label class="info_lbl">Retail Price</label></td>
+                                                                <td><label class="info_lbl retailerval" style="font-weight: bold;"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><label class="info_lbl">Wholesale Price</label></td>
+                                                                <td><label class="info_lbl wholesaleval" style="font-weight: bold;"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><label class="info_lbl" title="Wholesale Minimum Quantity">Wholesale Min. Qty.</label></td>
+                                                                <td><label class="info_lbl wholesaleminval" style="font-weight: bold;"></label></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div> 
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mt-1 mb-1">
+                                                <div class="card shadow-none border m-0">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title mb-0"><i class="fas fa-tags"></i> Others</h6>
+                                                        <hr class="my-50">
+                                                        <table class="infotbl" style="width:100%;font-size:12px;">
+                                                            <tr>
+                                                                <td><label class="info_lbl">Station</label></td>
+                                                                <td><label class="info_lbl station_lbl" style="font-weight: bold;"></label></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div> 
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="table-responsive scroll scrdiv">
+                                    <table id="docBatchSerialInfoItem" class="display table-bordered table-striped dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 3%">#</th>
+                                                <th style="width: 15%"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand</th>
+                                                <th style="width: 12%">Generic/ Model</th>
+                                                <th style="width: 12%" title="Batch Number">Batch No.</th>
+                                                <th style="width: 20%" title="Serial Number">Serial No.</th>
+                                                <th style="width: 8%" title="Available Quantity">Available Qty.</th>
+                                                <th style="width: 10%">Manufacturing Date</th>
+                                                <th style="width: 10%">Expiry Date</th>
+                                                <th style="width: 10%">Remaining Day</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table table-sm"></tbody>
+                                        <tfoot class="table table-sm">
+                                            <th colspan="5" style="text-align: right">Total</th>
+                                            <th id="total_avialable_qty"></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="closebuttonserial" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--End batch serial modal -->
+
     <script  type="text/javascript">
         var stockbaltable = '';
         var gblIndex = -1;
+        var batchSerialIndex = -1;
 
         $(function () {
             cardSection = $('#page-block');
         });
 
-        $(document).ready( function () {
-            $('.main_datatable').hide();
-            stockbalancedatalist();
+        $(document).ready(async function () {
+            await stockbalancedatalist();
             appendStockBalanceFilterFn();
         });
 
@@ -377,29 +539,21 @@
                     type: 'DELETE',
                     dataType: "json",
                     beforeSend: function () { 
-                        cardSection.block({
-                            message:
-                            '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                            css: {
-                            backgroundColor: 'transparent',
-                            color: '#fff',
-                            border: '0'
-                            },
-                            overlayCSS: {
-                            opacity: 0.5
-                            }
-                        });
+                        blockPage(cardSection,'Loading stock balance data...');
                     },
                     complete: function () { 
                         setFocus('#stockbalancedatatable');
                         $('#stockbalancedatatable').DataTable().columns.adjust();
+                    },
+                    error: function () { 
+                        unblockPage(cardSection);
                     },
                 },
                 columns: [
                     { data: 'DT_RowIndex',width:"3%"},
                     { data: 'Type', name:'regitems.Type',width:"8%"},
                     { data: 'ItemCode', name:'regitems.Code',width:"8%"},
-                    { data: 'ItemName', name:'regitems.Name',width:"16%"},
+                    { data: 'ItemName', name:'regitems.Name',width:"17%"},
                     { data: 'SKUNumber', name:'regitems.SKUNumber',width:"8%"},
                     { data: 'Category', name:'categories.Name',width:"9%"},
                     { data: 'UOM', name:'uoms.Name',width:"5%"},
@@ -476,8 +630,8 @@
                     },
                     { data: 'AvailableQuantityReg', name:'regitems.AvailableQuantityReg',
                         "render": function ( data, type, row, meta ) {
-                            var avbalance = data > 0 ? data : 0;
-                            var balance = row.Balance > 0 ? row.Balance : 0;
+                            var avbalance = parseFloat(data) > 0 ? data : 0;
+                            var balance = parseFloat(row.Balance) > 0 ? parseFloat(row.Balance) : 0;
                             var result = 0;
                             if(parseFloat(avbalance) <= 0 && parseFloat(balance) > 0){
                                 return 0;
@@ -493,13 +647,13 @@
                     }, 
                     { data: 'action', name: 'action',
                         "render": function ( data, type, row, meta ) {
-                            var balance = row.Balance > 0 ? row.Balance : 0;
-                            var allbalance = row.AvailableQuantity > 0 ? row.AvailableQuantity : 0;
-                            var minumumstock = row.MinimumStock > 0 ? row.MinimumStock : 0;
-                            var pendingquantity = row.PendingQuantity > 0 ? row.PendingQuantity : 0;
-                            var minamount = row.wholeSellerMinAmount > 0 ? row.wholeSellerMinAmount : 0;
-                            var minstock = row.MinimumStock > 0 ?  row.MinimumStock : 0;
-                            var wholesalemax = parseFloat(balance)-parseFloat(pendingquantity)-parseFloat(minstock);
+                            var balance = parseFloat(row.Balance) > 0 ? parseFloat(row.Balance) : 0;
+                            var allbalance = parseFloat(row.AvailableQuantity) > 0 ? parseFloat(row.AvailableQuantity) : 0;
+                            var minumumstock = parseFloat(row.MinimumStock) > 0 ? parseFloat(row.MinimumStock) : 0;
+                            var pendingquantity = parseFloat(row.PendingQuantity) > 0 ? parseFloat(row.PendingQuantity) : 0;
+                            var minamount = parseFloat(row.wholeSellerMinAmount) > 0 ? parseFloat(row.wholeSellerMinAmount) : 0;
+                            var minstock = parseFloat(row.MinimumStock) > 0 ? parseFloat(row.MinimumStock) : 0;
+                            var wholesalemax = parseFloat(balance) - parseFloat(pendingquantity) - parseFloat(minstock);
                             wholesalemax = wholesalemax > 0 ? wholesalemax : 0;
 
                             return `<div class="text-center">
@@ -526,7 +680,7 @@
                                         </a>
                                     </div>`;
                         },
-                        width:"4%"
+                        width:"3%"
                     }
                 ],
                 columnDefs: [
@@ -592,6 +746,9 @@
                         }  
                     }  
                 },
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
                 drawCallback: function(settings) {
                     this.api().columns().every(function() {
                         var column = this;
@@ -601,18 +758,8 @@
                             $(this).attr('data-title', header);
                         });
                     });
-                    cardSection.block({
-                        message:
-                        '',
-                        timeout: 1,
-                        css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                        }, 
-                    });     
-                    $("#stockbalance_tbl").show();
                     $('#stockbalancedatatable').DataTable().columns.adjust();
+                    unblockPage(cardSection);
                 },
                 fixedHeader: {
                     header: true,
@@ -667,141 +814,150 @@
         });
 
         function stbalanceInfoFn(id){
-            var unc = '<span class="badge badge-light-danger">unc</span>';
-            $("#stockbalance_item_div").hide();
-            var totalavailableqnt = "";
-            var wholemax = -1;
-            var wholemin = -1;
-            var modal = $(this);
             $.ajax({
                 type: "GET",
                 url: "{{ url('showitem') }}/"+id,
                 beforeSend: function () { 
-                    cardSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please Wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
+                    blockPage(cardSection,'Fetching item data...');
                 },
-                complete: function () { 
-                    fetchDetailDataFn(id);
+                success:async function (response) {
+                    await stockBalanceInfoDataFn(response,id);
+                    $(".infoscl").collapse('show');
+                    $('#stockInfoModal').modal('show');
                 },
-                success: function (response) {
-                    $.each(response.item, function (index, value) { 
-                        var maxc = value.MaxCost;
-                        var retpr = value.RetailerPrice;
-                        var wholesale = value.WholesellerPrice;
-                        var totalq = value.AvailableQuantity;
-                        var minstock = value.MinimumStock;
-                        var pending = value.PendingQuantity; 
-                        var averageCost = value.MaxCost;
-
-                        wholemin = value.wholeSellerMinAmount;
-                        $("#itemid").html(id);
-                        $(".itemtypeval").html(value.Type);
-                        $(".itemcodeval").html(value.Code);
-                        $(".itemnameval").html(value.Name);
-                        $(".skunumberval").html(value.SKUNumber);
-                        $(".maxcostval").html(maxc > 0 ? numformat(maxc) : 0);
-                        $(".categoryval").html(value.category_name);
-                        $(".uomval").html(value.uom_name);
-                        $("#uom_inp").val(value.uom_name);
-                        $("#batch_serial_flag").val((value.RequireSerialNumber != "Not-Require" || value.RequireExpireDate != "Not-Require") ? 1 : 0);
-
-                        totalq = parseFloat(value.AvailableQuantity) - parseFloat(value.PendingQuantity);
-                        wholemax = parseFloat(totalq) - parseFloat(minstock);
-
-                        if(parseFloat(retpr) > 0){
-                            if(parseFloat(maxc) > parseFloat(retpr)){
-                                $(".retailerval").html(unc);
-                            } 
-                            else{
-                                if(parseFloat(totalq) <= 0){
-                                    retpr = `<p style='text-decoration:line-through;text-decoration-color:red;'>${retpr}</p>`;
-                                }
-                                else{
-                                    $(".retailerval").html(numformat(retpr));
-                                }
-                            }
-                        } 
-                        else{
-                            $(".retailerval").html("");
-                        }
-
-                        if(parseFloat(wholesale) > 0){
-                            if(parseFloat(maxc) > parseFloat(wholesale)){
-                                $(".wholesaleval").html(unc);
-
-                                $(".wholesaleminval").html(numformat(wholemin));
-                                $(".wholesalemaxval").html(numformat(wholemax));
-
-                                $("#wholesalemininp").val(wholemin);
-                                $("#wholesalemaxinp").val(wholemax);
-                            } 
-                            else{
-                                if(parseFloat(totalq) < parseFloat(minstock) || parseFloat(wholemax) < parseFloat(wholemin) || parseFloat(totalq) <= 0 || parseFloat(wholemax) <= 0 || parseFloat(totalq) < parseFloat(wholemin)){
-                                    switch(minstock){
-                                        case 0:
-                                            wholemax = '';
-                                        break;
-                                        default:
-                                            if(parseFloat(wholemax) <= 0){
-                                                wholemax = 0;
-                                            } 
-                                            else{
-                                                wholemax = wholemax;
-                                            }
-                                        break;
-                                    }
-                                    wholesale = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholesale}</p>`;
-                                    wholemin = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholemin}</p>`;
-                                    wholemax = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholemax}</p>`;
-                                    $(".wholesaleval").html(numformat(wholesale));
-                                    $(".wholesaleminval").html(numformat(wholemin));
-                                    $(".wholesalemaxval").html(numformat(wholemax));
-                                    $("#wholesalemininp").val(wholemin);
-                                    $("#wholesalemaxinp").val(wholemax);
-                                } 
-                                else{
-                                    switch(minstock){
-                                        case 0:
-                                            wholemax = '';
-                                        break;
-                                        default:
-                                            if(parseFloat(wholemax) <= 0){
-                                                wholemax = 0;
-                                            } 
-                                            else{
-                                                wholemax = wholemax;
-                                            }
-                                        break;
-                                    }
-                                    
-                                    $(".wholesaleval").html(numformat(wholesale));
-                                    $(".wholesaleminval").html(numformat(wholemin));
-                                    $(".wholesalemaxval").html(numformat(wholemax));
-                                    $("#wholesalemininp").val(wholemin);
-                                    $("#wholesalemaxinp").val(wholemax);
-                                }
-                            }
-                        }
-                        else{
-                            $(".wholesaleval").html("");
-                            $(".wholesaleminval").html("");
-                            $(".wholesalemaxval").html("");
-                            $("#wholesalemininp").val("");
-                            $("#wholesalemaxinp").val("");
-                        } 
-                    });
+                error: function () {
+                    unblockPage(cardSection);
                 }
             });
+        }
+
+        function stockBalanceInfoDataFn(response,id){
+            var unc = '<span class="badge badge-light-danger">unc</span>';
+            var totalavailableqnt = "";
+            var wholemax = -1;
+            var wholemin = -1;
+            var modal = $(this);
+            var is_batch_req;
+            var is_expiry_req;
+            var is_serial_req;
+
+            $.each(response.item, function (index, value) { 
+                var maxc = value.MaxCost;
+                var retpr = value.RetailerPrice;
+                var wholesale = value.WholesellerPrice;
+                var totalq = value.AvailableQuantity;
+                var minstock = value.MinimumStock;
+                var pending = value.PendingQuantity; 
+                var averageCost = value.MaxCost;
+
+                wholemin = value.wholeSellerMinAmount;
+                $("#itemid").html(value.id);
+                $(".itemtypeval").html(value.Type);
+                $(".itemcodeval").html(value.Code);
+                $(".itemnameval").html(value.Name);
+                $(".skunumberval").html(value.SKUNumber);
+                $(".maxcostval").html(maxc > 0 ? numformat(maxc) : 0);
+                $(".categoryval").html(value.category_name);
+                $(".uomval").html(value.uom_name);
+                $("#uom_inp").val(value.uom_name);
+
+                $("#batch_serial_flag").val((value.RequireSerialNumber != "Not-Require" || value.RequireExpireDate != "Not-Require") ? 1 : 0);
+
+                is_batch_req = value.RequireExpireDate == "Require-BatchNumber" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_expiry_req = value.RequireExpireDate == "Require-ExpireDate" || value.RequireExpireDate == "Require-Both" ? "Yes" : "No";
+                is_serial_req = value.RequireSerialNumber == "Required" ? "Yes" : "No";
+
+                $(".is_batch_req").html(is_batch_req);
+                $(".is_expiry_date_req").html(is_expiry_req);
+                $(".is_serial_req").html(is_serial_req);
+
+                totalq = parseFloat(value.AvailableQuantity) - parseFloat(value.PendingQuantity);
+                wholemax = parseFloat(totalq) - parseFloat(minstock);
+
+                if(parseFloat(retpr) > 0){
+                    if(parseFloat(maxc) > parseFloat(retpr)){
+                        $(".retailerval").html(unc);
+                    } 
+                    else{
+                        if(parseFloat(totalq) <= 0){
+                            retpr = `<p style='text-decoration:line-through;text-decoration-color:red;'>${retpr}</p>`;
+                        }
+                        else{
+                            $(".retailerval").html(numformat(retpr));
+                        }
+                    }
+                } 
+                else{
+                    $(".retailerval").html("");
+                }
+
+                if(parseFloat(wholesale) > 0){
+                    if(parseFloat(maxc) > parseFloat(wholesale)){
+                        $(".wholesaleval").html(unc);
+
+                        $(".wholesaleminval").html(numformat(wholemin));
+                        $(".wholesalemaxval").html(numformat(wholemax));
+
+                        $("#wholesalemininp").val(wholemin);
+                        $("#wholesalemaxinp").val(wholemax);
+                    } 
+                    else{
+                        if(parseFloat(totalq) < parseFloat(minstock) || parseFloat(wholemax) < parseFloat(wholemin) || parseFloat(totalq) <= 0 || parseFloat(wholemax) <= 0 || parseFloat(totalq) < parseFloat(wholemin)){
+                            switch(minstock){
+                                case 0:
+                                    wholemax = '';
+                                break;
+                                default:
+                                    if(parseFloat(wholemax) <= 0){
+                                        wholemax = 0;
+                                    } 
+                                    else{
+                                        wholemax = wholemax;
+                                    }
+                                break;
+                            }
+                            wholesale = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholesale}</p>`;
+                            wholemin = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholemin}</p>`;
+                            wholemax = `<p style='text-decoration:line-through;text-decoration-color:red;'>${wholemax}</p>`;
+                            $(".wholesaleval").html(numformat(wholesale));
+                            $(".wholesaleminval").html(numformat(wholemin));
+                            $(".wholesalemaxval").html(numformat(wholemax));
+                            $("#wholesalemininp").val(wholemin);
+                            $("#wholesalemaxinp").val(wholemax);
+                        } 
+                        else{
+                            switch(minstock){
+                                case 0:
+                                    wholemax = '';
+                                break;
+                                default:
+                                    if(parseFloat(wholemax) <= 0){
+                                        wholemax = 0;
+                                    } 
+                                    else{
+                                        wholemax = wholemax;
+                                    }
+                                break;
+                            }
+                            
+                            $(".wholesaleval").html(numformat(wholesale));
+                            $(".wholesaleminval").html(numformat(wholemin));
+                            $(".wholesalemaxval").html(numformat(wholemax));
+                            $("#wholesalemininp").val(wholemin);
+                            $("#wholesalemaxinp").val(wholemax);
+                        }
+                    }
+                }
+                else{
+                    $(".wholesaleval").html("");
+                    $(".wholesaleminval").html("");
+                    $(".wholesalemaxval").html("");
+                    $("#wholesalemininp").val("");
+                    $("#wholesalemaxinp").val("");
+                } 
+            });
+
+            fetchDetailDataFn(id);
         }
 
         function fetchDetailDataFn(id){
@@ -989,7 +1145,6 @@
                         totalavailableqnt = `0 ${uom}`;
                     }
                     else if(parseFloat(total) > 0){
-                        
                         totalavailableqnt = `${numformat(parseFloat(total).toFixed(2))} ${uom}`;
                     }
                     $('#avbalanceval').html(totalavailableqnt);
@@ -999,6 +1154,7 @@
                     var balance = totalallbalance > 0 ? totalallbalance : 0;
                     var minumumstock = wholemax > 0 ? wholemax : 0;
                     var pendingquantity = total_pending > 0 ? total_pending : 0;
+
                     if(minumumstock > 0){
                         var maxc = parseFloat(balance) - parseFloat(minumumstock) - parseFloat(pendingquantity);
                         maximum = maxc > 0 ? maxc : 0;
@@ -1069,28 +1225,205 @@
                     //     }
                     // });
                 },
-                drawCallback: function(settings) {
-                    cardSection.block({
-                        message:
-                        '',
-                        timeout: 1,
-                        css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                        }, 
-                    });     
-                    $(".infoscl").collapse('show');
-                    $("#stockbalance_item_div").show();
-                    $('#stockInfoModal').modal('show');
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
                 },
             });
         }
 
+        //-------------------Start batch serial-----------------
+        function viewBatchSerialExpireFn(store_id,item_id){
+            var str_id = null;
+            var itm_id = null;
+            $.ajax({
+                url: '/fetchItemAndStore', 
+                type: 'POST',
+                data:{
+                    str_id: store_id,
+                    itm_id: item_id,
+                },
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching batch and/or serial numbers data...');
+                },
+                success: async function(data) {
+                    $('.batch_serial_item_header_info').html(`Item Code: <b>${data.item_code}</b>, Item Name: <b>${data.item_name}</b>, Station: <b>${data.store_name}</b>`);
+                    $(".station_lbl").text(data.store_name);
+                    await getItemBatchSerialNumFn(store_id,item_id);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+
+            $(".batch_serial_collapse").collapse('hide');
+            $('#serialBatchModal').modal('show'); 
+        }
+
+        function getItemBatchSerialNumFn(store_id,item_id){
+            batchSerialIndex = -1;
+            var str_id = null;
+            var itm_id = null;
+            var warning_date = 30;
+            var visibility_flag = true;
+            var column_index = [];
+            var is_batch_req = $(".is_batch_req").text().trim();
+            var is_exp_date_req = $(".is_expiry_date_req").text().trim();
+            var is_serial_num_req = $(".is_serial_req").text().trim();
+            
+            if(is_batch_req == "No"){
+                column_index.push(3);
+                visibility_flag = false;
+            }
+            if(is_exp_date_req == "No"){
+                column_index.push(7,8);
+                visibility_flag = false;
+            }
+            if(is_serial_num_req == "No"){
+                column_index.push(4);
+                visibility_flag = false;
+            }
+            
+            var batch_table = $('#docBatchSerialInfoItem').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: false,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                searching: true,
+                "order": [[ 7, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/fetchBatchSerialData',
+                    type: 'POST',
+                    data:{
+                        str_id: store_id,
+                        itm_id: item_id,
+                    },
+                    complete: function () { 
+                        setFocusInfoTable('#docBatchSerialInfoItem');
+                    },
+                },
+                columns: [{
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },
+                    {
+                        data: 'brand_name',
+                        name: 'brand_name',
+                        width:'15%',
+                    },
+                    {
+                        data: 'model_name',
+                        name: 'model_name',
+                        width:'12%',
+                    },
+                    {
+                        data: 'batch_number',
+                        name: 'batch_number',
+                        width:'12%',
+                    },
+                    {
+                        data: 'serial_numbers',
+                        name: 'serial_numbers',
+                        width:'20%',
+                    },
+                    {
+                        data: 'available_qty',
+                        name: 'available_qty',
+                        width:'8%',
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    },   
+                    {
+                        data: 'manufacturing_date',
+                        name: 'manufacturing_date',
+                        width:'10%',
+                    },
+                    {
+                        data: 'expiry_date',
+                        name: 'expiry_date',
+                        width:'10%',
+                    },
+                    {
+                        data: 'remaining_day',
+                        name: 'remaining_day',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    }, 
+                ],
+                "columnDefs": [{
+                    "targets": column_index,
+                    "visible": visibility_flag,
+                }],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    var remaining_date = aData.remaining_day;
+                    if(parseInt(remaining_date) < 0) {
+                        for(var i = 0;i <= 8;i++){
+                            $(nRow).find(`td:eq(${i})`).css({"color":"#ea5455"});
+                        }
+                    } 
+                    else if(parseInt(remaining_date) >= 0 && parseInt(remaining_date) <= 30){
+                        for(var i = 0;i <= 8;i++){
+                            $(nRow).find(`td:eq(${i})`).css({"color":"#ff9f43"});
+                        }
+                    }
+                    else if(parseInt(remaining_date) > 30){
+                        for(var i = 0;i <= 8;i++){
+                            $(nRow).find(`td:eq(${i})`).css({"color":"#28c76f"});
+                        }
+                    }
+                },
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(),data;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    var total = api
+                        .column(5)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    $('#total_avialable_qty').html(`${numformat(parseFloat(total || 0))}`);
+                },
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
+            });
+        }
+
+        $('#docBatchSerialInfoItem tbody').on('click', 'tr', function () {
+            $('#docBatchSerialInfoItem tbody > tr').removeClass('selected');
+            $(this).addClass('selected');
+            batchSerialIndex = $(this).index();
+        });
+
+        function setFocusInfoTable(targetTable) {
+            $($(targetTable + ' tbody > tr')[batchSerialIndex]).addClass('selected');
+        }
+        //-------------------End batch serial-------------------
+
         function refreshtbl(){
-            var tabletr = $('#stockbalancedatatable').DataTable();tabletr.search('');
-            var oTable = $('#stockbalancedatatable').dataTable(); 
-            oTable.fnDraw(false);
+            stockbaltable.ajax.reload(function() {
+                unblockPage(cardSection);
+            }, false); 
         }
 
         function closeInfoModal(){
@@ -1244,6 +1577,36 @@
                 const summaryHtml = `
                     Item Code: <b>${item_code}</b>,
                     Item Name: <b>${item_name}</b>`;
+                infoTarget.html(summaryHtml);
+            }
+        });
+
+        $(document).on('show.bs.collapse hide.bs.collapse', '.batch_coll', function (e) {
+            e.stopPropagation();
+            const collapse = $(this);
+            const container = collapse.closest('.card, .modal-content, .row');
+            const infoTarget = container.find('.batch_serial_item_header_info');
+            const collapseId = collapse.attr('id');
+            const trigger = $(`[data-target="#${collapseId}"], [data-bs-target="#${collapseId}"]`);
+
+            const isOpening = e.type === 'show';
+
+            $('.toggle-text-label').html(isOpening ? 'Collapse' : 'Expand');
+            $('.collapse-icon').html(isOpening ? '<i class="fas text-secondary fa-minus-circle"></i>' : '<i class="fas text-secondary fa-plus-circle"></i>');
+
+            if(isOpening) {
+                const originalHeader = `<i class="far fa-info-circle"></i> Basic Information`;
+                infoTarget.html(originalHeader);
+            } 
+            else{
+                // Section is COLLAPSING: Show the data summary
+                const item_code = container.find('.itemcodeval').text().trim();
+                const item_name = container.find('.itemnameval').text().trim();
+                const station_name = container.find('.station_lbl').text().trim();
+                const summaryHtml = `
+                    Item Code: <b>${item_code}</b>,
+                    Item Name: <b>${item_name}</b>
+                    Station: <b>${station_name}</b>`;
                 infoTarget.html(summaryHtml);
             }
         });

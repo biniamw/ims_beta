@@ -685,6 +685,8 @@ Route::get('/stockbalance','StockBalanceController@index');
 Route::delete('/stockbalancedata','StockBalanceController@showStockBalanceData');
 Route::delete('/showStockDetail/{id}','StockBalanceController@showStockDetailData');
 Route::delete('/showdeliveredqty/{itid}/{stid}','StockBalanceController@showDeliveredQty');
+Route::post('fetchItemAndStore','StockBalanceController@fetchItemAndStore');
+Route::post('fetchBatchSerialData','StockBalanceController@fetchBatchSerialData');
 //----------------------Stock balance route ends----------------------
 
 //----------------------Store Requistion Starts----------------------
