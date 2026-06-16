@@ -1672,24 +1672,26 @@
                     {
                         data: 'Status',name: 'Status',
                         "render": function ( data, type, row, meta ) {
+                            var color_class = "";
                             if(data == "Draft"){
-                                return `<span class="badge bg-secondary bg-glow">${data}</span>`;
+                                color_class = "bg-secondary";
                             }
                             else if(data == "Pending"){
-                                return `<span class="badge bg-warning bg-glow">${data}</span>`;
+                                color_class = "bg-warning";
                             }
                             else if(data == "Checked"){
-                                return `<span class="badge bg-primary bg-glow">${data}</span>`;
+                                color_class = "bg-primary";
                             }
                             else if(data == "Confirmed"){
-                                return `<span class="badge bg-success bg-glow">${data}</span>`;
+                                color_class = "bg-success";
                             }
                             else if(data == "Void" || data == "Void(Draft)" || data == "Void(Pending)" || data == "Void(Checked)" || data == "Void(Confirmed)"){
-                                return `<span class="badge bg-danger bg-glow">${data}</span>`;
+                                color_class = "bg-danger";
                             }
                             else{
-                                return `<span class="badge bg-dark bg-glow">${data}</span>`;
+                                color_class = "bg-dark";
                             }
+                            return `<span class="badge ${color_class} bg-glow">${data}</span>`;
                         },
                         width:"6%"
                     },
@@ -1715,12 +1717,13 @@
                         'visible': false
                     },
                 ],
-                "columnDefs": [
-                    {
-                        "targets": column_index,
-                        "visible": visibility_flag,
-                    },
-                ],
+                "columnDefs": [{
+                    "targets": column_index,
+                    "visible": visibility_flag,
+                }],
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
                 drawCallback: function () { 
                     this.api().columns().every(function() {
                         var column = this;

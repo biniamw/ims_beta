@@ -161,8 +161,7 @@
                                                         <th style="width: 3%">#</th>
                                                         <th style="width: 35%">Station</th>
                                                         <th style="width: 30%">Stock Balance</th>
-                                                        <th style="width: 29%">Waiting for Delivery</th>
-                                                        <th style="width: 3%"></th>
+                                                        <th style="width: 32%">Waiting for Delivery</th>
                                                         <th style="display: none;"></th>
                                                     </thead>
                                                     <tbody class="table table-sm"></tbody>
@@ -357,7 +356,7 @@
                                     </div>
                                     <div class="collapse batch_coll show batch_serial_collapse shadow pl-1 pr-1">
                                         <div class="row mb-1">
-                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-1 mb-1">
+                                            <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-12 mt-1 mb-1">
                                                 <div class="card shadow-none border m-0">
                                                     <div class="card-body mb-0">
                                                         <h6 class="card-title mb-0"><i class="fas fa-database"></i> General Information</h6>
@@ -371,15 +370,15 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl">Item Code</label></td>
-                                                                        <td><label class="info_lbl itemcodeval" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl itemcodeval" id="batch_item_code" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl">Item Name</label></td>
-                                                                        <td><label class="info_lbl itemnameval" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl itemnameval" id="batch_item_name" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl" title="Barcode Number">Barcode No.</label></td>
-                                                                        <td><label class="info_lbl skunumberval" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl skunumberval" id="batch_item_barcode" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>
@@ -387,23 +386,23 @@
                                                                 <table class="infotbl mb-0" style="width:100%;font-size:12px;">
                                                                     <tr>
                                                                         <td><label class="info_lbl">Category</label></td>
-                                                                        <td><label class="info_lbl categoryval" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl categoryval" id="batch_item_category" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl" title="Unit of Measurement">UOM</label></td>
-                                                                        <td><label class="info_lbl uomval" id="uom_lbl" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl uomval" id="batch_item_uom" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl" title="Is Batch Number Required">Is Batch No. Req.</label></td>
-                                                                        <td><label class="info_lbl is_batch_req" id="is_batch_req" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl is_batch_req" id="batch_is_batch_req" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl" title="Is Serial Number Required">Is Serial No. Req.</label></td>
-                                                                        <td><label class="info_lbl is_serial_req" id="is_serial_req" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl is_serial_req" id="batch_is_serial_req" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><label class="info_lbl" title="Is Expiry Date Required">Is Expiry Date Req.</label></td>
-                                                                        <td><label class="info_lbl is_expiry_date_req" id="is_expiry_date_req" style="font-weight: bold;"></label></td>
+                                                                        <td><label class="info_lbl is_expiry_date_req" id="batch_is_expiry_date_req" style="font-weight: bold;"></label></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>
@@ -412,7 +411,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mt-1 mb-1">
+                                            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-12 mt-1 mb-1">
                                                 <div class="card shadow-none border m-0">
                                                     <div class="card-body">
                                                         <h6 class="card-title mb-0"><i class="fa-sharp fa-solid fa-file-invoice-dollar"></i> Sales Pricing</h6>
@@ -435,21 +434,6 @@
                                                 </div> 
                                             </div>
 
-                                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mt-1 mb-1">
-                                                <div class="card shadow-none border m-0">
-                                                    <div class="card-body">
-                                                        <h6 class="card-title mb-0"><i class="fas fa-tags"></i> Others</h6>
-                                                        <hr class="my-50">
-                                                        <table class="infotbl" style="width:100%;font-size:12px;">
-                                                            <tr>
-                                                                <td><label class="info_lbl">Station</label></td>
-                                                                <td><label class="info_lbl station_lbl" style="font-weight: bold;"></label></td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                </div> 
-                                            </div>
-
                                         </div>
                                     </div>
                                 </section>
@@ -459,27 +443,12 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="table-responsive scroll scrdiv">
-                                    <table id="docBatchSerialInfoItem" class="display table-bordered table-striped dt-responsive defaultdatatable mb-0 info_datatable receiving_item_dt" style="width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 3%">#</th>
-                                                <th style="width: 15%"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand</th>
-                                                <th style="width: 12%">Generic/ Model</th>
-                                                <th style="width: 12%" title="Batch Number">Batch No.</th>
-                                                <th style="width: 20%" title="Serial Number">Serial No.</th>
-                                                <th style="width: 8%" title="Available Quantity">Available Qty.</th>
-                                                <th style="width: 10%">Manufacturing Date</th>
-                                                <th style="width: 10%">Expiry Date</th>
-                                                <th style="width: 10%">Remaining Day</th>
-                                            </tr>
-                                        </thead>
+                                    <table id="docBatchSerialInfoItem" class="report-dt table-bordered table-hover dt-responsive mb-0 info_datatable receiving_item_dt" style="width: 100%;">
                                         <tbody class="table table-sm"></tbody>
                                         <tfoot class="table table-sm">
-                                            <th colspan="5" style="text-align: right">Total</th>
-                                            <th id="total_avialable_qty"></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <td colspan="6" style="text-align: right" class="report-total-footer" id="total_lbl"></td>
+                                            <td id="total_avialable_qty" style="text-align: left" class="report-total-footer"></td>
+                                            <td colspan="3" class="report-total-footer"></td>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -487,6 +456,31 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="display:none;">
+                            <table id="company_info_tbl" class="table table-sm" style="width:100%;border: none !important;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:8%;border: none !important;"><b>Tel:</b></td>
+                                        <td style="width:42%;border: none !important;">{{$compInfo->Phone}}, {{$compInfo->OfficePhone}}</td>
+                                        <td style="width:10%;border: none !important;"><b>Website:</b></td>
+                                        <td style="width:40%;border: none !important;">{{$compInfo->Website}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: none !important;"><b>Email:</b></td>
+                                        <td style="border: none !important;">{{$compInfo->Email}}</td>
+                                        <td style="border: none !important;"><b>Address:</b></td>
+                                        <td style="border: none !important;">{{$compInfo->Address}}</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #000000;">
+                                        <td style="border: none !important;"><b>TIN:</b></td>
+                                        <td style="border: none !important;">{{$compInfo->TIN}}</td>
+                                        <td style="border: none !important;"><b>VAT No:</b></td>
+                                        <td style="border: none !important;">{{$compInfo->VATReg}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <input type="hidden" id="info_company_name" name="info_company_name" value="{{$compInfo->Name}}"/>
+                        </div>
                         <button id="closebuttonserial" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -494,7 +488,9 @@
         </form>
     </div>
     <!--End batch serial modal -->
+@endsection
 
+@section('scripts')
     <script  type="text/javascript">
         var stockbaltable = '';
         var gblIndex = -1;
@@ -697,51 +693,50 @@
                     var pendingbalance = aData.PendingQuantity > 0 ? aData.PendingQuantity : 0;
                     var minstock = aData.MinimumStock > 0 ? aData.MinimumStock : 0;
                     var minamount = aData.wholeSellerMinAmount > 0 ? aData.wholeSellerMinAmount : 0;
-                    var allblance = parseFloat(balance)-parseFloat(pendingbalance);
+                    var allblance = parseFloat(balance) - parseFloat(pendingbalance);
                     if(parseFloat(minstock) > 0){
-                        var maxc = parseFloat(allblance)-parseFloat(minstock);
+                        var maxc = parseFloat(allblance) - parseFloat(minstock);
                         maximum = maxc >= 0 ? maxc : 0;
                     }
                     var minimumstock = aData.MinimumStock > 0 ? aData.MinimumStock : 0;    
                     var avquantity = aData.AvailableQuantity > 0 ? aData.AvailableQuantity : 0;  
                     var wholesalefeaturetable = $('#wholesalefeaturetable').val();
 
-                    if(wholesalefeaturetable == 0){
+                    if(parseFloat(wholesalefeaturetable) == 0){
                         api.column(8).visible(false);
                         api.column(9).visible(false);
                         api.column(10).visible(false);
-                        if (parseFloat(allblance) <= 0 || parseFloat(avquantity) <= 0) {
+                        if(parseFloat(allblance) <= 0 || parseFloat(avquantity) <= 0) {
                             $(nRow).find('td:eq(6)').css({"text-decoration": "line-through","text-decoration-color": "red"});
                         }
 
-                        if (aData.StockPr == 1 && aData.StockAv == 1) {
+                        if(aData.StockPr == 1 && aData.StockAv == 1) {
                             $(nRow).find('td:eq(7)').css({"font-weight": "bold"});
                         } 
-                        else if (aData.StockPr == 0 && aData.StockAv == 1) {
+                        else if(aData.StockPr == 0 && aData.StockAv == 1) {
                             $(nRow).find('td:eq(7)').css({"font-weight": "bold"});
                         }
-                        else if (aData.StockPr == 0 && aData.StockAv == 0) {
+                        else if(aData.StockPr == 0 && aData.StockAv == 0) {
                             $(nRow).find('td:eq(7)').css({"font-weight": "bold"});
                         }  
                     }
-                    if(wholesalefeaturetable == 1){
+                    if(parseFloat(wholesalefeaturetable) == 1){
                         api.column(8).visible(true);
                         api.column(9).visible(true);
                         api.column(10).visible(true);
 
-                        if(parseFloat(allblance) < parseFloat(minimumstock) || parseFloat(maximum)<parseFloat(minamount)|| parseFloat(allblance)<=0 ||parseFloat(maximum)<=0|| parseFloat(allblance)<parseFloat(minamount)){
-                            
+                        if(parseFloat(allblance) < parseFloat(minimumstock) || parseFloat(maximum) < parseFloat(minamount) || parseFloat(allblance) <= 0 || parseFloat(maximum) <= 0 || parseFloat(allblance) < parseFloat(minamount)){
                             $(nRow).find('td:eq(8)').css({"text-decoration": "line-through","text-decoration-color": "red"});
                             $(nRow).find('td:eq(9)').css({"text-decoration": "line-through","text-decoration-color": "red"});
                             $(nRow).find('td:eq(10)').css({"text-decoration": "line-through","text-decoration-color": "red"});
                         }
-                        if (aData.StockPr == 1 && aData.StockAv == 1) {
+                        if(aData.StockPr == 1 && aData.StockAv == 1){
                             $(nRow).find('td:eq(10)').css({"font-weight": "bold"});
                         } 
-                        else if (aData.StockPr == 0 && aData.StockAv == 1) {
+                        else if(aData.StockPr == 0 && aData.StockAv == 1){
                             $(nRow).find('td:eq(10)').css({"font-weight": "bold"});
                         }
-                        else if (aData.StockPr == 0 && aData.StockAv == 0) {
+                        else if(aData.StockPr == 0 && aData.StockAv == 0){
                             $(nRow).find('td:eq(10)').css({"font-weight": "bold"});
                         }  
                     }  
@@ -965,6 +960,7 @@
             var totalallbalance = 0;
             var storebalanceqnt = 0;
             var quantityondel = 0;
+            var batch_serial_btn = "";
             var uom = $('#uom_inp').val();
             var wholemin = $("#wholesalemininp").val();
             var wholemax = $("#wholesalemaxinp").val();
@@ -986,7 +982,7 @@
                 info: false,
                 length: false,
                 paging: false,
-                dom: "<'row'<'col-sm-3 col-md-2 col-4 pr-0 mr-0'f><'col-sm-4 col-md-2 col-4 mt-1 pr-0 mr-0'><'col-sm-4 col-md-2 col-4 mt-1'>>" +
+                dom: "<'row'<'col-sm-4 col-md-2 col-5 ml-0'f><'col-sm-8 col-md-10 col-7 mt-1 pb-1 d-flex justify-content-end batch-serial-btn'>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
                 ajax: {
@@ -1054,27 +1050,6 @@
                             }   
                         },
                         width:"32%"
-                    },
-                    { data: null,
-                        "render": function (data, type, row, meta) {
-                            if(parseInt(batch_serial_fl) == 1){
-                                return `<div class="text-center">
-                                            <a 
-                                                class="viewsernum" 
-                                                href="javascript:void(0)" 
-                                                onclick="viewBatchSerialExpireFn(${row.StoreId},${row.ItemId})" 
-                                                data-id="viewsernum${row.StoreId}" 
-                                                id="viewsernum${row.StoreId}" 
-                                                title="View batch number, serial number, expiry date for ${row.ItemName} item!">
-                                                <i class="fa-sharp fa-regular fa-circle-info fa-xl" style="color: #00cfe8;"></i>
-                                            </a>
-                                        </div>`;
-                            }
-                            else{
-                                return "";
-                            }
-                        },
-                        width:"3%"
                     },
                     { data: null, className: "sum",'visible': false,
                         "render": function (data, type, row, meta) {
@@ -1155,7 +1130,7 @@
                     var minumumstock = wholemax > 0 ? wholemax : 0;
                     var pendingquantity = total_pending > 0 ? total_pending : 0;
 
-                    if(minumumstock > 0){
+                    if(parseFloat(minumumstock) > 0){
                         var maxc = parseFloat(balance) - parseFloat(minumumstock) - parseFloat(pendingquantity);
                         maximum = maxc > 0 ? maxc : 0;
                         maxreturn = maximum >= wholemin ? maximum : 0;
@@ -1229,26 +1204,42 @@
                     unblockPage(cardSection);
                 },
             });
+
+            if(parseInt(batch_serial_fl) == 1){
+                // batch_serial_btn = `<a 
+                //     class="viewsernum btn btn-outline-secondary btn-sm" 
+                //     href="javascript:void(0)" 
+                //     onclick="viewBatchSerialExpireFn(${id})" 
+                //     data-id="viewsernum${id}" 
+                //     id="viewsernum${id}" 
+                //     title="View batch number, serial number, expiry date!">
+                //     View Batch Details
+                // </a>`;
+
+                batch_serial_btn = `<button type="button" class="btn btn-outline-secondary" aria-haspopup="true" aria-expanded="false" onclick="viewBatchSerialExpireFn(${id})" >
+                    <i class="fas fa-eye fa-xl"></i><span class="btn-text">&nbsp View Batch Details</span>
+                </button>`;
+            }
+
+            $('.batch-serial-btn').empty().append(batch_serial_btn);
         }
 
         //-------------------Start batch serial-----------------
-        function viewBatchSerialExpireFn(store_id,item_id){
+        function viewBatchSerialExpireFn(item_id){
             var str_id = null;
             var itm_id = null;
             $.ajax({
                 url: '/fetchItemAndStore', 
                 type: 'POST',
                 data:{
-                    str_id: store_id,
                     itm_id: item_id,
                 },
                 beforeSend: function() {
                     blockPage(cardSection, 'Fetching batch and/or serial numbers data...');
                 },
                 success: async function(data) {
-                    $('.batch_serial_item_header_info').html(`Item Code: <b>${data.item_code}</b>, Item Name: <b>${data.item_name}</b>, Station: <b>${data.store_name}</b>`);
-                    $(".station_lbl").text(data.store_name);
-                    await getItemBatchSerialNumFn(store_id,item_id);
+                    $('.batch_serial_item_header_info').html(`Item Code: <b>${data.item_code}</b>, Item Name: <b>${data.item_name}</b>`);
+                    await getItemBatchSerialNumFn(item_id);
                 },
                 error: function () {
                     unblockPage(cardSection);
@@ -1259,7 +1250,7 @@
             $('#serialBatchModal').modal('show'); 
         }
 
-        function getItemBatchSerialNumFn(store_id,item_id){
+        function getItemBatchSerialNumFn(item_id){
             batchSerialIndex = -1;
             var str_id = null;
             var itm_id = null;
@@ -1269,6 +1260,8 @@
             var is_batch_req = $(".is_batch_req").text().trim();
             var is_exp_date_req = $(".is_expiry_date_req").text().trim();
             var is_serial_num_req = $(".is_serial_req").text().trim();
+            var item_name = $("#batch_item_name").text().trim();
+            $('#docBatchSerialInfoItem > thead').hide();
             
             if(is_batch_req == "No"){
                 column_index.push(3);
@@ -1291,14 +1284,14 @@
                 info:false,
                 searchHighlight: true,
                 searching: true,
-                "order": [[ 7, "asc" ]],
+                "order": [[ 1, "asc" ],[ 8, "asc" ]],
                 language: { 
                     search: '', 
                     searchPlaceholder: "Search here"
                 },
                 autoWidth: false,
                 deferRender: true,
-                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end'>>" +
+                dom: "<'row'<'col-sm-4 col-md-2 col-5 ml-0'f><'col-sm-8 col-md-10 col-7 mt-1 d-flex justify-content-end stbalance-print-export'>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
                 ajax: {
@@ -1308,10 +1301,10 @@
                     url: '/fetchBatchSerialData',
                     type: 'POST',
                     data:{
-                        str_id: store_id,
                         itm_id: item_id,
                     },
                     complete: function () { 
+                        $('#docBatchSerialInfoItem > thead').hide();
                         setFocusInfoTable('#docBatchSerialInfoItem');
                     },
                 },
@@ -1320,14 +1313,19 @@
                         width:'3%',
                     },
                     {
+                        data: 'station_name',
+                        name: 'station_name',
+                        width:'10%',
+                    },
+                    {
                         data: 'brand_name',
                         name: 'brand_name',
-                        width:'15%',
+                        width:'10%',
                     },
                     {
                         data: 'model_name',
                         name: 'model_name',
-                        width:'12%',
+                        width:'10%',
                     },
                     {
                         data: 'batch_number',
@@ -1337,7 +1335,7 @@
                     {
                         data: 'serial_numbers',
                         name: 'serial_numbers',
-                        width:'20%',
+                        width:'21%',
                     },
                     {
                         data: 'available_qty',
@@ -1353,12 +1351,12 @@
                     {
                         data: 'expiry_date',
                         name: 'expiry_date',
-                        width:'10%',
+                        width:'8%',
                     },
                     {
                         data: 'remaining_day',
                         name: 'remaining_day',
-                        width:'10%',
+                        width:'8%',
                         render: $.fn.dataTable.render.number(',', '.',0, '')
                     }, 
                 ],
@@ -1366,20 +1364,63 @@
                     "targets": column_index,
                     "visible": visibility_flag,
                 }],
+                rowGroup: {
+                    startRender: function (rows,group){
+                        var color = 'style="color:black;font-weight:bold;background:#f2f3f4;"';
+                        var header_group = `
+                            <tr>
+                                <th colspan="10" class="merged-header" style="text-align:center;">${group}</th>
+                            </tr>
+                            <tr>
+                                <th style="width: 3%">#</th>
+                                <th style="width: 10%">Station</th>
+                                <th style="width: 10%"><i class="fas fa-info-circle" title="Country, manufacturer, brand"></i> Brand</th>
+                                <th style="width: 10%">Generic/ Model</th>
+                                <th style="width: 12%" title="Batch Number">Batch No.</th>
+                                <th style="width: 21%" title="Serial Number">Serial No.</th>
+                                <th style="width: 8%" title="Available Quantity">Available Qty.</th>
+                                <th style="width: 10%">Manufacturing Date</th>
+                                <th style="width: 8%">Expiry Date</th>
+                                <th style="width: 8%">Remaining Day</th>
+                            </tr>`;
+
+                        return $(header_group)
+                    },
+                    endRender: function ( rows, group ) {
+                        var intVal = function ( i ) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '')*1 :
+                                typeof i === 'number' ?
+                                        i : 0;
+                        };
+
+                        var available_qty = rows
+                            .data()
+                            .pluck('available_qty')
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0); 
+
+                        var color = 'style="color:black;font-weight:bold;background:#f2f3f4;"';
+                        var total_merged_row = `<tr><td colspan="6" style="text-align:right" class="report-total-footer">Total of ${group}</td><td class="report-total-footer" style="text-align:left">${numformat(parseFloat(available_qty).toFixed(0))}</td><td class="report-total-footer" colspan="3"></td></tr>`;
+                        return $(total_merged_row);     
+                    },  
+                    dataSrc: 'station_name'
+                },
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     var remaining_date = aData.remaining_day;
                     if(parseInt(remaining_date) < 0) {
-                        for(var i = 0;i <= 8;i++){
+                        for(var i = 0;i <= 9;i++){
                             $(nRow).find(`td:eq(${i})`).css({"color":"#ea5455"});
                         }
                     } 
                     else if(parseInt(remaining_date) >= 0 && parseInt(remaining_date) <= 30){
-                        for(var i = 0;i <= 8;i++){
+                        for(var i = 0;i <= 9;i++){
                             $(nRow).find(`td:eq(${i})`).css({"color":"#ff9f43"});
                         }
                     }
                     else if(parseInt(remaining_date) > 30){
-                        for(var i = 0;i <= 8;i++){
+                        for(var i = 0;i <= 9;i++){
                             $(nRow).find(`td:eq(${i})`).css({"color":"#28c76f"});
                         }
                     }
@@ -1395,18 +1436,63 @@
                     };
 
                     var total = api
-                        .column(5)
+                        .column(6)
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
 
+                    $('#total_lbl').html(`Total of ${item_name}`);
                     $('#total_avialable_qty').html(`${numformat(parseFloat(total || 0))}`);
                 },
                 "initComplete": function(settings, json) {
                     unblockPage(cardSection);
                 },
+                drawCallback: function(settings) {
+                    var api = this.api();
+                    var currentIndex = 1;
+                    var currentGroup = null;
+                    api.rows({ page: 'current', search: 'applied' }).every(function() {
+                        var rowData = this.data();
+                        if (rowData) {
+                            var group = rowData['station_name'];
+                            if (group !== currentGroup) {
+                                currentIndex = 1; // Reset index for a new group
+                                currentGroup = group;
+                            }
+                            $(this.node()).find('td:first').text(currentIndex++);
+                        }
+                    });   
+                },
             });
+
+            var print_export_btn = $(`
+                <div class="btn-group dropdown" style="height:38px !important;">
+                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-sharp fa-solid fa-caret-down fa-xl"></i><span class="btn-text">&nbsp Print & Export</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item printBatchSerial" data-id="printBatchSerial" id="printBatchSerial" title="Print Batch and/or Serial Number">
+                                <span><i class="fas fa-print"></i> Print</span>  
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item exportExcelBatchSerial" data-id="exportExcelBatchSerial" id="exportExcelBatchSerial" title="Export Batch and/or Serial Number to Excel">
+                                <span><i class="fas fa-file-excel"></i> Export to Excel</span>  
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item exportPdfBatchSerial" data-id="exportPdfBatchSerial" id="exportPdfBatchSerial" title="Export Batch and/or Serial Number to PDF">
+                                <span><i class="fas fa-file-pdf"></i> Export to PDF</span>  
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            `);
+
+            $('.stbalance-print-export').empty().append(print_export_btn);
         }
 
         $('#docBatchSerialInfoItem tbody').on('click', 'tr', function () {
@@ -1419,6 +1505,884 @@
             $($(targetTable + ' tbody > tr')[batchSerialIndex]).addClass('selected');
         }
         //-------------------End batch serial-------------------
+
+        //-----------------Start Print & Export-----------------
+        $(document).on('click', '#exportExcelBatchSerial', function() {
+            var item_code = $("#batch_item_code").text().trim();
+            var item_name = $("#batch_item_name").text().trim();
+            var barcode = $("#batch_item_barcode").text().trim();
+            var category = $("#batch_item_category").text().trim();
+            var uom = $("#batch_item_uom").text().trim();
+            var station = $("#batch_station").text().trim();
+
+            var is_batch_req = $("#batch_is_batch_req").text().trim();
+            var is_serial_req = $("#batch_is_serial_req").text().trim();
+            var is_expiry_req = $("#batch_is_expiry_date_req").text().trim();
+            var page_title = "Batch, Serial & Expiry Report";
+
+            if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                page_title = "Batch, Serial & Expiry Report";
+            }
+            else if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                page_title = "Batch & Serial Report";
+            }
+            else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "No"){
+                page_title = "Batch Report";
+            }
+            else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                page_title = "Batch & Expiry Report";
+            }
+            else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                page_title = "Serial & Expiry Report";
+            }
+            else if(is_batch_req == "No" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                page_title = "Expiry Report";
+            }
+            else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                page_title = "Serial Report";
+            }
+
+            var table = document.getElementById("docBatchSerialInfoItem");
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet("Item");
+
+            let mergeCells = [];
+            let maxColumnWidths = {}; // Store max column widths
+
+            let titleRow = worksheet.addRow([page_title]);
+            titleRow.font = { bold: true, size: 16, color: { argb: "000000" } };
+            titleRow.alignment = { horizontal: "center", vertical: "middle" };
+            
+
+            worksheet.mergeCells(1, 1, 1, 10); // 🔹 Merge across all columns
+            // **🔹 Leave an empty row below the title**
+            worksheet.addRow([]);
+            worksheet.mergeCells(2, 1, 2, 3); 
+            worksheet.mergeCells(2, 4, 2, 5); 
+            worksheet.mergeCells(2, 6, 2, 7); 
+            worksheet.mergeCells(2, 8, 2, 10); 
+
+            worksheet.addRow([]);
+            worksheet.mergeCells(3, 1, 3, 3); 
+            worksheet.mergeCells(3, 4, 3, 5); 
+            worksheet.mergeCells(3, 6, 3, 7); 
+            worksheet.mergeCells(3, 8, 3, 10); 
+
+            const item_code_title = worksheet.getCell(2, 3);
+            const item_code_value = worksheet.getCell(2, 5);
+            const item_name_title = worksheet.getCell(3, 3);
+            const item_name_value = worksheet.getCell(3, 5);
+
+            const barcode_title = worksheet.getCell(2, 7);
+            const barcode_value = worksheet.getCell(2, 10);
+            const category_title = worksheet.getCell(3, 7);
+            const category_value = worksheet.getCell(3, 10);
+
+            item_code_title.value = "Item Code";
+            item_code_title.alignment = { horizontal: "right", vertical: "middle" };
+
+            item_code_value.value = item_code;
+            item_code_value.alignment = { horizontal: "left", vertical: "middle" };
+            item_code_value.font = { bold: true};
+
+            item_name_title.value = "Item Name";
+            item_name_title.alignment = { horizontal: "right", vertical: "middle" };
+            item_name_value.value = item_name;
+            item_name_value.alignment = { horizontal: "left", vertical: "middle" };
+            item_name_value.font = { bold: true};
+
+            barcode_title.value = "Barcode No.";
+            barcode_title.alignment = { horizontal: "right", vertical: "middle" };
+            barcode_value.value = barcode;
+            barcode_value.alignment = { horizontal: "left", vertical: "middle" };
+            barcode_value.font = { bold: true};
+
+            category_title.value = "Category";
+            category_title.alignment = { horizontal: "right", vertical: "middle" };
+            category_value.value = category;
+            category_value.alignment = { horizontal: "left", vertical: "middle" };
+            category_value.font = { bold: true};
+            
+            worksheet.addRow([]);
+            worksheet.mergeCells(4, 1, 4, 10); 
+
+            function processTableRows(tableSection, startRow, isHeader = false) {
+                let excelRowIndex = startRow;
+                let rowSpanMap = {}; 
+
+                $(tableSection).find("tr").each(function () {
+                    let rowData = [];
+                    let colIndex = 1;
+
+                    $(this).find("th, td").each(function () {
+                        let text = $(this).text().trim();
+                        let colspan = parseInt($(this).attr("colspan") || 1);
+                        let rowspan = parseInt($(this).attr("rowspan") || 1);
+
+                        // Ensure column is not occupied by previous row span
+                        while (rowSpanMap[`${excelRowIndex}-${colIndex}`]) {
+                            colIndex++;
+                        }
+
+                        rowData[colIndex - 1] = text;
+                        let estimatedWidth = text.length * 1.2; // 1.2 units per character (better scaling)
+                        estimatedWidth = Math.max(estimatedWidth, 5); // Minimum width for any column
+
+                        if (colIndex === 1) {
+                            maxColumnWidths[colIndex] = 5;
+                        }
+                        else{
+                            maxColumnWidths[colIndex] = Math.max(maxColumnWidths[colIndex] || 5, estimatedWidth);
+                            maxColumnWidths[colIndex] = Math.min(maxColumnWidths[colIndex], 50); // **Limit max width to 30**
+                        }
+
+                        if (colspan > 1 || rowspan > 1) {
+                            mergeCells.push({
+                                start: { row: excelRowIndex, col: colIndex },
+                                end: { row: excelRowIndex + rowspan - 1, col: colIndex + colspan - 1 }
+                            });
+
+                            for (let r = 0; r < rowspan; r++) {
+                                for (let c = 0; c < colspan; c++) {
+                                    rowSpanMap[`${excelRowIndex + r}-${colIndex + c}`] = true;
+                                }
+                            }
+                        }
+
+                        colIndex += colspan;
+                    });
+
+                    let row = worksheet.addRow(rowData);
+
+                    row.eachCell((cell, cellIndex) => {
+                        // Track current position in the original HTML cells
+                        let currentColIndex = 0;
+                        let foundOriginalCell = null;
+                        let originalCells = $(this).find("th, td");
+                        
+                        // Find which original cell this Excel column belongs to
+                        for (let i = 0; i < originalCells.length; i++) {
+                            let originalCell = $(originalCells[i]);
+                            let colspan = parseInt(originalCell.attr("colspan") || 1);
+                            
+                            // Check if the current Excel column falls within this original cell's colspan range
+                            if (cellIndex > currentColIndex && cellIndex <= currentColIndex + colspan) {
+                                foundOriginalCell = originalCell;
+                                break;
+                            }
+                            currentColIndex += colspan;
+                        }
+                        
+                        if (foundOriginalCell) {
+                            let isTh = foundOriginalCell.is("th");
+                            let isTd = foundOriginalCell.is("td");
+                            let colspan = parseInt(foundOriginalCell.attr("colspan") || 1);
+                            
+                            // Make <th> cells bold
+                            if (isTh) {
+                                cell.font = { bold: true, size: 12, color: { argb: "000000" } };
+                                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "F3F4F6"}};
+                            }
+                            
+                            // Apply header styling if this is a header row
+                            if (isHeader) {
+                                cell.font = { bold: true, size: 12, color: { argb: "FFFFFF" } };
+                                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "00cfe8" } };
+                                if (colspan === 1) {
+                                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                                }
+                            }
+                            
+                            // If no alignment was set, default to center
+                            if (!cell.alignment) {
+                                cell.alignment = { horizontal: "center", vertical: "middle" };
+                            }
+                            // Handle colspan alignment to the right
+                            if (colspan > 1 && isTd) {
+                                cell.style = {
+                                    alignment: { horizontal: "right", vertical: "middle" },
+                                    font: { bold: true, size: 12 },
+                                    fill: { type: "pattern", pattern: "solid", fgColor: { argb: "F9FAFB" }}
+                                };
+                            }
+                        } 
+                        else {
+                            // Default alignment if no original cell found
+                            cell.alignment = { horizontal: "center", vertical: "middle" };
+                        }
+                    });
+                    excelRowIndex++;
+                });
+
+                return excelRowIndex;
+            }
+
+            let lastRow = processTableRows($(table).find("tbody"), 5);
+            processTableRows($(table).find("tfoot"), lastRow, false, true); // Handle footer
+
+            mergeCells.forEach((cell) => {
+                worksheet.mergeCells(
+                    cell.start.row,
+                    cell.start.col,
+                    cell.end.row,
+                    cell.end.col
+                );
+            });
+
+            worksheet.eachRow((row) => {
+                const value = row.getCell(10).value;
+                var textColor = "";
+                if(parseInt(value) < 0){
+                    textColor = "ea5455";
+                }
+                else if(parseInt(value) >= 0 && parseInt(value) <= 30) {
+                    textColor = "ff9f43";
+                }
+                else if(parseInt(value) > 30) {
+                    textColor = "28c76f";
+                }
+                else{
+                    textColor = "000000";
+                }
+
+                row.eachCell((cell) => {
+                    cell.border = {
+                        top: { style: "thin" },
+                        left: { style: "thin" },
+                        bottom: { style: "thin" },
+                        right: { style: "thin" },
+                    };
+                    cell.font = {
+                        color: { argb: textColor },
+                    };
+                    //cell.alignment = { horizontal: "center", vertical: "middle" };
+                });
+            });
+
+            worksheet.columns.forEach((column, i) => {
+                column.width = maxColumnWidths[i + 1] || 5; // **Set a default min width of 10**
+            });
+
+            workbook.xlsx.writeBuffer().then((data) => {
+                var blob = new Blob([data], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                saveAs(blob,`${page_title}_of(${item_name}).xlsx`);
+            });
+        });
+
+        $(document).on('click', '#printBatchSerial', function() { 
+            try {
+                // Get filter values
+                var item_code = $("#batch_item_code").text().trim();
+                var item_name = $("#batch_item_name").text().trim();
+                var barcode = $("#batch_item_barcode").text().trim();
+                var category = $("#batch_item_category").text().trim();
+                var uom = $("#batch_item_uom").text().trim();
+                var station = $("#batch_station").text().trim();
+
+                var is_batch_req = $("#batch_is_batch_req").text().trim();
+                var is_serial_req = $("#batch_is_serial_req").text().trim();
+                var is_expiry_req = $("#batch_is_expiry_date_req").text().trim();
+                var page_title = "Batch, Serial & Expiry Report";
+
+                if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                    page_title = "Batch, Serial & Expiry Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                    page_title = "Batch & Serial Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "No"){
+                    page_title = "Batch Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                    page_title = "Batch & Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                    page_title = "Serial & Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                    page_title = "Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                    page_title = "Serial Report";
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                const company_name = $("#info_company_name").val();
+                doc.autoTable({
+                    startY: 2,
+                    theme: 'plain',
+                    showHead: 'firstPage',
+                    styles: { lineWidth: 0, fontSize: 12 },
+                    columnStyles: { 0: { cellWidth: 50 }, 1: { cellWidth: 50 }, 2: { cellWidth: 50 } },
+                    body: [
+                        [{ 
+                            content: company_name, 
+                            colSpan: 3, 
+                            styles: { halign: 'center', fontStyle: 'bold', fontSize: 20 } 
+                        }]
+                    ]
+                });
+
+                doc.autoTable({ 
+                    html: '#company_info_tbl',
+                    startY: doc.lastAutoTable.finalY + 0,      // Y position to start the table
+                    margin: { top: 1, left: 1, right: 1, bottom: 1 },
+                    styles: { fontSize: 8, cellPadding: 0.6, halign: 'left', valign: 'middle' },
+                    bodyStyles: { fillColor: [255, 255, 255] },
+                    columnStyles: { 
+                        0: { cellWidth: 13 }, 
+                        1: { cellWidth: 77,fontStyle: 'bold' }, 
+                        2: { cellWidth: 13 }, 
+                        3: { cellWidth: 77,fontStyle: 'bold' }, 
+                    }, // specific columns
+                    theme: 'plain',  // 'striped', 'grid', 'plain'
+                    showHead: 'firstPage', // 'never', 'firstPage', 'everyPage'
+                    tableWidth: 'auto',     // 'auto', 'wrap', numeric value
+                    pageBreak: 'auto',      // 'auto', 'avoid', 'always'
+                });
+
+                const companyTableEndY = doc.lastAutoTable.finalY + 1;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                doc.line(0, companyTableEndY, pageWidth , companyTableEndY);
+
+                const totalPagesExp = "{total_pages_count_string}";
+                
+                let bodyData = [];
+                let colspanMap = []; // Store colspan information with column positions
+                let cellStyles = []; // Store cell styling information
+
+                // Process body data and build colspan map and styles
+                $("#docBatchSerialInfoItem tbody tr").each(function (rowIndex) {
+                    let rowData = [];
+                    let rowColspanInfo = [];
+                    let rowCellStyles = [];
+                    let currentCol = 0;
+                    
+                    $(this).find("td, th").each(function () {
+                        let text = $(this).text().trim();
+                        let colspan = parseInt($(this).attr("colspan")) || 1;
+                        let isTh = $(this).is("th");
+                        
+                        rowData.push(text);
+                        
+                        // Store colspan information with actual column positions
+                        rowColspanInfo.push({
+                            startCol: currentCol,
+                            endCol: currentCol + colspan - 1,
+                            colspan: colspan,
+                            text: text,
+                            isTh: isTh
+                        });
+                        
+                        // Store styling information
+                        rowCellStyles.push({
+                            startCol: currentCol,
+                            endCol: currentCol + colspan - 1,
+                            colspan: colspan,
+                            isTh: isTh,
+                            text: text
+                        });
+                        
+                        // Add empty cells for colspan
+                        for (let i = 1; i < colspan; i++) {
+                            rowData.push("");
+                        }
+                        
+                        currentCol += colspan;
+                    });
+            
+                    if (rowData.length > 0) {
+                        bodyData.push(rowData);
+                        colspanMap.push(rowColspanInfo);
+                        cellStyles.push(rowCellStyles);
+                    }
+                });
+
+                // Check if there's actual data
+                if (bodyData.length === 0) {
+                    toastrMessage('error', "No data available for the selected criteria", "Error");
+                    return;
+                }
+
+                // Add title
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text(page_title, doc.internal.pageSize.width / 2, 35, { align: "center" });
+
+                // Add metadata in two columns
+                doc.setFontSize(8);
+                let yPosition = 40;
+
+                // Left column
+                if (item_code) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Item Code: ", 14, yPosition);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(item_code, 14 + doc.getTextWidth("Item Code: "), yPosition);
+                }
+                yPosition += 5;
+
+                doc.setFont("helvetica", "normal");
+                doc.text("Item Name: ", 14, yPosition);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${item_name}`, 14 + doc.getTextWidth("Item Name: "), yPosition);
+
+                // Right column
+                let rightX = doc.internal.pageSize.width - 70;
+                let rightY = 40;
+
+                if (barcode) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Barcode No.: ", rightX, rightY);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(barcode, rightX + doc.getTextWidth("Barcode No.: "), rightY);
+                    rightY += 5;
+                }
+
+                if (category) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Category: ", rightX, rightY);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(category, rightX + doc.getTextWidth("Category: "), rightY);
+                }
+
+                // Set yPosition for table after both columns
+                let finalYPosition = Math.max(yPosition, rightY) + 5;
+
+                // Generate table with colspan handling and styling
+                doc.autoTable({
+                    body: bodyData,
+                    theme: "grid",
+                    startY: yPosition + 2,
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 1.5,
+                        overflow: "linebreak",
+                        valign: "middle",
+                        halign: "center",
+                        lineWidth: 0.1,
+                        lineColor: [0, 0, 0], // Black border
+                        textColor: [0, 0, 0], // Black font
+                        fillColor: [255, 255, 255], // White background
+                    },
+                    margin: { top: 1, left: 1, right: 1, bottom: 8},
+                    didParseCell: function (data) {
+                        // Handle colspan and styling
+                        if (data.row.section === 'body' && cellStyles[data.row.index]) {
+                            const value = parseFloat(data.row.raw[9]);
+
+                            if(value < 0) {
+                                data.cell.styles.textColor = hexToRgbFn('#ea5455');
+                            }
+                            else if(value >= 0 && value <= 30) {
+                                data.cell.styles.textColor = hexToRgbFn('#ff9f43');
+                            }
+                            else if(value > 30) {
+                                data.cell.styles.textColor = hexToRgbFn('#28c76f');
+                            }
+
+                            for (let i = 0; i < cellStyles[data.row.index].length; i++) {
+                                let cellInfo = cellStyles[data.row.index][i];
+                                
+                                // Check if this column is the start of a merged cell
+                                if (data.column.index === cellInfo.startCol) {
+                                    // Apply colspan if greater than 1
+                                    if (cellInfo.colspan > 1) {
+                                        data.cell.colSpan = cellInfo.colspan;
+                                    }
+                                    
+                                    // Apply styling based on cell type
+                                    if (cellInfo.isTh) {
+                                        if(cellInfo.colspan > 1){
+                                            data.cell.styles.fontSize = 10;
+                                        }
+                                        else{
+                                            data.cell.styles.fontSize = 8;
+                                        }
+                                        data.cell.styles.fontStyle = 'bold';
+                                        data.cell.styles.halign = 'center';
+                                        data.cell.styles.fillColor = [243, 244, 246];
+                                    }
+                                    
+                                    // Right align for cells with colspan > 1
+                                    if (cellInfo.colspan > 1 && !cellInfo.isTh) {
+                                        data.cell.styles.fontSize = 9;
+                                        data.cell.styles.fontStyle = 'bold';
+                                        data.cell.styles.halign = 'right';
+                                        data.cell.styles.fillColor = [249, 250, 251];
+                                    }                                    
+                                    break;
+                                }
+                            }
+                        }
+                    },
+
+                    didDrawPage: function (data) {
+                        const pageCount = doc.internal.getNumberOfPages();
+                        const pageWidth = doc.internal.pageSize.getWidth();
+                        const pageHeight = doc.internal.pageSize.getHeight();
+
+                        doc.setFontSize(8);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(`Page ${data.pageNumber} of ${totalPagesExp}`, pageWidth + 25, pageHeight - 3, {
+                            align: "right"
+                        });
+
+                        doc.text(`Printed on: ${getDateTimeTZ('Africa/Addis_Ababa')}`, 5, pageHeight - 3);
+
+                        // Thin separator line (just above the bottom margin)
+                        doc.setDrawColor(0); // Black
+                        doc.setLineWidth(0.1); // Thin line
+                        doc.line(1, pageHeight - 7, pageWidth - 1, pageHeight - 7); // From (x1, y1) to (x2, y2)
+                    }
+                });
+
+                if (typeof doc.putTotalPages === 'function') {
+                    doc.putTotalPages(totalPagesExp);
+                }
+
+                if (typeof doc.putTotalPages === 'function') {
+                    doc.putTotalPages(totalPagesExp);
+                }
+
+                const blob = doc.output("blob");
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Open blank popup first
+                const printWindow = window.open('about:blank', '_blank', 'width=1400,height=800,top=100,left=100');
+
+                if (printWindow) {
+                    // Create iframe inside the blank popup
+                    printWindow.document.write(`<iframe style="width:100%;height:100%;" src="${blobUrl}"></iframe>`);
+                    printWindow.document.close();
+                    
+                    // Auto-print when iframe loads
+                    printWindow.onload = function() {
+                        setTimeout(function() {
+                            const iframe = printWindow.document.querySelector('iframe');
+                            if (iframe) {
+                                iframe.onload = function() {
+                                    setTimeout(function() {
+                                        iframe.contentWindow.print();
+                                    }, 500);
+                                };
+                            }
+                        }, 500);
+                    };
+                    
+                    // Clean up
+                    setTimeout(function() {
+                        URL.revokeObjectURL(blobUrl);
+                    }, 10000);
+                } else {
+                    toastrMessage('error', "Please allow popups!", "Error");
+                }
+                
+            } catch (error) {
+                console.error("PDF Generation Error:", error);
+                toastrMessage('error', "Error generating PDF: " + error.message, "Error");
+            }
+        });
+
+        $(document).on('click', '#exportPdfBatchSerial', function() { 
+            try {
+                // Get filter values
+                var item_code = $("#batch_item_code").text().trim();
+                var item_name = $("#batch_item_name").text().trim();
+                var barcode = $("#batch_item_barcode").text().trim();
+                var category = $("#batch_item_category").text().trim();
+                var uom = $("#batch_item_uom").text().trim();
+                var station = $("#batch_station").text().trim();
+
+                var is_batch_req = $("#batch_is_batch_req").text().trim();
+                var is_serial_req = $("#batch_is_serial_req").text().trim();
+                var is_expiry_req = $("#batch_is_expiry_date_req").text().trim();
+                var page_title = "Batch, Serial & Expiry Report";
+
+                if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                    page_title = "Batch, Serial & Expiry Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                    page_title = "Batch & Serial Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "No"){
+                    page_title = "Batch Report";
+                }
+                else if(is_batch_req == "Yes" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                    page_title = "Batch & Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "Yes"){
+                    page_title = "Serial & Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "No" && is_expiry_req == "Yes"){
+                    page_title = "Expiry Report";
+                }
+                else if(is_batch_req == "No" && is_serial_req == "Yes" && is_expiry_req == "No"){
+                    page_title = "Serial Report";
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                const company_name = $("#info_company_name").val();
+                doc.autoTable({
+                    startY: 2,
+                    theme: 'plain',
+                    showHead: 'firstPage',
+                    styles: { lineWidth: 0, fontSize: 12 },
+                    columnStyles: { 0: { cellWidth: 50 }, 1: { cellWidth: 50 }, 2: { cellWidth: 50 } },
+                    body: [
+                        [{ 
+                            content: company_name, 
+                            colSpan: 3, 
+                            styles: { halign: 'center', fontStyle: 'bold', fontSize: 20 } 
+                        }]
+                    ]
+                });
+
+                doc.autoTable({ 
+                    html: '#company_info_tbl',
+                    startY: doc.lastAutoTable.finalY + 0,      // Y position to start the table
+                    margin: { top: 1, left: 1, right: 1, bottom: 1 },
+                    styles: { fontSize: 8, cellPadding: 0.6, halign: 'left', valign: 'middle' },
+                    bodyStyles: { fillColor: [255, 255, 255] },
+                    columnStyles: { 
+                        0: { cellWidth: 13 }, 
+                        1: { cellWidth: 77,fontStyle: 'bold' }, 
+                        2: { cellWidth: 13 }, 
+                        3: { cellWidth: 77,fontStyle: 'bold' }, 
+                    }, // specific columns
+                    theme: 'plain',  // 'striped', 'grid', 'plain'
+                    showHead: 'firstPage', // 'never', 'firstPage', 'everyPage'
+                    tableWidth: 'auto',     // 'auto', 'wrap', numeric value
+                    pageBreak: 'auto',      // 'auto', 'avoid', 'always'
+                });
+
+                const companyTableEndY = doc.lastAutoTable.finalY + 1;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                doc.line(0, companyTableEndY, pageWidth , companyTableEndY);
+
+                const totalPagesExp = "{total_pages_count_string}";
+                
+                let bodyData = [];
+                let colspanMap = []; // Store colspan information with column positions
+                let cellStyles = []; // Store cell styling information
+
+                // Process body data and build colspan map and styles
+                $("#docBatchSerialInfoItem tbody tr").each(function (rowIndex) {
+                    let rowData = [];
+                    let rowColspanInfo = [];
+                    let rowCellStyles = [];
+                    let currentCol = 0;
+                    
+                    $(this).find("td, th").each(function () {
+                        let text = $(this).text().trim();
+                        let colspan = parseInt($(this).attr("colspan")) || 1;
+                        let isTh = $(this).is("th");
+                        
+                        rowData.push(text);
+                        
+                        // Store colspan information with actual column positions
+                        rowColspanInfo.push({
+                            startCol: currentCol,
+                            endCol: currentCol + colspan - 1,
+                            colspan: colspan,
+                            text: text,
+                            isTh: isTh
+                        });
+                        
+                        // Store styling information
+                        rowCellStyles.push({
+                            startCol: currentCol,
+                            endCol: currentCol + colspan - 1,
+                            colspan: colspan,
+                            isTh: isTh,
+                            text: text
+                        });
+                        
+                        // Add empty cells for colspan
+                        for (let i = 1; i < colspan; i++) {
+                            rowData.push("");
+                        }
+                        
+                        currentCol += colspan;
+                    });
+            
+                    if (rowData.length > 0) {
+                        bodyData.push(rowData);
+                        colspanMap.push(rowColspanInfo);
+                        cellStyles.push(rowCellStyles);
+                    }
+                });
+
+                // Check if there's actual data
+                if (bodyData.length === 0) {
+                    toastrMessage('error', "No data available for the selected criteria", "Error");
+                    return;
+                }
+
+                // Add title
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text(page_title, doc.internal.pageSize.width / 2, 35, { align: "center" });
+
+                // Add metadata in two columns
+                doc.setFontSize(8);
+                let yPosition = 40;
+
+                // Left column
+                if (item_code) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Item Code: ", 14, yPosition);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(item_code, 14 + doc.getTextWidth("Item Code: "), yPosition);
+                }
+                yPosition += 5;
+
+                doc.setFont("helvetica", "normal");
+                doc.text("Item Name: ", 14, yPosition);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${item_name}`, 14 + doc.getTextWidth("Item Name: "), yPosition);
+
+                // Right column
+                let rightX = doc.internal.pageSize.width - 70;
+                let rightY = 40;
+
+                if (barcode) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Barcode No.: ", rightX, rightY);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(barcode, rightX + doc.getTextWidth("Barcode No.: "), rightY);
+                    rightY += 5;
+                }
+
+                if (category) {
+                    doc.setFont("helvetica", "normal");
+                    doc.text("Category: ", rightX, rightY);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(category, rightX + doc.getTextWidth("Category: "), rightY);
+                }
+
+                // Set yPosition for table after both columns
+                let finalYPosition = Math.max(yPosition, rightY) + 5;
+
+                // Generate table with colspan handling and styling
+                doc.autoTable({
+                    body: bodyData,
+                    theme: "grid",
+                    startY: yPosition + 2,
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 1.5,
+                        overflow: "linebreak",
+                        valign: "middle",
+                        halign: "center",
+                        lineWidth: 0.1,
+                        lineColor: [0, 0, 0], // Black border
+                        textColor: [0, 0, 0], // Black font
+                        fillColor: [255, 255, 255], // White background
+                    },
+                    margin: { top: 1, left: 1, right: 1, bottom: 8},
+                    didParseCell: function (data) {
+                        // Handle colspan and styling
+                        if (data.row.section === 'body' && cellStyles[data.row.index]) {
+                            const value = parseFloat(data.row.raw[9]);
+
+                            if(value < 0) {
+                                data.cell.styles.textColor = hexToRgbFn('#ea5455');
+                            }
+                            else if(value >= 0 && value <= 30) {
+                                data.cell.styles.textColor = hexToRgbFn('#ff9f43');
+                            }
+                            else if(value > 30) {
+                                data.cell.styles.textColor = hexToRgbFn('#28c76f');
+                            }
+
+                            for (let i = 0; i < cellStyles[data.row.index].length; i++) {
+                                let cellInfo = cellStyles[data.row.index][i];
+                                
+                                // Check if this column is the start of a merged cell
+                                if (data.column.index === cellInfo.startCol) {
+                                    // Apply colspan if greater than 1
+                                    if (cellInfo.colspan > 1) {
+                                        data.cell.colSpan = cellInfo.colspan;
+                                    }
+                                    
+                                    // Apply styling based on cell type
+                                    if (cellInfo.isTh) {
+                                        if(cellInfo.colspan > 1){
+                                            data.cell.styles.fontSize = 10;
+                                        }
+                                        else{
+                                            data.cell.styles.fontSize = 8;
+                                        }
+                                        data.cell.styles.fontStyle = 'bold';
+                                        data.cell.styles.halign = 'center';
+                                        data.cell.styles.fillColor = [243, 244, 246];
+                                    }
+                                    
+                                    // Right align for cells with colspan > 1
+                                    if (cellInfo.colspan > 1 && !cellInfo.isTh) {
+                                        data.cell.styles.fontSize = 9;
+                                        data.cell.styles.fontStyle = 'bold';
+                                        data.cell.styles.halign = 'right';
+                                        data.cell.styles.fillColor = [249, 250, 251];
+                                    }                                    
+                                    break;
+                                }
+                            }
+                        }
+                    },
+
+                    didDrawPage: function (data) {
+                        const pageCount = doc.internal.getNumberOfPages();
+                        const pageWidth = doc.internal.pageSize.getWidth();
+                        const pageHeight = doc.internal.pageSize.getHeight();
+
+                        doc.setFontSize(8);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(`Page ${data.pageNumber} of ${totalPagesExp}`, pageWidth + 25, pageHeight - 3, {
+                            align: "right"
+                        });
+
+                        doc.text(`Exported on: ${getDateTimeTZ('Africa/Addis_Ababa')}`, 5, pageHeight - 3);
+
+                        // Thin separator line (just above the bottom margin)
+                        doc.setDrawColor(0); // Black
+                        doc.setLineWidth(0.1); // Thin line
+                        doc.line(1, pageHeight - 7, pageWidth - 1, pageHeight - 7); // From (x1, y1) to (x2, y2)
+                    }
+                });
+
+                if (typeof doc.putTotalPages === 'function') {
+                    doc.putTotalPages(totalPagesExp);
+                }
+
+                if (typeof doc.putTotalPages === 'function') {
+                    doc.putTotalPages(totalPagesExp);
+                }
+
+                // Save PDF
+                doc.save(`${page_title}_of(${item_name}).pdf`);
+                
+            } catch (error) {
+                console.error("PDF Generation Error:", error);
+                toastrMessage('error', "Error generating PDF: " + error.message, "Error");
+            }
+        });
+
+        function hexToRgbFn(hex) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return [r, g, b];
+        }
+        //-----------------End Print & Export-----------------
 
         function refreshtbl(){
             stockbaltable.ajax.reload(function() {
@@ -1602,11 +2566,9 @@
                 // Section is COLLAPSING: Show the data summary
                 const item_code = container.find('.itemcodeval').text().trim();
                 const item_name = container.find('.itemnameval').text().trim();
-                const station_name = container.find('.station_lbl').text().trim();
                 const summaryHtml = `
                     Item Code: <b>${item_code}</b>,
-                    Item Name: <b>${item_name}</b>
-                    Station: <b>${station_name}</b>`;
+                    Item Name: <b>${item_name}</b>`;
                 infoTarget.html(summaryHtml);
             }
         });
@@ -1619,6 +2581,26 @@
         function openissdoc(issid){
             var link = "/isstr/" + issid;
             window.open(link, 'Issue', 'width=1200,height=800,scrollbars=yes');
+        }
+
+        function getDateTimeTZ(timezone) {
+            const now = new Date();
+
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: timezone,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            }).formatToParts(now);
+
+            const map = {};
+            parts.forEach(p => map[p.type] = p.value);
+
+            return `${map.year}-${map.month}-${map.day} @ ${map.hour}:${map.minute}:${map.second} ${map.dayPeriod}`;
         }
     </script>   
 @endsection

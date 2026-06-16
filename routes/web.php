@@ -98,7 +98,14 @@ Route::get('proformainfolist/{id}','ProformaController@proformainfolist');
 
 //item route start
 Route::get('/items','ItemController@index');
-Route::delete('/itemdata','ItemController@showItemData');
+Route::get('/pricehangelog','ItemController@pricehangelog');
+Route::post('/getpricelog/{from}/{to}/{group}/{type}','ItemController@getpricelog');
+Route::post('batchupdate','ItemController@batchupdate');
+Route::post('getbatchitem','ItemController@getbatchitem');
+Route::post('getbatchitemlog','ItemController@getbatchitemlog');
+Route::delete('batchupdatepreview/{item}','ItemController@batchupdatepreview');
+//Route::delete('/itemdata','ItemController@showItemData');
+Route::delete('/itemdata/{type}', [ItemController::class, 'showItemData'])->name('itemdata');
 Route::post('/saveitems','ItemController@store');
 Route::get('/itemedit/{id}','ItemController@edit');
 Route::post('/itemUpdate','ItemController@updateItem');
@@ -113,7 +120,12 @@ Route::get('/printbar','ItemController@printbar');
 Route::post('/printbarcodes/{id}','ItemController@printbarcodes');
 Route::get('/printbar','ItemController@printbar');
 Route::get('/geteset','ItemController@geteset');
-
+Route::get('/getitemcodes','ItemController@getitemcodes');
+Route::get('/getoldsknumber/{sku}','ItemController@getoldsknumber');
+Route::post('dropzone/upload', 'ItemController@upload')->name('dropzone.upload');
+Route::get('dropzone/fetch/{id}', 'ItemController@fetch')->name('dropzone.fetch');
+Route::get('dropzone/delete', 'ItemController@destroy')->name('dropzone.delete');
+Route::get('checkitemimage/{id}','ItemController@fetch');
 
 //Customer Route Start
 Route::get('/customer','CustomerController@index');
