@@ -2193,12 +2193,12 @@
         }
 
         //Start page load
-        $(document).ready(function() {
+        $(document).ready(async function() {
             $('.main_datatable').hide();
-            countReceivingStatusFn(fyears,"pur");
-            countReceivingStatusFn(fyears,"prd");
-            getReceivingData(fyears);
-            getProductionData(fyears);
+            await countReceivingStatusFn(fyears,"pur");
+            await countReceivingStatusFn(fyears,"prd");
+            await getReceivingData(fyears);
+            await getProductionData(fyears);
         });
         //End page load
 
@@ -2846,7 +2846,6 @@
                 toastrMessage('error',"There is duplicate item found in the list","Error");
             }
             else{
-                var numofitems = $('#numberofItemsLbl').text();
                 var registerForm = $("#RegisterRec");
                 var formData = registerForm.serialize();
                 $.ajax({
@@ -2857,247 +2856,280 @@
                         if(parseInt(optype) == 1){
                             $('#savebutton').text('Saving...');
                             $('#savebutton').prop("disabled", true);
-                            progress_text = "Saving receiving";
+                            progress_text = "Saving receiving...";
                         }
                         else if(parseInt(optype) == 2){
                             $('#savebutton').text('Updating...');
                             $('#savebutton').prop("disabled", true);
-                            progress_text = "Updating receiving";
+                            progress_text = "Updating receiving...";
                         }
 
                         blockPage(cardSection,progress_text);
                     },
-                    complete: function () { 
+                    error: function () { 
                         unblockPage(cardSection);     
                     },
-                    success: function(data) {
-                        if (data.errors) {
-                            if (data.errors.SourceType) {
-                                $('#source_type-error').html(data.errors.SourceType[0]);
-                            }
-                            if (data.errors.ReferenceType) {
-                                $('#reference-type-error').html(data.errors.ReferenceType[0]);
-                            }
-                            if (data.errors.Reference) {
-                                var text = data.errors.Reference[0];
-                                text = text.replace("501", "PO");
-                                text = text.replace("502", "PI");
-                                $('#reference-doc-error').html(text);
-                            }
-                            if (data.errors.ProductType) {
-                                $('#product-type-error').html(data.errors.ProductType[0]);
-                            }
-                            if (data.errors.supplier) {
-                                $('#supplier-error').html(data.errors.supplier[0]);
-                            }
-                            if (data.errors.DocumentNumber) {
-                                $('#docnumber-error').html(data.errors.DocumentNumber[0]);
-                            }
-
-                            if (data.errors.VoucherStatus) {
-                                var text = data.errors.VoucherStatus[0];
-                                text = text.replace("voucher status", "receiving type");
-                                $('#voucherstatus-error').html(text);
-                            }
-
-                            if (data.errors.PaymentType) {
-                                var text = data.errors.PaymentType[0];
-                                text = text.replace("503", "Unorder");
-                                $('#paymentType-error').html(text);
-                            }
-                            if (data.errors.date) {
-                                var text = data.errors.date[0];
-                                text = text.replace("503", "Unorder");
-                                $('#date-error').html(text);
-                            }
-                            if (data.errors.voucherType) {
-                                var text = data.errors.voucherType[0];
-                                text = text.replace("1", "available");
-                                text = text.replace("voucher", "invoice");
-                                $('#voucherType-error').html(text);
-                            }
-                            if (data.errors.VoucherNumber) {
-                                var text = data.errors.VoucherNumber[0];
-                                text = text.replace("1", "available");
-                                $('#voucherNumber-error').html(text);
-                            }
-                            if (data.errors.InvoiceNumber) {
-                                $('#invoiceNumber-error').html(data.errors.InvoiceNumber[0]);
-                            }
-                            if (data.errors.MrcNumber) {
-                                $('#mrcNumber-error').html(data.errors.MrcNumber[0]);
-                            }
-                            if (data.errors.store) {
-                                var text = data.errors.store[0];
-                                text = text.replace("store", "station");
-                                $('#store-error').html(text);
-                            }
-                            if (data.errors.Purchaser) {
-                                var src_type = $('#source_type').html();
-                                var text = data.errors.Purchaser[0];
-                                text = text.replace("purchaser", "purchaser/ delivered by");
-                                $('#purchaser-error').html(text);
-                            }
-
-                            if (data.errors.ReceivedBy) {
-                                $('#receivedby-error').html(data.errors.ReceivedBy[0]);
-                            }
-                            if (data.errors.ReceivedDate) {
-                                $('#received-date-error').html(data.errors.ReceivedDate[0]);
-                            }
-
-                            if (data.errors.productionNumber) {
-                                $('#production-number-error').html(data.errors.productionNumber[0]);
-                            }
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',"Check your inputs","Error");
-                        } 
-                        else if (data.errorv2) {
-                            var error_html = '';
-                            var selecteditemsvar = '';
-                            var reference_type =  $('#ReferenceType').val();
-                            var isChecked = $('#VisibleCost').is(':checked');
-                            $('#dynamicTable > tbody > tr').each(function (index) {
-                                let k = $(this).find('.vals').val();
-                                var itmid = ($(`#itemNameSl${k}`)).val();
-                                var insqnt = ($(`#insertedqty${k}`)).val();
-                                if(($(`#quantity${k}`).val())!=undefined){
-                                    var qnt = $(`#quantity${k}`).val();
-                                    if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
-                                        $(`#quantity${k}`).css("background", errorcolor);
-                                    }
-                                }
-                                if(($(`#unitcost${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
-                                    var unitc = $(`#unitcost${k}`).val();
-                                    if(isNaN(parseFloat(unitc)) || parseFloat(unitc) == 0){
-                                        $(`#unitcost${k}`).css("background", errorcolor);
-                                    }
-                                }
-                                if(($(`#beforetax${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
-                                    var beforetx = $(`#beforetax${k}`).val();
-                                    if(isNaN(parseFloat(beforetx)) || parseFloat(beforetx) == 0){
-                                        $(`#beforetax${k}`).css("background", errorcolor);
-                                    }
-                                }
-                                if(($(`#taxamounts${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
-                                    var totaltax = $(`#taxamounts${k}`).val();
-                                    if(isNaN(parseFloat(totaltax)) || parseFloat(totaltax) == 0){
-                                        $(`#taxamounts${k}`).css("background", errorcolor);
-                                    }
-                                }
-                                if(($(`#total${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
-                                    var gtotal=$(`#total${k}`).val();
-                                    if(isNaN(parseFloat(gtotal)) || parseFloat(gtotal) == 0){
-                                        $(`#total${k}`).css("background", errorcolor);
-                                    }
-                                }
-                                if(isNaN(parseFloat(itmid)) || parseFloat(itmid) == 0){
-                                    $(`#select2-itemNameSl${k}-container`).parent().css('background-color',errorcolor);
-                                }
-                                if(($(`#insertedqty${k}`).val())!=undefined && ($(`#quantity${k}`).val())!=undefined){
-                                    var insertedquantitys = $(`#insertedqty${k}`).val();
-                                    var actualquantity = $(`#quantity${k}`).val()||0;
-                                    if((parseFloat(insertedquantitys) != parseFloat(actualquantity)) && parseFloat(actualquantity) != 0){
-                                        $(`#itemNameSl${k} :selected`).each(function() {
-                                            selecteditemsvar += `${this.text} </br>`;
-                                        });
-                                        error_html = ` and insert serial number or expire date for</br>${selecteditemsvar}`;
-                                    } 
-                                }
-                            });
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',`Please insert valid data on highlighted fields!</br>${error_html}`,"Error");
-                        } 
-                        else if (data.dberrors) {
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',"Please contact administrator","Error");
-                        }
-                        else if(data.emptyerror){
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',"Please add atleast one item","Error");
-                        } 
-                        else if(data.empty_table){
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',"You should add atleast one item","Error");
-                        }
-                        else if (data.balance_error) {
-                            var item_list = "";
-                            $.each(data.items, function(index, value) {
-                                item_list += `<b>${++index},</b> ${value.name}</br>`;
-                            });
-                            if(parseInt(optype) == 1){
-                                $('#savebutton').text('Save');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            else if(parseInt(optype) == 2){
-                                $('#savebutton').text('Update');
-                                $('#savebutton').prop("disabled", false);
-                            }
-                            toastrMessage('error',`These items cannot be updated, the requested change is not supported by the available quantity and would result negative balance.</br>-------------------</br>${item_list}`,"Error");
-                        } 
-                        else if (data.success) {
-                            toastrMessage('success',"Successful","Success");
-                            $(".receiving-tab-view").removeClass("active");
-                            var source_type = $('input[name="SourceType"]:checked').val();
-                            source_type == "Production" ? $(".prd-view").addClass("active") : $(".pur-view").addClass("active");
-                            countReceivingStatusFn(data.fiscalyr,"pur");
-                            countReceivingStatusFn(data.fiscalyr,"prd");
-
-                            var oTable = $('#laravel-datatable-crud').dataTable();
-                            oTable.fnDraw(false);
-
-                            var pTable = $('#laravel-datatable-crud-prd').dataTable();
-                            pTable.fnDraw(false);
-                            if(parseFloat(optype) == 2){
-                                createReceivingInfoFn(data.receivingId,vType);
-                            }
-                            $("#inlineForm").modal('hide');
-                            var isChecked = $('#printGRVCBX').is(':checked');
-                            if (isChecked == true) {
-                                var link = source_type == "Purchase" ? "/grv/" + data.receivingId : "/grv_prd/" + data.receivingId;
-                                window.open(link, 'GRV', 'width=1200,height=800,scrollbars=yes');
-                            }
-                        }
+                    success:async function(data) {
+                        await saveReceivingFn(data);
                     },
                 });
             }
         });
         //End save receiving
+
+        function saveReceivingFn(data){
+            var numofitems = $('#numberofItemsLbl').text();
+            var optype = $("#operationtypes").val();
+            var vType = $("#VoucherStatus").val() == 1 && $("#source_type").val() == "Purchase" ? 1 : 2;
+            var source_type = $("#source_type").val();
+            var voucher_st = $("#VoucherStatus").val();
+            if (data.errors) {
+                if (data.errors.SourceType) {
+                    $('#source_type-error').html(data.errors.SourceType[0]);
+                }
+                if (data.errors.ReferenceType) {
+                    $('#reference-type-error').html(data.errors.ReferenceType[0]);
+                }
+                if (data.errors.Reference) {
+                    var text = data.errors.Reference[0];
+                    text = text.replace("501", "PO");
+                    text = text.replace("502", "PI");
+                    $('#reference-doc-error').html(text);
+                }
+                if (data.errors.ProductType) {
+                    $('#product-type-error').html(data.errors.ProductType[0]);
+                }
+                if (data.errors.supplier) {
+                    $('#supplier-error').html(data.errors.supplier[0]);
+                }
+                if (data.errors.DocumentNumber) {
+                    $('#docnumber-error').html(data.errors.DocumentNumber[0]);
+                }
+
+                if (data.errors.VoucherStatus) {
+                    var text = data.errors.VoucherStatus[0];
+                    text = text.replace("voucher status", "receiving type");
+                    $('#voucherstatus-error').html(text);
+                }
+
+                if (data.errors.PaymentType) {
+                    var text = data.errors.PaymentType[0];
+                    text = text.replace("503", "Unorder");
+                    $('#paymentType-error').html(text);
+                }
+                if (data.errors.date) {
+                    var text = data.errors.date[0];
+                    text = text.replace("503", "Unorder");
+                    $('#date-error').html(text);
+                }
+                if (data.errors.voucherType) {
+                    var text = data.errors.voucherType[0];
+                    text = text.replace("1", "available");
+                    text = text.replace("voucher", "invoice");
+                    $('#voucherType-error').html(text);
+                }
+                if (data.errors.VoucherNumber) {
+                    var text = data.errors.VoucherNumber[0];
+                    text = text.replace("1", "available");
+                    $('#voucherNumber-error').html(text);
+                }
+                if (data.errors.InvoiceNumber) {
+                    $('#invoiceNumber-error').html(data.errors.InvoiceNumber[0]);
+                }
+                if (data.errors.MrcNumber) {
+                    $('#mrcNumber-error').html(data.errors.MrcNumber[0]);
+                }
+                if (data.errors.store) {
+                    var text = data.errors.store[0];
+                    text = text.replace("store", "station");
+                    $('#store-error').html(text);
+                }
+                if (data.errors.Purchaser) {
+                    var src_type = $('#source_type').html();
+                    var text = data.errors.Purchaser[0];
+                    text = text.replace("purchaser", "purchaser/ delivered by");
+                    $('#purchaser-error').html(text);
+                }
+
+                if (data.errors.ReceivedBy) {
+                    $('#receivedby-error').html(data.errors.ReceivedBy[0]);
+                }
+                if (data.errors.ReceivedDate) {
+                    $('#received-date-error').html(data.errors.ReceivedDate[0]);
+                }
+
+                if (data.errors.productionNumber) {
+                    $('#production-number-error').html(data.errors.productionNumber[0]);
+                }
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"Check your inputs","Error");
+                unblockPage(cardSection);
+            } 
+            else if (data.errorv2) {
+                var error_html = '';
+                var selecteditemsvar = '';
+                var reference_type =  $('#ReferenceType').val();
+                var isChecked = $('#VisibleCost').is(':checked');
+                $('#dynamicTable > tbody > tr').each(function (index) {
+                    let k = $(this).find('.vals').val();
+                    var itmid = ($(`#itemNameSl${k}`)).val();
+                    var insqnt = ($(`#insertedqty${k}`)).val();
+                    if(($(`#quantity${k}`).val())!=undefined){
+                        var qnt = $(`#quantity${k}`).val();
+                        if(isNaN(parseFloat(qnt)) || parseFloat(qnt) == 0){
+                            $(`#quantity${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#unitcost${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
+                        var unitc = $(`#unitcost${k}`).val();
+                        if(isNaN(parseFloat(unitc)) || parseFloat(unitc) == 0){
+                            $(`#unitcost${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#beforetax${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
+                        var beforetx = $(`#beforetax${k}`).val();
+                        if(isNaN(parseFloat(beforetx)) || parseFloat(beforetx) == 0){
+                            $(`#beforetax${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#taxamounts${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
+                        var totaltax = $(`#taxamounts${k}`).val();
+                        if(isNaN(parseFloat(totaltax)) || parseFloat(totaltax) == 0){
+                            $(`#taxamounts${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(($(`#total${k}`).val()) != undefined && (reference_type == 503 || isChecked)){
+                        var gtotal=$(`#total${k}`).val();
+                        if(isNaN(parseFloat(gtotal)) || parseFloat(gtotal) == 0){
+                            $(`#total${k}`).css("background", errorcolor);
+                        }
+                    }
+                    if(isNaN(parseFloat(itmid)) || parseFloat(itmid) == 0){
+                        $(`#select2-itemNameSl${k}-container`).parent().css('background-color',errorcolor);
+                    }
+                    if(($(`#insertedqty${k}`).val())!=undefined && ($(`#quantity${k}`).val())!=undefined){
+                        var insertedquantitys = $(`#insertedqty${k}`).val();
+                        var actualquantity = $(`#quantity${k}`).val()||0;
+                        if((parseFloat(insertedquantitys) != parseFloat(actualquantity)) && parseFloat(actualquantity) != 0){
+                            $(`#itemNameSl${k} :selected`).each(function() {
+                                selecteditemsvar += `${this.text} </br>`;
+                            });
+                            error_html = ` and insert serial number or expire date for</br>${selecteditemsvar}`;
+                        } 
+                    }
+                });
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`Please insert valid data on highlighted fields!</br>${error_html}`,"Error");
+                unblockPage(cardSection);
+            } 
+            else if (data.dberrors) {
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
+            }
+            else if(data.emptyerror){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"Please add atleast one item","Error");
+                unblockPage(cardSection);
+            } 
+            else if(data.empty_table){
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"You should add atleast one item","Error");
+                unblockPage(cardSection);
+            }
+            else if (data.balance_error) {
+                var item_list = "";
+                $.each(data.items, function(index, value) {
+                    item_list += `<b>${++index},</b> ${value.name}</br>`;
+                });
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',`These items cannot be updated, the requested change is not supported by the available quantity and would result negative balance.</br>-------------------</br>${item_list}`,"Error");
+                unblockPage(cardSection);
+            } 
+            else if (data.success) {
+                toastrMessage('success',"Successful","Success");    
+                countReceivingStatusFn(data.fiscalyr,"pur");
+                countReceivingStatusFn(data.fiscalyr,"prd");
+
+                if(parseInt(optype) == 1){
+                    refreshDTUpdateFn();
+                }
+                else if(parseFloat(optype) == 2){
+                    createReceivingInfoFn(data.receivingId,vType);
+                    refreshMainDatatbleFn();
+                    $('#printGRVCBX').prop('checked', false);
+                }
+                $(".receiving-tab-view").removeClass("active");
+                var source_type = $('input[name="SourceType"]:checked').val();
+                source_type == "Production" ? $(".prd-view").addClass("active") : $(".pur-view").addClass("active");
+                $("#inlineForm").modal('hide');
+                var isChecked = $('#printGRVCBX').is(':checked');
+                if(isChecked) {
+                    var link = source_type == "Purchase" ? "/grv/" + data.receivingId : "/grv_prd/" + data.receivingId;
+                    window.open(link, 'GRV', 'width=1200,height=800,scrollbars=yes');
+                }
+            }
+        }
+
+        function refreshDTUpdateFn(){
+            table.ajax.reload(function() {
+                unblockPage(cardSection);
+            }, false); 
+
+            prd_table.ajax.reload(function() {
+                //unblockPage(cardSection);
+            }, false); 
+        }
+
+        function refreshMainDatatbleFn(){
+            var oTable = $('#laravel-datatable-crud').dataTable(); 
+            oTable.fnDraw(false);
+
+            var pTable = $('#laravel-datatable-crud-prd').dataTable();
+            pTable.fnDraw(false);
+        }
 
         //Start get hold number value
         $('#addrecbutton').click(function(){ 

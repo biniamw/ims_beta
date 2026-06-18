@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ImportDataController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\RegionController;
@@ -1561,6 +1562,7 @@ Route::post('/importdata','ImportDataController@import');
 //----------Start Booking------------------
 Route::get('/booking','BookingController@index');
 //----------End Booking--------------------
+
 /** BEGIN: region controller route */
 Route::get('/region', [RegionController::class, 'index'])->name('region.index');
 Route::delete('/get-region', [RegionController::class, 'getregions'])->name('get.regions');
@@ -1609,6 +1611,7 @@ Route::post('deleteWoreda','WoredaController@deleteWoreda');
     Route::get('undoprpermit/{checkid}','PurchaseRequestController@undoprpermit');
     Route::get('/prattachemnt/{id}','PurchaseRequestController@prattachemnt');
 //end of pr route
+
 // start of rfq route
     Route::get('rfq','RfqController@index');
     Route::get('rfqslist/{fyear}','RfqController@rfqslist');

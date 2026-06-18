@@ -1913,6 +1913,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+    <script type="application/javascript" src="https://unpkg.com/js-image-zoom@0.7.0/js-image-zoom.js"></script>
 
     <script type="text/javascript">
         $(function () {

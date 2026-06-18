@@ -246,6 +246,7 @@
             </div>
         </section>
     </div>
+
     <div class="modal fade text-left" id="batchupdateformodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -362,9 +363,10 @@
             </div>
         </div>
     </div>
+
     {{-- //  item register modal-body --}}
-    <div class="modal fade show" id="addItemForm" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" style="display: none;" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal fade text-left fit-content" id="addItemForm" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" style="display: none;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalScrollableTitle">Register Item</h5>
@@ -372,11 +374,68 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="RegisterItem" enctype="multipart/form-data" class="mt-2">
+                <form id="RegisterItem" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="modal-body">
-                        <!-- Input Mask start -->
+                        <div class="row mb-1">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <ul class="nav nav-tabs one-note" role="tablist">
+                                    <li class="nav-item genformnavcon">
+                                        <a class="nav-link genformnav disabled one-tab-prop" id="General-tab" data-toggle="tab" href="#generalinformationview" aria-controls="generalinformationview" role="tab" aria-selected="false" title="General"><i class="fas fa-database"></i><span class="tab-text">General</span></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content genformtabcon general-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
+                                    <div class="tab-pane active" id="generalinformationview" aria-labelledby="generalinformationview" role="tabpanel">
+                                        General
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <ul class="nav nav-tabs nav-fill" role="tablist">
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link active item-tabs tab-title active-tab-title" id="item-basic-tab" data-toggle="tab" href="#item-basic-view" aria-controls="item-basic-tab" role="tab" aria-selected="true" title="Basic"><i class="fas fa-bars"></i><span class="tab-text">Basic</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-tabs tab-title" id="item-inventory-tab" data-toggle="tab" href="#item-inventory-view" aria-controls="item-inventory-tab" role="tab" aria-selected="true" title="Inventory"><i class="fas fa-boxes"></i><span class="tab-text">Inventory</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-tabs tab-title" id="item-purchase-tab" data-toggle="tab" href="#item-purchase-view" aria-controls="item-purchase-tab" role="tab" aria-selected="true" title="Purchase"><i class="fas fa-cart-plus"></i><span class="tab-text">Purchase</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-tabs tab-title" id="item-sales-tab" data-toggle="tab" href="#item-sales-view" aria-controls="item-sales-tab" role="tab" aria-selected="true" title="Sales"><i class="fas fa-cash-register"></i><span class="tab-text">Sales</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-tabs tab-title" id="item-others-tab" data-toggle="tab" href="#item-others-view" aria-controls="item-others-tab" role="tab" aria-selected="true" title="Others"><i class="fas fa-circle-check"></i><span class="tab-text">Others</span></a>                                
+                                    </li>
+                                </ul>
+                                <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
+                                    <div class="tab-pane item-views active tab-view active-tab-view" id="item-basic-view" aria-labelledby="item-basic-view" role="tabpanel">
+                                        Basic
+                                    </div>
+                                    <div class="tab-pane item-views tab-view" id="item-inventory-view" aria-labelledby="item-inventory-view" role="tabpanel">
+                                        Inventory
+                                    </div>
+                                    <div class="tab-pane item-views tab-view" id="item-purchase-view" aria-labelledby="item-purchase-view" role="tabpanel">
+                                        Purchase
+                                    </div>
+                                    <div class="tab-pane item-views tab-view" id="item-sales-view" aria-labelledby="item-sales-view" role="tabpanel">
+                                        Sales
+                                    </div>
+                                    <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
+                                        Others
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
                         <section id="section-block">
                             <div class="row">
                                 <div class="col-md-9" id="itemsdiv">
@@ -768,20 +827,15 @@
                         <input type="hidden" placeholder="" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
                         <input type="hidden" placeholder="" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
                         <input type="hidden" placeholder="" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
+                        <button type="button" id="savebutton" class="btn btn-info waves-effect waves-float waves-light">Save</button>
+                        <button id="closebuttonitem" type="button" class="btn btn-danger" onclick="closeModalWithClearValidation()" data-dismiss="modal">Close</button>
                     </div>
                 </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="savebutton" class="btn btn-info waves-effect waves-float waves-light">
-                            <span id="saveloadid"></span>
-                            <span id="savesaveid">Save</span>
-                        </button>
-                        <button id="closebutton1" type="button" class="btn btn-danger" onclick="closeModalWithClearValidation()" data-dismiss="modal">Close</button>
-                </div>
             </div>
         </div>
     </div>
     {{-- end of item Register --}}
+
     <div class="modal fade" id="docInfoModal" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" data-backdrop="static" style="display: none;">
     <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">

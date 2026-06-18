@@ -488,9 +488,7 @@
         </form>
     </div>
     <!--End batch serial modal -->
-@endsection
 
-@section('scripts')
     <script  type="text/javascript">
         var stockbaltable = '';
         var gblIndex = -1;
