@@ -85,7 +85,6 @@ class RoleController extends Controller
         $directstockbalance = Permission::where('Page','direct-stock-balance')->get();
         $deliveryorderpermission = Permission::where('Page','Delivery-Order')->get();
 
-
         if($request->ajax()) {
             return view('account.role',compact('categorypermission','uompermission','itempermission','customerpermission','storerpermission','brandpermission',
                 'salespermission','recievingpermission','requisitiongpermission','storetransferpermission','approvalpermission',

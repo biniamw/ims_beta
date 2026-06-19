@@ -386,7 +386,114 @@
                                 </ul>
                                 <div class="tab-content genformtabcon general-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
                                     <div class="tab-pane active" id="generalinformationview" aria-labelledby="generalinformationview" role="tabpanel">
-                                        General
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-0 mb-1 pt-1">
+                                                <div class="demo-inline-spacing pl-1">
+                                                    <div class="custom-control custom-radio mt-0">
+                                                        <input type="radio" id="product_class1" name="product_class" class="custom-control-input" value="Goods"/>
+                                                        <label class="custom-control-label form_lbl" for="product_class1">Goods</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio mt-0">
+                                                        <input type="radio" id="product_class2" name="product_class" class="custom-control-input" value="Commodity"/>
+                                                        <label class="custom-control-label form_lbl" for="product_class2">Commodity</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio mt-0">
+                                                        <input type="radio" id="product_class3" name="product_class" class="custom-control-input" value="Service"/>
+                                                        <label class="custom-control-label form_lbl" for="product_class3">Service</label>
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger">
+                                                    <strong id="product_class_error" class="errordatalabel"></strong>
+                                                </span>
+                                            </div>  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xl-8 col-lg-8 col-md-9 col-sm-9 col-12">
+                                                <div class="row pl-1">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <label class="form_lbl">Product Code<b style="color: red; font-size:16px;">*</b></label>
+                                                        <input type="text" name="code" id="code" placeholder="Enter product code here" class="form-control mainforminp" onkeyup="removeCodeValidation()"/>
+                                                        <span class="text-danger">
+                                                            <strong id="code-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <label class="form_lbl">Product Name<b style="color: red; font-size:16px;">*</b></label>
+                                                        <input type="text" name="name" id="name" placeholder="Enter product name here" class="form-control mainforminp" onkeyup="removeNameValidation()"/>
+                                                        <span class="text-danger">
+                                                            <strong id="name-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="skuNumberDiv">
+                                                        <label class="form_lbl">Barcode No.</label>
+                                                        <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or generate here" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
+                                                        <span class="text-danger">
+                                                            <strong id="skuNumber-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="uomDiv">
+                                                        <label class="form_lbl" title="Unit of Measurement">UOM<b style="color: red; font-size:16px;">*</b></label>
+                                                        <select class="select2 form-control" name="Uom" id="Uom" onchange="uomValidation()">
+                                                            @foreach ($uom as $um)
+                                                                <option value="{{ $um->id }}">{{ $um->Name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <span class="text-danger">
+                                                            <strong id="uom-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="categoryDiv">
+                                                        <label class="form_lbl">Category<b style="color: red; font-size:16px;">*</b></label>
+                                                        <select class="select2 form-control" name="Category" id="Category" onchange="categoryValidation()">
+                                                            @foreach ($category as $cat)
+                                                                <option value="{{ $cat->id }}">{{ $cat->Name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <span class="text-danger">
+                                                            <strong id="category-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="taxtypeDiv">
+                                                        <label class="form_lbl">Tax Type<b style="color: red; font-size:16px;">*</b></label>
+                                                        <select class="select2 form-control" name="TaxType" id="TaxType" onchange="taxTypeValidation()">
+                                                            @foreach ($taxtypes as $tx)
+                                                                <option value="{{ $tx->Value }}">{{ $tx->Name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <span class="text-danger">
+                                                            <strong id="taxType-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <label class="form_lbl">Description</label>
+                                                        <textarea type="text" name="description" id="description" placeholder="Enter description here" class="form-control" rows="1"></textarea>
+                                                        <span class="text-danger">
+                                                            <strong id="description-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="statusDiv">
+                                                        <label class="form_lbl">Status<b style="color: red; font-size:16px;">*</b></label>
+                                                        <select class="select2 form-control" name="status" id="status" onchange="removeStatusValidation()"></select>
+                                                        <span class="text-danger">
+                                                            <strong id="activeStatus-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-12 mb-1 pr-1">
+                                                <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
+                                                <div class="row">
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -421,7 +528,23 @@
                                         Purchase
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-sales-view" aria-labelledby="item-sales-view" role="tabpanel">
-                                        Sales
+                                        <div class="row">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Selling Price (Before Tax)<b style="color: red; font-size:16px;">*</b></label>
+                                                <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter selling price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                <span class="text-danger">
+                                                    <strong id="selling_price_bt_error" class="errordatalabel general_error"></strong>
+                                                </span>
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Selling Price (After Tax)<b style="color: red; font-size:16px;">*</b></label>
+                                                <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter selling price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                <span class="text-danger">
+                                                    <strong id="selling_price_at_error" class="errordatalabel general_error"></strong>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
                                         Others
@@ -476,57 +599,11 @@
                                                 <strong id="group-error"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="codeDiv">
-                                            <label strong style="font-size: 14px;">Code</label><label style="color: red; font-size:16px;">*</label><button type="button" class="btn btn-flat-success btn-sm" id="newcodegenerate" onclick="generatecode()">Get new code</button>
-                                            <div id="codeblock">
-                                                <input type="text" placeholder="Code" class="form-control" name="code" id="code" onkeyup="removeCodeValidation()" ondblclick="codeActive()" onkeypress="return ValidateCode(event);" />
-                                            </div>
-                                                <span class="text-danger">
-                                                    <strong id="code-error"></strong>
-                                                </span>
-                                        </div>
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2" id="nameDiv">
-                                            <label strong style="font-size: 14px;">Name</label><label style="color: red; font-size:16px;">*</label>
-                                            <div id="nameblock" ondblclick="openHeader();">
-                                                <input type="text" placeholder="Enter item name" class="form-control" name="name" id="name" onkeypress="removeNameValidation()" autofocus />
-                                            </div>
-                                                <span class="text-danger">
-                                                    <strong id="name-error"></strong>
-                                                </span>
-                                        </div>
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="uomDiv">
-                                            <label strong style="font-size: 14px;">UOM</label><label style="color: red; font-size:16px;">*</label>
-                                            <div>
-                                                <div id="uomblock">
-                                                    <select class="select2 form-control" data-placeholder="Select uom" name="Uom" id="Uom" onchange="uomValidation()">
-                                                        <option value="" disabled selected></option>
-                                                        @foreach ($uom as $um)
-                                                            <option value="{{ $um->id }}">{{ $um->Name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <span class="text-danger">
-                                                <strong id="uom-error"></strong>
-                                            </span>
-                                        </div>
-                                        <div class="col-xl-3 col-md-6 col-sm-12 mb-2" id="categoryDiv">
-                                            <label strong style="font-size: 14px;">Category</label><label style="color: red; font-size:16px;">*</label>
-                                            <div>
-                                                <div id="categoryblock">
-                                                    <select class="select2 form-control" data-placeholder="Select category" name="Category" id="Category" onchange="categoryValidation()">
-                                                        <option value="" disabled selected></option>
-                                                        @foreach ($category as $cat)
-                                                            <option value="{{ $cat->id }}">{{ $cat->Name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                
-                                            </div>
-                                            <span class="text-danger">
-                                                <strong id="category-error"></strong>
-                                            </span>
-                                        </div>
+                                        
+                                    
+
+                                        
+
                                         <div class="col-xl-2 col-md-6 col-sm-12 mb-2 costdiv" style="display: none;">
                                             <label strong style="font-size: 14px;text-align:center;" id="mincostlabel">Min Cost</label>
                                             <div class="input-group">
@@ -660,19 +737,7 @@
                                                     <strong id="lowStock-error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="taxtypeDiv">
-                                                <label strong style="font-size: 14px;">Tax Type</label>
-                                                <div>
-                                                    <select class="select2 form-control" name="TaxType" id="TaxType" onchange="taxTypeValidation()">
-                                                        @foreach ($taxtypes as $tx)
-                                                            <option value="{{ $tx->Value }}">{{ $tx->Name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <span class="text-danger">
-                                                    <strong id="taxType-error"></strong>
-                                                </span>
-                                            </div>
+                                            
                                         <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="serialNumDiv">
                                             <label strong style="font-size: 14px;"> Serial Number</label>
                                             <div class="input-group input-group-merge">
@@ -724,24 +789,11 @@
                                             </span>
                                         </div>
                                         
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="statusDiv">
-                                            <label strong style="font-size: 14px;">Status</label>
-                                            <select class="select2 form-control" name="status" id="status"  onchange="removeStatusValidation()">
-                                            </select>
-                                            <span class="text-danger">
-                                                <strong id="activeStatus-error"></strong>
-                                            </span>
-                                        </div>  
+                                        
                                         @php
                                             $sk = $setings->prefix . $setings->skunumber;
                                         @endphp
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2" id="descriptionDiv">
-                                            <label strong style="font-size: 14px;"> Description </label>
-                                            <textarea type="text" placeholder="Write Description here..." class="form-control" rows="3" name="description" id="description"> </textarea>
-                                            <span class="text-danger">
-                                                <strong id="description-error"></strong>
-                                            </span>
-                                        </div>
+                                       
                                     </div> <!-- end row-->
                                 </div>
                                 <div class="col-md-3"  id="purchasediv">
@@ -778,23 +830,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12 col-lg-12" id="skuNumberDiv">
-                                                <label strong style="font-size: 14px;">Barcode(SKU#)<button type="button" class="btn btn-flat-success btn-sm" id="readBtn" onclick="ReadBarcode()">R</button>
-                                                <button type="button" class="btn btn-flat-success btn-sm" id="generateBtn" onclick="GenerateBarcode()">G</button>
-                                                <button type="button" class="btn btn-flat-danger btn-sm" id="closeGenBtn" onclick="closeBarcode()">C</button></label>
-                                                <input type="hidden" class="form-control" name="skupdate" id="skupdate" value="" />
-                                                <input type="hidden" class="form-control" name="skuNumberupdate" id="skuNumberupdate"/>
-                                                <input type="hidden" class="form-control" name="skuNumberupdatehidden" id="skuNumberupdatehidden"/>
-                                                <input type="text" placeholder="SKU Number" class="form-control" name="skuNumber" id="skuNumber" onkeyup="removeSknumbervalidation()" />
-                                                <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
-                                                <input type="hidden" class="form-control" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
-                                                <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
-                                                <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
-                                                <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
-                                                <span class="text-danger">
-                                                    <strong id="skuNumber-error"></strong>
-                                                </span>
-                                            </div>
+                                            
                                             <div class="col-md-12 col-lg-12">
                                                 <div id="barcodeDiv">
                                                     <div style="" class="text-center">
@@ -822,11 +858,17 @@
                         </section>
                     </div>
                     <div class="modal-footer">
+                        <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
+                        <input type="hidden" class="form-control" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
+                        <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
+                        <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
+                        <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
+
                         <input type="hidden" placeholder="max cost" class="form-control" name="maxcosti" id="maxcosti" />
-                        <input type="hidden" placeholder="" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
-                        <input type="hidden" placeholder="" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
-                        <input type="hidden" placeholder="" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
-                        <input type="hidden" placeholder="" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
+                        <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
+                        <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
+                        <input type="hidden" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
+                        <input type="hidden" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
                         <button type="button" id="savebutton" class="btn btn-info waves-effect waves-float waves-light">Save</button>
                         <button id="closebuttonitem" type="button" class="btn btn-danger" onclick="closeModalWithClearValidation()" data-dismiss="modal">Close</button>
                     </div>
@@ -1034,9 +1076,9 @@
             <div class="col-xl-12 col-lg-12">
                     <div class="row">
                             <div class="col-xl-10 col-lg-12">
-                                <input type="hidden" placeholder="" class="form-control" name="itemtype" id="itemtype" readonly="true">
-                                <input type="hidden" placeholder="" class="form-control" name="wholesalemax" id="wholesalemax" readonly="true">
-                                <input type="hidden" placeholder="" class="form-control" name="pendingdata" id="pendingdata" readonly="true">
+                                <input type="hidden" class="form-control" name="itemtype" id="itemtype" readonly="true">
+                                <input type="hidden" class="form-control" name="wholesalemax" id="wholesalemax" readonly="true">
+                                <input type="hidden" class="form-control" name="pendingdata" id="pendingdata" readonly="true">
                                 <button type="button" id="itemeditbutton" class="btn btn-outline-dark"><i class="fa-sharp fa-solid fa-pen"></i>Edit</button>
                                 @can("Item-Delete")
                                 <button type="button" id="itemdeletebutton" class="btn btn-outline-danger"><i class="fa-solid fa-trash-xmark"></i>Delete</button>
@@ -3752,6 +3794,12 @@
         function taxTypeValidation() {
             $('#taxType-error').html("");
         }
+        function sellingPriceBeforeTaxFn() {
+            $('#selling_price_bt_error').html("");
+        }
+        function sellingPriceAfterTaxFn() {
+            $('#selling_price_at_error').html("");
+        }
         function reqSerialNumValidation() {
             $('#requireSerialNumber-error').html("");
         }
@@ -3777,6 +3825,8 @@
             $('#description-error').html("");
         }
         // end of show items
+
+
         //Start dropdown features
         $(function() {
             $('#TypeId').change(function() {
