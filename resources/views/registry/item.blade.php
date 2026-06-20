@@ -369,7 +369,7 @@
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle">Register Item</h5>
+                    <h4 class="modal-title" id="exampleModalScrollableTitle">Add Product</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModalWithClearValidation()">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -411,11 +411,29 @@
                                             <div class="col-xl-8 col-lg-8 col-md-9 col-sm-9 col-12">
                                                 <div class="row pl-1">
                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                                        <label class="form_lbl">Product Code<b style="color: red; font-size:16px;">*</b></label>
-                                                        <input type="text" name="code" id="code" placeholder="Enter product code here" class="form-control mainforminp" onkeyup="removeCodeValidation()"/>
-                                                        <span class="text-danger">
-                                                            <strong id="code-error" class="errordatalabel general_error"></strong>
-                                                        </span>
+                                                        <div class="row">
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
+                                                                <label class="form_lbl">Product Code<b style="color: red; font-size:16px;">*</b></label>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-4 pr-2" style="text-align:right;">
+                                                                <a 
+                                                                    class="generate_item_code" 
+                                                                    href="javascript:void(0)" 
+                                                                    onclick="generateItemCodeFn()" 
+                                                                    id="generate_item_code" 
+                                                                    title="Generate product code">
+                                                                    <i class="fas fa-g fa-xl" style="color:#00cfe8"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                <input type="text" name="code" id="code" placeholder="Enter product code here" class="form-control mainforminp" onkeyup="removeCodeValidation()"/>
+                                                                <span class="text-danger">
+                                                                    <strong id="code-error" class="errordatalabel general_error"></strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
@@ -427,11 +445,29 @@
                                                     </div>
 
                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="skuNumberDiv">
-                                                        <label class="form_lbl">Barcode No.</label>
-                                                        <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or generate here" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
-                                                        <span class="text-danger">
-                                                            <strong id="skuNumber-error" class="errordatalabel general_error"></strong>
-                                                        </span>
+                                                        <div class="row">
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
+                                                                <label class="form_lbl" title="Barcode Number">Barcode No.</label>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-4 pr-2" style="text-align:right;">
+                                                                <a 
+                                                                    class="generateBtn" 
+                                                                    href="javascript:void(0)" 
+                                                                    onclick="GenerateBarcode()" 
+                                                                    id="generateBtn" 
+                                                                    title="Generate barcode">
+                                                                    <i class="fas fa-g fa-xl" style="color:#00cfe8"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or generate here" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
+                                                                <span class="text-danger">
+                                                                    <strong id="skuNumber-error" class="errordatalabel general_error"></strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="uomDiv">
@@ -487,12 +523,21 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-12 mb-1 pr-1">
                                                 <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
                                                 <div class="row">
-
+                                                    @foreach ($itemtypes as $itemtype_data)
+                                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                            <div class="custom-control custom-control-primary custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input item_type" id="item_type{{$itemtype_data->id}}" name="item_type_name[]" value="{{$itemtype_data->id}}"/>
+                                                                <label class="custom-control-label" for="item_type{{$itemtype_data->id}}">{{$itemtype_data->type}}</label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -547,7 +592,27 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
-                                        Others
+                                        <div class="row">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 m-1">
+                                                <label class="form_lbl">Barcode</label>
+                                                <div id="barcodeDiv">
+                                                    <div class="text-center">
+                                                        <b><label id="barcodeCode"></label></b>
+                                                    </div>
+                                                    <div id="barcodeimages" class="text-center" style="display: none;"></div>
+                                                    <div id="barcodeimagesupdate" class="text-center" style="display: none;"></div>
+                                                    <div class="form-check form-check-inline text-right mt-1" id="printbardiv">
+                                                        <label class="form-check-label" for="printbar">Print Barcode </label>
+                                                        <input class="form-check-input" name="printBar" type="checkbox" id="printBar" />
+                                                        <input type="hidden" class="form-control" name="checkboxVali" id="checkboxVali" readonly/>
+                                                    </div>
+                                                    <div style="padding-left: 20%">
+                                                        <b><label id="barcodeNumberss"></label></b>
+                                                        <b><label id="barcodeNumber"></label></b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -832,26 +897,8 @@
                                             </div>
                                             
                                             <div class="col-md-12 col-lg-12">
-                                                <div id="barcodeDiv">
-                                                    <div style="" class="text-center">
-                                                        <b><label id="barcodeCode"></label></b>
-                                                    </div>
-                                                    <!-- barcodec images -->
-                                                    <div id="barcodeimages" class="text-center" style="display: none;">
-                                                    </div>
-                                                    <div id="barcodeimagesupdate" class="text-center" style="display: none;">
-                                                    </div>
-                                                    <div class="form-check form-check-inline" id="printbardiv">
-                                                        <label class="form-check-label" for="printbar">Print Barcode : </label>
-                                                        <input class="form-check-input" name="printBar" type="checkbox" id="printBar" />
-                                                        <input type="hidden" class="form-control" name="checkboxVali" id="checkboxVali" readonly/>
-                                                    </div>
-                                                    <div style="padding-left: 20%">
-                                                        <b><label id="barcodeNumberss"></label></b>
-                                                        <b><label id="barcodeNumber"></label></b>
-                                                    </div>
+                                                
                                             </div>
-                                        </div>
                                         </div>
                                     </section>
                                 </div>
@@ -1426,7 +1473,6 @@
         });
         $(document).ready(function() {
             $("#newcodegenerate").hide();
-            $("#skuNumber").attr("readonly", true);
             $("#barcodeDiv").hide();
             $("#imagepreview").hide();
             var weight = window.innerHeight;
@@ -4084,51 +4130,50 @@
             }
         }
         //End Close modal with clear validations
+
         //Start Generate barcode
         function GenerateBarcode() {
-            var id=$('#ids').val()||0;
-            var barcode=$('#BarcodeTypesupdate').val()||0;
+            var id = $('#ids').val()||0;
+            var barcode = $('#BarcodeTypesupdate').val()||0;
             $("#skuNumber").attr("readonly", true); //enable sku number
             $('#skuNumber-error').html("");
-            if ($('#code').val().length === 0) {
+            if($('#code').val().length === 0) {
                 $('#code-error').html("Code is required");
                 toastrMessage('error','Code is required','Error');
-            } else {
-                if(barcode=="Read"||barcode==0){
-                        $('#BarcodeTypes').val("Generate");
-                        $('#barcodeimages').show();
-                        $('#barcodeimagesupdate').hide();
-                        $.get("/getsknumber", function(data) {
-                        if(data.maxerror){
-                            toastrMessage('error',data.maxerror,"Error");
-                        }
-                        else if(data.minierror){
-                            toastrMessage('error',data.minierror,"Error");
-                        }
-                        else if(data.systemerror){
-                            toastrMessage('error',data.minierror,"Error");
-                        }
-                        else if(data.success) {
-                            $("#skupdate").val(data.setting.skunumber);
-                            $("#skuNumber").val(data.setting.prefix + data.numberpaddging);
-                            $.get("/getgeneratebarcode", function(data) {
-                                $("#barcodeimages").html(data.generated_barcodeimage);
-                            });
-                        }
+            } 
+            else {
+                if(barcode == "Read" || barcode == 0){
+                    $('#BarcodeTypes').val("Generate");
+                    $('#barcodeimages').show();
+                    $('#barcodeimagesupdate').hide();
+                    $.ajax({
+                        url: '/getsknumber',
+                        type: 'GET',
+                        success: async function(data) {
+                            await getBarcodeImageFn(data);
+                        },
                     });
                 }
                 else{
                     $('#BarcodeTypes').val("Generate");
                     $('#barcodeimages').hide();
                     $('#barcodeimagesupdate').show();
-                    var sknumber=$('#skuNumberupdate').val();
+                    var sknumber = $('#skuNumberupdate').val();
                     $('#skuNumber').val(sknumber);
+
                     $.ajax({
                         type: "GET",
                         url: "{{ url('getoldsknumber') }}/"+sknumber,
-                        success: function (response) {
-                            $("#barcodeimagesupdate").html(response.generated_barcodeimage);
-                        }
+                        beforeSend: function() { 
+                            blockPage(cardSection,"Generating barcode...");
+                        },
+                        success:async function (response) {
+                            await getBarcodeImageFn2(response);
+                            unblockPage(cardSection); 
+                        },
+                        error: function () { 
+                            unblockPage(cardSection);     
+                        },
                     });
                 }
                 var skupdate = $("#skupdate").val();
@@ -4142,6 +4187,51 @@
             }
         }
         //End Generate barcode
+
+        function getBarcodeImageFn(data){
+            if(data.maxerror){
+                toastrMessage('error',data.maxerror,"Error");
+                unblockPage(cardSection);  
+            }
+            else if(data.minierror){
+                toastrMessage('error',data.minierror,"Error");
+                unblockPage(cardSection);  
+            }
+            else if(data.systemerror){
+                toastrMessage('error',data.minierror,"Error");
+                unblockPage(cardSection);  
+            }
+            else if(data.success) {
+                $("#skupdate").val(data.setting.skunumber);
+                $("#skuNumber").val(data.setting.prefix + data.numberpaddging);
+                $.ajax({
+                    url: '/getgeneratebarcode',
+                    type: 'GET',
+                    beforeSend: function() { 
+                        blockPage(cardSection,"Generating barcode...");
+                    },
+                    success: async function(data) {
+                        await getBarcodeImageFn3(data);
+                        unblockPage(cardSection); 
+                        alert("3");
+                    },
+                    error: function () { 
+                        unblockPage(cardSection);     
+                    },
+                });
+            }
+        }
+
+        function getBarcodeImageFn2(response){
+            $("#barcodeimagesupdate").html(response.generated_barcodeimage);
+            alert("1");
+        }
+
+        function getBarcodeImageFn3(data){
+            $("#barcodeimages").html(data.generated_barcodeimage);
+            alert("2");
+        }
+
         //Start Read barcode
         function ReadBarcode() {
             $("#skuNumber").val('');

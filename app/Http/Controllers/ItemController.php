@@ -7,7 +7,7 @@ use Image;
 use Picqer;
 use Barcode;
 //use App\Models\barcode;
-use App\Models\{Regitem,User,Sales,itemimage,Itemlog,setting,Category,Salesitem,companyinfo,transaction,beginingdetail,receivingdetail};
+use App\Models\{Regitem,User,Sales,itemimage,Itemlog,setting,Category,Salesitem,companyinfo,transaction,beginingdetail,receivingdetail,item_type};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -40,8 +40,8 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     function testimages(){
-      
         $imagepath = public_path().'/itemimage/13.jpg';
         $im=public_path('itemimage/13.jpg');
         $image = base64_encode(file_get_contents($imagepath));
@@ -78,26 +78,33 @@ class ItemController extends Controller
         // return Response::json(['success' => $im,]);
         // return response()->file(public_path('itemimage/13.jpg'));
     }
-    public function index(Request $request)
-    {
-        $setings=DB::table('settings')->latest()->first();
-        $category=DB::select('select * from categories where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
-        $uom=DB::select('select * from uoms where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
-        $taxtypes=DB::select('select * from taxtype');
+
+    public function index(Request $request){
+        $setings = DB::table('settings')->latest()->first();
+        $category = DB::select('select * from categories where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
+        $uom = DB::select('select * from uoms where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
+        $taxtypes = DB::select('select * from taxtype');
+        $itemtypes = DB::select('SELECT * FROM item_types WHERE item_types.status="Active" ORDER BY item_types.type ASC');
         $lastsku = DB::table('regitems')->latest()->first();
+
+        $item_properties = [
+          'category' => $category,'uom' => $uom,'taxtypes' => $taxtypes,'lastsku' => $lastsku,'setings' => $setings,'itemtypes' => $itemtypes
+        ];
+
         if($request->ajax()) {
-                return view('registry.item',['category'=>$category,'uom'=>$uom,'taxtypes'=>$taxtypes,'lastsku'=>$lastsku,'setings'=>$setings])->renderSections()['content'];
-            }
-            else{
-                return view('registry.item',['category'=>$category,'uom'=>$uom,'taxtypes'=>$taxtypes,'lastsku'=>$lastsku,'setings'=>$setings]);
-            }
+          return view('registry.item',$item_properties)->renderSections()['content'];
+        }
+        else{
+          return view('registry.item',$item_properties);
+        }
     }
-    public function paginate($items, $perPage = 5, $page = null, $options = [])
-    {
+
+    public function paginate($items, $perPage = 5, $page = null, $options = []){
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
+
     public function showItemData($type)
     {
       switch ($type) {
