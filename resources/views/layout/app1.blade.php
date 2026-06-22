@@ -1918,6 +1918,7 @@
     <script type="text/javascript">
         $(function () {
             cardSection = $('#page-block');
+            customPageSection = $('#page-block');
         });
 
         $(window).on('load', function() {

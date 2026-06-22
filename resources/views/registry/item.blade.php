@@ -1,11 +1,8 @@
 @extends('layout.app1')
 @section('title')
 @endsection
-@section('styles')
-<link rel="stylesheet" href="{{ asset('fontawesome6/pro/css/all.min.css') }}">
-@endsection
 @section('content')
-    <div class="app-content content ">
+    <div class="app-content content">
         <section id="responsive-datatable">
             <div class="row">
                 <div class="col-12">
@@ -54,6 +51,7 @@
                                                     <input type="hidden" class="form-control" name="localitemstoreminquantity" id="localitemstoreminquantity" value="{{ auth()->user()->can('Local-Item-Store-Min-Quantity') ? 1 : 0 }}" readonly/>
                                                     <input type="hidden" class="form-control" name="localitempriceupdate" id="localitempriceupdate" value="{{ auth()->user()->can('Local-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
                                                     <input type="hidden" class="form-control" name="importitempriceupdate" id="importitempriceupdate" value="{{ auth()->user()->can('Import-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
+                                                    <input type="hidden" class="form-control" name="itmcodetype" id="itmcodetype" />
                                                 </div>
                                             </div>
                                         </div>
@@ -365,12 +363,12 @@
     </div>
 
     {{-- //  item register modal-body --}}
-    <div class="modal fade text-left fit-content" id="addItemForm" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal fade text-left fit-content" id="addItemForm" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="docInfoModal" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalScrollableTitle">Add Product</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModalWithClearValidation()">
+                    <h4 class="modal-title" id="item_form_title">Add Product</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -410,7 +408,7 @@
                                         <div class="row">
                                             <div class="col-xl-8 col-lg-8 col-md-9 col-sm-9 col-12">
                                                 <div class="row pl-1">
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="product_code_div">
                                                         <div class="row">
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
                                                                 <label class="form_lbl">Product Code<b style="color: red; font-size:16px;">*</b></label>
@@ -422,7 +420,7 @@
                                                                     onclick="generateItemCodeFn()" 
                                                                     id="generate_item_code" 
                                                                     title="Generate product code">
-                                                                    <i class="fas fa-g fa-xl" style="color:#00cfe8"></i>
+                                                                    <i class="fas fa-g fa-xl" style="color:#00cfe8;"></i>
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -462,7 +460,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or generate here" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
+                                                                <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or click [G] button to generate" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
                                                                 <span class="text-danger">
                                                                     <strong id="skuNumber-error" class="errordatalabel general_error"></strong>
                                                                 </span>
@@ -470,7 +468,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="uomDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="uomDiv">
                                                         <label class="form_lbl" title="Unit of Measurement">UOM<b style="color: red; font-size:16px;">*</b></label>
                                                         <select class="select2 form-control" name="Uom" id="Uom" onchange="uomValidation()">
                                                             @foreach ($uom as $um)
@@ -482,7 +480,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="categoryDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="categoryDiv">
                                                         <label class="form_lbl">Category<b style="color: red; font-size:16px;">*</b></label>
                                                         <select class="select2 form-control" name="Category" id="Category" onchange="categoryValidation()">
                                                             @foreach ($category as $cat)
@@ -494,7 +492,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="taxtypeDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="taxtypeDiv">
                                                         <label class="form_lbl">Tax Type<b style="color: red; font-size:16px;">*</b></label>
                                                         <select class="select2 form-control" name="TaxType" id="TaxType" onchange="taxTypeValidation()">
                                                             @foreach ($taxtypes as $tx)
@@ -506,21 +504,9 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                                        <label class="form_lbl">Description</label>
-                                                        <textarea type="text" name="description" id="description" placeholder="Enter description here" class="form-control" rows="1"></textarea>
-                                                        <span class="text-danger">
-                                                            <strong id="description-error" class="errordatalabel general_error"></strong>
-                                                        </span>
-                                                    </div>
+                                                    
 
-                                                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="statusDiv">
-                                                        <label class="form_lbl">Status<b style="color: red; font-size:16px;">*</b></label>
-                                                        <select class="select2 form-control" name="status" id="status" onchange="removeStatusValidation()"></select>
-                                                        <span class="text-danger">
-                                                            <strong id="activeStatus-error" class="errordatalabel general_error"></strong>
-                                                        </span>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
 
@@ -535,6 +521,24 @@
                                                             </div>
                                                         </div>
                                                     @endforeach
+                                                    <div class="col-xl-7 col-lg-4 col-md-4 col-sm-12 col-12 mt-1">
+                                                        <label class="form_lbl">Description</label>
+                                                        <textarea type="text" name="description" id="description" placeholder="Enter description here" class="form-control mainforminp" rows="1"></textarea>
+                                                        <span class="text-danger">
+                                                            <strong id="description-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mt-1 pr-1" id="statusDiv">
+                                                        <label class="form_lbl">Status<b style="color: red; font-size:16px;">*</b></label>
+                                                        <select class="select2 form-control" name="status" id="status" onchange="removeStatusValidation()">
+                                                            <option value="Active">Active</option>
+                                                            <option value="Inactive">Inactive</option>
+                                                        </select>
+                                                        <span class="text-danger">
+                                                            <strong id="activeStatus-error" class="errordatalabel general_error"></strong>
+                                                        </span>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             
@@ -564,10 +568,63 @@
                                 </ul>
                                 <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
                                     <div class="tab-pane item-views active tab-view active-tab-view" id="item-basic-view" aria-labelledby="item-basic-view" role="tabpanel">
-                                        Basic
+                                        <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="partNumDiv">
+                                                <label class="form_lbl" title="Part Number">Part No.</label>
+                                                <input type="text" placeholder="Enter part number here" class="form-control mainforminp" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
+                                                <span class="text-danger">
+                                                    <strong id="partNumber-error" class="errordatalabel basic_error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="lowStockDiv">
+                                                <label class="form_lbl">Reorder Point</label>
+                                                <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
+                                                <span class="text-danger">
+                                                    <strong id="lowStock-error" class="errordatalabel basic_error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Lot Description</label>
+                                                <textarea type="text" name="lotDescription" id="lotDescription" placeholder="Enter lot description here" class="form-control mainforminp" rows="1" onkeyup="lotDescriptionFn()"></textarea>
+                                                <span class="text-danger">
+                                                    <strong id="lot_description-error" class="errordatalabel basic_error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Factor</label>
+                                                <input type="number" placeholder="Enter factor here" class="form-control mainforminp" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
+                                                <span class="text-danger">
+                                                    <strong id="factor-error" class="errordatalabel basic_error"></strong>
+                                                </span>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <label class="form_lbl">Cartoon Size</label>
+                                                <input type="number" placeholder="Enter cartoon size here" class="form-control mainforminp" name="cartoonSize" id="cartoonSize" onkeyup="cartoonSizeFn()" onkeypress="return ValidateNum(event);" />
+                                                <span class="text-danger">
+                                                    <strong id="cartoon_size-error" class="errordatalabel basic_error"></strong>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-inventory-view" aria-labelledby="item-inventory-view" role="tabpanel">
-                                        Inventory
+                                        <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="serialNumDiv">
+                                                <label class="form_lbl" title="Is Serial Number Requires">Is Serial No. Req.</label>
+                                                <select class="select2 form-control" name="ReqSerialNumber" id="ReqSerialNumber" onchange="reqSerialNumValidation()">
+                                                    <option value="Not-Require">Not-Require</option>
+                                                    <option value="Required">Requires</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="expireDateDiv">
+                                                <label class="form_lbl" title="Is Batch Number or/and Expiry Date Requires">Is Batch No. | Expiry Date Req.</label>
+                                                <select class="select2 form-control" name="ReqExpireDate" id="ReqExpireDate" onchange="reqExpDateValidation()">
+                                                    <option value="Not-Require">Not-Require</option>
+                                                    <option value="Require-ExpireDate">Require-ExpireDate</option>
+                                                    <option value="Require-BatchNumber">Require-BatchNumber</option>
+                                                    <option value="Require-Both">Require-Both</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-purchase-view" aria-labelledby="item-purchase-view" role="tabpanel">
                                         Purchase
@@ -593,7 +650,7 @@
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
                                         <div class="row">
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 m-1">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 m-1" style="display: none;" id="barcode_div">
                                                 <label class="form_lbl">Barcode</label>
                                                 <div id="barcodeDiv">
                                                     <div class="text-center">
@@ -628,13 +685,13 @@
                             <div class="row">
                                 <div class="col-md-9" id="itemsdiv">
                                     <div class="row" id="headerblock">
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="withDiv">
+                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="withDiv" style="display: none;">
                                             <label strong style="font-size: 14px;">Type </label>
                                             <input type="hidden" placeholder="Item ID" class="form-control" name="id" id="ids" />
                                             <input type="hidden" class="form-control" name="notifiablemaxcostid" id="notifiablemaxcostid" />
                                             <input type="hidden" class="form-control" name="notifiablereailerpriceid" id="notifiablereailerpriceid" />
                                             <input type="hidden" class="form-control" name="notifiablewholesellerpriceid" id="notifiablewholesellerpriceid" />
-                                            <input type="hidden" class="form-control" name="itmcodetype" id="itmcodetype" />
+                                            
                                             <div class="" id='typeblock'>
                                                 <select class="select2 form-control" name="TypeId" id="TypeId">
                                                     <option value="Goods">Goods</option>
@@ -795,64 +852,11 @@
                                             </div>
                                             @endif
                                         
-                                            <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="lowStockDiv">
-                                                <label strong style="font-size: 14px;">Reorder Point</label>
-                                                <input type="number" placeholder="Reorder Point" class="form-control" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
-                                                <span class="text-danger">
-                                                    <strong id="lowStock-error"></strong>
-                                                </span>
-                                            </div>
                                             
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="serialNumDiv">
-                                            <label strong style="font-size: 14px;"> Serial Number</label>
-                                            <div class="input-group input-group-merge">
-                                                <select class="form-control" name="ReqSerialNumber" id="ReqSerialNumber" onchange="reqSerialNumValidation()">
-                                                    <option value="Not-Require">Not-Require</option>
-                                                    <option value="Required">Requires</option>
-                                                </select>
-                                            </div>
-                                            <span class="text-danger">
-                                                <strong id="requireSerialNumber-error"></strong>
-                                            </span>
-                                        </div>
-                                        <div class="col-xl-3 col-md-6 col-sm-12 mb-2" id="expireDateDiv">
-                                            <label strong style="font-size: 14px;"> Expire Date|Batch Number </label>
-                                            <div class="input-group input-group-merge">
-                                                <select class="form-control" name="ReqExpireDate" id="ReqExpireDate" onchange="reqExpDateValidation()">
-                                                    <option value="Not-Require">Not-Require</option>
-                                                    <option value="Require-ExpireDate">Require-ExpireDate</option>
-                                                    <option value="Require-BatchNumber">Require-BatchNumber</option>
-                                                    <option value="Require-Both">Require-Both</option>
-                                                </select>
-                                            </div>
-                                            <span class="text-danger">
-                                                <strong id="requireExpireDate-error"></strong>
-                                            </span>
-                                        </div>
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="partNumDiv">
-                                            <label strong style="font-size: 14px;">Part Number</label>
-                                            <input type="text" placeholder="Part Number" class="form-control" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
-                                            <span class="text-danger">
-                                                <strong id="partNumber-error"></strong>
-                                            </span>
-                                        </div>
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="factorDiv">
-                                            <label style="font-size: 14px; font-weight: bold;">Factor</label>
-                                            <div>
-                                                <input type="number"
-                                                    step="any"
-                                                    placeholder="e.g. 1.23456789"
-                                                    class="form-control"
-                                                    name="factor"
-                                                    id="factor"
-                                                    onkeyup="calculateCostsWithFactor()"
-                                                    onkeypress="return ValidateFactorNum(event, this);"
-                                                    style="color:black; font-weight:bold; border-style:solid;" />
-                                            </div>
-                                            <span class="text-danger">
-                                                <strong id="factor-error"></strong>
-                                            </span>
-                                        </div>
+                                            
+                                       
+                                        
+                                        
                                         
                                         
                                         @php
@@ -905,6 +909,11 @@
                         </section>
                     </div>
                     <div class="modal-footer">
+                        
+
+
+                        <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
+                        <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
                         <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
                         <input type="hidden" class="form-control" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
                         <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
@@ -1283,16 +1292,17 @@
 
         $(function() {
             tableSection = $('#table-block');
-            sectionBlock=$('#section-block');
-            pageSection = $('#page-block');
-            tableSection=$('.tableSection');
-            headerSection=$('#headerblock');
-            withDivSection=$('#typeblock');
-            GroupDivSection=$('#groupblock');
-            codeDivSection=$('#codeblock');
-            nameDivSection=$('#nameblock');
-            uomDivSection=$('#uomblock');
-            categoryDivSection=$('#categoryblock');
+            sectionBlock = $('#section-block');
+            pageSection = $('#page-blocks');
+            tableSection = $('.tableSection');
+            headerSection = $('#headerblock');
+            withDivSection = $('#typeblock');
+            GroupDivSection = $('#groupblock');
+            codeDivSection = $('#codeblock');
+            nameDivSection = $('#nameblock');
+            uomDivSection = $('#uomblock');
+            categoryDivSection = $('#categoryblock');
+            productCodeSection = $('#product_code_div');
             $("#printBar").click(function() {
                 if ($(this).is(":checked")) {
                     $('#checkboxVali').val('1');
@@ -1313,10 +1323,12 @@
             $('#imageuploadmodal').modal('show');
             load_images(id);
         });
+
         $(document).on('click', '.remove-wishlist', function() {
             var name = $(this).attr('id');
             removeitemimages(name);
         });
+
         function load_images(id) {
             $.ajax({
                 type: "GET",
@@ -1363,6 +1375,7 @@
                 }
             })
         }
+
         function removeitemimages(params) {
                 swal.fire({
                     title: 'Notice!',
@@ -1405,30 +1418,36 @@
                 return false;
             })
         }
+
         function refreshtbl(){
-        var tabletr = $(focustables).DataTable(); 
-        tabletr.search('');
-        var oTable = $(focustables).dataTable(); 
-        oTable.fnDraw(false);
-    }
-    function refreshtbl1(){
-        var oTable = $(focustables).dataTable(); 
-        oTable.fnDraw(false);
-    }
+            var tabletr = $(focustables).DataTable(); 
+            tabletr.search('');
+            var oTable = $(focustables).dataTable(); 
+            oTable.fnDraw(false);
+        }
+
+        function refreshtbl1(){
+            var oTable = $(focustables).dataTable(); 
+            oTable.fnDraw(false);
+        }
+
         function clearpercernterror(){
             $('#batchpercent-error').html('');
             $('#batchupadtepreviewbutton').show();
         }
+
         $('#batchgroup').on ('change', function () {
             $('#batchgroup-error').html('');
             $("#batchcategory").attr('disabled',false);
             $('#batchcategory').selectpicker('refresh');
         });
+
         $('#batchitem').on ('change', function () {
             $('#batchitem-error').html('');
             $('#increaseDescrease').attr("disabled", false);
             $('#increaseDescrease').selectpicker('refresh'); 
         });
+
         $('#increaseDescrease').on ('change', function () {
             $('#increaseDescrease-error').html('');
             $('#percent').attr("disabled", false);
@@ -1440,6 +1459,7 @@
                 $("#percent").attr({ style: "color:#ff9f43;font-weight:bold;border-style:solid;border-color:#ff9f43;" });
             }
         });
+
         $('#batchcategory').on ('change', function () {
             $('#batchcategory-error').html('');
             $("#batchitem").attr('disabled',false);
@@ -1471,18 +1491,13 @@
                 });
             }
         });
+
         $(document).ready(function() {
             $("#newcodegenerate").hide();
             $("#barcodeDiv").hide();
             $("#imagepreview").hide();
             var weight = window.innerHeight;
-            var itcodetype= $('#ItemCodeType').val();
-            if(parseFloat(itcodetype)==1){
-                $('#code').prop('readonly', true);
-            }
-            else{
-                $('#code').prop('readonly', false);
-            }
+
             $(".selectpicker").selectpicker({
                 noneSelectedText: ''
             });
@@ -2180,28 +2195,23 @@
         function codeActive(){
             $('#code').prop('readonly', false);
         }
+
         function generatecode(){
-            var itcodetype=null;
+            var itcodetype = null;
             $.get("getitemcodes",function (data, textStatus, jqXHR) {
-                    $.each(data.setings, function (index, value) {
-                        
-                        itcodetype=value.ItemCodeType;
-                    });
-                    //console.log('doc='+data.docNumber+'ff='+itcodetype);
-                    if(parseFloat(itcodetype)==1){
-                        $('#code').val(data.docNumber);
-                        $('#code').prop('readonly', true);
-                    }
-                    else{
-                        //$('#code').val('');
-                        $('#code').prop('readonly', false);
-                    }
+                $.each(data.setings, function (index, value) {
+                    itcodetype = value.ItemCodeType;
                 });
-                $("#newcodegenerate").hide();
-                $('#code-error').html('');
+
+                if(parseInt(itcodetype) == 1){
+                    $('#code').val(data.docNumber);
+                }
+            });
+            $("#generate_item_code").hide();
+            $("#newcodegenerate").hide();
+            $('#code-error').html('');
         }
         
-
         $('body').on('click', '.batchupdate', function() {
             $("#batchupdateformodal").modal('show');
             $('#batchcategory').attr("disabled", true); 
@@ -2216,142 +2226,176 @@
             $('#dividerdiv').hide();
             $('#batchupadtesavebutton').hide();
         });
+        
         $('body').on('click', '.addbutton', function() {
-                var itcodetype=null;
-                var wholesalefeature=null;
-                var priceupdate=$('#priceupdate').val();
-                var importcostpermission=$('#importcost').val();
-                var localcostpermission=$('#localcost').val();
-                removeAverageCostColor();
-                removeMaxCostColor();
-                $('#myModalLabel333').html("Add Item");
-                var type=$('#TypeId').val();
-                $('#pmretail').prop('readonly', true);
-                $('#pmwholesale').prop('readonly', true);
-                $('#purchasediv').removeClass('col-md-3');
-                $('#purchasediv').removeClass('col-md-0');
-                $('#itemsdiv').removeClass('col-md-9');
-                $('#itemsdiv').removeClass('col-md-12');
-                $('#purchasediv').addClass('col-md-3');
-                $('#itemsdiv').addClass('col-md-9');
-                $('#purchasediv').show();
-                $('#minimumstockdiv').hide();
-                $('#pmretail').show();
-                $('#pmretaillbl').show();
-                switch (priceupdate) {
-                    case '1':
-                        $('#retailPricebv').prop('readonly', false);
-                        $('#retailPrice').prop('readonly', false);
-                        $('#wholeSellerPricebv').prop('readonly', false);
-                        $('#wholeSellerPrice').prop('readonly', false);
-                        
-                        break;
-                    default:
-                        $('#retailPricebv').prop('readonly', true);
-                        $('#retailPrice').prop('readonly', true);
-                        $('#wholeSellerPricebv').prop('readonly', true);
-                        $('#wholeSellerPrice').prop('readonly', true);
-                        
-                        break;
-                }
-                $.get("getitemcodes",function (data, textStatus, jqXHR) {
-                    $.each(data.setings, function (index, value) {
-                        itcodetype=value.ItemCodeType;
-                        $('#itmcodetype').val(itcodetype);
-                    });
-                    if(parseFloat(itcodetype)==1){
-                        $('#code').val(data.docNumber);
-                        $('#code').prop('readonly', true);
-                    }
-                    else{
-                        $('#code').prop('readonly', false);
-                    }
-                });
-                withDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-                GroupDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-                nameDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-                uomDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-                codeDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-                categoryDivSection.block({
-                    message:
-                    '',
-                    timeout: 1,
-                    css: {
-                    backgroundColor: '',
-                    color: '',
-                    border: ''
-                    },
-                });
-            $('#ids').val('');
-            $('#BarcodeTypesupdate').val('');
-            $('#notifiablemaxcostid').val('');
-            $('#notifiablereailerpriceid').val('');
-            $('#notifiablewholesellerpriceid').val('');
-            $("#RegisterItem")[0].reset();
-            $('#lblretailprice').html('Retail Price');
+
+            resetItemFormFn();
+            managePriceFn();
+            manageProductCodeFn();
+
+            $("#item_form_title").html('Add Product');
+            $('#savebutton').text('Save');
+            $('#savebutton').prop("disabled",false);
             $("#addItemForm").modal('show');
-            $("#savebutton").show();
-            $('#closeGenBtn').hide();
-            $("#itemupdatebutton").hide();
-            $('#barcodeNumberss').show();
-            $('#barcodeNumber').hide();
-            $("#imageloads").hide();
-            $("#barcodeDiv").hide();
-            $("#imageresetbutton").hide();
-            $("#wholeSellerMinAmount").prop("readonly", true);
-            $('#skuNumber').val('');
-            $("#checkboxVali").val('0');
-            $('#igroup').select2('destroy');
-            $('#igroup').val('').select2();
-            $('#status').empty();
-            $('#status').append('<option value="Active">Active</option><option value="Inactive">Inactive</option>');
-            $('#status').select2();
+
+            // var itcodetype=null;
+            // var wholesalefeature=null;
+            
+            // var importcostpermission=$('#importcost').val();
+            // var localcostpermission=$('#localcost').val();
+            // removeAverageCostColor();
+            // removeMaxCostColor();
+            // $('#myModalLabel333').html("Add Item");
+            // var type=$('#TypeId').val();
+            // $('#pmretail').prop('readonly', true);
+            // $('#pmwholesale').prop('readonly', true);
+            // $('#purchasediv').removeClass('col-md-3');
+            // $('#purchasediv').removeClass('col-md-0');
+            // $('#itemsdiv').removeClass('col-md-9');
+            // $('#itemsdiv').removeClass('col-md-12');
+            // $('#purchasediv').addClass('col-md-3');
+            // $('#itemsdiv').addClass('col-md-9');
+            // $('#purchasediv').show();
+            // $('#minimumstockdiv').hide();
+            // $('#pmretail').show();
+            // $('#pmretaillbl').show();
+
+            
+
+            // $.get("getitemcodes",function (data, textStatus, jqXHR) {
+            //     $.each(data.setings, function (index, value) {
+            //         itcodetype=value.ItemCodeType;
+            //         $('#itmcodetype').val(itcodetype);
+            //     });
+            //     if(parseFloat(itcodetype)==1){
+            //         $('#code').val(data.docNumber);
+            //     }
+            //     else{
+            //         $('#code').prop('readonly', false);
+            //     }
+            // });
+               
+
+            // $('#ids').val('');
+            // $('#BarcodeTypesupdate').val('');
+            // $('#notifiablemaxcostid').val('');
+            // $('#notifiablereailerpriceid').val('');
+            // $('#notifiablewholesellerpriceid').val('');
+            // $("#RegisterItem")[0].reset();
+            // $('#lblretailprice').html('Retail Price');
+            // $("#addItemForm").modal('show');
+            // $("#savebutton").show();
+            // $('#closeGenBtn').hide();
+            // $("#itemupdatebutton").hide();
+            // $('#barcodeNumberss').show();
+            // $('#barcodeNumber').hide();
+            // $("#imageloads").hide();
+            // $("#barcodeDiv").hide();
+            // $("#imageresetbutton").hide();
+            // $("#wholeSellerMinAmount").prop("readonly", true);
+            // $('#skuNumber').val('');
+            // $("#checkboxVali").val('0');
+            // $('#igroup').select2('destroy');
+            // $('#igroup').val('').select2();
+            // $('#status').empty();
+            // $('#status').append('<option value="Active">Active</option><option value="Inactive">Inactive</option>');
+            // $('#status').select2();
         });
+
+        function resetItemFormFn(){
+            $('#Uom').val(null).select2({
+                placeholder: "Select uom here",
+            });
+
+            $('#Category').val(null).select2({
+                placeholder: "Select category here",
+            });
+
+            $('#TaxType').val(15).select2({
+                placeholder: "Select tax type here",
+                minimumResultsForSearch: -1
+            });
+
+            $('#status').val("Active").select2({
+                placeholder: "Select status here",
+                minimumResultsForSearch: -1
+            });
+
+            $('#ReqSerialNumber').val("Not-Require").select2({
+                placeholder: "Select value here",
+                minimumResultsForSearch: -1
+            });
+
+            $('#ReqExpireDate').val("Not-Require").select2({
+                placeholder: "Select value here",
+                minimumResultsForSearch: -1
+            });
+
+            $('input[name="product_class"]').prop('checked', false);
+            $('input[id="product_class1"]').prop('checked', true);
+            $('input[name="item_type_name"]').prop('checked', false);
+
+            $('.mainforminp').val("");
+            $('.errordatalabel').html("");
+        }
+
+        function managePriceFn(){
+            var priceupdate = $('#priceupdate').val();
+            switch (priceupdate) {
+                case '1':
+                    $('#retailPricebv').prop('readonly', false);
+                    $('#retailPrice').prop('readonly', false);
+                    $('#wholeSellerPricebv').prop('readonly', false);
+                    $('#wholeSellerPrice').prop('readonly', false);
+                    
+                    break;
+                default:
+                    $('#retailPricebv').prop('readonly', true);
+                    $('#retailPrice').prop('readonly', true);
+                    $('#wholeSellerPricebv').prop('readonly', true);
+                    $('#wholeSellerPrice').prop('readonly', true);
+                    
+                    break;
+            }
+        }
+
+        function manageProductCodeFn(){
+            var item_code_type = $('#ItemCodeType').val();
+            if(parseInt(item_code_type) == 1){
+                $.ajax({
+                    url: '/getitemcodes',
+                    type: 'GET',
+                    beforeSend: function() { 
+                        blockPage(productCodeSection,"");
+                    },
+                    success: async function(data) {
+                        await getItemCodeFn(data);
+                        unblockPage(productCodeSection);
+                    },
+                    error: function () { 
+                        unblockPage(productCodeSection);
+                    },
+                });                
+
+            }
+            else{
+
+            }
+            $('#generate_item_code').hide();
+        }
+
+        function getItemCodeFn(data){
+            $("#code").val(data.docNumber);
+            $("#codeHidden").val(data.docNumber);
+        }
+
+        function generateItemCodeFn(){
+            blockPage(productCodeSection,"Generating code...");
+            var code_hidden = $("#codeHidden").val();
+            $("#code").val(code_hidden);
+            $('#generate_item_code').hide();
+            unblockPage(productCodeSection);
+        }
         
             function openHeader(){
                 var transaction=$('#transactionEdit').val();
@@ -3178,9 +3222,9 @@
             
             return false;
         });
-        $(function () {
-            cardSection = $('#card-block');
-        });
+        // $(function () {
+        //     cardSection = $('#card-block');
+        // });
         $('#batchupadtepreviewbutton').click(function() {
             $('#batchupdatedatablediv').show();
             $('#dividerdiv').show();
@@ -3460,11 +3504,25 @@
         function removeNameValidation() {
             $('#name-error').html("");
         }
+
         function removeCodeValidation() {
-            $('#code-error').html("");
+            var item_code_type = $('#ItemCodeType').val();
             var code = $('#code').val();
+            if(parseInt(item_code_type) == 1){
+                var code_hidden = $('#codeHidden').val();
+
+                if(code == code_hidden){
+                    $('#generate_item_code').hide();
+                }
+                else if(code != code_hidden){
+                    $('#generate_item_code').show();
+                }
+            }
+            
             $('#barcodeCode').html(code);
+            $('#code-error').html("");
         }
+
         function categoryValidation() {
             $('#category-error').html("");
         }
@@ -3827,51 +3885,87 @@
             }
         }
         function wholeSellerMaxAmountValidation() {
-            var max=$('#wholeSellerMaxAmount').val()||0;
-            var alablestock=$('#balance').val()||0;
-            var minstock=parseFloat(alablestock)-parseFloat(max);
-            minstock=minstock>0?minstock:0;
+            var max = $('#wholeSellerMaxAmount').val()||0;
+            var alablestock = $('#balance').val()||0;
+            var minstock = parseFloat(alablestock) - parseFloat(max);
+            minstock = minstock > 0 ? minstock : 0;
             $('#minimumstock').val(minstock);
             $("#minimumstock").prop("readonly", false);
         }
+
         function wholeSellerMinAmountValidation() {
             $('#wholeSellerMinAmount-error').html("");
         }
+
         function taxTypeValidation() {
             $('#taxType-error').html("");
         }
+
         function sellingPriceBeforeTaxFn() {
             $('#selling_price_bt_error').html("");
         }
+
         function sellingPriceAfterTaxFn() {
             $('#selling_price_at_error').html("");
         }
+
         function reqSerialNumValidation() {
             $('#requireSerialNumber-error').html("");
         }
+
         function reqExpDateValidation() {
             $('#requireExpireDate-error').html("");
         }
+
         function partNumberValidation() {
             $('#partNumber-error').html("");
         }
+
         function lowStockValidation() {
             $('#lowStock-error').html("");
         }
+
+        function lotDescriptionFn() {
+            $('#lot_description-error').html("");
+        }
+
+        function cartoonSizeFn() {
+            $('#cartoon_size-error').html("");
+        }
+
         function skuValidation() {
             $('#skuNumber-error').html("");
         }
+
         function removeStatusValidation() {
             $('#activeStatus-error').html("");
         }
+
         function removeSknumbervalidation() {
+            compareBarcodeNoFn();
             $('#skuNumber-error').html("");
         }
+
+        function compareBarcodeNoFn(){
+            var current_barcode_no = $('#skuNumber').val();
+            var hidden_barcode_no = $('#skuNumberHidden').val();
+
+            if(current_barcode_no == hidden_barcode_no){
+                $("#generateBtn").hide();
+                $("#barcode_div").show();
+                $('#BarcodeTypes').val("Generate");
+            }
+            else{
+                $("#generateBtn").show();
+                $("#barcode_div").hide();
+                $('#BarcodeTypes').val("Read");
+            }
+        }
+
         function descriptionValidation() {
             $('#description-error').html("");
         }
         // end of show items
-
 
         //Start dropdown features
         $(function() {
@@ -4057,6 +4151,7 @@
             });
         });
         //End dropdown features
+
         //Start Close modal with clear validations
         function closebatchModalWithClearValidation(){
             $('#batchcategory-error').html('');
@@ -4071,6 +4166,7 @@
             $("#batchupdateform")[0].reset();
             $("#percent").attr({ style: "" });
         }
+
         function closeModalWithClearValidation() {
             $("#RegisterItem")[0].reset();
             $('#nameDiv').show();
@@ -4106,7 +4202,6 @@
             $('#description-error').html("");
             $('#image-error').html("");
             $('#barcodeDiv').hide();
-            $("#skuNumber").attr("readonly", true); //disable sku number
             $('#BarcodeTypes').val("None");
             $('#closeGenBtn').hide();
             $('#generateBtn').show();
@@ -4121,9 +4216,9 @@
             $('#mincostlbl').html("");
             $('#mincostbvlbl').html("");
             $("#newcodegenerate").hide();
-            var itcodetype= $('#ItemCodeType').val();
+            var itcodetype = $('#ItemCodeType').val();
+
             if(parseFloat(itcodetype)==1){
-                $('#code').prop('readonly', true);
             }
             else{
                 $('#code').prop('readonly', false);
@@ -4135,22 +4230,28 @@
         function GenerateBarcode() {
             var id = $('#ids').val()||0;
             var barcode = $('#BarcodeTypesupdate').val()||0;
-            $("#skuNumber").attr("readonly", true); //enable sku number
             $('#skuNumber-error').html("");
             if($('#code').val().length === 0) {
                 $('#code-error').html("Code is required");
                 toastrMessage('error','Code is required','Error');
             } 
-            else {
+            else{
                 if(barcode == "Read" || barcode == 0){
                     $('#BarcodeTypes').val("Generate");
                     $('#barcodeimages').show();
                     $('#barcodeimagesupdate').hide();
+
                     $.ajax({
                         url: '/getsknumber',
                         type: 'GET',
+                        beforeSend: function() { 
+                           blockPage(customPageSection,"Generating barcode...");
+                        },
                         success: async function(data) {
                             await getBarcodeImageFn(data);
+                        },
+                        error: function () { 
+                            unblockPage(customPageSection);
                         },
                     });
                 }
@@ -4165,16 +4266,17 @@
                         type: "GET",
                         url: "{{ url('getoldsknumber') }}/"+sknumber,
                         beforeSend: function() { 
-                            blockPage(cardSection,"Generating barcode...");
+                            blockPage(customPageSection,"Generating barcode...");
                         },
-                        success:async function (response) {
+                        success:async function(response) {
                             await getBarcodeImageFn2(response);
-                            unblockPage(cardSection); 
+                            unblockPage(customPageSection); 
                         },
                         error: function () { 
-                            unblockPage(cardSection);     
+                            unblockPage(customPageSection);     
                         },
                     });
+
                 }
                 var skupdate = $("#skupdate").val();
                 var barCodeCodeTxt = $("#code");
@@ -4191,32 +4293,33 @@
         function getBarcodeImageFn(data){
             if(data.maxerror){
                 toastrMessage('error',data.maxerror,"Error");
-                unblockPage(cardSection);  
+                unblockPage(customPageSection);  
             }
             else if(data.minierror){
                 toastrMessage('error',data.minierror,"Error");
-                unblockPage(cardSection);  
+                unblockPage(customPageSection);  
             }
             else if(data.systemerror){
                 toastrMessage('error',data.minierror,"Error");
-                unblockPage(cardSection);  
+                unblockPage(customPageSection);  
             }
             else if(data.success) {
                 $("#skupdate").val(data.setting.skunumber);
                 $("#skuNumber").val(data.setting.prefix + data.numberpaddging);
+                $("#skuNumberHidden").val(data.setting.prefix + data.numberpaddging);
+
                 $.ajax({
                     url: '/getgeneratebarcode',
                     type: 'GET',
                     beforeSend: function() { 
-                        blockPage(cardSection,"Generating barcode...");
+                        blockPage(customPageSection,"Generating barcode...");
                     },
                     success: async function(data) {
                         await getBarcodeImageFn3(data);
-                        unblockPage(cardSection); 
-                        alert("3");
+                        unblockPage(customPageSection); 
                     },
                     error: function () { 
-                        unblockPage(cardSection);     
+                        unblockPage(customPageSection);     
                     },
                 });
             }
@@ -4224,12 +4327,12 @@
 
         function getBarcodeImageFn2(response){
             $("#barcodeimagesupdate").html(response.generated_barcodeimage);
-            alert("1");
         }
 
         function getBarcodeImageFn3(data){
             $("#barcodeimages").html(data.generated_barcodeimage);
-            alert("2");
+            compareBarcodeNoFn();
+            toastrMessage("info","Barcode is generated!</br>You can find in Others tab","Info");
         }
 
         //Start Read barcode
@@ -4237,17 +4340,16 @@
             $("#skuNumber").val('');
             $("#skuNumber").focus();
             $('#barcodeDiv').hide();
-            $("#skuNumber").attr("readonly", false); //enable sku number
             $('#BarcodeTypes').val("Read");
             $('#closeGenBtn').show();
             $('#generateBtn').hide();
             $('#readBtn').hide();
         }
         //End read barcode
+
         //Start barcode close
         function closeBarcode() {
             $('#barcodeDiv').hide();
-            $("#skuNumber").attr("readonly", true); //disable sku number
             $('#BarcodeTypes').val("None");
             $('#closeGenBtn').hide();
             $('#generateBtn').show();
