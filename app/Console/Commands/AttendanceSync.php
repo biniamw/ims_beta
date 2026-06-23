@@ -83,7 +83,8 @@ class AttendanceSync extends Command
     {
         try{
             $mqtt = MQTT::connection();
-            $mqt=new mqttmessage;
+            $mqt = new mqttmessage;
+            $mqt->setConnection("ahununu");
 
             $devicesdata=DB::select('SELECT devices.* FROM devices WHERE devices.Status="Active" AND devices.devicetype IN(4)');
             foreach($devicesdata as $devprop){

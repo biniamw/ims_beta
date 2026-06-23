@@ -503,10 +503,6 @@
                                                             <strong id="taxType-error" class="errordatalabel general_error"></strong>
                                                         </span>
                                                     </div>
-
-                                                    
-
-                                                    
                                                 </div>
                                             </div>
 
@@ -626,11 +622,66 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="tab-pane item-views tab-view" id="item-purchase-view" aria-labelledby="item-purchase-view" role="tabpanel">
-                                        Purchase
+                                        <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="expireDateDiv">
+                                                <label class="form_lbl">Group</label>
+                                                <div class="row">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input item_group_class" id="item_group_local" name="item_group[]" value="Local"/>
+                                                            <label class="custom-control-label" for="item_group_local">Local</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div class="custom-control custom-control-primary custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input item_group_class" id="item_group_imported" name="item_group[]" value="Imported"/>
+                                                            <label class="custom-control-label" for="item_group_imported">Imported</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div class="tab-pane item-views tab-view" id="item-sales-view" aria-labelledby="item-sales-view" role="tabpanel">
-                                        <div class="row">
+                                        <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
+                                                
+                                            </div>
+                                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-1" style="text-align: right;">
+                                                <table style="width: 100%;" class="table table-bordered text-center">
+                                                    <tr class="table-secondary">
+                                                        <td colspan="3">
+                                                            <b>Product Purchase Cost</b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="table-secondary">
+                                                        <td style="width: 33%"><b>Cost</b></td>
+                                                        <td style="width: 34%"><b>Before VAT</b></td>
+                                                        <td style="width: 33%"><b>After VAT</b></td>
+                                                    </tr>
+                                                    <tr class="table-default">
+                                                        <td>Min Cost</td>
+                                                            <td><b><span id="mincostbvlbl"></span></b></td>
+                                                            <td><b><span id="mincostlbl"></span></b></td>
+                                                    </tr>
+                                                    <tr id="averagecostabletr">
+                                                        <td>Avg Cost</td>
+                                                        <td><b><span id="averagecostbvlbl"></span></b></td>
+                                                        <td><b><span id="averagecostlbl"></span></b></td>
+                                                    </tr>
+                                                    <tr id="maxcostabletr">
+                                                        <td>Max Cost</td>
+                                                        <td><b><span id="maxcostbvlbl"></span></b></td>
+                                                        <td><b><span id="maxcostlbl"></span></b></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row" style="display: none;">
                                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                                 <label class="form_lbl">Selling Price (Before Tax)<b style="color: red; font-size:16px;">*</b></label>
                                                 <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter selling price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
@@ -647,7 +698,9 @@
                                                 </span>
                                             </div>
                                         </div>
+
                                     </div>
+
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
                                         <div class="row">
                                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 m-1" style="display: none;" id="barcode_div">
@@ -704,7 +757,7 @@
                                                 <strong id="type-error"></strong>
                                             </span>
                                         </div>
-                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="GroupDiv">
+                                        <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="GroupDiv" style="display: none;">
                                             <label strong style="font-size: 14px;">Group </label>
                                             <div class="" id="groupblock">
                                                 <select class="select2 form-control" data-placeholder="select item group" name="group" id="igroup" onchange="cleargroupvalidation()">
@@ -865,7 +918,7 @@
                                        
                                     </div> <!-- end row-->
                                 </div>
-                                <div class="col-md-3"  id="purchasediv">
+                                <div class="col-md-3"  id="purchasedi" style="display: none;">
                                     <section id="card-demo-example">
                                         <div class="row match-height">
                                             <div class="col-md-12 col-lg-12">
@@ -873,28 +926,7 @@
                                                     <div class="card-body">
                                                         <h4 class="card-title">Product-Purchase Cost</h4>
                                                         <div class="table-responsive">
-                                                            <table style="width: 100%;" class="table table-bordered">
-                                                                <tr class="table-secondary">
-                                                                    <td style="width: 33%"><b>Cost</b></td>
-                                                                    <td style="width: 34%"><b>Before VAT</b></td>
-                                                                    <td style="width: 33%"><b>After VAT</b></td>
-                                                                </tr>
-                                                                <tr class="table-default">
-                                                                    <td>Min Cost</td>
-                                                                        <td><b><span id="mincostbvlbl"></span></b></td>
-                                                                        <td><b><span id="mincostlbl"></span></b></td>
-                                                                </tr>
-                                                                <tr id="averagecostabletr">
-                                                                    <td>Avg Cost</td>
-                                                                    <td><b><span id="averagecostbvlbl"></span></b></td>
-                                                                    <td><b><span id="averagecostlbl"></span></b></td>
-                                                                </tr>
-                                                                <tr id="maxcostabletr">
-                                                                    <td>Max Cost</td>
-                                                                    <td><b><span id="maxcostbvlbl"></span></b></td>
-                                                                    <td><b><span id="maxcostlbl"></span></b></td>
-                                                                </tr>
-                                                            </table>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1220,7 +1252,8 @@
             </div>
         </div>
     <!--End upload image -->
-
+@endsection
+@section('scripts')
     <script type="text/javascript">
         var gblIndex = 0;
         var itemtable = '';

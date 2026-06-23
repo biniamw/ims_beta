@@ -1980,7 +1980,7 @@ class AttendanceController extends Controller
         $user=Auth()->user()->username ?? "Automated";
         $userid=Auth()->user()->id ?? 0;
         if($logrecord == 0){
-            return Response::json(['success'=>1,'logrecord'=>$logrecord]);
+            return Response::json(['success' => 1,'logrecord' => $logrecord]);
         }
         else if($logrecord > 0){
             while (true) {
@@ -2001,18 +2001,18 @@ class AttendanceController extends Controller
                     ->get();
 
                     foreach($insertedRecords as $row){
-                        $alltimetable=[];
-                        $timetableid=1;
-                        $punchtype=1;
+                        $alltimetable = [];
+                        $timetableid = 1;
+                        $punchtype = 1;
                         
-                        $datevalues= Carbon::parse($row->DateTime)->format('Y-m-d');
-                        $time=Carbon::parse($row->DateTime)->format('H:i');
+                        $datevalues = Carbon::parse($row->DateTime)->format('Y-m-d');
+                        $time = Carbon::parse($row->DateTime)->format('H:i');
 
                         $employeeid = employee::where('name',$row->Name)->latest()->value('id') ?? 1;
                 
-                        $timetabledata=DB::select('SELECT DISTINCT timetables_id FROM shiftschedule_timetables WHERE shiftschedule_timetables.shiftschedules_id=(SELECT shiftschedules.id FROM shiftschedules WHERE shiftschedules.employees_id='.$employeeid.') AND shiftschedule_timetables.Date="'.$datevalues.'"');
+                        $timetabledata = DB::select('SELECT DISTINCT timetables_id FROM shiftschedule_timetables WHERE shiftschedule_timetables.shiftschedules_id=(SELECT shiftschedules.id FROM shiftschedules WHERE shiftschedules.employees_id='.$employeeid.') AND shiftschedule_timetables.Date="'.$datevalues.'"');
                         foreach($timetabledata as $timetabledata){
-                            $alltimetable[]=$timetabledata->timetables_id;
+                            $alltimetable[] = $timetabledata->timetables_id;
                         }
                         $gettimetableid = timetable::whereIn('id',$alltimetable)->whereBetween(DB::raw("'$time'"),[DB::raw('timetables.BeginningIn'),DB::raw('timetables.EndingOut')])->latest()->first();
                         if(empty($gettimetableid)){
