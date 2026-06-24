@@ -460,9 +460,9 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or click [G] button to generate" class="form-control mainforminp" onkeyup="removeSknumbervalidation()"/>
+                                                                <input type="text" name="skuNumber" id="skuNumber" placeholder="Enter barcode number or click [G] button to generate" class="form-control mainforminp non_service_input" onkeyup="removeSknumbervalidation()"/>
                                                                 <span class="text-danger">
-                                                                    <strong id="skuNumber-error" class="errordatalabel general_error"></strong>
+                                                                    <strong id="skuNumber-error" class="errordatalabel general_error non_service_error"></strong>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -514,13 +514,13 @@
                                                     @foreach ($itemtypes as $itemtype_data)
                                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                                             <div class="custom-control custom-control-primary custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input item_type" id="item_type{{$itemtype_data->id}}" name="item_type_name[]" value="{{$itemtype_data->id}}"/>
+                                                                <input type="checkbox" class="custom-control-input item_type non_service_checkbox" id="item_type{{$itemtype_data->id}}" name="item_type_name[]" value="{{$itemtype_data->id}}"/>
                                                                 <label class="custom-control-label" for="item_type{{$itemtype_data->id}}">{{$itemtype_data->type}}</label>
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                     <span class="text-danger ml-1">
-                                                        <strong id="product_type-error" class="errordatalabel general_error"></strong>
+                                                        <strong id="product_type-error" class="errordatalabel general_error non_service_error"></strong>
                                                     </span>
                                                 </div>
                                                 <div class="row">
@@ -574,37 +574,37 @@
                                         <div class="row mr-1 ml-1 mt-1">
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="partNumDiv">
                                                 <label class="form_lbl" title="Part Number">Part No.</label>
-                                                <input type="text" placeholder="Enter part number here" class="form-control mainforminp" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
+                                                <input type="text" placeholder="Enter part number here" class="form-control mainforminp non_service_input" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
                                                 <span class="text-danger">
-                                                    <strong id="partNumber-error" class="errordatalabel basic_error"></strong>
+                                                    <strong id="partNumber-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="lowStockDiv">
                                                 <label class="form_lbl">Reorder Point</label>
-                                                <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
+                                                <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp non_service_input" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
-                                                    <strong id="lowStock-error" class="errordatalabel basic_error"></strong>
+                                                    <strong id="lowStock-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Lot Description</label>
-                                                <textarea type="text" name="lotDescription" id="lotDescription" placeholder="Enter lot description here" class="form-control mainforminp" rows="1" onkeyup="lotDescriptionFn()"></textarea>
+                                                <textarea type="text" name="lotDescription" id="lotDescription" placeholder="Enter lot description here" class="form-control mainforminp non_service_input" rows="1" onkeyup="lotDescriptionFn()"></textarea>
                                                 <span class="text-danger">
-                                                    <strong id="lot_description-error" class="errordatalabel basic_error"></strong>
+                                                    <strong id="lot_description-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Factor</label>
-                                                <input type="number" placeholder="Enter factor here" class="form-control mainforminp" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
+                                                <input type="number" placeholder="Enter factor here" class="form-control mainforminp non_service_input" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
                                                 <span class="text-danger">
-                                                    <strong id="factor-error" class="errordatalabel basic_error"></strong>
+                                                    <strong id="factor-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Cartoon Size</label>
-                                                <input type="number" placeholder="Enter cartoon size here" class="form-control mainforminp" name="cartoonSize" id="cartoonSize" onkeyup="cartoonSizeFn()" onkeypress="return ValidateNum(event);" />
+                                                <input type="number" placeholder="Enter cartoon size here" class="form-control mainforminp non_service_input" name="cartoonSize" id="cartoonSize" onkeyup="cartoonSizeFn()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
-                                                    <strong id="cartoon_size-error" class="errordatalabel basic_error"></strong>
+                                                    <strong id="cartoon_size-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                         </div>
@@ -618,7 +618,7 @@
                                                     <option value="Required">Requires</option>
                                                 </select>
                                                 <span class="text-danger">
-                                                    <strong id="requireSerialNumber-error" class="errordatalabel inventory_error"></strong>
+                                                    <strong id="requireSerialNumber-error" class="errordatalabel inventory_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="expireDateDiv">
@@ -630,7 +630,7 @@
                                                     <option value="Require-Both">Require-Both</option>
                                                 </select>
                                                 <span class="text-danger">
-                                                    <strong id="requireExpireDate-error" class="errordatalabel inventory_error"></strong>
+                                                    <strong id="requireExpireDate-error" class="errordatalabel inventory_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                         </div>
@@ -643,20 +643,53 @@
                                                 <div class="row">
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input item_group_class" id="item_group_local" name="item_group[]" value="Local"/>
+                                                            <input type="checkbox" class="custom-control-input item_group_class non_service_checkbox" id="item_group_local" name="item_group[]" value="Local"/>
                                                             <label class="custom-control-label" for="item_group_local">Local</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="custom-control custom-control-primary custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input item_group_class" id="item_group_imported" name="item_group[]" value="Imported"/>
+                                                            <input type="checkbox" class="custom-control-input item_group_class non_service_checkbox" id="item_group_imported" name="item_group[]" value="Imported"/>
                                                             <label class="custom-control-label" for="item_group_imported">Imported</label>
                                                         </div>
                                                     </div>
+                                                    <span class="text-danger">
+                                                        <strong id="group-error"></strong>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-10 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
-
+                                                <fieldset class="fset">
+                                                    <legend class="mb-0">Supplier</legend>
+                                                    <div class="row">
+                                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                            <div class="table-responsive pr-0 pl-0" style="width: 100%;overflow-x: auto;-webkit-overflow-scrolling: touch;margin: 0 0rem;padding: 0 1rem;">
+                                                                <table id="dynamicTable" class="mb-0 rtable form_dynamic_table fit-content" style="width:100%;min-width: 900px;">  
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="form_lbl" style="width:3%;">#</th>
+                                                                            <th class="form_lbl" style="width:20%;">Supplier Name<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:10%;">UOM<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:12%;">Quantity<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:12%;">Price</th>
+                                                                            <th class="form_lbl" style="width:20%;">Availability<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:20%;">Remark</th>
+                                                                            <th class="form_lbl" style="width:3%;"></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody></tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="5" style="text-align: left !important;border: none;">
+                                                                                <button type="button" name="adds" id="adds" class="btn btn-success btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
                                             </div>
                                         </div>
                                     </div>
@@ -784,8 +817,7 @@
                                             <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
                                                 <label class="form_lbl">Compatible Products</label>
                                                 <select class="select2 form-control" name="CompatibleProducts" id="CompatibleProducts" multiple onchange="compatibleProductFn()">
-                                                    <option value="Fixed">Fixed</option>
-                                                    <option value="Flexible">Flexible</option>
+
                                                 </select>
                                                 <span class="text-danger">
                                                     <strong id="compatible_products-error" class="errordatalabel sales_error"></strong>
@@ -805,7 +837,7 @@
                                                     <div id="barcodeimages" class="text-center" style="display: none;"></div>
                                                     <div id="barcodeimagesupdate" class="text-center" style="display: none;"></div>
                                                     <div class="custom-control custom-control-primary custom-checkbox mt-1" id="printbardiv">
-                                                        <input type="checkbox" class="custom-control-input item_group_class" id="printBar" name="printBar"/>
+                                                        <input type="checkbox" class="custom-control-input item_group_class non_service_checkbox" id="printBar" name="printBar"/>
                                                         <label class="custom-control-label" for="printBar">Print Barcode</label>
                                                         <input type="hidden" class="form-control" name="checkboxVali" id="checkboxVali" readonly/>
                                                     </div>
@@ -864,9 +896,7 @@
                                                     @endcan
                                                 </select>
                                             </div>
-                                            <span class="text-danger">
-                                                <strong id="group-error"></strong>
-                                            </span>
+
                                         </div>
                                         
                                     
@@ -1036,19 +1066,34 @@
 
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
-                        <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
-                        <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
-                        <input type="hidden" class="form-control mainforminp" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
-                        <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
-                        <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
-                        <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
+                        <div style="display: none;">
+                            <select class="select2 form-control" name="supplier_default" id="supplier_default">
+                                <option selected disabled value=""></option>
+                                @foreach ($supplier_data as $s_data)
+                                    <option value="{{ $s_data->id }}">{{ $s_data->customer}}</option>
+                                @endforeach
+                            </select>
+                            <select class="select2 form-control" name="uom_default" id="uom_default">
+                                <option selected disabled value=""></option>
+                                @foreach ($uom as $u_data)
+                                    <option value="{{ $um->id }}">{{ $um->Name }}</option>
+                                @endforeach
+                            </select>
+                        
+                            <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
+                            <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
+                            <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
+                            <input type="hidden" class="form-control mainforminp" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
+                            <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
+                            <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
+                            <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
 
-                        <input type="hidden" placeholder="max cost" class="form-control" name="maxcosti" id="maxcosti" />
-                        <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
-                        <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
-                        <input type="hidden" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
-                        <input type="hidden" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
+                            <input type="hidden" placeholder="max cost" class="form-control" name="maxcosti" id="maxcosti" />
+                            <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
+                            <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
+                            <input type="hidden" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
+                            <input type="hidden" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
+                        </div>
                         <button type="button" id="savebutton" class="btn btn-info waves-effect waves-float waves-light">Save</button>
                         <button id="closebuttonitem" type="button" class="btn btn-danger" onclick="closeModalWithClearValidation()" data-dismiss="modal">Close</button>
                     </div>
@@ -1349,6 +1394,10 @@
         var gblIndex = 0;
         var itemtable = '';
         var focustables = '';
+        var errorcolor = "#ffcccc";
+        var j = 0;
+        var i = 0;
+        var m = 0;
         var options1 = {
             width: 500,
             zoomWidth: 500,
@@ -1628,6 +1677,7 @@
             focustables='#itemdataables';
             itemdatalist('#itemdataables','All');
         });
+
         function itemslistbytab(params) {
             switch (params) {
                 case 'all':
@@ -1652,6 +1702,7 @@
                     break;
             }
         }
+
         function itemdatalist(tables,type){
                 itemtable=$(tables).DataTable({
                 responsive: true,
@@ -1893,9 +1944,11 @@
                     gblIndex = $(this).index();    
                 });
         }
+
         function setFocus(){ 
             $($(focustables+' tbody > tr')[gblIndex]).addClass('selected');  
         }
+
         function showitemInformation(itemid,uom,category,maxicost,averagecost){
             var localpriceupdate=$('#localitempriceupdate').val();
             var importpriceupdate=$('#importitempriceupdate').val();
@@ -2109,6 +2162,7 @@
                     }
                 });
         }
+
         function checkforefresh(){
             $('.sideImage').html('');
             $('#carouselExampleFade').html('');
@@ -2130,6 +2184,7 @@
                 }
             });
         }
+
         function setitemimages(images) {
             $.each(images, function (indexInArray, valueOfElement) { 
                 if(parseInt(indexInArray) == 0){
@@ -2237,9 +2292,11 @@
             }
             
         }
+
         function setAccessDeniedItemPrice(){
         
         }
+
         function setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice){
             $('#mincostInfoLblbv').text(numformat(mincostbv));
             $('#mincostInfoLblav').text(numformat(mincost));
@@ -2267,23 +2324,27 @@
             }
             
         }
+
         function setAverageCostColor(){
             $("#averagecosttr").addClass("table-success");
             $("#averagecostabletr").addClass("table-success");
         }
+
         function setMaxCostColor(){
             $("#maxcosttr").addClass("table-success");
             $("#maxcostabletr").addClass("table-success");
         }
+
         function removeAverageCostColor(){
             $("#averagecosttr").removeClass("table-success");
             $("#averagecostabletr").removeClass("table-success");
         }
+
         function removeMaxCostColor(){
             $("#maxcostabletr").removeClass("table-success");
             $("#maxcosttr").removeClass("table-success");
-
         }
+
         function setAccessDeniedinformation(){
             $('#mincostInfoLblbv').html('Access Denied!');
             $('#mincostInfoLblav').html('Access Denied!');
@@ -2305,6 +2366,7 @@
             $('#wspmInfoLbl').addClass('badge badge-pill badge-light-danger mr-1');
             
         }
+
         function removeColorAccessDeniedinformation(){
             $("#mincostInfoLblbv").removeClass("badge badge-pill badge-light-danger mr-1");
             $("#mincostInfoLblav").removeClass("badge badge-pill badge-light-danger mr-1");
@@ -2316,6 +2378,7 @@
             $('#rppmInfoLbl').removeClass('badge badge-pill badge-light-danger mr-1');
             $('#wspmInfoLbl').removeClass('badge badge-pill badge-light-danger mr-1');
         }
+
         function codeActive(){
             $('#code').prop('readonly', false);
         }
@@ -2350,6 +2413,14 @@
             $('#dividerdiv').hide();
             $('#batchupadtesavebutton').hide();
         });
+
+
+        //****************************************
+        //****************************************
+        //****************************************
+        //****************************************
+        //****************************************
+        //Starting a new modification.......
         
         $('body').on('click', '.addbutton', function() {
 
@@ -2455,12 +2526,21 @@
                 minimumResultsForSearch: -1
             });
 
+            $('#CompatibleProducts').val(null).select2({
+                placeholder: "Select compatible product here",
+            });
+
+            $('#dynamicTable > tbody').empty();
+
             $('input[name="product_class"]').prop('checked', false);
             $('input[id="product_class1"]').prop('checked', true);
             $('input[name="item_type_name"]').prop('checked', false);
 
             $('input[name="price_type"]').prop('checked', false);
             $('input[id="price_type1"]').prop('checked', true);
+
+            manageProductClassFn();
+            itemTabMgtFn();
 
             $('.mainforminp').val("");
             $('.errordatalabel').html("");
@@ -2503,7 +2583,6 @@
                         unblockPage(productCodeSection);
                     },
                 });                
-
             }
             else{
 
@@ -2523,77 +2602,208 @@
             $('#generate_item_code').hide();
             unblockPage(productCodeSection);
         }
-        
-            function openHeader(){
-                var transaction=$('#transactionEdit').val();
-                switch(transaction){
-                    case '1':
-                        withDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        GroupDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        nameDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        uomDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        codeDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        categoryDivSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        break;
-                    default:
-                        toastrMessage('error','Access Deneid!','Error'); 
-                        $('#name-error').html('Access Denied!');
-                }
+
+        $('input[name="product_class"]').on('change', function() {
+            var prd_class = $(this).val();
+            manageProductClassFn();
+        });
+
+        function manageProductClassFn(){
+            var prd_class = $('input[name="product_class"]:checked').val();
+            if(prd_class == "Goods" || prd_class == "Commodity"){
+                $('.non_service_div').show();
+                $('#generateBtn').show();
+                $('#barcodeDiv').hide();
             }
+            else if(prd_class == "Service"){
+                $('.non_service_div').hide();
+                $('.non_service_input').val("");
+                $('.non_service_error').html("");
+                $('.non_service_checkbox').prop('checked', false);
+
+                $('#ReqSerialNumber').val("Not-Require").select2({
+                    placeholder: "Select value here",
+                    minimumResultsForSearch: -1
+                });
+
+                $('#ReqExpireDate').val("Not-Require").select2({
+                    placeholder: "Select value here",
+                    minimumResultsForSearch: -1
+                });
+
+                $('#CompatibleProducts').val(null).select2({
+                    placeholder: "Select compatible product here",
+                });
+
+                $('#dynamicTable > tbody').empty();
+
+                $('#barcodeimages').empty();
+            }
+        } 
+        
+        function itemTabMgtFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            
+            $(".active-tab-title").addClass("active");
+            $(".active-tab-view").addClass("active");
+        }
+
+        $("#adds").click(function() {
+            ++i;
+            ++m;
+            ++j;
+            var lastrowcount = $('#dynamicTable > tbody > tr:last').find('td').eq(1).find('input').val();
+            var supplier = $(`#supplier${lastrowcount}`).val();
+
+            if(supplier !== undefined && isNaN(parseInt(supplier))){
+                $(`#supplier${lastrowcount}`).css('background-color',errorcolor);
+                toastrMessage('error',"Please insert valid data on highlighted field","Error");
+            }
+            else{
+                $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
+                    <td style="font-weight:bold;width:3%;text-align:center;">${j}</td>
+                    <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
+                    <td style="width:20%;"><select id="supplier${m}" class="select2 form-control supplier" onchange="supplierFn(this)" name="row[${m}][supplier]"></select></td>
+                    <td style="width:10%;"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
+                    <td style="width:12%;"><input type="number" name="row[${m}][quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="quantityFn(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:12%;"><input type="number" name="row[${m}][price]" placeholder="Enter price here" id="price${m}" class="price form-control numeral-mask" onkeyup="priceFn(this)" onkeypress="return ValidateNum(event);"/></td>
+                    <td style="width:20%;"><select id="availablity${m}" class="select2 form-control availablity" name="row[${m}][availablity]" onchange="availablityFn(this)"></select></td>
+                    <td style="width:20%;"><input type="text" name="row[${m}][remark]" placeholder="Enter remark here" id="remark${m}" class="remark form-control" onkeyup="remarkFn(this)"/></td>
+                    <td style="width:3%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                </tr>`);
+
+                var availablity_status = '<option value="Available">Available</option><option value="Not-Available">Not-Available</option>';
+                $(`#availablity${m}`).append(availablity_status).select2
+                ({
+                    placeholder: "Select availablity here",
+                    minimumResultsForSearch: -1
+                });
+                renumberRows();
+            }
+        });
+
+        $(document).on('click', '.remove-tr', function() {
+            $(this).parents('tr').remove();
+            renumberRows();
+            --i;
+        });
+
+        function renumberRows() {
+            var ind;
+            $('#dynamicTable > tbody > tr').each(function(index,el) {
+                $(this).children('td').first().text(index+=1);
+            });
+        }
+
+        function supplierFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#select2-supplier${cid}-container`).parent().css({"background":"white","position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+        }
+
+        function uomFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#uom${cid}`).css("background", "white");
+        }
+
+        function quantityFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#quantity${cid}`).css("background", "white");
+        }
+
+        function priceFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#price${cid}`).css("background", "white");
+        }
+
+        function availablityFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#select2-availablity${cid}-container`).parent().css({"background":"white","position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+        }
+
+        function remarkFn(ele) {
+            var cid = $(ele).closest('tr').find('.vals').val();
+            $(`#remark${cid}`).css("background", "white");
+        }
+
+        //****************************************
+        //****************************************
+        //****************************************
+        //****************************************
+        //****************************************
+        //Ending a new modification.......
+
+        function openHeader(){
+            var transaction=$('#transactionEdit').val();
+            switch(transaction){
+                case '1':
+                    withDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    GroupDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    nameDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    uomDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    codeDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    categoryDivSection.block({
+                        message:
+                        '',
+                        timeout: 1,
+                        css: {
+                        backgroundColor: '',
+                        color: '',
+                        border: ''
+                        },
+                    });
+                    break;
+                default:
+                    toastrMessage('error','Access Deneid!','Error'); 
+                    $('#name-error').html('Access Denied!');
+            }
+        }
+
         $('body').on('click', '.showItem', function() {
             var item_id = $(this).data('id');
             var uom = $(this).data('uom');
@@ -2613,10 +2823,12 @@
             $('#did').val(id);
             $('#deleteitem').modal('show');
         });
+
         $('#itemeditbutton').click(function(){
             var id=$('#ids').val();
             edititems(id);
         });
+
         function edititems(id){
             var wholesalefeaturetable=$('#wholesalefeaturetable').val();
             var importcostpermission=$('#importcost').val();
@@ -2952,6 +3164,7 @@
                 }
             });
         }
+
         function checkminstockpermission(group) {
             switch (group) {
                 case 'Imported':
@@ -2979,6 +3192,7 @@
                     break;
             }
         }
+
         function somedivhideandshow(type) {
             switch (type) {
                 case 'Service':
@@ -3069,6 +3283,9 @@
                     break;
             }
         }
+
+
+
         function editransaction(transaction){
                 switch(transaction){
                         case 0:
@@ -3209,6 +3426,7 @@
                             
                     }
         }
+
         function costTablesetColor(costtype){
             switch (costtype) {
                 case '1':
@@ -3221,6 +3439,7 @@
                     break;
             }
         }
+
         function addclasstocost(pmwholesale,pmretail){
             $('#mincostbvlbl').html('Access Denied!');  
             $('#averagecostbvlbl').html('Access Denied!'); 
@@ -3241,6 +3460,7 @@
             $("#averagecostbvlbl").addClass("badge badge-pill badge-light-danger mr-1");
             $('#maxcostbvlbl').addClass('badge badge-pill badge-light-danger mr-1');
         }
+
         function removeclassfromcost(){
             $("#mincostlbl").removeClass("badge badge-pill badge-light-danger mr-1");
             $("#averagecostlbl").removeClass("badge badge-pill badge-light-danger mr-1");
@@ -3249,12 +3469,14 @@
             $("#averagecostbvlbl").removeClass("badge badge-pill badge-light-danger mr-1");
             $('#maxcostbvlbl').removeClass('badge badge-pill badge-light-danger mr-1');
         }
+
         $('#printbutton').click(function() {
             var cid = $('#ids').val();
             console.log('print id=' + cid);
             var link = '/printbarcodes/' + cid;
             window.open(link, 'Barcodes', 'width=1200,height=800,scrollbars=yes');
         });
+
         $('#deletebtnitem').click(function() {
             var cid = document.forms['itemdeleteform'].elements['did'].value;
             var registerForm = $("#itemdeleteform");

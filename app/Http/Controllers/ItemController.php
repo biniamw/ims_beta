@@ -85,10 +85,12 @@ class ItemController extends Controller
         $uom = DB::select('select * from uoms where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
         $taxtypes = DB::select('select * from taxtype');
         $itemtypes = DB::select('SELECT * FROM item_types WHERE item_types.status="Active" ORDER BY item_types.type ASC');
+        $supplier_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory IN("Supplier","Customer&Supplier") AND customers.ActiveStatus="Active" ORDER BY customers.Name ASC');
         $lastsku = DB::table('regitems')->latest()->first();
 
         $item_properties = [
-          'category' => $category,'uom' => $uom,'taxtypes' => $taxtypes,'lastsku' => $lastsku,'setings' => $setings,'itemtypes' => $itemtypes
+          'category' => $category,'uom' => $uom,'taxtypes' => $taxtypes,'supplier_data' => $supplier_data,
+          'lastsku' => $lastsku,'setings' => $setings,'itemtypes' => $itemtypes
         ];
 
         if($request->ajax()) {
