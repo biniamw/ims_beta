@@ -2770,6 +2770,34 @@
             $(`#remark${cid}`).css("background", "white");
         }
 
+        function calculatePricingFn(){
+            var tax_quotient = 0;
+            var tax_type = $('#TaxType').val();
+            var min_before_tax = $('#MinSellingPriceBeforeTax').val();
+            var min_after_tax = $('#MinSellingPriceAfterTax').val();
+
+            var default_before_tax = $('#SellingPriceBeforeTax').val();
+            var default_after_tax = $('#SellingPriceAfterTax').val();
+
+            var max_before_tax = $('#MaxSellingPriceBeforeTax').val();
+            var max_after_tax = $('#MaxSellingPriceAfterTax').val();
+
+            tax_type = tax_type == '' ? 0 : tax_type;
+            min_before_tax = min_before_tax == '' ? 0 : min_before_tax;
+            min_after_tax = min_after_tax == '' ? 0 : min_after_tax;
+            default_before_tax = default_before_tax == '' ? 0 : default_before_tax;
+            default_after_tax = default_after_tax == '' ? 0 : default_after_tax;
+            max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
+            max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
+
+            tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
+
+            if(parseFloat(min_before_tax) > 0){
+                var after_tax_price = 
+            }
+
+        }
+
         //****************************************
         //****************************************
         //****************************************
