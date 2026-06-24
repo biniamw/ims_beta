@@ -668,11 +668,11 @@
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="form_lbl" style="width:3%;">#</th>
-                                                                            <th class="form_lbl" style="width:20%;">Supplier Name<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:25%;">Supplier Name<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:10%;">UOM<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:12%;">Quantity<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:12%;">Price</th>
-                                                                            <th class="form_lbl" style="width:20%;">Availability<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:15%;">Availability<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:20%;">Remark</th>
                                                                             <th class="form_lbl" style="width:3%;"></th>
                                                                         </tr>
@@ -716,22 +716,22 @@
                                                         </div>
                                                     </legend>
                                                     <div class="row">
-                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 flexible_attribute">
                                                             <fieldset class="fset2">
                                                                 <legend class="mb-0">Minimum Price</legend>
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="min_selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="min_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="min_selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="min_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -758,22 +758,22 @@
                                                                 </div>
                                                             </fieldset>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 flexible_attribute">
                                                             <fieldset class="fset2">
                                                                 <legend class="mb-0">Maximum Price</legend>
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="max_selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="max_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="max_selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="max_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -1076,7 +1076,7 @@
                             <select class="select2 form-control" name="uom_default" id="uom_default">
                                 <option selected disabled value=""></option>
                                 @foreach ($uom as $u_data)
-                                    <option value="{{ $um->id }}">{{ $um->Name }}</option>
+                                    <option value="{{ $u_data->id }}">{{ $u_data->Name }}</option>
                                 @endforeach
                             </select>
                         
@@ -1087,7 +1087,6 @@
                             <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
                             <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
                             <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
-
                             <input type="hidden" placeholder="max cost" class="form-control" name="maxcosti" id="maxcosti" />
                             <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
                             <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
@@ -2540,6 +2539,7 @@
             $('input[id="price_type1"]').prop('checked', true);
 
             manageProductClassFn();
+            managePricingFn();
             itemTabMgtFn();
 
             $('.mainforminp').val("");
@@ -2639,7 +2639,24 @@
 
                 $('#barcodeimages').empty();
             }
-        } 
+        }
+
+        $('input[name="price_type"]').on('change', function() {
+            var price_type = $(this).val();
+            managePricingFn();
+        });
+
+        function managePricingFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            if(price_type == "Flexible"){
+                $('.flexible_attribute').show();
+            }
+            else if(price_type == "Fixed"){
+                $('.flexible_attribute').hide();
+                $('.flexible_input').val("");
+                $('.flexible_error').html("");
+            }
+        }
         
         function itemTabMgtFn(){
             $(".tab-title").removeClass("active");
@@ -2655,23 +2672,45 @@
             ++j;
             var lastrowcount = $('#dynamicTable > tbody > tr:last').find('td').eq(1).find('input').val();
             var supplier = $(`#supplier${lastrowcount}`).val();
+            var supplier_option;
+            var uom_option;
+            var default_option = `<option selected disabled value=""></option>`;
 
             if(supplier !== undefined && isNaN(parseInt(supplier))){
-                $(`#supplier${lastrowcount}`).css('background-color',errorcolor);
+                $(`#select2-supplier${lastrowcount}-container`).parent().css('background-color',errorcolor);
                 toastrMessage('error',"Please insert valid data on highlighted field","Error");
             }
             else{
                 $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
                     <td style="font-weight:bold;width:3%;text-align:center;">${j}</td>
                     <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
-                    <td style="width:20%;"><select id="supplier${m}" class="select2 form-control supplier" onchange="supplierFn(this)" name="row[${m}][supplier]"></select></td>
+                    <td style="width:25%;"><select id="supplier${m}" class="select2 form-control supplier" onchange="supplierFn(this)" name="row[${m}][supplier]"></select></td>
                     <td style="width:10%;"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
                     <td style="width:12%;"><input type="number" name="row[${m}][quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="quantityFn(this)" onkeypress="return ValidateNum(event);"/></td>
                     <td style="width:12%;"><input type="number" name="row[${m}][price]" placeholder="Enter price here" id="price${m}" class="price form-control numeral-mask" onkeyup="priceFn(this)" onkeypress="return ValidateNum(event);"/></td>
-                    <td style="width:20%;"><select id="availablity${m}" class="select2 form-control availablity" name="row[${m}][availablity]" onchange="availablityFn(this)"></select></td>
+                    <td style="width:15%;"><select id="availablity${m}" class="select2 form-control availablity" name="row[${m}][availablity]" onchange="availablityFn(this)"></select></td>
                     <td style="width:20%;"><input type="text" name="row[${m}][remark]" placeholder="Enter remark here" id="remark${m}" class="remark form-control" onkeyup="remarkFn(this)"/></td>
                     <td style="width:3%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
                 </tr>`);
+
+                supplier_option = $("#supplier_default > option").clone();
+                $(`#supplier${m}`).append(supplier_option);
+
+                uom_option = $("#uom_default > option").clone();
+                $(`#uom${m}`).append(uom_option);
+
+                $('#dynamicTable > tbody > tr').each(function(index, tr) {
+                    let supp_id = $(this).find('.supplier').val();
+                    $(`#supplier${m} option[value="${supp_id}"]`).remove(); 
+                });
+
+                $(`#supplier${m}`).append(default_option).select2({
+                    placeholder: "Select supplier here",
+                });
+
+                $(`#uom${m}`).append(default_option).select2({
+                    placeholder: "Select UOM here",
+                });
 
                 var availablity_status = '<option value="Available">Available</option><option value="Not-Available">Not-Available</option>';
                 $(`#availablity${m}`).append(availablity_status).select2
@@ -2679,6 +2718,11 @@
                     placeholder: "Select availablity here",
                     minimumResultsForSearch: -1
                 });
+
+                $(`#select2-supplier${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-availablity${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+
                 renumberRows();
             }
         });
