@@ -442,7 +442,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="skuNumberDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="skuNumberDiv">
                                                         <div class="row">
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
                                                                 <label class="form_lbl" title="Barcode Number">Barcode No.</label>
@@ -507,8 +507,10 @@
                                             </div>
 
                                             <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-12 mb-1 pr-1">
-                                                <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
-                                                <div class="row">
+                                                <div class="row non_service_div">
+                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <label class="form_lbl">Product Type<b style="color: red; font-size:16px;">*</b></label>
+                                                    </div>
                                                     @foreach ($itemtypes as $itemtype_data)
                                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                                             <div class="custom-control custom-control-primary custom-checkbox">
@@ -517,6 +519,11 @@
                                                             </div>
                                                         </div>
                                                     @endforeach
+                                                    <span class="text-danger ml-1">
+                                                        <strong id="product_type-error" class="errordatalabel general_error"></strong>
+                                                    </span>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col-xl-7 col-lg-4 col-md-4 col-sm-12 col-12 mt-1">
                                                         <label class="form_lbl">Description</label>
                                                         <textarea type="text" name="description" id="description" placeholder="Enter description here" class="form-control mainforminp" rows="1"></textarea>
@@ -565,35 +572,35 @@
                                 <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
                                     <div class="tab-pane item-views active tab-view active-tab-view" id="item-basic-view" aria-labelledby="item-basic-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="partNumDiv">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="partNumDiv">
                                                 <label class="form_lbl" title="Part Number">Part No.</label>
                                                 <input type="text" placeholder="Enter part number here" class="form-control mainforminp" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
                                                 <span class="text-danger">
                                                     <strong id="partNumber-error" class="errordatalabel basic_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="lowStockDiv">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="lowStockDiv">
                                                 <label class="form_lbl">Reorder Point</label>
                                                 <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
                                                     <strong id="lowStock-error" class="errordatalabel basic_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Lot Description</label>
                                                 <textarea type="text" name="lotDescription" id="lotDescription" placeholder="Enter lot description here" class="form-control mainforminp" rows="1" onkeyup="lotDescriptionFn()"></textarea>
                                                 <span class="text-danger">
                                                     <strong id="lot_description-error" class="errordatalabel basic_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Factor</label>
                                                 <input type="number" placeholder="Enter factor here" class="form-control mainforminp" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
                                                 <span class="text-danger">
                                                     <strong id="factor-error" class="errordatalabel basic_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Cartoon Size</label>
                                                 <input type="number" placeholder="Enter cartoon size here" class="form-control mainforminp" name="cartoonSize" id="cartoonSize" onkeyup="cartoonSizeFn()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
@@ -604,14 +611,17 @@
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-inventory-view" aria-labelledby="item-inventory-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="serialNumDiv">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="serialNumDiv">
                                                 <label class="form_lbl" title="Is Serial Number Requires">Is Serial No. Req.</label>
                                                 <select class="select2 form-control" name="ReqSerialNumber" id="ReqSerialNumber" onchange="reqSerialNumValidation()">
                                                     <option value="Not-Require">Not-Require</option>
                                                     <option value="Required">Requires</option>
                                                 </select>
+                                                <span class="text-danger">
+                                                    <strong id="requireSerialNumber-error" class="errordatalabel inventory_error"></strong>
+                                                </span>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="expireDateDiv">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="expireDateDiv">
                                                 <label class="form_lbl" title="Is Batch Number or/and Expiry Date Requires">Is Batch No. | Expiry Date Req.</label>
                                                 <select class="select2 form-control" name="ReqExpireDate" id="ReqExpireDate" onchange="reqExpDateValidation()">
                                                     <option value="Not-Require">Not-Require</option>
@@ -619,13 +629,16 @@
                                                     <option value="Require-BatchNumber">Require-BatchNumber</option>
                                                     <option value="Require-Both">Require-Both</option>
                                                 </select>
+                                                <span class="text-danger">
+                                                    <strong id="requireExpireDate-error" class="errordatalabel inventory_error"></strong>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="tab-pane item-views tab-view" id="item-purchase-view" aria-labelledby="item-purchase-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="expireDateDiv">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Group</label>
                                                 <div class="row">
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -642,68 +655,148 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-xl-10 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
+
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="tab-pane item-views tab-view" id="item-sales-view" aria-labelledby="item-sales-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
                                             <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
-                                                
+                                                <fieldset class="fset">
+                                                    <legend class="mb-0">
+                                                        <div class="row">
+                                                            <div class="col-xl-6 col-lg-9 col-md-9 col-sm-9 col-12">Pricing</div>
+                                                            <div class="col-xl-6 col-lg-9 col-md-9 col-sm-9 col-12" style="text-align: right">
+                                                                <div class="demo-inline-spacing" style="justify-content:flex-end;font-weight:400;">
+                                                                    <div class="custom-control custom-radio mt-0">
+                                                                        <input type="radio" id="price_type1" name="price_type" class="custom-control-input" value="Flexible"/>
+                                                                        <label class="custom-control-label form_lbl" for="price_type1">Flexible</label>
+                                                                    </div>
+                                                                    <div class="custom-control custom-radio mt-0 mr-0">
+                                                                        <input type="radio" id="price_type2" name="price_type" class="custom-control-input" value="Fixed"/>
+                                                                        <label class="custom-control-label form_lbl" for="price_type2">Fixed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </legend>
+                                                    <div class="row">
+                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Minimum Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                                                        <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="min_selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="min_selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Default Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                                                        <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter default price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter default price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Maximum Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                                                        <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="max_selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
+                                                                        <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <span class="text-danger">
+                                                                            <strong id="max_selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+
+                                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-1 non_service_div" style="text-align: right;">
+                                                            <table style="width: 100%;font-size:12px;" class="rtable text-center">
+                                                                <tr>
+                                                                    <td colspan="3">
+                                                                        <label class="info_lbl" style="font-weight: bold;">Product Purchase Cost</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">Cost</label></td>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">Before Tax</label></td>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">After Tax</label></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td title="Minimum Cost"><label class="info_lbl">Min. Cost</label></td>
+                                                                    <td><label class="info_lbl" id="mincostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl" id="mincostlbl"></label></td>
+                                                                </tr>
+                                                                <tr id="averagecostabletr">
+                                                                    <td title="Average Cost"><label class="info_lbl">Avg. Cost</label></td>
+                                                                    <td><label class="info_lbl" id="averagecostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl" id="averagecostlbl"></label></td>
+                                                                </tr>
+                                                                <tr id="maxcostabletr">
+                                                                    <td title="Maximum Cost"><label class="info_lbl">Max. Cost</label></td>
+                                                                    <td><label class="info_lbl" id="maxcostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl" id="maxcostlbl"></label></td>
+                                                                </tr>
+                                                            </table>
+                                                            
+                                                        </div>
+
+                                                    </div>
+                                                </fieldset>
                                             </div>
-                                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-1" style="text-align: right;">
-                                                <table style="width: 100%;" class="table table-bordered text-center">
-                                                    <tr class="table-secondary">
-                                                        <td colspan="3">
-                                                            <b>Product Purchase Cost</b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="table-secondary">
-                                                        <td style="width: 33%"><b>Cost</b></td>
-                                                        <td style="width: 34%"><b>Before VAT</b></td>
-                                                        <td style="width: 33%"><b>After VAT</b></td>
-                                                    </tr>
-                                                    <tr class="table-default">
-                                                        <td>Min Cost</td>
-                                                            <td><b><span id="mincostbvlbl"></span></b></td>
-                                                            <td><b><span id="mincostlbl"></span></b></td>
-                                                    </tr>
-                                                    <tr id="averagecostabletr">
-                                                        <td>Avg Cost</td>
-                                                        <td><b><span id="averagecostbvlbl"></span></b></td>
-                                                        <td><b><span id="averagecostlbl"></span></b></td>
-                                                    </tr>
-                                                    <tr id="maxcostabletr">
-                                                        <td>Max Cost</td>
-                                                        <td><b><span id="maxcostbvlbl"></span></b></td>
-                                                        <td><b><span id="maxcostlbl"></span></b></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row" style="display: none;">
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                                <label class="form_lbl">Selling Price (Before Tax)<b style="color: red; font-size:16px;">*</b></label>
-                                                <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter selling price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                            <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
+                                                <label class="form_lbl">Compatible Products</label>
+                                                <select class="select2 form-control" name="CompatibleProducts" id="CompatibleProducts" multiple onchange="compatibleProductFn()">
+                                                    <option value="Fixed">Fixed</option>
+                                                    <option value="Flexible">Flexible</option>
+                                                </select>
                                                 <span class="text-danger">
-                                                    <strong id="selling_price_bt_error" class="errordatalabel general_error"></strong>
+                                                    <strong id="compatible_products-error" class="errordatalabel sales_error"></strong>
                                                 </span>
                                             </div>
-
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                                <label class="form_lbl">Selling Price (After Tax)<b style="color: red; font-size:16px;">*</b></label>
-                                                <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter selling price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
-                                                <span class="text-danger">
-                                                    <strong id="selling_price_at_error" class="errordatalabel general_error"></strong>
-                                                </span>
-                                            </div>
                                         </div>
-
                                     </div>
 
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 m-1" style="display: none;" id="barcode_div">
+                                        <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="barcode_div">
                                                 <label class="form_lbl">Barcode</label>
                                                 <div id="barcodeDiv">
                                                     <div class="text-center">
@@ -711,11 +804,12 @@
                                                     </div>
                                                     <div id="barcodeimages" class="text-center" style="display: none;"></div>
                                                     <div id="barcodeimagesupdate" class="text-center" style="display: none;"></div>
-                                                    <div class="form-check form-check-inline text-right mt-1" id="printbardiv">
-                                                        <label class="form-check-label" for="printbar">Print Barcode </label>
-                                                        <input class="form-check-input" name="printBar" type="checkbox" id="printBar" />
+                                                    <div class="custom-control custom-control-primary custom-checkbox mt-1" id="printbardiv">
+                                                        <input type="checkbox" class="custom-control-input item_group_class" id="printBar" name="printBar"/>
+                                                        <label class="custom-control-label" for="printBar">Print Barcode</label>
                                                         <input type="hidden" class="form-control" name="checkboxVali" id="checkboxVali" readonly/>
                                                     </div>
+
                                                     <div style="padding-left: 20%">
                                                         <b><label id="barcodeNumberss"></label></b>
                                                         <b><label id="barcodeNumber"></label></b>
@@ -734,7 +828,7 @@
 
 
 
-                        <section id="section-block">
+                        <section id="section-block" style="display:none;">
                             <div class="row">
                                 <div class="col-md-9" id="itemsdiv">
                                     <div class="row" id="headerblock">
@@ -939,15 +1033,13 @@
                                     </section>
                                 </div>
                         </section>
+
                     </div>
                     <div class="modal-footer">
-                        
-
-
                         <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
                         <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
                         <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
-                        <input type="hidden" class="form-control" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
+                        <input type="hidden" class="form-control mainforminp" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
                         <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
                         <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
                         <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
@@ -1252,8 +1344,7 @@
             </div>
         </div>
     <!--End upload image -->
-@endsection
-@section('scripts')
+
     <script type="text/javascript">
         var gblIndex = 0;
         var itemtable = '';
@@ -2367,6 +2458,9 @@
             $('input[name="product_class"]').prop('checked', false);
             $('input[id="product_class1"]').prop('checked', true);
             $('input[name="item_type_name"]').prop('checked', false);
+
+            $('input[name="price_type"]').prop('checked', false);
+            $('input[id="price_type1"]').prop('checked', true);
 
             $('.mainforminp').val("");
             $('.errordatalabel').html("");
@@ -3932,6 +4026,14 @@
 
         function taxTypeValidation() {
             $('#taxType-error').html("");
+        }
+
+        function priceTypeFn() {
+            $('#price_type-error').html("");
+        }
+
+        function compatibleProductFn() {
+            $('#compatible_products-error').html("");
         }
 
         function sellingPriceBeforeTaxFn() {

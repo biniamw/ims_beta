@@ -264,6 +264,25 @@
         margin-left: 20px;
     }
 
+    .fset2 {
+        border: 0.5px solid #D3D3D3 !important;
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    .fset2 legend {
+        color: #696969 !important;
+        background: none !important;     /* ← removes background box */
+        border: none !important;         /* ← removes border */
+        box-shadow: none !important;     /* ← removes shadow */
+        padding: 0 10px 0 0;             /* ← only right padding for spacing */
+        font-size: 13px;
+        margin-left: 0;                  /* ← aligns to the left */
+        width: auto;
+        float: none;                     /* ← ensures normal flow */
+        display: inline-block; 
+    }
+
     .appiddrp {
         width: 80% !important;
     }
@@ -287,8 +306,6 @@
     .select2width {
         width: 100% !important;
     }
-
-
 
     .truncate {
         max-width:130px;
