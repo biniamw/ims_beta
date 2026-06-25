@@ -573,35 +573,35 @@
                                     <div class="tab-pane item-views active tab-view active-tab-view" id="item-basic-view" aria-labelledby="item-basic-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="partNumDiv">
-                                                <label class="form_lbl" title="Part Number">Part No.</label>
+                                                <label class="form_lbl" title="Unique identifier assigned to this product for tracking and reference.">Part No.</label>
                                                 <input type="text" placeholder="Enter part number here" class="form-control mainforminp non_service_input" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
                                                 <span class="text-danger">
                                                     <strong id="partNumber-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="lowStockDiv">
-                                                <label class="form_lbl">Reorder Point</label>
+                                                <label class="form_lbl" title="The minimum stock level that triggers a replenishment order to avoid stockouts.">Reorder Point</label>
                                                 <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp non_service_input" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
                                                     <strong id="lowStock-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
-                                                <label class="form_lbl">Lot Description</label>
+                                                <label class="form_lbl" title="Identifies the specific lot or shelf location where this product is stored.">Lot Description</label>
                                                 <textarea type="text" name="lotDescription" id="lotDescription" placeholder="Enter lot description here" class="form-control mainforminp non_service_input" rows="1" onkeyup="lotDescriptionFn()"></textarea>
                                                 <span class="text-danger">
                                                     <strong id="lot_description-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
-                                                <label class="form_lbl">Factor</label>
+                                                <label class="form_lbl" title="A multiplier used to convert or scale quantities in calculations. (For manufacturing)">Factor</label>
                                                 <input type="number" placeholder="Enter factor here" class="form-control mainforminp non_service_input" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
                                                 <span class="text-danger">
                                                     <strong id="factor-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
-                                                <label class="form_lbl">Cartoon Size</label>
+                                                <label class="form_lbl" title="Number of pieces contained in a single carton or box.">Cartoon Size</label>
                                                 <input type="number" placeholder="Enter cartoon size here" class="form-control mainforminp non_service_input" name="cartoonSize" id="cartoonSize" onkeyup="cartoonSizeFn()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
                                                     <strong id="cartoon_size-error" class="errordatalabel basic_error non_service_error"></strong>
@@ -722,14 +722,14 @@
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="minVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="min_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="minVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="min_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
@@ -743,14 +743,14 @@
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter default price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter default price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="defaultVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="selling_price_bt_error" class="errordatalabel sales_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter default price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter default price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="defaultVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="selling_price_at_error" class="errordatalabel sales_error"></strong>
                                                                         </span>
@@ -764,14 +764,14 @@
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="maxVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="max_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
-                                                                        <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);"/>
+                                                                        <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="maxVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
                                                                             <strong id="max_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
                                                                         </span>
@@ -2770,9 +2770,256 @@
             $(`#remark${cid}`).css("background", "white");
         }
 
-        function calculatePricingFn(){
-            var tax_quotient = 0;
+        function taxTypeValidation() {
+            calculateTaxPricingFn();
+            $('#taxType-error').html("");
+        }
+
+        function minSellingPriceBeforeTaxFn(){
+            calculateAllPricingFn("min","before");
+            $('#min_selling_price_bt_error').html("");
+        }
+
+        function minSellingPriceAfterTaxFn(){
+            calculateAllPricingFn("min","after");
+            $('#min_selling_price_at_error').html("");
+        }
+
+        function sellingPriceBeforeTaxFn(){
+            calculateAllPricingFn("default","before");
+            $('#selling_price_bt_error').html("");
+        }
+
+        function sellingPriceAfterTaxFn(){
+            calculateAllPricingFn("default","after");
+            $('#selling_price_at_error').html("");
+        }
+
+        function maxSellingPriceBeforeTaxFn(){
+            calculateAllPricingFn("max","before");
+            $('#max_selling_price_bt_error').html("");
+        }
+
+        function maxSellingPriceAfterTaxFn(){
+            calculateAllPricingFn("max","after");
+            $('#max_selling_price_at_error').html("");
+        }
+
+        function minVerifyPriceBeforeTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var min_before_tax = $('#MinSellingPriceBeforeTax').val();
+            min_before_tax = min_before_tax == '' ? 0 : min_before_tax;
+            if(price_type == "Flexible" && parseFloat(min_before_tax) > 0){
+                var default_before_tax = $('#SellingPriceBeforeTax').val();
+                var max_before_tax = $('#MaxSellingPriceBeforeTax').val();
+
+                default_before_tax = default_before_tax == '' ? 0 : default_before_tax;
+                max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
+
+                if(parseFloat(min_before_tax) >= parseFloat(default_before_tax) && parseFloat(default_before_tax) > 0){
+                    $('#min_selling_price_bt_error').html("Minimum price cannot be greater or equal to default price");
+                    $('#MinSellingPriceBeforeTax').val("");
+                    $('#MinSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(min_before_tax) >= parseFloat(max_before_tax) && parseFloat(max_before_tax) > 0){
+                    $('#min_selling_price_bt_error').html("Minimum price cannot be greater or equal to maximum price");
+                    $('#MinSellingPriceBeforeTax').val("");
+                    $('#MinSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function minVerifyPriceAfterTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var max_after_tax = $('#MaxSellingPriceAfterTax').val();
+            max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
+            if(price_type == "Flexible" && parseFloat(max_after_tax) > 0){
+                var min_after_tax = $('#MinSellingPriceAfterTax').val();
+                var default_after_tax = $('#SellingPriceAfterTax').val();
+                
+                min_after_tax = min_after_tax == '' ? 0 : min_after_tax;
+                default_after_tax = default_after_tax == '' ? 0 : default_after_tax;
+                
+                if(parseFloat(min_after_tax) >= parseFloat(default_after_tax) && parseFloat(default_after_tax) > 0){
+                    $('#min_selling_price_at_error').html("Minimum price cannot be greater or equal to default price");
+                    $('#MinSellingPriceBeforeTax').val("");
+                    $('#MinSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(min_after_tax) >= parseFloat(max_after_tax) && parseFloat(max_after_tax) > 0){
+                    $('#min_selling_price_at_error').html("Minimum price cannot be greater or equal to default price");
+                    $('#MinSellingPriceBeforeTax').val("");
+                    $('#MinSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function defaultVerifyPriceBeforeTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var default_before_tax = $('#SellingPriceBeforeTax').val();
+            default_before_tax = default_before_tax == '' ? 0 : default_before_tax;
+            if(price_type == "Flexible" && parseFloat(default_before_tax) > 0){
+                var min_before_tax = $('#MinSellingPriceBeforeTax').val();
+                var max_before_tax = $('#MaxSellingPriceBeforeTax').val();
+
+                min_before_tax = min_before_tax == '' ? 0 : min_before_tax;
+                max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
+
+                if(parseFloat(default_before_tax) <= parseFloat(min_before_tax) && parseFloat(min_before_tax) > 0){
+                    $('#selling_price_bt_error').html("Default price cannot be less or equal to minimum price");
+                    $('#SellingPriceBeforeTax').val("");
+                    $('#SellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(default_before_tax) >= parseFloat(max_before_tax) && parseFloat(max_before_tax) > 0){
+                    $('#selling_price_bt_error').html("Default price cannot be greater or equal to maximum price");
+                    $('#SellingPriceBeforeTax').val("");
+                    $('#SellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function defaultVerifyPriceAfterTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var default_after_tax = $('#SellingPriceAfterTax').val();
+            default_after_tax = default_after_tax == '' ? 0 : default_after_tax;
+
+            if(price_type == "Flexible" && parseFloat(default_after_tax) > 0){
+                var min_after_tax = $('#MinSellingPriceAfterTax').val();
+                var max_after_tax = $('#MaxSellingPriceAfterTax').val();
+
+                min_after_tax = min_after_tax == '' ? 0 : min_after_tax;
+                max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
+
+                if(parseFloat(default_after_tax) <= parseFloat(min_after_tax) && parseFloat(min_after_tax) > 0){
+                    $('#selling_price_at_error').html("Default price cannot be less or equal to minimum price");
+                    $('#SellingPriceBeforeTax').val("");
+                    $('#SellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(default_after_tax) >= parseFloat(max_after_tax) && parseFloat(max_after_tax) > 0){
+                    $('#selling_price_at_error').html("Default price cannot be greater or equal to maximum price");
+                    $('#SellingPriceBeforeTax').val("");
+                    $('#SellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function maxVerifyPriceBeforeTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var max_before_tax = $('#MaxSellingPriceBeforeTax').val();
+            max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
+
+            if(price_type == "Flexible" && parseFloat(max_before_tax) > 0){
+                var min_before_tax = $('#MinSellingPriceBeforeTax').val();
+                var default_before_tax = $('#SellingPriceBeforeTax').val();
+                
+                min_before_tax = min_before_tax == '' ? 0 : min_before_tax;
+                default_before_tax = default_before_tax == '' ? 0 : default_before_tax;
+                
+                if(parseFloat(max_before_tax) <= parseFloat(default_before_tax) && parseFloat(default_before_tax) > 0){
+                    $('#max_selling_price_bt_error').html("Maximum price cannot be less or equal to default price");
+                    $('#MaxSellingPriceBeforeTax').val("");
+                    $('#MaxSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(max_before_tax) <= parseFloat(min_before_tax) && parseFloat(min_before_tax) > 0){
+                    $('#max_selling_price_bt_error').html("Maximum price cannot be less or equal to minimum price");
+                    $('#MaxSellingPriceBeforeTax').val("");
+                    $('#MaxSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function maxVerifyPriceAfterTaxFn(){
+            var price_type = $('input[name="price_type"]:checked').val();
+            var max_after_tax = $('#MaxSellingPriceAfterTax').val();
+            max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
+
+            if(price_type == "Flexible" && parseFloat(max_after_tax) > 0){
+                var min_after_tax = $('#MinSellingPriceAfterTax').val();
+                var default_after_tax = $('#SellingPriceAfterTax').val();
+                
+                min_after_tax = min_after_tax == '' ? 0 : min_after_tax;
+                default_after_tax = default_after_tax == '' ? 0 : default_after_tax;
+                
+                if(parseFloat(max_after_tax) <= parseFloat(default_after_tax) && parseFloat(default_after_tax) > 0){
+                    $('#max_selling_price_at_error').html("Maximum price cannot be less or equal to default price");
+                    $('#MaxSellingPriceBeforeTax').val("");
+                    $('#MaxSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+                if(parseFloat(max_after_tax) <= parseFloat(min_after_tax) && parseFloat(min_after_tax) > 0){
+                    $('#max_selling_price_at_error').html("Maximum price cannot be less or equal to mimimum price");
+                    $('#MaxSellingPriceBeforeTax').val("");
+                    $('#MaxSellingPriceAfterTax').val("");
+                    toastrMessage("error","Please enter a valid data on the field","Error");
+                }
+            }
+        }
+
+        function calculateAllPricingFn(price_mode,tax_status){
             var tax_type = $('#TaxType').val();
+            var tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
+
+            if(price_mode == "min"){
+                var min_before_tax = $('#MinSellingPriceBeforeTax').val();
+                var min_after_tax = $('#MinSellingPriceAfterTax').val();
+                min_before_tax = min_before_tax == '' ? 0 : min_before_tax;
+                min_after_tax = min_after_tax == '' ? 0 : min_after_tax;
+
+                if(tax_status == "before"){
+                    var after_tax_price = parseFloat(min_before_tax) * parseFloat(tax_quotient);
+                    $('#MinSellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+                }
+                else if(tax_status == "after"){
+                    var before_tax_price = parseFloat(min_after_tax) / parseFloat(tax_quotient);
+                    $('#MinSellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
+                }
+            }
+
+            if(price_mode == "default"){
+                var default_before_tax = $('#SellingPriceBeforeTax').val();
+                var default_after_tax = $('#SellingPriceAfterTax').val();
+                default_before_tax = default_before_tax == '' ? 0 : default_before_tax;
+                default_after_tax = default_after_tax == '' ? 0 : default_after_tax;
+
+                if(tax_status == "before"){
+                    var after_tax_price = parseFloat(default_before_tax) * parseFloat(tax_quotient);
+                    $('#SellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+                }
+                else if(tax_status == "after"){
+                    var before_tax_price = parseFloat(default_after_tax) / parseFloat(tax_quotient);
+                    $('#SellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
+                }
+            }
+
+            if(price_mode == "max"){
+                var max_before_tax = $('#MaxSellingPriceBeforeTax').val();
+                var max_after_tax = $('#MaxSellingPriceAfterTax').val();
+                max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
+                max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
+
+                if(tax_status == "before"){
+                    var after_tax_price = parseFloat(max_before_tax) * parseFloat(tax_quotient);
+                    $('#MaxSellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+                }
+                else if(tax_status == "after"){
+                    var before_tax_price = parseFloat(max_after_tax) / parseFloat(tax_quotient);
+                    $('#MaxSellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
+                }
+            }
+        }
+
+        function calculateTaxPricingFn(){
+            var tax_type = $('#TaxType').val();
+            var tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
             var min_before_tax = $('#MinSellingPriceBeforeTax').val();
             var min_after_tax = $('#MinSellingPriceAfterTax').val();
 
@@ -2790,12 +3037,32 @@
             max_before_tax = max_before_tax == '' ? 0 : max_before_tax;
             max_after_tax = max_after_tax == '' ? 0 : max_after_tax;
 
-            tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
-
-            if(parseFloat(min_before_tax) > 0){
-                var after_tax_price = 
+            if(parseFloat(min_before_tax) > 0 && parseFloat(min_after_tax) >= 0){
+                var after_tax_price = parseFloat(min_before_tax) * parseFloat(tax_quotient);
+                $('#MinSellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+            }
+            if(parseFloat(min_before_tax) == 0 && parseFloat(min_after_tax) > 0){
+                var before_tax_price = parseFloat(min_after_tax) / parseFloat(tax_quotient);
+                $('#MinSellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
             }
 
+            if(parseFloat(default_before_tax) > 0 && parseFloat(default_after_tax) >= 0){
+                var after_tax_price = parseFloat(default_before_tax) * parseFloat(tax_quotient);
+                $('#SellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+            }
+            if(parseFloat(default_before_tax) == 0 && parseFloat(default_after_tax) > 0){
+                var before_tax_price = parseFloat(default_after_tax) / parseFloat(tax_quotient);
+                $('#SellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
+            }
+
+            if(parseFloat(max_before_tax) > 0 && parseFloat(max_after_tax) >= 0){
+                var after_tax_price = parseFloat(max_before_tax) * parseFloat(tax_quotient);
+                $('#MaxSellingPriceAfterTax').val(parseFloat(after_tax_price).toFixed(2));
+            }
+            if(parseFloat(max_before_tax) == 0 && parseFloat(max_after_tax) > 0){
+                var before_tax_price = parseFloat(max_after_tax) / parseFloat(tax_quotient);
+                $('#MaxSellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
+            }
         }
 
         //****************************************
@@ -4318,24 +4585,12 @@
             $('#wholeSellerMinAmount-error').html("");
         }
 
-        function taxTypeValidation() {
-            $('#taxType-error').html("");
-        }
-
         function priceTypeFn() {
             $('#price_type-error').html("");
         }
 
         function compatibleProductFn() {
             $('#compatible_products-error').html("");
-        }
-
-        function sellingPriceBeforeTaxFn() {
-            $('#selling_price_bt_error').html("");
-        }
-
-        function sellingPriceAfterTaxFn() {
-            $('#selling_price_at_error').html("");
         }
 
         function reqSerialNumValidation() {
