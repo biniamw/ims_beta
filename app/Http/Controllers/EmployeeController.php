@@ -822,7 +822,7 @@ class EmployeeController extends Controller
                 DB::table('actions')->insert(['user_id'=>$userid,'pageid'=>$employees->id,'pagename'=>"employee",'action'=>$actions,'status'=>$actions,'time'=>Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),'reason'=>"",'created_at'=>Carbon::now(),'updated_at'=>Carbon::now()]);
 
                 DB::commit();
-                return Response::json(['success' =>1]);
+                return Response::json(['success' => 1]);
             }
             catch(Exception $e)
             {

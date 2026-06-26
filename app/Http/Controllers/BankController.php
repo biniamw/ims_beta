@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use App\Models\bank;
 use App\Models\bankdetail;
 use App\Models\actions;
+use Illuminate\Support\Facades\Cache;
 
 class BankController extends Controller
 {
@@ -22,8 +23,10 @@ class BankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    const CACHE_KEY = 'bank_data_all';
+    const CACHE_TTL = 3600; // 1 hour
+
+    public function index(Request $request){
         //
         $user=Auth()->user()->username;
         $userid=Auth()->user()->id;
@@ -37,18 +40,31 @@ class BankController extends Controller
         }
     }
 
-    public function banklistcon()
-    {
-        $user=Auth()->user()->username;
-        $userid=Auth()->user()->id;
-        $users=Auth()->user();
-        $banklist=DB::select('SELECT * FROM banks ORDER BY id DESC');
-        if(request()->ajax()) {
-            return datatables()->of($banklist)
-            ->addIndexColumn()
-            ->rawColumns(['action'])
-            ->make(true);
+    public function banklistcon(){
+        $user = Auth()->user()->username;
+        $userid = Auth()->user()->id;
+        $users = Auth()->user();
+        try{
+            $banklist = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
+                return DB::select('SELECT * FROM banks ORDER BY id DESC');
+            });
+
+            return datatables()->of($banklist)->addIndexColumn()->toJson();
         }
+        catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        // $banklist=DB::select('SELECT * FROM banks ORDER BY id DESC');
+        // if(request()->ajax()) {
+        //     return datatables()->of($banklist)
+        //     ->addIndexColumn()
+        //     ->rawColumns(['action'])
+        //     ->make(true);
+        // }
     }
 
 

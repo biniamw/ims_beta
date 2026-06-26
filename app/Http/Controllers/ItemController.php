@@ -31,9 +31,13 @@ use LaravelDaily\Invoices\Classes\InvoiceItem;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class ItemController extends Controller
 {
+
+    const CACHE_KEY = 'products_all';
+    const CACHE_TTL = 3600; // 1 hour
 
     /**
      * Display a listing of the resource.
@@ -43,10 +47,10 @@ class ItemController extends Controller
 
     function testimages(){
         $imagepath = public_path().'/itemimage/13.jpg';
-        $im=public_path('itemimage/13.jpg');
+        $im = public_path('itemimage/13.jpg');
         $image = base64_encode(file_get_contents($imagepath));
-        $newimg="https://apis.opalaconsult.com/face_recognition/default.png";
-        $apiurlval="http://192.168.0.139/action/AddPerson";
+        $newimg = "https://apis.opalaconsult.com/face_recognition/default.png";
+        $apiurlval = "http://192.168.0.139/action/AddPerson";
         return Http::withBasicAuth('admin','admin')
         ->post($apiurlval,[
             'operator'=>"AddPerson",
@@ -83,14 +87,15 @@ class ItemController extends Controller
         $setings = DB::table('settings')->latest()->first();
         $category = DB::select('select * from categories where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
         $uom = DB::select('select * from uoms where ActiveStatus="Active" and IsDeleted=1 order by Name asc');
-        $taxtypes = DB::select('select * from taxtype');
+        $taxtypes = DB::select('SELECT * FROM taxtype');
         $itemtypes = DB::select('SELECT * FROM item_types WHERE item_types.status="Active" ORDER BY item_types.type ASC');
         $supplier_data = DB::select('SELECT customers.id,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS customer FROM customers WHERE customers.CustomerCategory IN("Supplier","Customer&Supplier") AND customers.ActiveStatus="Active" ORDER BY customers.Name ASC');
+        $item_data = DB::select('SELECT regitems.id,regitems.Name,regitems.Type FROM regitems WHERE regitems.ActiveStatus="Active" ORDER BY regitems.Name ASC');
         $lastsku = DB::table('regitems')->latest()->first();
 
         $item_properties = [
           'category' => $category,'uom' => $uom,'taxtypes' => $taxtypes,'supplier_data' => $supplier_data,
-          'lastsku' => $lastsku,'setings' => $setings,'itemtypes' => $itemtypes
+          'lastsku' => $lastsku,'setings' => $setings,'itemtypes' => $itemtypes,'item_data' => $item_data
         ];
 
         if($request->ajax()) {
@@ -107,27 +112,24 @@ class ItemController extends Controller
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
-    public function showItemData($type)
-    {
-      switch ($type) {
-        case 'All':
-              $item=DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 ORDER BY id ASC');
-          break;
-        case 'Goods':
-            $item=DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 and regitems.Type="Goods" ORDER BY id ASC');
-          break;
-        case 'fixedasset':
-            $item=DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 and regitems.Type="Fixed Asset" ORDER BY id ASC');
-        break;
-        case 'service':
-          $item=DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 and regitems.Type="Service" ORDER BY id ASC');
-        break;
-        default:
-              $item=DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems INNER JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 and regitems.Type="Consumption" ORDER BY id ASC');
-          break;
-      }
+    public function showItemData($type){
+      try{
+        $item = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
+          return DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 ORDER BY id ASC');
+        });
         return datatables()->of($item)->addIndexColumn()->toJson();
+      }
+      catch (\Exception $e) {
+          return response()->json([
+              'error' => true,
+              'message' => $e->getMessage()
+          ], 500);
+      }
+
+      // $item = DB::select('SELECT regitems.id,regitems.Type,regitems.Name,regitems.itemGroup,regitems.Code,regitems.MaxCost,regitems.averageCost,uoms.Name as UOM,categories.Name as Category,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.Description,regitems.SKUNumber,regitems.BarcodeType,regitems.ActiveStatus,regitems.MinimumStock,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId=regitems.id) AS Balance,(SELECT IFNULL(SUM(salesitems.ConvertedQuantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id INNER JOIN uoms on regitems.MeasurementId=uoms.id where regitems.IsDeleted=1 ORDER BY id ASC');
+      // return datatables()->of($item)->addIndexColumn()->toJson();   
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -258,9 +260,9 @@ class ItemController extends Controller
 
     
     }
+
     public function getbatchitemlog(Request $request){
       $validator = Validator::make($request->all(), [
-        
         'itemGroup' =>'required',
         'category'=>'required',
       
@@ -284,6 +286,7 @@ class ItemController extends Controller
 
       
     }
+
     public function getbatchitem(Request $request){
       $validator = Validator::make($request->all(), [
         
@@ -306,6 +309,7 @@ class ItemController extends Controller
 
       
     }
+
     public function batchupdatepreview($item){
       $items = array_map('intval', explode(',', $item));
       //$items=Regitem::whereIn('id',$request->item)->get(['itemGroup','Code','Name']);
@@ -317,6 +321,7 @@ class ItemController extends Controller
                     return datatables()->of($item)->addIndexColumn()->toJson();
       // return Response::json(['errors' => $items]);
     }
+
     public function pricehangelog(){
       $category=Category::where('ActiveStatus','Active')->where('IsDeleted',1)->orderBy('Name','Asc')->get(['id','Name']);
       $items=Itemlog::join('regitems','regitems.id','=','itemlogs.regitem_id')
@@ -349,6 +354,7 @@ class ItemController extends Controller
         'companyalladdress'=>$companyalladdress,
     ]);
     }
+
     public function getpricelog( $from,$to,$group,$type){
       $categories=$_POST['category'];
       $items=$_POST['item'];
@@ -405,272 +411,191 @@ class ItemController extends Controller
                       'images'=>$images,
                         ]);
         }
+
+
     public function store(Request $request){
-      $number=null;
-      $barcodename=null;
-      $itempathstore=null;
-      $ty=null;
-      $oldsknumber=null;
-      $oldbarcodetype=null;
-      $profitmarginretail=null;
-      $profitmarginwholesale=null;
-      $message='';
-            $type=$request->TypeId;
-            if($type=='Goods'||$type=='Consumption')
-            {
-              $ty='Goods';
-              $validator = Validator::make($request->all(), [
-              'TypeId'=>"required",
-              'group'=>'required',
-              'item_image' => 'image|mimes:jpeg,png,jpg,gif,svg',
-              'code'=>"required|max:255|min:2|unique:regitems,Code,$request->id",
-              'Category'=>"required",
-              'Uom'=>"required",
-              'wholeSellerPrice'=>'nullable|numeric|lt:retailPrice',
-                ]);
-                $validator->sometimes('name', "required|min:2|max:255|unique:regitems,Name,$request->id", function ($input) {
-                  return $input->id!=null;
-                });
-                $validator->sometimes('name', "required|min:2|max:255|unique_space_check:regitems", function ($input) {
-                  return $input->id==null;
-                });
-                $validator->sometimes('retailPrice', 'required|gt:0', function ($input) {
-                return $input->wholeSellerPrice > 0;
-                });
-                $validator->sometimes('wholeSellerMinAmount', 'required|gt:0', function ($input) {
-                  return $input->wholeSellerPrice > 0;
-                  });
-              $validator->sometimes('skuNumber', "required|unique:regitems,SKUNumber,$request->id", function ($input) {
-                return ($input->TypeId == "Goods" &&  $input->barcoderequire =="Require");
-              });
-            }
-            if($type=='Service')
-            {
-              $validator = Validator::make($request->all(), [
-              'TypeId'=>"required",              
-              'name' =>"required|max:255|min:2|unique:regitems,Name,$request->id",
-              'code'=>"required|max:255|min:2|unique:regitems,Code,$request->id",
-              'Category'=>"required",
-              'Uom'=>"required",
-                ]);
-            }
+      ini_set('max_execution_time', '30000');
+      ini_set("pcre.backtrack_limit", "30000");
+      $settings = DB::table('settings')->latest()->first();
+      $user = Auth()->user()->username;
+      $userid = Auth()->user()->id;
+      $number = null;
+      $barcodename = null;
+      $itempathstore = null;
+      $ty = null;
+      $oldsknumber = null;
+      $oldbarcodetype = null;
+      $profitmarginretail = null;
+      $profitmarginwholesale = null;
+      $message = "";
+      $type = $request->TypeId;
+      $findid = $request->id;
+
+      $validator = Validator::make($request->all(), [
+        'product_class' => 'required',
+        'code' => 'required',
+        'name' => [
+          'required',
+          Rule::unique('regitems','Name')->ignore($findid)
+        ],
+        'skuNumber' => [
+          'nullable',
+          Rule::unique('regitems','SKUNumber')->ignore($findid)
+        ],
+        'Uom'=> 'required',
+        'Category' => 'required',
+        'TypeId' => 'required',
+        'item_type' => 'required_if:product_class,Goods',
+        'item_group' => 'required',
+        'price_type' => 'required',
+        'MinSellingPriceBeforeTax' => 'required_if:price_type,Flexible|ls:SellingPriceBeforeTax',
+        'MinSellingPriceAfterTax' => 'required_if:price_type,Flexible|ls:SellingPriceAfterTax',
+        'SellingPriceBeforeTax' => 'required',
+        'SellingPriceAfterTax' => 'required',
+        'MaxSellingPriceBeforeTax' => 'required_if:price_type,Flexible|gt:SellingPriceBeforeTax',
+        'MaxSellingPriceAfterTax' => 'required_if:price_type,Flexible|gt:SellingPriceAfterTax',
+      ]);
+
             
-              if ($validator->passes()) {
-                $item=new Regitem;
-                $number=$request->skuNumber;
-                if(!empty($number)){
-                    $barcodelenth=Str::length($number);
-                    
-                    if($barcodelenth==12 || $barcodelenth==13){
-                        include(app_path().'/CustomClass/barcode.php');
-                        $barcode_images = new Barcode($number, 4);
-                        $barcode_image=$barcode_images->image();
-                        $barcode=Image::make($barcode_image);
-                        Response::make($barcode->encode('jpeg'));
-                        $savename = $number.'.'.'png';
-                        $barcodepath = public_path() . '/barcode/'.$savename;
-                        $barcodename="barcode/".$savename;
-                        file_put_contents($barcodepath,$barcode);
-                    }
-                  } else{
-                      $number=null;
-                      $barcodename=null;
-                  }
+      if($validator->passes()){
+        $item = new Regitem;
+        $number = $request->skuNumber;
+        if(!empty($number)){
+          $barcodelenth = Str::length($number);
+          if($barcodelenth == 12 || $barcodelenth == 13){
+            include(app_path().'/CustomClass/barcode.php');
+            $barcode_images = new Barcode($number, 4);
+            $barcode_image = $barcode_images->image();
+            $barcode = Image::make($barcode_image);
+            Response::make($barcode->encode('jpeg'));
+            $savename = $number.'.'.'png';
+            $barcodepath = public_path() . '/barcode/'.$savename;
+            $barcodename = "barcode/".$savename;
+            file_put_contents($barcodepath,$barcode);
+          }
+        } 
+        else{
+          $number = null;
+          $barcodename = null;
+        }
                   
-                  switch ($request->TypeId) {
-                    case 'Service':
-                      $barcode=null;
-                      break;
-                    
-                    default:
-                        if($request->BarcodeTypes=='Generate'){
-                            if($request->id==null){
-                              $num=$request->skupdate;
-                              $num+=1;
-                              $updn=DB::select('UPDATE settings SET skunumber=skunumber+1 WHERE 1');
-                            } 
-                            else{ // on edit generate barcode if it is not generated before
-                              if($request->BarcodeTypesupdate==null){ 
-                                  switch ($request->BarcodeTypes) {
-                                    case 'Generate':
-                                      $updn=DB::select('UPDATE settings SET skunumber=skunumber+1 WHERE 1');
-                                      break;
-                                    
-                                    default:
-                                      # code...
-                                      break;
-                                  }
-                              }
-                            }
-                        }
-                        if($request->id==null){
-                          $oldsknumber=$number;
-                          $oldbarcodetype=$request->BarcodeTypes;
-                        }
-                        else if($request->id!=null){
-                          $oldsknumber=$request->skuNumberupdate;
-                          if($request->BarcodeTypes=='Generate')
-                          {
-                            $oldbarcodetype="Generate";
-                            
-                            $oldsknumber=$number;
-                          }
-                          else{
-                            $oldbarcodetype=$request->BarcodeTypesupdate;
-                            $oldsknumber=$request->skuNumberupdate;
-                          }
-                          
-                          if($request->pmretail=="AD"){
-                            $profitmarginretail=$request->pmretailhidden;
-                          } else{
-                            $profitmarginretail=$request->pmretail;
-                            
-                          }
-                          if($request->pmwholesale=="AD"){
-                            $profitmarginwholesale=$request->pmwholesalehidden;
-                          }else{
-                            $profitmarginwholesale=$request->pmwholesale;
-                          }
-                        }
-                      break;
-                  }
-                
-                  
-                  
-                try
-                {
-                  $sale=Regitem::updateOrCreate(['id' =>$request->id], [
-                    'Name' => trim($request->name),
-                    'Code' => trim($request->code),
-                    'MeasurementId' =>trim($request->Uom),
-                    'CategoryId' => trim($request->Category),
-                    'RetailerPrice' => $request->retailPrice,
-                    'WholesellerPrice' => $request->wholeSellerPrice,
-                    'wholeSellerMinAmount' => $request->wholeSellerMinAmount,
-                    'wholeSellerMaxAmount' => $request->wholeSellerMaxAmount,
-                    'MinimumStock' => $request->minimumstock,
-                    'pmretail'=>$profitmarginretail,
-                    'pmwholesale'=>$profitmarginwholesale,
-                    'RequireSerialNumber' => trim($request->ReqSerialNumber),
-                    'TaxTypeId' => trim($request->TaxType),
-                    'RequireExpireDate' => trim($request->ReqExpireDate),
-                    'PartNumber' => trim($request->partNumber),
-                    'Description' => trim($request->description),
-                    'BarcodeType' => trim($request->BarcodeTypes),
-                    'oldBarcodeType' => trim($oldbarcodetype),
-                    'ActiveStatus' => trim($request->status),
-                    'Type' => trim($request->TypeId),
-                    'itemGroup' => trim($request->group),
-                    'LowStock' => trim($request->lowStock),
-                    'IsDeleted' => '1',
-                    'path' => $itempathstore,
-                    'imageName' => $barcodename,
-                    'SKUNumber' => $number,
-                    'oldSKUNumber' => $oldsknumber,
-                    'standard_factor' => $request->factor
-                    
-                    ]);
-                    $late=Regitem::where('SKUNumber',$number)->get('id');
-                    $updateretail=Regitem::whereNull('RetailerPrice')->update(['RetailerPrice'=>0]);
-                    $updatewholesale=Regitem::whereNull('WholesellerPrice')->update(['WholesellerPrice'=>0]);
-                    $updatewholesalemin=Regitem::whereNull('wholeSellerMinAmount')->update(['wholeSellerMinAmount'=>0]);
-                    $updatewholesalemax=Regitem::whereNull('wholeSellerMaxAmount')->update(['wholeSellerMaxAmount'=>0]);
-                    $updateminstock=Regitem::whereNull('MinimumStock')->update(['MinimumStock'=>0]);
-                    if($request->id!=null)
-                    {
-                      $itemlog=new Itemlog();
-                      $itemss=Regitem::find($request->id);
-                       // hidden values
-                      $updatemaxcost=$request->notifiablemaxcostid;
-                      $updateretailprice=$request->notifiablereailerpriceid;
-                      $updatewholesellprice=$request->notifiablewholesellerpriceid;
-                      // original content
-                      $maxost=$request->maxcost;
-                      $retailprice=$request->retailPrice;
-                      $wholesaleprice=$request->wholeSellerPrice;
-                      $itemcode=trim($request->code);
-                        if($updatemaxcost!=$maxost)
-                        {
-                          //$users2= User::Permission(['Max-cost'])->get();
-                          $url='/items';
-                          $itemname=$request->name;
-                          $username=Auth()->user()->username;
-                          $messages='MaxCost Updated from '.$updatemaxcost.' to '.$maxost.' for '.$itemname.'('.$itemcode.') item';
-                              try {
-                           // Notification::send($users2, new itemNotification($username,$messages,$url));
-                            //auth()->user()->notify(new itemNotification($username,$messages,$url));
-                          } catch(\Exception $e){
-                          }
-                        }
-                        if($updateretailprice!=$retailprice)
-                        {
-                          if($retailprice>$updateretailprice){
-                            $type=1;
-                          }
-                          if($retailprice<$updateretailprice){
-                            $type=2;
-                          } 
-                          $itemlog->retailprice=$updateretailprice;
-                          $itemlog->wholesaleprice=$wholesaleprice;
-                          $itemlog->newretailprice=$retailprice;
-                          $itemlog->type=$type;
-                          $itemlog->changedby=auth()->user()->FullName;
-                          $itemss->additemlog()->save($itemlog);
-                          $users2= User::Permission(['Item-View'])->get();
-                          $url='/items';
-                          $itemname=$request->name;
-                          $username=Auth()->user()->FullName;
-                          $messages='Retail Price Updated from '.$updateretailprice.' to '.$retailprice.' for '.$itemname.'('.$itemcode.') item';
-                              try {
-                            //Notification::send($users2, new itemNotification($username,$messages,$url));
-                            } catch(\Exception $e){
-                          }
-                        }
-                        if($updatewholesellprice!=$wholesaleprice)
-                        {
-                            if($wholesaleprice>$updatewholesellprice){
-                              $type=1;
-                            }
-                            if($wholesaleprice<$updatewholesellprice){
-                              $type=2;
-                            }
-                          $itemlog->retailprice=$updateretailprice;  
-                          $itemlog->wholesaleprice=$updatewholesellprice;
-                          $itemlog->newwholesaleprice=$wholesaleprice;
-                          $itemlog->type=$type;
-                          $itemlog->changedby=auth()->user()->FullName;
-                          $itemss->additemlog()->save($itemlog);
-                          $users2= User::Permission(['Item-View'])->get();
-                          $url='/items';
-                          $itemname=$request->name;
-                          $username=Auth()->user()->FullName;
-                          $messages='Wholesale Price Updated from '.$updatewholesellprice.' to '.$wholesaleprice.' for '.$itemname.'('.$itemcode.') item';
-                              try {
-                          //Notification::send($users2, new itemNotification($username,$messages,$url));
-                            } catch(\Exception $e){
-                          }
-                        }
-                    }
-                    else{
-                      //
-                      $itemcodetype=setting::where('id',1)->first()->ItemCodeType;
-                      $itemcodenumber=setting::where('id',1)->first()->ItemCodeNumber;
-                      $inc=$itemcodenumber+1;
-                      if($itemcodetype==1){
-                        $settingUpdate=setting::where('id',1)->update(['ItemCodeNumber'=>$inc]);
+        switch ($request->TypeId){
+          case 'Service':
+            $barcode=null;
+            break;
+          default:
+            if($request->BarcodeTypes == 'Generate'){
+                if($request->id==null){
+                  $num = $request->skupdate;
+                  $num += 1;
+                  $updn = DB::select('UPDATE settings SET skunumber=skunumber+1 WHERE 1');
+                } 
+                else{ // on edit generate barcode if it is not generated before
+                  if($request->BarcodeTypesupdate==null){ 
+                      switch ($request->BarcodeTypes) {
+                        case 'Generate':
+                          $updn = DB::select('UPDATE settings SET skunumber=skunumber+1 WHERE 1');
+                          break;
+                        
+                        default:
+                          # code...
+                          break;
                       }
-                    }
-                    return Response::json([
-                    'success' => '1',
-                    'latest'=>$late,
-                      ]);
-                }
-                catch(Exception $e)
-                {
-                  return Response::json(['dberrors' =>  $e->getMessage()]);
+                  }
                 }
             }
-            return Response::json(['errors' => $validator->errors()]);
+            if($request->id == null){
+              $oldsknumber = $number;
+              $oldbarcodetype = $request->BarcodeTypes;
+            }
+            else if($request->id != null){
+              $oldsknumber = $request->skuNumberupdate;
+              if($request->BarcodeTypes == 'Generate'){
+                $oldbarcodetype = "Generate";
+                $oldsknumber = $number;
+              }
+              else{
+                $oldbarcodetype = $request->BarcodeTypesupdate;
+                $oldsknumber = $request->skuNumberupdate;
+              }
+            }
+          break;
+        }
+           
+        DB::beginTransaction();
+        try{
+          $item = Regitem::updateOrCreate(['id' =>$request->id], [
+            'Type' => $request->product_class,
+            'Code' => $request->code,
+            'Name' => $request->name,
+            'SKUNumber' => $number,
+            'MeasurementId' => $request->Uom,
+            'CategoryId' => $request->Category,
+            'TaxTypeId' => $request->TaxType,
+            'Description' => $request->description,
+            'ActiveStatus' => $request->status,
+
+            'PartNumber' => $request->partNumber,
+            'LowStock' => $request->lowStock,
+            'LowStock' => $request->lotDescription,
+            'standard_factor' => $request->factor,
+            'standard_factor' => $request->cartoonSize,
+
+            'RequireSerialNumber' => $request->ReqSerialNumber,
+            'RequireExpireDate' => $request->ReqExpireDate,
+
+            'itemGroup' => $request->item_group,
+
+            'RetailerPrice' => $request->retailPrice,
+            'WholesellerPrice' => $request->wholeSellerPrice,
+            'wholeSellerMinAmount' => $request->wholeSellerMinAmount,
+            'wholeSellerMaxAmount' => $request->wholeSellerMaxAmount,
+            'MinimumStock' => $request->minimumstock,
+            'pmretail'=>$profitmarginretail,
+            'pmwholesale'=>$profitmarginwholesale,
+            
+            
+            
+            
+            
+            'BarcodeType' => trim($request->BarcodeTypes),
+            'oldBarcodeType' => trim($oldbarcodetype),
+            
+            'IsDeleted' => 1,
+            'imageName' => $barcodename,
+            'oldSKUNumber' => $oldsknumber,
+          ]);
+
+
+          if($findid == null && $settings->ItemCodeType == 1){
+            DB::select('UPDATE settings SET ItemCodeNumber=ItemCodeNumber+1 WHERE id=1');
+          }
+
+          $actions = $findid == null ? "Created" : "Edited";
+          DB::table('actions')->insert([
+            'user_id' => $userid,
+            'pageid' => $item->id,
+            'pagename' => "item",
+            'action' => $actions,
+            'status' => $actions,
+            'time' => Carbon::now(new \DateTimeZone('Africa/Addis_Ababa'))->format('Y-m-d @ g:i:s A'),
+            'reason' => "",
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+          ]);
+      
+          DB::commit();
+          return Response::json(['success' => 1,'latest' => $item->id]);
+        }
+        catch(Exception $e){
+          DB::rollBack();
+          return Response::json(['dberrors' =>  $e->getMessage()]);
+        }
+      }
+      if($validator->fails())
+      {
+        return Response::json(['errors' => $validator->errors()]);
+      }
     }
     /**
      * Display the specified resource.

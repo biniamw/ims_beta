@@ -2,248 +2,87 @@
 @section('title')
 @endsection
 @section('content')
+    @can('Item-View')
     <div class="app-content content">
         <section id="responsive-datatable">
             <div class="row">
                 <div class="col-12">
-                    <!-- Tabs with Icon starts -->
-                        <div class="col-xl-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="col-xl-12 col-lg-12">
-                                        <div class="row">
-                                            <div class="col-xl-2 col-lg-12">
-                                                <h4 class="card-title">Items / Service
-                                                    <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-sm" onclick="refreshtbl()"><i data-feather='refresh-ccw'></i></button>
-                                                </h4>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-12">
-                                                <label strong style="font-size: 12px;font-weight:bold;">Item Group</label>
-                                                    <select data-column="4" class="selectpicker form-control filter-select" data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-count-selected-text="Group ({0})" data-live-search-placeholder="search group" title="Select group" multiple>
-                                                                <option value="Local">Local</option>
-                                                                <option value="Imported">Imported</option>
-                                                    </select>
-                                            </div>
-                                            <div class="col-xl-6 col-lg-12">
-                                            </div>
-                                            <div class="col-xl-1 col-lg-12">
-                                                <div class="btn-group">
-                                                    @can('Item-Add')
-                                                    <button type="button" class="btn btn-info btn-sm waves-effect waves-float waves-light addbutton">Add</button>
-                                                    @endcan
-                                                    @if(auth()->user()->can('Multiple-Price-Update-Local')||auth()->user()->can('Multpile-Price-Update-Import'))
-                                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split waves-effect waves-float waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <span class="sr-only">Toggle Dropdown</span>
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-right" style="">
-                                                            <a class="dropdown-item batchupdate">Multiple price update</a>
-                                                        </div>
-                                                        @endif
-                                                        <input type="hidden" class="form-control" name="wholesalefeaturetable" id="wholesalefeaturetable" value="{{ $setings->wholesalefeature }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="costtype" id="costtype" value="{{ $setings->costType }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="ItemCodeType" id="ItemCodeType" value="{{ $setings->ItemCodeType }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="transactionEdit" id="transactionEdit" value="{{ auth()->user()->can('Transaction-Edit') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="localcost" id="localcost" value="{{ auth()->user()->can('Local-item-cost-view') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="importcost" id="importcost" value="{{ auth()->user()->can('Import-item-cost-view') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="localitemeditpermission" id="localitemeditpermission" value="{{ auth()->user()->can('Local-item-edit') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="importitemeditpermission" id="importitemeditpermission" value="{{ auth()->user()->can('Import-item-edit') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="importitemstoreminquantity" id="importitemstoreminquantity" value="{{ auth()->user()->can('Import-Item-Store-Min-Quantity') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="localitemstoreminquantity" id="localitemstoreminquantity" value="{{ auth()->user()->can('Local-Item-Store-Min-Quantity') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="localitempriceupdate" id="localitempriceupdate" value="{{ auth()->user()->can('Local-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="importitempriceupdate" id="importitempriceupdate" value="{{ auth()->user()->can('Import-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
-                                                    <input type="hidden" class="form-control" name="itmcodetype" id="itmcodetype" />
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="card">
+                        <div class="card-header border-bottom fit-content mb-0 pb-0">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: left !important;align-items: center;padding: 10px 5px;">
+                                        <h3 class="card-title form_title">Products</h3>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="nav nav-tabs nav-justified" id="apptabs" role="tablist">
-                                        <li class="nav-item" id="allitemstab">
-                                            <a class="nav-link active" id="homeIcon-tab" data-toggle="tab" href="#homeIcon" aria-controls="home" role="tab" aria-selected="true" onclick="itemslistbytab('all');"><i data-feather="home"></i> All Items</a>
-                                        </li>
-                                        <li class="nav-item" id="goodstab">
-                                            <a class="nav-link" id="goods-tab" data-toggle="tab" href="#goods" aria-controls="goods" role="tab" aria-selected="false" onclick="itemslistbytab('allgoods');"><i data-feather="tool"></i>Goods</a>
-                                        </li>
-                                        <li class="nav-item" id="consumptiontab">
-                                            <a class="nav-link" id="consumption-tab" data-toggle="tab" href="#consumption" aria-controls="consumption" role="tab" aria-selected="false" onclick="itemslistbytab('consumption');"><i data-feather="codepen"></i> Consumption</a>
-                                        </li>
-                                        <li class="nav-item" id="fixedassetab">
-                                            <a class="nav-link" id="fixedAsset-tab" data-toggle="tab" href="#fixedAsset" aria-controls="fixedasset" role="tab" aria-selected="false" onclick="itemslistbytab('fixedasset');" ><i data-feather="activity"></i> Fixed Asset</a>
-                                        </li>
-                                        <li class="nav-item" id="servicetab">
-                                            <a class="nav-link" id="service-tab" data-toggle="tab" href="#service" aria-controls="service" role="tab" aria-selected="false" onclick="itemslistbytab('service');"><i data-feather="stop-circle"></i> Service</a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="homeIcon" aria-labelledby="homeIcon-tab" role="tabpanel">
-                                                <div class="card-datatable" id="table-block">
-                                                    @can('Item-View')
-                                                    <div style="width:98%; margin-left:1%" class="tableSection">
-                                                        <table id="itemdataables" class="display table-bordered table-striped table-hover dt-responsive mb-0" style="width: 100%;">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>id</th>
-                                                                    <th>#</th>
-                                                                    <th>Code</th>
-                                                                    <th>Name</th>
-                                                                    <th>SKU #</th>                                              
-                                                                    <th>Group</th>
-                                                                    <th>Category</th>
-                                                                    <th>UOM</th>
-                                                                    <th>RT Price</th>
-                                                                    <th>WS Price</th>
-                                                                    <th>WS Min Qty</th>
-                                                                    <th>WS Max Qty</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Pending</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                        </div>
-                                                    @endcan
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: right !important;align-items: center;padding: 10px 5px;">
+                                        <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-sm" onclick="refreshtbl()"><i class="fas fa-sync-alt"></i></button>
+                                        <div class="btn-group">
+                                            @can('Item-Add')
+                                                <button type="button" class="btn btn-gradient-info btn-sm header-prop addbutton" id="addbutton"><i class="fas fa-plus"></i><span class="header-text">&nbsp Add</span></button>
+                                            @endcan
+                                            @if(auth()->user()->can('Multiple-Price-Update-Local')||auth()->user()->can('Multpile-Price-Update-Import'))
+                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split waves-effect waves-float waves-light header-prop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item batchupdate">Multiple price update</a>
                                                 </div>
+                                            @endif
                                         </div>
-                                        <div class="tab-pane" id="goods" aria-labelledby="goods-tab" role="tabpanel">
-                                            <div class="card-datatable" id="table-block">
-                                                    @can('Item-View')
-                                                    <div style="width:98%; margin-left:1%" class="tableSection">
-                                                        <table id="goodsitemdataables" class="display table-bordered table-striped table-hover dt-responsive mb-0" style="width: 100%;">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>id</th>
-                                                                    <th>#</th>
-                                                                    <th>Code</th>
-                                                                    <th>Name</th>
-                                                                    <th>SKU #</th>                                              
-                                                                    <th>Group</th>
-                                                                    <th>Category</th>
-                                                                    <th>UOM</th>
-                                                                    <th>RT Price</th>
-                                                                    <th>WS Price</th>
-                                                                    <th>WS Min Qty</th>
-                                                                    <th>WS Max Qty</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Pending</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                        </div>
-                                                    @endcan
-                                                </div>
-                                        </div>
-                                        <div class="tab-pane" id="fixedAsset" aria-labelledby="fixedAsset-tab" role="tabpanel">
-                                                <div class="card-datatable" id="table-block">
-                                                    @can('Item-View')
-                                                    <div style="width:98%; margin-left:1%" class="tableSection">
-                                                        <table id="fixedassetitemdataables" class="display table-bordered table-striped table-hover dt-responsive mb-0" style="width: 100%;">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>id</th>
-                                                                    <th>#</th>
-                                                                    <th>Code</th>
-                                                                    <th>Name</th>
-                                                                    <th>SKU #</th>                                              
-                                                                    <th>Group</th>
-                                                                    <th>Category</th>
-                                                                    <th>UOM</th>
-                                                                    <th>RT Price</th>
-                                                                    <th>WS Price</th>
-                                                                    <th>WS Min Qty</th>
-                                                                    <th>WS Max Qty</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Pending</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                        </div>
-                                                    @endcan
-                                                </div>
-                                        </div>
-                                        <div class="tab-pane" id="service" aria-labelledby="service-tab" role="tabpanel">
-                                            <div class="card-datatable" id="table-block">
-                                                    @can('Item-View')
-                                                    <div style="width:98%; margin-left:1%" class="tableSection">
-                                                        <table id="serviceitemdataables" class="display table-bordered table-striped table-hover dt-responsive mb-0" style="width: 100%;">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>id</th>
-                                                                    <th>#</th>
-                                                                    <th>Code</th>
-                                                                    <th>Name</th>
-                                                                    <th>SKU #</th>                                              
-                                                                    <th>Group</th>
-                                                                    <th>Category</th>
-                                                                    <th>UOM</th>
-                                                                    <th>RT Price</th>
-                                                                    <th>WS Price</th>
-                                                                    <th>WS Min Qty</th>
-                                                                    <th>WS Max Qty</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Pending</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                        </div>
-                                                    @endcan
-                                                </div>
-                                        </div>
-                                        <div class="tab-pane" id="consumption" aria-labelledby="consumption-tab" role="tabpanel">
-                                            <div class="card-datatable" id="table-block">
-                                                    @can('Item-View')
-                                                    <div style="width:98%; margin-left:1%" class="tableSection">
-                                                        <table id="consumptionitemdataables" class="display table-bordered table-striped table-hover dt-responsive mb-0" style="width: 100%;">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>id</th>
-                                                                    <th>#</th>
-                                                                    <th>Code</th>
-                                                                    <th>Name</th>
-                                                                    <th>SKU #</th>                                              
-                                                                    <th>Group</th>
-                                                                    <th>Category</th>
-                                                                    <th>UOM</th>
-                                                                    <th>RT Price</th>
-                                                                    <th>WS Price</th>
-                                                                    <th>WS Min Qty</th>
-                                                                    <th>WS Max Qty</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Pending</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                        </div>
-                                                    @endcan
-                                                </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card-datatable fit-content">
+                            <div style="width:99%; margin-left:0.5%;" id="table-block">
+                                <table id="itemdataables" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 mobile-dt" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="display: none;"></th>
+                                            <th style="width:3%;">#</th>
+                                            <th style="width:10%;">Code</th>
+                                            <th style="width:10%;">Name</th>
+                                            <th style="width:10%;">Barcode No.</th>
+                                            <th style="width:6%;">Group</th>
+                                            <th style="width:6%;">Category</th>
+                                            <th style="width:6%;" title="Unit of Measurement">UOM</th>
+                                            <th style="width:9%;">RT Price</th>
+                                            <th style="width:9%;">WS Price</th>
+                                            <th style="width:9%;">WS Min Qty</th>
+                                            <th style="width:10%;">WS Max Qty</th>
+                                            <th style="display:none;"></th>
+                                            <th style="display:none;"></th>
+                                            <th style="width:8%;">Status</th>
+                                            <th style="width:4%;">Action</th>
+                                            <th style="display:none;"></th>
+                                            <th style="display:none;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table table-sm"></tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" class="form-control" name="wholesalefeaturetable" id="wholesalefeaturetable" value="{{ $setings->wholesalefeature }}" readonly/>
+                            <input type="hidden" class="form-control" name="costtype" id="costtype" value="{{ $setings->costType }}" readonly/>
+                            <input type="hidden" class="form-control" name="ItemCodeType" id="ItemCodeType" value="{{ $setings->ItemCodeType }}" readonly/>
+                            <input type="hidden" class="form-control" name="transactionEdit" id="transactionEdit" value="{{ auth()->user()->can('Transaction-Edit') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="localcost" id="localcost" value="{{ auth()->user()->can('Local-item-cost-view') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="importcost" id="importcost" value="{{ auth()->user()->can('Import-item-cost-view') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="localitemeditpermission" id="localitemeditpermission" value="{{ auth()->user()->can('Local-item-edit') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="importitemeditpermission" id="importitemeditpermission" value="{{ auth()->user()->can('Import-item-edit') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="importitemstoreminquantity" id="importitemstoreminquantity" value="{{ auth()->user()->can('Import-Item-Store-Min-Quantity') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="localitemstoreminquantity" id="localitemstoreminquantity" value="{{ auth()->user()->can('Local-Item-Store-Min-Quantity') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="localitempriceupdate" id="localitempriceupdate" value="{{ auth()->user()->can('Local-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="importitempriceupdate" id="importitempriceupdate" value="{{ auth()->user()->can('Import-Item-Selling-Price-update') ? 1 : 0 }}" readonly/>
+                            <input type="hidden" class="form-control" name="itmcodetype" id="itmcodetype" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
+    @endcan
 
     <div class="modal fade text-left" id="batchupdateformodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
@@ -514,7 +353,7 @@
                                                     @foreach ($itemtypes as $itemtype_data)
                                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                                             <div class="custom-control custom-control-primary custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input item_type non_service_checkbox" id="item_type{{$itemtype_data->id}}" name="item_type_name[]" value="{{$itemtype_data->id}}"/>
+                                                                <input type="checkbox" class="custom-control-input item_type non_service_checkbox" id="item_type{{$itemtype_data->id}}" name="item_type[]" value="{{$itemtype_data->id}}"/>
                                                                 <label class="custom-control-label" for="item_type{{$itemtype_data->id}}">{{$itemtype_data->type}}</label>
                                                             </div>
                                                         </div>
@@ -1079,6 +918,13 @@
                                     <option value="{{ $u_data->id }}">{{ $u_data->Name }}</option>
                                 @endforeach
                             </select>
+
+                            <select class="select2 form-control" name="item_default" id="item_default">
+                                <option selected disabled value=""></option>
+                                @foreach ($item_data as $i_data)
+                                    <option data-type="{{$i_data->Type}}" value="{{ $i_data->id }}">{{ $i_data->Name }}</option>
+                                @endforeach
+                            </select>
                         
                             <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
                             <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
@@ -1591,13 +1437,6 @@
             })
         }
 
-        function refreshtbl(){
-            var tabletr = $(focustables).DataTable(); 
-            tabletr.search('');
-            var oTable = $(focustables).dataTable(); 
-            oTable.fnDraw(false);
-        }
-
         function refreshtbl1(){
             var oTable = $(focustables).dataTable(); 
             oTable.fnDraw(false);
@@ -1664,19 +1503,6 @@
             }
         });
 
-        $(document).ready(function() {
-            $("#newcodegenerate").hide();
-            $("#barcodeDiv").hide();
-            $("#imagepreview").hide();
-            var weight = window.innerHeight;
-
-            $(".selectpicker").selectpicker({
-                noneSelectedText: ''
-            });
-            focustables='#itemdataables';
-            itemdatalist('#itemdataables','All');
-        });
-
         function itemslistbytab(params) {
             switch (params) {
                 case 'all':
@@ -1700,248 +1526,6 @@
                     itemdatalist('#consumptionitemdataables','consumption');
                     break;
             }
-        }
-
-        function itemdatalist(tables,type){
-                itemtable=$(tables).DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                deferRender:true,
-                destroy:true,
-                searchHighlight: true,
-                scrollY:'60vh',
-                scrollX: true,
-                scrollCollapse: true,
-                "pagingType": "simple",
-                "lengthMenu": [[50, 100], [50, 100]],
-                language: {
-                    search: '',
-                    searchPlaceholder: "Search here",
-                },
-                    "dom": "<'row'<'col-lg-10 col-md-10 col-xs-1'f><'col-lg-2 col-md-2 col-xs-8'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-5'><'col-sm-12 col-md-2'p>>",
-                    "order": [[0, "desc"]],
-                    ajax: {
-                        url: "{{ url('itemdata') }}/"+type,
-                        type: 'DELETE',
-                        beforeSend: function () {
-                            tableSection.block({
-                                message:
-                                '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                                css: {
-                                backgroundColor: 'transparent',
-                                color: '#fff',
-                                border: '0'
-                                },
-                                overlayCSS: {
-                                opacity: 0.5
-                                }
-                    });
-                    },
-                    complete: function () {
-                        tableSection.block({
-                            message:'',
-                                timeout: 1,
-                                css: {
-                                backgroundColor: '',
-                                color: '',
-                                border: ''
-                                },
-                    });
-                    setFocus();
-                    },
-                    },
-                    
-                columns: [
-                    {data:'id',visible:false},
-                    { data:'DT_RowIndex'   },
-                    {data: 'Code',  name: 'Code' },
-                    {data: 'Name',   name: 'Name' },
-                    {data: 'SKUNumber', name: 'SKUNumber'},
-                    {data: 'itemGroup',   name: 'itemGroup'},
-                    {data: 'Category',   name: 'Category'},
-                    {data: 'UOM',name: 'UOM' },
-                    {data: 'RetailerPrice',  name: 'RetailerPrice'},
-                    {data: 'WholesellerPrice', name: 'WholesellerPrice'},
-                    {data: 'wholeSellerMinAmount', name: 'wholeSellerMinAmount' },
-                    {data: 'MinimumStock', name: 'MinimumStock'},
-                    {data: 'Balance', name: 'Balance', 'visible': false},
-                    {data: 'PendingQuantity',name: 'PendingQuantity','visible': false},
-                    {data: 'ActiveStatus',name: 'ActiveStatus' },
-                    {data: 'id', name: 'id'},
-                    {data: 'MaxCost',name: 'MaxCost','visible': false},
-                    {data: 'averageCost',name: 'averageCost','visible': false}
-                ],
-                
-                columnDefs: [
-                        {
-                            targets:8,
-                            render: function(data,type,row,meta){
-                                var numberendering = $.fn.dataTable.render.number( ',', '.', 2,).display;
-                                var maximum=0;
-                                var balance=row.Balance||0;
-                                var pending=row.PendingQuantity;
-                                var minstock=row.MinimumStock||0;
-                                var maxc=parseFloat(balance)-parseFloat(minstock);
-                                maximum=maxc>=0?maxc:0;
-                                var minimumstock= row.MinimumStock||0;
-                                var allBalance=parseFloat(balance)-parseFloat(pending);
-                                var wholesalefeaturetable=$('#wholesalefeaturetable').val();
-                                var costType=$('#costtype').val();
-                                var maxCostVal = costType == 0 ? row.MaxCost: row.averageCost;
-                                switch(data){
-                                    case 0:
-                                        return '';
-                                        break; 
-                                    default:
-                                        if(parseFloat(data)<parseFloat(maxCostVal)){
-                                        return '<span class="badge badge-light-danger">unc</span>';
-                                        }
-                                        else{
-                                            if(allBalance<=0){
-                                                return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";  
-                                            } else{
-                                                return numberendering(data);
-                                            }
-                                        }
-                                }
-                            } 
-                        },
-                        {
-                            targets:9,
-                            render: function(data,type,row,meta){
-                                var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
-                                var maximum=0;
-                                var balance=row.Balance||0;
-                                var pending=row.PendingQuantity;
-                                var minstock=row.MinimumStock||0;
-                                var wholesaleminamount=row.wholeSellerMinAmount||0;
-                                var maxc=parseFloat(balance)-parseFloat(minstock);
-                                maximum=maxc>=0?maxc:0;
-                                var minimumstock= row.MinimumStock||0;
-                                var allBalance=parseFloat(balance)-parseFloat(pending);
-                                var wholesalefeaturetable=$('#wholesalefeaturetable').val();
-                                var costType=$('#costtype').val();
-                                var maxCostVal = costType == 0 ? row.MaxCost: row.averageCost;
-                                switch(data){
-                                    case 0:
-                                        return '';
-                                        break;
-                                    default:
-                                        if(parseFloat(data)<parseFloat(maxCostVal)){
-                                            return '<span class="badge badge-light-danger">unc</span>';
-                                        }
-                                        else{
-                                            if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maximum)< parseFloat(wholesaleminamount)  ){
-                                                return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";
-                                            }
-                                            else{
-                                                return numberendering(data);
-                                            }
-                                        }
-                                }
-                            } 
-                        },
-                        {
-                            targets:10,
-                            render: function (data,type,row,meta){
-                                var maximum=0;
-                                var balance=row.Balance||0;
-                                var pending=row.PendingQuantity;
-                                var minstock=row.MinimumStock||0;
-                                var wholesaleminamount=row.wholeSellerMinAmount||0;
-                                var maxc=parseFloat(balance)-parseFloat(minstock);
-                                maximum=maxc>=0?maxc:0;
-                                var minimumstock= row.MinimumStock||0;
-                                var allBalance=parseFloat(balance)-parseFloat(pending);
-                                var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
-                                switch(data){
-                                    case 0:
-                                        return '';
-                                        break;
-                                    default:
-                                        if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maximum)< parseFloat(wholesaleminamount)  ){
-                                            return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";
-                                        }
-                                        else{
-                                            return data;
-                                        }
-                                }
-                            } 
-                        },
-                    {
-                        targets:11,
-                        render: function ( data, type, row, meta ) {
-                            var maximum=0;
-                            var maxreturn='';
-                            var balance=row.Balance||0;
-                            var pending=row.PendingQuantity;
-                            var minimumstock=row.MinimumStock||0;
-                            var wholesaleminamount=row.wholeSellerMinAmount||0;
-                            var allBalance=parseFloat(balance)-parseFloat(pending);
-                            var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
-                                if(parseFloat(minimumstock)>0){
-                                    var maxc=parseFloat(balance)-parseFloat(minimumstock)-parseFloat(pending);
-                                    maximum=maxc>0?maxc:0;
-                                    maxreturn=maximum>=row.wholeSellerMinAmount?maximum:0;
-                                }
-                            switch(row.wholeSellerMinAmount){
-                                case 0:
-                                    return '';
-                                break;
-                                default:
-                                    if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maxreturn)< parseFloat(wholesaleminamount)){
-                                    return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+maxreturn+"</p>";
-                                    }
-                                    else{
-                                        return maxreturn;
-                                    }
-                            }
-                        }
-                },
-                {
-                    targets: 14,
-                    render: function ( data, type, row, meta ) {
-                        if(data=="Active"){
-                        var x="<span style='color:#4CAF50;font-weight:bold;text-shadow:1px 1px 10px #4CAF50'>"+data+ "</span>"
-                            return x;
-                            
-                        }
-                        else{
-                            var y="<span style='color:#f44336;font-weight:bold;text-shadow:1px 1px 10px #f44336'>"+data+ "</span>"
-                            return y;
-                        }
-                    }
-                },
-                {
-                    targets: 15,
-                    render: function ( data, type, row, meta ) {
-                            var anchor='';
-                            var maxreturn='';
-                            var balance=row.Balance||0;
-                            var minimumstock=row.MinimumStock||0;
-                            var pendingquantity=row.PendingQuantity||0;
-                            var minamount=row.wholeSellerMinAmount||0;
-                            var maxcost=row.MaxCost||0;
-                            var averagcostcost=row.averageCost||0;
-                                if(parseFloat(minimumstock)>0){
-                                    var maxc=parseFloat(balance)-parseFloat(minimumstock)-parseFloat(pendingquantity);
-                                    maxreturn=maxc>=0?maxc:0;
-                                    maxreturn=maxreturn>=row.wholeSellerMinAmount?maxreturn:0;
-                                }
-                                anchor='<a class="showItem" href="javascript:void(0)"  data-id="'+data+'" data-category="'+row.Category+'" data-uom="'+row.UOM+'" data-max="'+maxreturn+'" data-pending="'+pendingquantity+'" data-balance="'+balance+'" data-minstock="'+minimumstock+'" data-minamount="'+minamount+'" data-maxicost="'+maxcost+'" data-averagecost="'+averagcostcost+'" title="view items"><i class="fa-sharp fa-regular fa-circle-info fa-xl" style="color: #00cfe8;"></i></a>';
-                            return anchor;
-                    }
-                },
-                ],
-                });
-                $(focustables+' tbody').on('click', 'tr', function () {
-                    $(focustables+' tbody > tr').removeClass('selected');
-                    $(this).addClass('selected');
-                    gblIndex = $(this).index();    
-                });
         }
 
         function setFocus(){ 
@@ -2420,9 +2004,261 @@
         //****************************************
         //****************************************
         //Starting a new modification.......
-        
-        $('body').on('click', '.addbutton', function() {
 
+        $(document).ready(function(){
+            $("#newcodegenerate").hide();
+            $("#barcodeDiv").hide();
+            $("#imagepreview").hide();
+            var weight = window.innerHeight;
+            itemdatalist('#itemdataables','All');
+        });
+
+        function itemdatalist(tables,type){
+            itemtable = $('#itemdataables').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: true,
+                searchHighlight: true,
+                "order": [[ 0, "desc" ]],
+                "lengthMenu": [25,50,100,250,500],
+                "pagingType": "simple",
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                //scrollY:'100%',
+                scrollY:'65vh',
+                scrollX: true,
+                scrollCollapse: true, 
+                deferRender: true,
+                fixedHeader:true,
+                dom: "<'row'<'col-sm-3 col-md-2 col-6'f><'col-sm-3 col-md-2 col-6 mt-1'><'col-sm-3 col-md-2 col-6 mt-1'><'col-sm-3 col-md-2 col-6 mt-1'><'col-sm-3 col-md-2 col-6 mt-1 custom-4'><'col-sm-3 col-md-2 col-6 mt-1'>>" +
+                    "<'row'<'col-sm-12 margin_top_class'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ url('itemdata') }}/"+type,
+                    type: 'DELETE',
+                    beforeSend: function() {
+                       blockPage(cardSection,'Loading products...');
+                    },
+                    complete: function () { 
+                        setFocus('#itemdataables');
+                        $('#itemdataables').DataTable().columns.adjust();
+                    },
+                    error: function () { 
+                        unblockPage(cardSection);
+                    },
+                },                    
+                columns: [
+                    {data:'id',visible:false},
+                    {data:'DT_RowIndex',width:"3%"},
+                    {data: 'Code',name: 'Code',width:"10%"},
+                    {data: 'Name',name: 'Name',width:"10%"},
+                    {data: 'SKUNumber',name:'SKUNumber',width:"10%"},
+                    {data: 'itemGroup',name:'itemGroup',width:"6%"},
+                    {data: 'Category',name: 'Category',width:"6%"},
+                    {data: 'UOM',name: 'UOM',width:"6%"},
+                    {data: 'RetailerPrice',name:'RetailerPrice',width:"9%"},
+                    {data: 'WholesellerPrice',name:'WholesellerPrice',width:"9%"},
+                    {data: 'wholeSellerMinAmount',name:'wholeSellerMinAmount',width:"9%"},
+                    {data: 'MinimumStock',name:'MinimumStock',width:"10%"},
+                    {data: 'Balance', name: 'Balance', 'visible': false},
+                    {data: 'PendingQuantity',name: 'PendingQuantity','visible': false},
+                    {data: 'ActiveStatus',name: 'ActiveStatus',
+                        "render": function ( data, type, row, meta ) {
+                            if(data == "Active"){
+                                return `<span class="badge bg-success bg-glow">${data}</span>`;
+                            }
+                            else if(data == "Inactive"){
+                                return `<span class="badge bg-danger bg-glow">${data}</span>`;
+                            }
+                            else{
+                                return `<span class="badge bg-warning bg-glow">${data}</span>`;
+                            }
+                        },
+                        width:"8%"
+                    },
+                    {data:'id', name: 'id',width:"4%"},
+                    {data: 'MaxCost',name: 'MaxCost','visible': false},
+                    {data: 'averageCost',name: 'averageCost','visible': false}
+                ],
+                columnDefs: [{
+                    targets:8,
+                    render: function(data,type,row,meta){
+                        var numberendering = $.fn.dataTable.render.number( ',', '.', 2,).display;
+                        var maximum=0;
+                        var balance=row.Balance||0;
+                        var pending=row.PendingQuantity;
+                        var minstock=row.MinimumStock||0;
+                        var maxc=parseFloat(balance)-parseFloat(minstock);
+                        maximum=maxc>=0?maxc:0;
+                        var minimumstock= row.MinimumStock||0;
+                        var allBalance=parseFloat(balance)-parseFloat(pending);
+                        var wholesalefeaturetable=$('#wholesalefeaturetable').val();
+                        var costType=$('#costtype').val();
+                        var maxCostVal = costType == 0 ? row.MaxCost: row.averageCost;
+                        switch(data){
+                            case 0:
+                                return '';
+                                break; 
+                            default:
+                                if(parseFloat(data)<parseFloat(maxCostVal)){
+                                return '<span class="badge badge-light-danger">unc</span>';
+                                }
+                                else{
+                                    if(allBalance<=0){
+                                        return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";  
+                                    } else{
+                                        return numberendering(data);
+                                    }
+                                }
+                        }
+                    } 
+                },
+                {
+                    targets:9,
+                    render: function(data,type,row,meta){
+                        var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
+                        var maximum=0;
+                        var balance=row.Balance||0;
+                        var pending=row.PendingQuantity;
+                        var minstock=row.MinimumStock||0;
+                        var wholesaleminamount=row.wholeSellerMinAmount||0;
+                        var maxc=parseFloat(balance)-parseFloat(minstock);
+                        maximum=maxc>=0?maxc:0;
+                        var minimumstock= row.MinimumStock||0;
+                        var allBalance=parseFloat(balance)-parseFloat(pending);
+                        var wholesalefeaturetable=$('#wholesalefeaturetable').val();
+                        var costType=$('#costtype').val();
+                        var maxCostVal = costType == 0 ? row.MaxCost: row.averageCost;
+                        switch(data){
+                            case 0:
+                                return '';
+                                break;
+                            default:
+                                if(parseFloat(data)<parseFloat(maxCostVal)){
+                                    return '<span class="badge badge-light-danger">unc</span>';
+                                }
+                                else{
+                                    if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maximum)< parseFloat(wholesaleminamount)  ){
+                                        return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";
+                                    }
+                                    else{
+                                        return numberendering(data);
+                                    }
+                                }
+                        }
+                    } 
+                },
+                {
+                    targets:10,
+                    render: function (data,type,row,meta){
+                        var maximum=0;
+                        var balance=row.Balance||0;
+                        var pending=row.PendingQuantity;
+                        var minstock=row.MinimumStock||0;
+                        var wholesaleminamount=row.wholeSellerMinAmount||0;
+                        var maxc=parseFloat(balance)-parseFloat(minstock);
+                        maximum=maxc>=0?maxc:0;
+                        var minimumstock= row.MinimumStock||0;
+                        var allBalance=parseFloat(balance)-parseFloat(pending);
+                        var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
+                        switch(data){
+                            case 0:
+                                return '';
+                                break;
+                            default:
+                                if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maximum)< parseFloat(wholesaleminamount)  ){
+                                    return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+data+"</p>";
+                                }
+                                else{
+                                    return data;
+                                }
+                        }
+                    } 
+                },
+                {
+                    targets:11,
+                    render: function ( data, type, row, meta ) {
+                        var maximum=0;
+                        var maxreturn='';
+                        var balance=row.Balance||0;
+                        var pending=row.PendingQuantity;
+                        var minimumstock=row.MinimumStock||0;
+                        var wholesaleminamount=row.wholeSellerMinAmount||0;
+                        var allBalance=parseFloat(balance)-parseFloat(pending);
+                        var numberendering = $.fn.dataTable.render.number( ',', '.', 2, ).display;
+                            if(parseFloat(minimumstock)>0){
+                                var maxc=parseFloat(balance)-parseFloat(minimumstock)-parseFloat(pending);
+                                maximum=maxc>0?maxc:0;
+                                maxreturn=maximum>=row.wholeSellerMinAmount?maximum:0;
+                            }
+                        switch(row.wholeSellerMinAmount){
+                            case 0:
+                                return '';
+                            break;
+                            default:
+                                if(parseFloat(allBalance)<=0 || parseFloat(allBalance)<parseFloat(minimumstock) || parseFloat(allBalance)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<parseFloat(wholesaleminamount) || parseFloat(allBalance)-parseFloat(minimumstock)<=0 || parseFloat(maxreturn)< parseFloat(wholesaleminamount)){
+                                return "<p style='text-decoration:line-through;text-decoration-color:red;'>"+maxreturn+"</p>";
+                                }
+                                else{
+                                    return maxreturn;
+                                }
+                        }
+                    }
+                },
+                {
+                    targets: 15,
+                    render: function ( data, type, row, meta ) {
+                        var anchor='';
+                        var maxreturn='';
+                        var balance=row.Balance||0;
+                        var minimumstock=row.MinimumStock||0;
+                        var pendingquantity=row.PendingQuantity||0;
+                        var minamount=row.wholeSellerMinAmount||0;
+                        var maxcost=row.MaxCost||0;
+                        var averagcostcost=row.averageCost||0;
+                            if(parseFloat(minimumstock)>0){
+                                var maxc=parseFloat(balance)-parseFloat(minimumstock)-parseFloat(pendingquantity);
+                                maxreturn=maxc>=0?maxc:0;
+                                maxreturn=maxreturn>=row.wholeSellerMinAmount?maxreturn:0;
+                            }
+                            anchor='<div class="text-center"><a class="showItem" href="javascript:void(0)"  data-id="'+data+'" data-category="'+row.Category+'" data-uom="'+row.UOM+'" data-max="'+maxreturn+'" data-pending="'+pendingquantity+'" data-balance="'+balance+'" data-minstock="'+minimumstock+'" data-minamount="'+minamount+'" data-maxicost="'+maxcost+'" data-averagecost="'+averagcostcost+'" title="view items"><i class="fa-sharp fa-regular fa-circle-info fa-xl" style="color: #00cfe8;"></i></a></div>';
+                        return anchor;
+                    }
+                }],
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
+                drawCallback: function () { 
+                    this.api().columns().every(function() {
+                        var column = this;
+                        var header = $(column.header()).text().trim();
+                        
+                        $(column.nodes()).each(function() {
+                            $(this).attr('data-title', header);
+                        });
+                    });
+                    $(tables).DataTable().columns.adjust();
+                    unblockPage(cardSection);
+                },     
+                fixedHeader: {
+                    header: true,
+                    headerOffset: $('.header-navbar').outerHeight(),
+                },
+            });
+
+            $('#itemdataables tbody').on('click', 'tr', function () {
+                $('#itemdataables tbody > tr').removeClass('selected');
+                $(this).addClass('selected');
+                gblIndex = $(this).index();    
+            });
+        }
+        
+        $("#addbutton").click(function() {
             resetItemFormFn();
             managePriceFn();
             manageProductCodeFn();
@@ -2533,13 +2369,14 @@
 
             $('input[name="product_class"]').prop('checked', false);
             $('input[id="product_class1"]').prop('checked', true);
-            $('input[name="item_type_name"]').prop('checked', false);
+            $('input[name="item_type"]').prop('checked', false);
 
             $('input[name="price_type"]').prop('checked', false);
             $('input[id="price_type1"]').prop('checked', true);
 
             manageProductClassFn();
             managePricingFn();
+            manageCompatibleItemFn();
             itemTabMgtFn();
 
             $('.mainforminp').val("");
@@ -2606,6 +2443,7 @@
         $('input[name="product_class"]').on('change', function() {
             var prd_class = $(this).val();
             manageProductClassFn();
+            manageCompatibleItemFn();
         });
 
         function manageProductClassFn(){
@@ -2656,6 +2494,16 @@
                 $('.flexible_input').val("");
                 $('.flexible_error').html("");
             }
+        }
+
+        function manageCompatibleItemFn(){
+            var product_class = $('input[name="product_class"]:checked').val();
+            var item_options = $("#item_default");
+
+            $('#CompatibleProducts').empty().append(item_options.find(`option[data-type="${product_class}"]`).clone());
+            $('#CompatibleProducts').val(null).select2({
+                placeholder: "Select compatible product here",
+            });
         }
         
         function itemTabMgtFn(){
@@ -3063,6 +2911,12 @@
                 var before_tax_price = parseFloat(max_after_tax) / parseFloat(tax_quotient);
                 $('#MaxSellingPriceBeforeTax').val(parseFloat(before_tax_price).toFixed(2));
             }
+        }
+
+        function refreshtbl(){
+            itemtable.ajax.reload(function() {
+                unblockPage(cardSection);
+            }, false); 
         }
 
         //****************************************
@@ -3871,6 +3725,7 @@
                 
             });
         }
+
         $('#batchupadtesavebutton').click(function() {
             $.when(makebatchupdaterequest()).then(function successHandler(response){
                 if(response.errors){

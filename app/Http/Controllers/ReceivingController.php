@@ -1403,6 +1403,7 @@ class ReceivingController extends Controller
         $mrcnum = $request->MrcNumber;
         $fiscalr = "Fiscal-Receipt";
         $fyear = $settings->FiscalYear;
+        
         if($strid != null){
             $strdata = store::findorFail($strid);
             $fiscalyears = $strdata->FiscalYear;
@@ -1414,6 +1415,7 @@ class ReceivingController extends Controller
             'Reference' => ['required_if:ReferenceType,501,502'],
             'ProductType' => ['required_if:SourceType,Purchase'],
             'supplier' => ['required_if:SourceType,Purchase'],
+
             'DocumentNumber' => ['nullable',Rule::unique('receivings')->where(function ($query) use($request) {
                 return $query->where('CustomerId',$request->supplier);
             })->ignore($findid)],
@@ -1421,6 +1423,7 @@ class ReceivingController extends Controller
             'PaymentType' => ['required_if:ReferenceType,503'],
             'date' => ['required_if:ReferenceType,503','nullable','before:now'],
             'voucherType' => ['required_if:VoucherStatus,true,1,on,yes'],
+
             'VoucherNumber' => ['required_if:VoucherStatus,true,1,on,yes',Rule::unique('receivings')->where(function ($query) use($vnumber,$customerid,$mrcnum) {
                     return $query->where('VoucherNumber', $vnumber)
                     ->where('CustomerMRC', $mrcnum)
@@ -1428,6 +1431,7 @@ class ReceivingController extends Controller
                     ->whereNotNull('VoucherNumber');
                 })->ignore($findid)
             ],
+
             'InvoiceNumber' => ['nullable',Rule::unique('receivings')->where(function ($query) use($inumber,$customerid,$mrcnum) {
                     return $query->where('InvoiceNumber', $inumber)
                     ->where('CustomerMRC', $mrcnum)

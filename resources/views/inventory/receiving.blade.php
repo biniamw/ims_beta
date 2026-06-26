@@ -1744,6 +1744,7 @@
                     headerOffset: $('.header-navbar').outerHeight(),
                 },
             });
+            
             appendReceivingFilterFn(fyears);
         }
 

@@ -42,7 +42,6 @@
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -230,9 +229,7 @@
         </div>
     </div>
     @include('layout.universal-component')
-@endsection
 
-@section('scripts')
     <script type="text/javascript">
         var errorcolor = "#ffcccc";
         var globalIndex = -1;
