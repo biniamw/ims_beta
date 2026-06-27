@@ -7,7 +7,12 @@ use Image;
 use Picqer;
 use Barcode;
 //use App\Models\barcode;
-use App\Models\{Regitem,User,Sales,itemimage,Itemlog,setting,Category,Salesitem,companyinfo,transaction,beginingdetail,receivingdetail,item_type};
+use App\Models\{
+          Regitem,User,Sales,itemimage,Itemlog,setting,
+          Category,Salesitem,companyinfo,transaction,
+          beginingdetail,receivingdetail,item_type,
+          compatible_items,item_suppliers
+        };
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -32,6 +37,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -430,8 +436,11 @@ class ItemController extends Controller
       $message = "";
       $type = $request->TypeId;
       $findid = $request->id;
+      $old_code = $request->codeHidden;
+      $supplier_data = [];
+      $compatible_items = [];
 
-      $validator = Validator::make($request->all(), [
+      $regular_validation = [
         'product_class' => 'required',
         'code' => 'required',
         'name' => [
@@ -448,15 +457,26 @@ class ItemController extends Controller
         'item_type' => 'required_if:product_class,Goods',
         'item_group' => 'required',
         'price_type' => 'required',
-        'MinSellingPriceBeforeTax' => 'required_if:price_type,Flexible|ls:SellingPriceBeforeTax',
-        'MinSellingPriceAfterTax' => 'required_if:price_type,Flexible|ls:SellingPriceAfterTax',
+        'MinSellingPriceBeforeTax' => 'required_if:price_type,Flexible',
+        'MinSellingPriceAfterTax' => 'required_if:price_type,Flexible',
         'SellingPriceBeforeTax' => 'required',
         'SellingPriceAfterTax' => 'required',
-        'MaxSellingPriceBeforeTax' => 'required_if:price_type,Flexible|gt:SellingPriceBeforeTax',
-        'MaxSellingPriceAfterTax' => 'required_if:price_type,Flexible|gt:SellingPriceAfterTax',
-      ]);
+        'MaxSellingPriceBeforeTax' => 'required_if:price_type,Flexible',
+        'MaxSellingPriceAfterTax' => 'required_if:price_type,Flexible'
+      ];
 
-            
+      $supplier_validation = [
+        'row.*.supplier' => 'required',
+        'row.*.uom' => 'required',
+        'row.*.quantity' => 'required',
+        'row.*.price' => 'required',
+        'row.*.availablity' => 'required',
+      ];
+
+      $allvalidation = array_merge($regular_validation,$supplier_validation);
+
+      $validator = Validator::make($request->all(),$allvalidation);
+ 
       if($validator->passes()){
         $item = new Regitem;
         $number = $request->skuNumber;
@@ -471,7 +491,7 @@ class ItemController extends Controller
             $savename = $number.'.'.'png';
             $barcodepath = public_path() . '/barcode/'.$savename;
             $barcodename = "barcode/".$savename;
-            file_put_contents($barcodepath,$barcode);
+            //file_put_contents($barcodepath,$barcode);
           }
         } 
         else{
@@ -532,42 +552,73 @@ class ItemController extends Controller
             'MeasurementId' => $request->Uom,
             'CategoryId' => $request->Category,
             'TaxTypeId' => $request->TaxType,
+            'item_type' => json_encode($request->item_type ?? []),
             'Description' => $request->description,
             'ActiveStatus' => $request->status,
 
             'PartNumber' => $request->partNumber,
             'LowStock' => $request->lowStock,
-            'LowStock' => $request->lotDescription,
+            'lot_description' => $request->lotDescription,
             'standard_factor' => $request->factor,
-            'standard_factor' => $request->cartoonSize,
+            'cartoon_size' => $request->cartoonSize,
 
             'RequireSerialNumber' => $request->ReqSerialNumber,
             'RequireExpireDate' => $request->ReqExpireDate,
 
-            'itemGroup' => $request->item_group,
+            //'itemGroup' => $request->item_group ?? [],
+            'itemGroup' => is_array($request->item_group) ? implode(',', array_filter($request->item_group)) : $request->item_group,
 
-            'RetailerPrice' => $request->retailPrice,
-            'WholesellerPrice' => $request->wholeSellerPrice,
-            'wholeSellerMinAmount' => $request->wholeSellerMinAmount,
-            'wholeSellerMaxAmount' => $request->wholeSellerMaxAmount,
-            'MinimumStock' => $request->minimumstock,
-            'pmretail'=>$profitmarginretail,
-            'pmwholesale'=>$profitmarginwholesale,
-            
-            
-            
-            
-            
-            'BarcodeType' => trim($request->BarcodeTypes),
-            'oldBarcodeType' => trim($oldbarcodetype),
-            
+            'price_type' => $request->price_type,
+            'min_price_bt' => $request->MinSellingPriceBeforeTax,
+            'min_price_at' => $request->MinSellingPriceAfterTax,
+            'default_price_bt' => $request->SellingPriceBeforeTax,
+            'default_price_at' => $request->SellingPriceAfterTax,
+            'max_price_bt' => $request->MaxSellingPriceBeforeTax,
+            'max_price_at' => $request->MaxSellingPriceAfterTax,
+
+            'item_code_mode' => $request->ItemCodeMode,
+            'old_item_code' => $request->codeHidden,
+            'BarcodeType' => $request->BarcodeTypes,
+            'oldBarcodeType' => $oldbarcodetype,
             'IsDeleted' => 1,
             'imageName' => $barcodename,
             'oldSKUNumber' => $oldsknumber,
           ]);
 
+          if($request->row != null){
+            foreach ($request->row as $key => $supprow){
+              $supplier_data[] = [
+                "item_id" => $item->id,
+                "supplier_id" => $supprow['supplier'],
+                "uom_id" => $supprow['uom'],
+                "quantity" => $supprow['quantity'],
+                "price" => $supprow['price'],
+                "availability" => $supprow['availablity'],
+                "remark" => $supprow['remark'],
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now()
+              ];
+            }
+          }
 
-          if($findid == null && $settings->ItemCodeType == 1){
+          if(!empty($request->CompatibleProducts) && is_array($request->CompatibleProducts)){
+              foreach($request->CompatibleProducts as $comp_item_id){
+                  $compatible_items[] = [
+                      "base_item_id" => $item->id,
+                      "compatible_item_id" => $comp_item_id,
+                      "created_at" => Carbon::now(),
+                      "updated_at" => Carbon::now()
+                  ];
+              }
+          }
+
+          DB::table('item_suppliers')->where('item_suppliers.item_id',$item->id)->delete();
+          DB::table('item_suppliers')->insert($supplier_data);
+
+          DB::table('compatible_items')->where('compatible_items.base_item_id',$item->id)->delete();
+          DB::table('compatible_items')->insert($compatible_items);
+
+          if($old_code == null && $settings->ItemCodeType == 1){
             DB::select('UPDATE settings SET ItemCodeNumber=ItemCodeNumber+1 WHERE id=1');
           }
 

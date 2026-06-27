@@ -492,8 +492,8 @@
                                                             <label class="custom-control-label" for="item_group_imported">Imported</label>
                                                         </div>
                                                     </div>
-                                                    <span class="text-danger">
-                                                        <strong id="group-error"></strong>
+                                                    <span class="text-danger ml-1">
+                                                        <strong id="group-error" class="errordatalabel non_service_error"></strong>
                                                     </span>
                                                 </div>
                                             </div>
@@ -563,14 +563,14 @@
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="MinSellingPriceBeforeTax" id="MinSellingPriceBeforeTax" step="any" placeholder="Enter min price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="minVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="min_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
+                                                                            <strong id="min_selling_price_bt_error" class="errordatalabel sales_error flexible_error minimum_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="MinSellingPriceAfterTax" id="MinSellingPriceAfterTax" step="any" placeholder="Enter min price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="minSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="minVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="min_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
+                                                                            <strong id="min_selling_price_at_error" class="errordatalabel sales_error flexible_error minimum_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -584,14 +584,14 @@
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="SellingPriceBeforeTax" id="SellingPriceBeforeTax" step="any" placeholder="Enter default price (before tax) here" class="form-control mainforminp" onkeyup="sellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="defaultVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="selling_price_bt_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="selling_price_bt_error" class="errordatalabel sales_error default_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="SellingPriceAfterTax" id="SellingPriceAfterTax" step="any" placeholder="Enter default price (after tax) here" class="form-control mainforminp" onkeyup="sellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="defaultVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="selling_price_at_error" class="errordatalabel sales_error"></strong>
+                                                                            <strong id="selling_price_at_error" class="errordatalabel sales_error default_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -605,14 +605,14 @@
                                                                         <label class="form_lbl">Before Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="MaxSellingPriceBeforeTax" id="MaxSellingPriceBeforeTax" step="any" placeholder="Enter max price (before tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceBeforeTaxFn()" onkeypress="return ValidateNum(event);" onblur="maxVerifyPriceBeforeTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="max_selling_price_bt_error" class="errordatalabel sales_error flexible_error"></strong>
+                                                                            <strong id="max_selling_price_bt_error" class="errordatalabel sales_error flexible_error maximum_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                         <label class="form_lbl">After Tax<b style="color: red; font-size:16px;">*</b></label>
                                                                         <input type="number" name="MaxSellingPriceAfterTax" id="MaxSellingPriceAfterTax" step="any" placeholder="Enter max price (after tax) here" class="form-control mainforminp flexible_input" onkeyup="maxSellingPriceAfterTaxFn()" onkeypress="return ValidateNum(event);" onblur="maxVerifyPriceAfterTaxFn()"/>
                                                                         <span class="text-danger">
-                                                                            <strong id="max_selling_price_at_error" class="errordatalabel sales_error flexible_error"></strong>
+                                                                            <strong id="max_selling_price_at_error" class="errordatalabel sales_error flexible_error maximum_price_error"></strong>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -655,9 +655,7 @@
                                             </div>
                                             <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
                                                 <label class="form_lbl">Compatible Products</label>
-                                                <select class="select2 form-control" name="CompatibleProducts" id="CompatibleProducts" multiple onchange="compatibleProductFn()">
-
-                                                </select>
+                                                <select class="select2 form-control" name="CompatibleProducts[]" id="CompatibleProducts" multiple onchange="compatibleProductFn()"></select>
                                                 <span class="text-danger">
                                                     <strong id="compatible_products-error" class="errordatalabel sales_error"></strong>
                                                 </span>
@@ -676,7 +674,7 @@
                                                     <div id="barcodeimages" class="text-center" style="display: none;"></div>
                                                     <div id="barcodeimagesupdate" class="text-center" style="display: none;"></div>
                                                     <div class="custom-control custom-control-primary custom-checkbox mt-1" id="printbardiv">
-                                                        <input type="checkbox" class="custom-control-input item_group_class non_service_checkbox" id="printBar" name="printBar"/>
+                                                        <input type="checkbox" class="custom-control-input non_service_checkbox" id="printBar" name="printBar"/>
                                                         <label class="custom-control-label" for="printBar">Print Barcode</label>
                                                         <input type="hidden" class="form-control" name="checkboxVali" id="checkboxVali" readonly/>
                                                     </div>
@@ -912,6 +910,7 @@
                                     <option value="{{ $s_data->id }}">{{ $s_data->customer}}</option>
                                 @endforeach
                             </select>
+
                             <select class="select2 form-control" name="uom_default" id="uom_default">
                                 <option selected disabled value=""></option>
                                 @foreach ($uom as $u_data)
@@ -925,22 +924,26 @@
                                     <option data-type="{{$i_data->Type}}" value="{{ $i_data->id }}">{{ $i_data->Name }}</option>
                                 @endforeach
                             </select>
-                        
-                            <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value="" />
+
+                            <input type="hidden" class="form-control" name="operationType" id="operationType" value="1"/>
+                            <input type="hidden" class="form-control" name="IsNewItemCode" id="IsNewItemCode" value=""/>
+                            <input type="hidden" class="form-control" name="OldItemCode" id="OldItemCode" value=""/>
+                            <input type="hidden" class="form-control" name="ItemCodeMode" id="ItemCodeMode" value=""/>
+                            <input type="hidden" class="form-control" name="codeHidden" id="codeHidden" value=""/>
                             <input type="hidden" class="form-control" name="skuNumberHidden" id="skuNumberHidden" value="" />
                             <input type="hidden" class="form-control" name="BarcodeTypes" id="BarcodeTypes" value="None" />
                             <input type="hidden" class="form-control mainforminp" name="BarcodeTypesupdate" id="BarcodeTypesupdate" value="None" />
                             <input type="hidden" class="form-control" name="skgenerate" id="skgenerate" />
                             <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
                             <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
-                            <input type="hidden" placeholder="max cost" class="form-control" name="maxcosti" id="maxcosti" />
+                            <input type="hidden" class="form-control" placeholder="max cost" name="maxcosti" id="maxcosti" />
                             <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
                             <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
                             <input type="hidden" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
                             <input type="hidden" class="form-control" name="wholeSellerPricehidden" id="wholeSellerPricehidden" readonly/>
                         </div>
-                        <button type="button" id="savebutton" class="btn btn-info waves-effect waves-float waves-light">Save</button>
-                        <button id="closebuttonitem" type="button" class="btn btn-danger" onclick="closeModalWithClearValidation()" data-dismiss="modal">Close</button>
+                        <button id="savebutton" type="button" class="btn btn-info waves-effect waves-float waves-light">Save</button>
+                        <button id="closebuttonitem" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -2005,12 +2008,12 @@
         //****************************************
         //Starting a new modification.......
 
-        $(document).ready(function(){
+        $(document).ready(async function(){
             $("#newcodegenerate").hide();
             $("#barcodeDiv").hide();
             $("#imagepreview").hide();
             var weight = window.innerHeight;
-            itemdatalist('#itemdataables','All');
+            await itemdatalist('#itemdataables','All');
         });
 
         function itemdatalist(tables,type){
@@ -2263,6 +2266,7 @@
             managePriceFn();
             manageProductCodeFn();
 
+            $('#operationType').val(1);
             $("#item_form_title").html('Add Product');
             $('#savebutton').text('Save');
             $('#savebutton').prop("disabled",false);
@@ -2369,7 +2373,8 @@
 
             $('input[name="product_class"]').prop('checked', false);
             $('input[id="product_class1"]').prop('checked', true);
-            $('input[name="item_type"]').prop('checked', false);
+            $('input[name="item_type[]"]').prop('checked', false);
+            $('input[name="item_group[]"]').prop('checked', false);
 
             $('input[name="price_type"]').prop('checked', false);
             $('input[id="price_type1"]').prop('checked', true);
@@ -2429,19 +2434,208 @@
 
         function getItemCodeFn(data){
             $("#code").val(data.docNumber);
-            $("#codeHidden").val(data.docNumber);
+            $("#codeHidden").val("");
+            //$("#codeHidden").val(data.docNumber);
+            $("#ItemCodeMode").val("Generated");
         }
 
         function generateItemCodeFn(){
-            blockPage(productCodeSection,"Generating code...");
             var code_hidden = $("#codeHidden").val();
-            $("#code").val(code_hidden);
+            if(code_hidden == ""){
+                manageProductCodeFn();
+            }
+            else{
+                $("#code").val(code_hidden);
+            }
             $('#generate_item_code').hide();
-            unblockPage(productCodeSection);
+        }
+
+        $('#savebutton').click(function(){
+            var registerForm = $("#RegisterItem");
+            var formData = registerForm.serialize();
+            var optype = $("#operationType").val();
+            var progress_text = "";
+            $.ajax({
+                type: "POST",
+                url: "{{ url('saveitems') }}",
+                data: formData,
+                dataType: "json",
+                beforeSend: function() { 
+                    if(parseInt(optype) == 1){
+                        $('#savebutton').text('Saving...');
+                        $('#savebutton').prop("disabled", true);
+                        progress_text = "Saving product...";
+                    }
+                    else if(parseInt(optype) == 2){
+                        $('#savebutton').text('Updating...');
+                        $('#savebutton').prop("disabled", true);
+                        progress_text = "Updating product...";
+                    }
+
+                    blockPage(cardSection,progress_text);
+                },
+                success: async function(data) {
+                    await saveItemFn(data);
+                },
+                error: function () { 
+                    unblockPage(cardSection);     
+                },
+            });
+        });
+
+        function saveItemFn(data){
+            var optype = $("#operationType").val();
+            if(data.errors){
+                if(data.errors.product_class){
+                    $('#product_class_error').html(data.errors.product_class[0]);
+                }
+                if (data.errors.name) {
+                    $('#name-error').html(data.errors.name[0]);
+                }
+                if (data.errors.code) {
+                    $('#code-error').html(data.errors.code[0]);
+                }
+                if (data.errors.Category) {
+                    $('#category-error').html(data.errors.Category[0]);
+                }
+                if (data.errors.Uom) {
+                    $('#uom-error').html(data.errors.Uom[0]);
+                }
+                if (data.errors.skuNumber) {
+                    $('#skuNumber-error').html(data.errors.skuNumber[0]);
+                }
+                if (data.errors.item_type) {
+                    var text = data.errors.item_type[0];
+                    text = text.replace("item type", "product type");
+                    $('#product_type-error').html(text);
+                }
+
+                //start sales tab
+                if (data.errors.MinSellingPriceBeforeTax) {
+                    $('#min_selling_price_bt_error').html(data.errors.MinSellingPriceBeforeTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.MinSellingPriceAfterTax) {
+                    $('#min_selling_price_at_error').html(data.errors.MinSellingPriceAfterTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.SellingPriceBeforeTax) {
+                    $('#selling_price_bt_error').html(data.errors.SellingPriceBeforeTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.SellingPriceAfterTax) {
+                    $('#selling_price_at_error').html(data.errors.SellingPriceAfterTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.MaxSellingPriceBeforeTax) {
+                    $('#max_selling_price_bt_error').html(data.errors.MaxSellingPriceBeforeTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.MaxSellingPriceAfterTax) {
+                    $('#max_selling_price_at_error').html(data.errors.MaxSellingPriceAfterTax[0]);
+                    tabMgtSalesFn();
+                }
+                if (data.errors.CompatibleProducts) {
+                    $('#compatible_products-error').html(data.errors.CompatibleProducts[0]);
+                    tabMgtSalesFn();
+                }
+
+                //start purchase tab
+                if (data.errors.item_group) {
+                    var text = data.errors.item_group[0];
+                    text = text.replace("item group", "product group");
+                    $('#group-error').html(text);
+                    tabMgtPurchaseFn();
+                }
+                const supplierErrorsExist = Object.keys(data.errors).some(key => key.startsWith('row.'));
+                if (supplierErrorsExist) {
+                    $('#dynamicTable > tbody > tr').each(function (index) {
+                        let indx = $(this).find('.vals').val();
+                        var supplier = $(`#supplier${indx}`).val();
+                        var uom = $(`#uom${indx}`).val();
+                        var qty = $(`#quantity${indx}`).val();
+                        var price = $(`#price${indx}`).val();
+                        var availablity = $(`#availablity${indx}`).val();
+                        if(isNaN(parseInt(supplier)) || parseInt(supplier) == 0){
+                            $(`#select2-supplier${indx}-container`).parent().css('background-color',errorcolor);
+                        }
+                        if(isNaN(parseInt(uom)) || parseInt(uom) == 0){
+                            $(`#select2-uom${indx}-container`).parent().css('background-color',errorcolor);
+                        }
+                        if(isNaN(parseInt(qty))){
+                            $(`#quantity${indx}`).css("background", errorcolor);
+                        }
+                        if(isNaN(parseInt(price))){
+                            $(`#price${indx}`).css("background", errorcolor);
+                        }
+                        if(availablity == ""){
+                            $(`#select2-availablity${indx}-container`).parent().css('background-color',errorcolor);
+                        }
+                    });
+                    tabMgtPurchaseFn();
+                }
+
+                //start inventory tab
+                if (data.errors.ReqSerialNumber) {
+                    $('#requireSerialNumber-error').html(data.errors.ReqSerialNumber[0]);
+                    tabMgtInventoryFn();
+                }
+                if (data.errors.ReqExpireDate) {
+                    $('#requireExpireDate-error').html(data.errors.ReqExpireDate[0]);
+                    tabMgtInventoryFn();
+                }
+
+                //start basic tab
+                if (data.errors.partNumber) {
+                    $('#partNumber-error').html(data.errors.partNumber[0]);
+                    tabMgtBasicFn();
+                }
+                if (data.errors.lowStock) {
+                    var text = data.errors.lowStock[0];
+                    text = text.replace("low stock", "reorder point");
+                    $('#lowStock-error').html(text);
+                    tabMgtBasicFn();
+                }
+                if (data.errors.lotDescription) {
+                    $('#lot_description-error').html(data.errors.lotDescription[0]);
+                    tabMgtBasicFn();
+                }
+                if (data.errors.factor) {
+                    $('#factor-error').html(data.errors.factor[0]);
+                    tabMgtBasicFn();
+                }
+                if (data.errors.cartoonSize) {
+                    $('#cartoon_size-error').html(data.errors.cartoonSize[0]);
+                    tabMgtBasicFn();
+                }
+                
+                if(parseInt(optype) == 1){
+                    $('#savebutton').text('Save');
+                    $('#savebutton').prop("disabled", false);
+                }
+                else if(parseInt(optype) == 2){
+                    $('#savebutton').text('Update');
+                    $('#savebutton').prop("disabled", false);
+                }
+                toastrMessage('error',"Check your inputs","Error");
+                unblockPage(cardSection);
+            }
+            else if(data.dberrors) {
+                toastrMessage('error',"Please contact administrator","Error");
+                unblockPage(cardSection);
+            }
+            else if(data.success){
+                toastrMessage('success','Successful','Success');
+                $("#addItemForm").modal('hide');
+                if(parseInt(optype) == 1){
+                    refreshtbl();
+                }
+            }
         }
 
         $('input[name="product_class"]').on('change', function() {
             var prd_class = $(this).val();
+            $('#product_class_error').html("");
             manageProductClassFn();
             manageCompatibleItemFn();
         });
@@ -2484,6 +2678,14 @@
             managePricingFn();
         });
 
+        $(document).on('change', '.item_type', function() {
+            $('#product_type-error').html("");
+        });
+
+        $(document).on('change', '.item_group_class', function() {
+            $('#group-error').html("");
+        });
+
         function managePricingFn(){
             var price_type = $('input[name="price_type"]:checked').val();
             if(price_type == "Flexible"){
@@ -2506,14 +2708,6 @@
             });
         }
         
-        function itemTabMgtFn(){
-            $(".tab-title").removeClass("active");
-            $(".tab-view").removeClass("active");
-            
-            $(".active-tab-title").addClass("active");
-            $(".active-tab-view").addClass("active");
-        }
-
         $("#adds").click(function() {
             ++i;
             ++m;
@@ -2595,7 +2789,7 @@
 
         function uomFn(ele) {
             var cid = $(ele).closest('tr').find('.vals').val();
-            $(`#uom${cid}`).css("background", "white");
+            $(`#select2-uom${cid}-container`).parent().css({"background":"white","position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
         }
 
         function quantityFn(ele) {
@@ -2625,32 +2819,38 @@
 
         function minSellingPriceBeforeTaxFn(){
             calculateAllPricingFn("min","before");
-            $('#min_selling_price_bt_error').html("");
+            $('.minimum_price_error').html("");
+            //$('#min_selling_price_bt_error').html("");
         }
 
         function minSellingPriceAfterTaxFn(){
             calculateAllPricingFn("min","after");
-            $('#min_selling_price_at_error').html("");
+            $('.minimum_price_error').html("");
+            //$('#min_selling_price_at_error').html("");
         }
 
         function sellingPriceBeforeTaxFn(){
             calculateAllPricingFn("default","before");
-            $('#selling_price_bt_error').html("");
+            $('.default_price_error').html("");
+            //$('#selling_price_bt_error').html("");
         }
 
         function sellingPriceAfterTaxFn(){
             calculateAllPricingFn("default","after");
-            $('#selling_price_at_error').html("");
+            $('.default_price_error').html("");
+            //$('#selling_price_at_error').html("");
         }
 
         function maxSellingPriceBeforeTaxFn(){
             calculateAllPricingFn("max","before");
-            $('#max_selling_price_bt_error').html("");
+            $('.maximum_price_error').html("");
+            //$('#max_selling_price_bt_error').html("");
         }
 
         function maxSellingPriceAfterTaxFn(){
             calculateAllPricingFn("max","after");
-            $('#max_selling_price_at_error').html("");
+            $('.maximum_price_error').html("");
+            //$('#max_selling_price_at_error').html("");
         }
 
         function minVerifyPriceBeforeTaxFn(){
@@ -2913,10 +3113,58 @@
             }
         }
 
+        function itemTabMgtFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            
+            $(".active-tab-title").addClass("active");
+            $(".active-tab-view").addClass("active");
+        }
+
+        function tabMgtBasicFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            $("#item-basic-tab").addClass("active");
+            $("#item-basic-view").addClass("active");
+        }
+
+        function tabMgtInventoryFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            $("#item-inventory-tab").addClass("active");
+            $("#item-inventory-view").addClass("active");
+        }
+
+        function tabMgtPurchaseFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            $("#item-purchase-tab").addClass("active");
+            $("#item-purchase-view").addClass("active");
+        }
+
+        function tabMgtSalesFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            $("#item-sales-tab").addClass("active");
+            $("#item-sales-view").addClass("active");
+        }
+
+        function tabMgtOthersFn(){
+            $(".tab-title").removeClass("active");
+            $(".tab-view").removeClass("active");
+            $("#item-others-tab").addClass("active");
+            $("#item-others-view").addClass("active");
+        }
+
         function refreshtbl(){
             itemtable.ajax.reload(function() {
                 unblockPage(cardSection);
             }, false); 
+        }
+
+        function refreshMainDatatbleFn(){
+            var oTable = $('#itemdataables').dataTable(); 
+            oTable.fnDraw(false);
         }
 
         //****************************************
@@ -3893,129 +4141,6 @@
             ]
             });
         });
-        $('#savebutton').click(function(){
-            var id=$('#ids').val()||0;
-            var wholesalVal = parseFloat($('#wholeSellerPrice').val()||0);
-            var wholesalMinVal = parseFloat($('#wholeSellerMinAmount').val());
-            var maxCostValue = parseFloat($('#maxcosti').val());
-            var averagcost=parseFloat($('#averagecost').val());
-            var retailval = parseFloat($('#retailPrice').val()||0);
-            var costType=$('#costtype').val();
-            maxCostVal = costType == 0 ? maxCostValue: averagcost;
-            var msgretail=costType == 0 ? 'The retail price is less than max cost': 'The retail price is less than average cost';
-            var msgwholesale=costType == 0 ? 'The whole sale price is less than max cost': 'The whole sale price is less than average cost';
-            var msgforboth=costType == 0 ? 'The retail and whole sale price is less than max cost': 'The retail and whole sale price is less than average cost';
-            if((maxCostVal != '' && retailval!=0 && retailval < maxCostVal) &&  (maxCostVal != '' && wholesalVal!=0 && wholesalVal < maxCostVal)){
-                toastrMessage('error',msgforboth,'Error');
-            }
-            else if ((maxCostVal != '' && retailval!=0 && retailval < maxCostVal)) {
-                    toastrMessage('error',msgretail,'Error');
-            }
-            else if((maxCostVal != '' && wholesalVal!=0 && wholesalVal < maxCostVal)){
-                toastrMessage('error',msgwholesale,'Error');
-            }
-            else{
-                var registerForm = $("#RegisterItem");
-                var formData = registerForm.serialize();
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('saveitems') }}",
-                    data: formData,
-                    dataType: "json",
-                    beforeSend: function () {
-                        $('#savebutton').prop('disabled',true);
-                        $('#saveloadid').addClass('spinner-border spinner-border-sm');
-                        $('#savesaveid').addClass('sml-25 align-middle').text('Please wait...');
-                        sectionBlock.block({
-                                message:
-                                '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mt-0">Loading Please wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                                css: {
-                                backgroundColor: 'transparent',
-                                color: '#fff',
-                                border: '0'
-                                },
-                                overlayCSS: {
-                                opacity: 0.5
-                                }
-                            });
-                    },
-                    complete: function () {
-                        $('#savebutton').prop('disabled',false);
-                        $('#saveloadid').removeClass('spinner-border spinner-border-sm');
-                        $('#savesaveid').text('Save');
-                            sectionBlock.block({
-                            message:
-                                '',
-                                timeout: 1,
-                                css: {
-                                backgroundColor: '',
-                                color: '',
-                                border: ''
-                                },
-                            });
-                    },
-                    success: function (data) {
-                        if(data.errors){
-                            if(data.errors.group){
-                                $('#group-error').html(data.errors.group[0]);
-                            }
-                            if (data.errors.name) {
-                                $('#name-error').html(data.errors.name[0]);
-                            }
-                            if (data.errors.code) {
-                                $('#code-error').html(data.errors.code[0]);
-                                var itmcodetype=$('#itmcodetype').val();
-                                if(parseFloat(itmcodetype)==1){
-                                    $("#newcodegenerate").show();
-                                }
-                                else{
-                                    $("#newcodegenerate").hide();
-                                }
-                            }
-                            if (data.errors.Category) {
-                                $('#category-error').html(data.errors.Category[0]);
-                            }
-                            if (data.errors.Uom) {
-                                $('#uom-error').html(data.errors.Uom[0]);
-                            }
-                            if (data.errors.skuNumber) {
-                                $('#skuNumber-error').html(data.errors.skuNumber[0]);
-                            }
-                            if (data.errors.wholeSellerPrice) {
-                                var text=data.errors.wholeSellerPrice[0];
-                                text = text.replace("whole seller", "Whole sale");
-                                $('#wholeSellerPrice-error').html(text);
-                            }
-                            if (data.errors.wholeSellerMinAmount) {
-                                $('#wholeSellerMinAmount-error').html(data.errors.wholeSellerMinAmount[0]);
-                            }
-                            if(data.errors.retailPrice){
-                                $('#retailPrice-error').html(data.errors.retailPrice[0]);
-                            }
-                        }
-                        if(data.success){
-                            toastrMessage('success','Item Saved Successfully','Success');
-                            $("#addItemForm").modal('hide');
-                            $("#RegisterItem")[0].reset();
-                            $('#Category').val(null).trigger('change');
-                            $('#Uom').val(null).trigger('change');
-                            switch (id) {
-                                case 0:
-                                    gblIndex+=1;
-                                    break;
-                                default:
-                                    gblIndex= gblIndex;
-                                    break;
-                            }
-                            var oTable = $(focustables).dataTable();
-                            oTable.fnDraw(false);
-                            closeModalWithClearValidation();
-                        
-                        }
-                    }
-                });
-            }
-        });
         
             function copyAverageCostBv(){
                 var averagcost=$('#averagecostbv').val();
@@ -4056,9 +4181,11 @@
 
                 if(code == code_hidden){
                     $('#generate_item_code').hide();
+                    $("#ItemCodeMode").val("Generated");
                 }
                 else if(code != code_hidden){
                     $('#generate_item_code').show();
+                    $("#ItemCodeMode").val("Manual");
                 }
             }
             

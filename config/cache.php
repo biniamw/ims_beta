@@ -88,6 +88,15 @@ return [
             'endpoint' => env('DYNAMODB_ENDPOINT'),
         ],
 
+        // 'default' => env('CACHE_DRIVER', 'redis'),
+
+        // 'stores' => [
+        //     'redis' => [
+        //         'driver' => 'redis',
+        //         'connection' => 'cache',   // uses the 'cache' connection above
+        //         'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache'),
+        //     ],
+        // ],
     ],
 
     /*
