@@ -84,6 +84,419 @@
     </div>
     @endcan
 
+    <div class="modal fade text-left fit-content" id="docInfoModal" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" data-backdrop="static" style="display: none;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title form_title">Product Information</h4>
+                    <div class="row">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </div>
+                <form id="itemInfoForm">
+                    {{ csrf_field() }}
+                    <div class="modal-body">    
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                <ul class="nav nav-tabs info-note" role="tablist">
+                                    <li class="nav-item genformnavcon">
+                                        <a class="nav-link genformnav disabled" id="Info-general-tab" data-toggle="tab" href="#infogeneralview" aria-controls="Info-general-tab" role="tab" aria-selected="false" title="General Information"><i class="fas fa-database"></i><span class="tab-text">General Information</span></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content genformtabcon" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
+                                    <div class="tab-pane genformtab active" id="infogeneralview" aria-labelledby="infogeneralview" role="tabpanel">
+                                        <div class="row m-1">
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                <table class="infotbl" style="width:100%;font-size:12px;">
+                                                    <tr>
+                                                        <td><label class="info_lbl">Class</label></td>
+                                                        <td><label class="info_lbl" id="product_class_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl">Code</label></td>
+                                                        <td><label class="info_lbl" id="itemcodeInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl">Name</label></td>
+                                                        <td><label class="info_lbl" id="itemInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr class="non_service_info">
+                                                        <td><label class="info_lbl" title="Barcode Number">Barcode No.</label></td>
+                                                        <td><label class="info_lbl" id="skuInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Unit of Measurement">UOM</label></td>
+                                                        <td><label class="info_lbl" id="uomInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                                <table class="infotbl" style="width:100%;font-size:12px;">
+                                                    <tr>
+                                                        <td><label class="info_lbl">Category</label></td>
+                                                        <td><label class="info_lbl" id="itemCategoryInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl">Tax Type</label></td>
+                                                        <td><label class="info_lbl" id="taxInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr class="non_service_info">
+                                                        <td><label class="info_lbl">Product Type</label></td>
+                                                        <td><label class="info_lbl" id="product_type_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl">Description</label></td>
+                                                        <td><label class="info_lbl" id="imagedescription" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl">Status</label></td>
+                                                        <td><label class="info_lbl" id="status_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                <ul class="nav nav-tabs nav-fill" role="tablist">
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link active item-info-tabs info-tab-title active-tab-title" id="item-info-basic-tab" data-toggle="tab" href="#item-info-basic-view" aria-controls="item-info-basic-tab" role="tab" aria-selected="true" title="Basic"><i class="fas fa-bars"></i><span class="tab-text">Basic</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-info-tabs info-tab-title" id="item-info-inventory-tab" data-toggle="tab" href="#item-info-inventory-view" aria-controls="item-info-inventory-tab" role="tab" aria-selected="true" title="Inventory"><i class="fas fa-boxes"></i><span class="tab-text">Inventory</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-info-tabs info-tab-title" id="item-info-purchase-tab" data-toggle="tab" href="#item-info-purchase-view" aria-controls="item-info-purchase-tab" role="tab" aria-selected="true" title="Purchase"><i class="fas fa-cart-plus"></i><span class="tab-text">Purchase</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-info-tabs info-tab-title" id="item-info-sales-tab" data-toggle="tab" href="#item-info-sales-view" aria-controls="item-info-sales-tab" role="tab" aria-selected="true" title="Sales"><i class="fas fa-cash-register"></i><span class="tab-text">Sales</span></a>                                
+                                    </li>
+                                    <li class="nav-item formnavitm note">
+                                        <a class="nav-link item-info-tabs info-tab-title" id="item-info-others-tab" data-toggle="tab" href="#item-info-others-view" aria-controls="item-info-others-tab" role="tab" aria-selected="true" title="Others"><i class="fas fa-circle-check"></i><span class="tab-text">Others</span></a>                                
+                                    </li>
+                                </ul>
+                                <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
+                                    <div class="tab-pane item-info-views active info-tab-view active-tab-view" id="item-info-basic-view" aria-labelledby="item-info-basic-view" role="tabpanel">
+                                        <div class="row m-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Basic</a></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 non_service_info">
+                                                <table class="infotbl" style="width:100%;font-size:12px;">
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Unique identifier assigned to this product for tracking and reference.">Part No.</label></td>
+                                                        <td><label class="info_lbl" id="partnumberInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="The minimum stock level that triggers a replenishment order to avoid stockouts.">Reorder Point</label></td>
+                                                        <td><label class="info_lbl" id="reorderInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Identifies the specific lot or shelf location where this product is stored.">Lot Description</label></td>
+                                                        <td><label class="info_lbl" id="lot_description_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="A multiplier used to convert or scale quantities in calculations. (For manufacturing)">Factor</label></td>
+                                                        <td><label class="info_lbl" id="factorInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Number of pieces contained in a single carton or box.">Cartoon Size</label></td>
+                                                        <td><label class="info_lbl" id="cartoon_size_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane item-info-views info-tab-view" id="item-info-inventory-view" aria-labelledby="item-info-inventory-view" role="tabpanel">
+                                        <div class="row m-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Inventory</a></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 non_service_info">
+                                                <table class="infotbl" style="width:100%;font-size:12px;">
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Is Serial Number Required">Is Serial No. Req.</label></td>
+                                                        <td><label class="info_lbl" id="is_serial_no_req_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label class="info_lbl" title="Is Batch Number | Expiry Date Required">Is Batch No. | Expiry Date Req.</label></td>
+                                                        <td><label class="info_lbl" id="is_batch_no_req_lbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane item-info-views info-tab-view" id="item-info-purchase-view" aria-labelledby="item-info-purchase-view" role="tabpanel">
+                                        <div class="row m-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Purchase</a></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 non_service_info">
+                                                <table class="infotbl" style="width:100%;font-size:12px;">
+                                                    <tr>
+                                                        <td><label class="info_lbl">Group</label></td>
+                                                        <td><label class="info_lbl" id="itemgroupInfoLbl" style="font-weight:bold;"></label></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12 col-12 border-left non_service_info">
+                                                <table id="info-supplier-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable" style="width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="7" class="text-center">Supplier Information</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="width:3%;">#</th>
+                                                            <th style="width:40%;">Supplier <i class="fas fa-info-circle" style="color: #82868b;" title="Code, Name, TIN"></i></th>
+                                                            <th style="width:10%;">UOM</th>
+                                                            <th style="width:10%;">Quantity</th>
+                                                            <th style="width:10%;">Price</th>
+                                                            <th style="width:10%;">Availablity</th>
+                                                            <th style="width:17%;">Remark</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="table table-sm"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane item-info-views info-tab-view" id="item-info-sales-view" aria-labelledby="item-info-sales-view" role="tabpanel">
+                                        <div class="row mt-1 mr-1 ml-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Sales</a></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                                <fieldset class="fset">
+                                                    <legend class="mb-0">
+                                                        <div class="row">
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">Pricing</div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align: right">
+                                                                <label class="info_lbl" id="price_type_lbl" style="font-weight:400;"></label>
+                                                            </div>
+                                                        </div>
+                                                    </legend>
+                                                    <div class="row">
+                                                        <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1 flexible_class_info">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Minimum Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">Before Tax</label></td>
+                                                                                <td><label class="info_lbl" id="min_bt_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">After Tax</label></td>
+                                                                                <td><label class="info_lbl" id="min_at_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Default Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">Before Tax</label></td>
+                                                                                <td><label class="info_lbl" id="default_bt_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">After Tax</label></td>
+                                                                                <td><label class="info_lbl" id="default_at_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1 flexible_class_info">
+                                                            <fieldset class="fset2">
+                                                                <legend class="mb-0">Maximum Price</legend>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <table class="infotbl" style="width:100%;font-size:12px;">
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">Before Tax</label></td>
+                                                                                <td><label class="info_lbl" id="max_bt_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td><label class="info_lbl">After Tax</label></td>
+                                                                                <td><label class="info_lbl" id="max_at_lbl" style="font-weight:bold;"></label></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-9 col-md-9 col-sm-9 col-12 mb-1 non_service_info">
+                                                            <table style="width: 100%;font-size:12px;" class="rtable text-center">
+                                                                <tr>
+                                                                    <td colspan="3">
+                                                                        <label class="info_lbl" style="font-weight: bold;">Product Purchase Cost</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">Cost Type</label></td>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">Before Tax</label></td>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">After Tax</label></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td title="Minimum Cost"><label class="info_lbl">Min. Cost</label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="mincostInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="mincostInfoLblav"></label></td>
+                                                                </tr>
+                                                                <tr id="averagecosttr">
+                                                                    <td title="Average Cost"><label class="info_lbl">Avg. Cost</label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="averageInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="averageInfoLblav"></label></td>
+                                                                </tr>
+                                                                <tr id="maxcosttr">
+                                                                    <td title="Maximum Cost"><label class="info_lbl">Max. Cost</label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="maxcostInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl" id="maxcostInfoLblav"></label></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
+                                                <table id="info-compatible-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable" style="width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:3%;">#</th>
+                                                            <th style="width:97%;">Compatible Products <i class="fas fa-info-circle" style="color: #82868b;" title="Code, Name, Barcode Number"></i></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="table table-sm"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane item-info-views info-tab-view" id="item-info-others-view" aria-labelledby="item-info-others-view" role="tabpanel">
+                                        <div class="row mt-1 ml-1">
+                                            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 non_service_info">
+                                                <!-- Tab navs -->
+                                                <div class="nav flex-column nav-tabs text-left" id="v-tabs-modules" role="tablist" aria-orientation="vertical">
+                                                    <a class="nav-link mod-vertical-tab active verticalinfo info-tab-title active-tab-title ver-cus-tab" id="info-v-image-tab" data-toggle="tab" href="#info-v-image-view" role="tab" aria-controls="info-general-tab" aria-selected="true" title="Images"><i class="fas fa-images"></i><span class="tab-text">Images</span></a>
+                                                    <a class="nav-link mod-vertical-tab verticalinfo mod info-tab-title ver-cus-tab" id="info-document-tab" data-mod="hr" data-toggle="tab" href="#info-document-view" role="tab" aria-controls="info-hr-tab" aria-selected="false" title="Documents"><i class="fas fa-books"></i><span class="tab-text">Documents</span></a>
+                                                </div>
+                                                <!-- Tab navs -->
+                                            </div>
+                                            <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 non_service_info" style="margin-right: -5rem;padding-right: -5rem !important;">
+                                                <div class="tab-content" id="v-tabs-tabContent" style="border: 0.1px solid #d9d7ce;">
+                                                    <div class="tab-pane active verticalviewinfo info-tab-view active-tab-view" id="info-v-image-view" role="tabpanel" aria-labelledby="info-v-image-view">
+                                                        <div class="row">
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 section-path">
+                                                                <div class="breadcrumb-path">
+                                                                    <div class="crumb"><a>Oters</a></div>
+                                                                    <div class="crumb active"><a>Images</a></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 main">
+                                                                        <div id="carouselExampleFade"></div>
+                                                                        <div id="img-container">
+                                                                            <img id=featured src="" width="500px;" height="300px;">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 scroll scrdiv">
+                                                                        <div class="card">
+                                                                            <div class="card-body ">
+                                                                                <div class="row sideImage"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                                                <div id="barcodeinfo" class="text-center" style="height:25rem;">
+                                                                    <b><label id="barcodeinfocode"></label></b>
+                                                                    <div id="barcodeinfoimages"></div>
+                                                                    <b><label id="barcodeskuNumber"></label></b>
+                                                                    <input type="hidden" name="printid" id="printid" />
+                                                                    <button id="printbutton" type="button" class="btn btn-outline-info btn-sm header-prop"><i class="fas fa-print"></i><span class="header-text">&nbsp Print</span></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane verticalviewinfo info-tab-view" id="info-document-view" role="tabpanel" aria-labelledby="info-document-view">
+                                                        <div class="row m-1">
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 section-path">
+                                                                <div class="breadcrumb-path">
+                                                                    <div class="crumb"><a>Oters</a></div>
+                                                                    <div class="crumb active"><a>Documents</a></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                <table id="info-document-datatable" class="display table-bordered table-striped table-hover dt-responsive defaultdatatable mb-0 info_datatable mr-1" style="width: 100%;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="display: none;"></th>
+                                                                            <th style="width:3%;">#</th>
+                                                                            <th style="width:13%;">Type</th>
+                                                                            <th style="width:10%;">Date</th>
+                                                                            <th style="width:40%;">Document</th>
+                                                                            <th style="width:24%;">Remark</th>
+                                                                            <th style="width:10%;">Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="table table-sm"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:left">
+                                    <button type="button" id="itemeditbutton" class="btn btn-outline-dark"><i class="fa-sharp fa-solid fa-pen"></i>Edit</button>
+                                    @can("Item-Delete")
+                                    <button type="button" id="itemdeletebutton" class="btn btn-outline-danger"><i class="fa-solid fa-trash-xmark"></i>Delete</button>
+                                    @endcan
+                                    <button type="button" id="imageuploadbutton" class="btn btn-outline-dark"><i class="fa-regular fa-cloud-arrow-up"></i>Image Upload</button>
+                                </div>        
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:right">
+                                    <input type="hidden" class="form-control" name="itemtype" id="itemtype" readonly="true">
+                                    <input type="hidden" class="form-control" name="wholesalemax" id="wholesalemax" readonly="true">
+                                    <input type="hidden" class="form-control" name="pendingdata" id="pendingdata" readonly="true">
+                                    <button id="closebutton" type="button" class="btn btn-danger form_btn" data-dismiss="modal" onclick="refreshtbl1()">Close</button>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade text-left" id="batchupdateformodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true" style="overflow-y: scroll;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -342,6 +755,7 @@
                                                             <strong id="taxType-error" class="errordatalabel general_error"></strong>
                                                         </span>
                                                     </div>
+
                                                 </div>
                                             </div>
 
@@ -380,7 +794,6 @@
                                                             <strong id="activeStatus-error" class="errordatalabel general_error"></strong>
                                                         </span>
                                                     </div>
-
                                                 </div>
                                             </div>
                                             
@@ -411,6 +824,11 @@
                                 <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
                                     <div class="tab-pane item-views active tab-view active-tab-view" id="item-basic-view" aria-labelledby="item-basic-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Basic</a></div>
+                                                </div>
+                                            </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="partNumDiv">
                                                 <label class="form_lbl" title="Unique identifier assigned to this product for tracking and reference.">Part No.</label>
                                                 <input type="text" placeholder="Enter part number here" class="form-control mainforminp non_service_input" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
@@ -450,6 +868,11 @@
                                     </div>
                                     <div class="tab-pane item-views tab-view" id="item-inventory-view" aria-labelledby="item-inventory-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Inventory</a></div>
+                                                </div>
+                                            </div>
                                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="serialNumDiv">
                                                 <label class="form_lbl" title="Is Serial Number Requires">Is Serial No. Req.</label>
                                                 <select class="select2 form-control" name="ReqSerialNumber" id="ReqSerialNumber" onchange="reqSerialNumValidation()">
@@ -477,6 +900,11 @@
 
                                     <div class="tab-pane item-views tab-view" id="item-purchase-view" aria-labelledby="item-purchase-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Purchase</a></div>
+                                                </div>
+                                            </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl">Group</label>
                                                 <div class="row">
@@ -507,10 +935,10 @@
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="form_lbl" style="width:3%;">#</th>
-                                                                            <th class="form_lbl" style="width:25%;">Supplier Name<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:25%;" title="Code, Name, TIN">Supplier<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:10%;">UOM<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:12%;">Quantity<b style="color:red;">*</b></th>
-                                                                            <th class="form_lbl" style="width:12%;">Price</th>
+                                                                            <th class="form_lbl" style="width:12%;">Price<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:15%;">Availability<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:20%;">Remark</th>
                                                                             <th class="form_lbl" style="width:3%;"></th>
@@ -535,6 +963,11 @@
 
                                     <div class="tab-pane item-views tab-view" id="item-sales-view" aria-labelledby="item-sales-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Sales</a></div>
+                                                </div>
+                                            </div>
                                             <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-12 mb-1">
                                                 <fieldset class="fset">
                                                     <legend class="mb-0">
@@ -627,7 +1060,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><label class="info_lbl" style="font-weight: bold;">Cost</label></td>
+                                                                    <td><label class="info_lbl" style="font-weight: bold;">Cost Type</label></td>
                                                                     <td><label class="info_lbl" style="font-weight: bold;">Before Tax</label></td>
                                                                     <td><label class="info_lbl" style="font-weight: bold;">After Tax</label></td>
                                                                 </tr>
@@ -665,6 +1098,11 @@
 
                                     <div class="tab-pane item-views tab-view" id="item-others-view" aria-labelledby="item-others-view" role="tabpanel">
                                         <div class="row mr-1 ml-1 mt-1">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
+                                                <div class="breadcrumb-path">
+                                                    <div class="crumb active"><a>Others</a></div>
+                                                </div>
+                                            </div>
                                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="barcode_div">
                                                 <label class="form_lbl">Barcode</label>
                                                 <div id="barcodeDiv">
@@ -951,223 +1389,9 @@
     </div>
     {{-- end of item Register --}}
 
-    <div class="modal fade" id="docInfoModal" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" data-backdrop="static" style="display: none;">
-    <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalScrollableTitle">Item information</h5>
-                <div class="row">
-                    <div style="text-align: right;" id="dividertext"></div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="refreshtbl1()">
-                    <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <form id="holdInfo">
-                @csrf
-                    <div class="col-xl-12">
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-12" id="iteminfo">
-                                    <div class="card" style="height: 55rem;">
-                                        <div class="card-header">
-                                            <h6 class="card-title">Item Info</h6>
-                                        </div>
-                                        <div class="card-body" id="itemInfoCardDiv">
-                                            <table class="table-responsive">
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Item Code: </label></td>
-                                                    <td><b><label id="itemcodeInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Item Type: </label></td>
-                                                    <td><b><label id="itemtypeInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Item Group: </label></td>
-                                                    <td><b><label id="itemgroupInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Item Name: </label></td>
-                                                    <td><b><label id="itemInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">UOM: </label></td>
-                                                    <td><b><label id="uomInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Category: </label></td>
-                                                    <td><b><label id="itemCategoryInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Tax: </label></td>
-                                                    <td><b><label id="taxInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Barcode(SKU#): </label></td>
-                                                    <td><b><label id="skuInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Reorder Value: </label></td>
-                                                    <td><b><label id="reorderInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><label strong style="font-size: 12px;">Part Number: </label></td>
-                                                    <td><b><label id="partnumberInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                                
-                                                 <tr>
-                                                    <td><label strong style="font-size: 12px;">Factor: </label></td>
-                                                    <td><b><label id="factorInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                </tr>
-                                            </table>
-                                            <div class="divider divider-info">
-                                                <div class="divider-text">Item Description</div>
-                                            </div>
-                                            <div style="overflow-y:scroll;height:20rem;">
-                                                <label id="imagedescription" style="font-size: 12px;"></label>
-                                            </div>
-                                            <div class="row" style="color:white;">-</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-12" id="barcodeimage">
-                                    <div class="card" style="height:55rem;">
-                                        <div class="card-body" id="priceInfoCardDiv">
-                                            <div class="table-responsive" style="height:20rem;">
-                                                <table style="width: 100%;" class="table table-bordered table-sm">
-                                                <tr class="table-default">
-                                                    <td colspan="4" style="text-align: center;"><b>Selling Price</b></td>
-                                                </tr>
-                                                <tr class="table-secondary">
-                                                    <td style="width: 30%"><b>Price</b></td>
-                                                    <td style="width: 30%"><b>Before VAT</b></td>
-                                                    <td style="width: 30%"><b>After VAT</b></td>
-                                                    <td style="width: 10%"><b>PM %</b></td>
-                                                </tr>
-                                                    <tr>
-                                                        <td>Reatil</td>
-                                                        <td><b><label id="rpInfoLblbv" strong style="font-size: 12px;"></label></b></td>
-                                                        <td><b><label id="rpInfoLblav" strong style="font-size: 12px;"></label></b></td>
-                                                        <td><b><label id="rppmInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                    </tr>
-                                                    <tr  class="table-default">
-                                                        <td>Wholesale</td>
-                                                        <td><b><label id="wsInfoLblbv" strong style="font-size: 12px;"></label></b></td>
-                                                        <td><b><label id="wsInfoLblav" strong style="font-size: 12px;"></label></b></td>
-                                                        <td><b><label id="wspmInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                    </tr>
-                                            </table>
-                                            <table class="table-responsive" id="costables">
-                                                @if($setings->wholesalefeature==1)
-                                                    
-                                                        <tr>
-                                                            <td><label strong style="font-size: 12px;">Wholesale Min Qty:</label></td>
-                                                            <td><b><label id="wsminInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><label strong style="font-size: 12px;">Wholesale Max Qty:</label></td>
-                                                            <td><b><label id="wsmaxInfoLbl" strong style="font-size: 12px;"></label></b></td>
-                                                        </tr>
-                                                    
-                                                @endif
-                                            </table>
-                                            </div>
-                                            <div class="divider divider-info">
-                                                <div class="divider-text">Barcode(SKU#)</div>
-                                            </div>
-                                            <div id="barcodeinfo" class="text-center" style="height:25rem;">
-                                                <b><label id="barcodeinfocode"></label></b>
-                                                <div id="barcodeinfoimages">
-                                                </div>
-                                                <b><label id="barcodeskuNumber"></label></b>
-                                                <input type="hidden" name="printid" id="printid" />
-                                                <button id="printbutton" type="button" class="btn btn-info">Print</button>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-12" id="productimage">
-                                    <div class="card" style="height: 55rem;">
-                                        <div class="card-body" id="itemInfoCardDiv">
-                                            <div class="table-responsive" style="height:20rem;">
-                                            <table style="width: 100%;" class="table table-bordered table-sm">
-                                                    <tr class="table-default">
-                                                        <td colspan="3" style="text-align: center;"><b>Product-Purchase Cost</b></td>
-                                                    </tr>
-                                                    <tr class="table-secondary">
-                                                        <td style="width: 29%"><b>Cost</b></td>
-                                                        <td style="width: 36%"><b>Before VAT</b></td>
-                                                        <td style="width: 35%"><b>After VAT</b></td>
-                                                    </tr>
-                                                        <tr>
-                                                            <td>Min</td>
-                                                            <td><b><label id="mincostInfoLblbv" strong style="font-size: 12px;"></label></b></td>
-                                                            <td><b><label id="mincostInfoLblav" strong style="font-size: 12px;"></label></b></td>
-                                                        </tr>
-                                                        <tr id="averagecosttr" class=''>
-                                                            <td>Avg</td>
-                                                            <td><b><label id="averageInfoLblbv" strong style="font-size: 12px;"></label></b></td>
-                                                            <td><b><label id="averageInfoLblav" strong style="font-size: 12px;"></label></b></td>
-                                                        </tr>
-                                                        <tr id="maxcosttr" class=''>
-                                                            <td>Max</td>
-                                                            <td><b><label id="maxcostInfoLblbv" strong style="font-size: 12px;"></label></b></td>
-                                                            <td><b><label id="maxcostInfoLblav" strong style="font-size: 12px;"></label></b></td>
-                                                        </tr>
-                                                </table>
-                                            </div>
-                                            <div class="divider divider-info">
-                                                <div class="divider-text">Item Images</div>
-                                            </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 col-sm-12 main">
-                                                        <div id="carouselExampleFade"></div>
-                                                        <div id="img-container">
-                                                            <img id=featured src="" width="500px;" height="300px;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12 col-sm-12 scroll scrdiv">
-                                                        <div class="card">
-                                                            <div class="card-body ">
-                                                                <div class="row sideImage" >
-                                                                
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    </form>   
-    </div>
-        <div class="modal-footer">
-            <div class="col-xl-12 col-lg-12">
-                    <div class="row">
-                            <div class="col-xl-10 col-lg-12">
-                                <input type="hidden" class="form-control" name="itemtype" id="itemtype" readonly="true">
-                                <input type="hidden" class="form-control" name="wholesalemax" id="wholesalemax" readonly="true">
-                                <input type="hidden" class="form-control" name="pendingdata" id="pendingdata" readonly="true">
-                                <button type="button" id="itemeditbutton" class="btn btn-outline-dark"><i class="fa-sharp fa-solid fa-pen"></i>Edit</button>
-                                @can("Item-Delete")
-                                <button type="button" id="itemdeletebutton" class="btn btn-outline-danger"><i class="fa-solid fa-trash-xmark"></i>Delete</button>
-                                @endcan
-                                <button type="button" id="imageuploadbutton" class="btn btn-outline-dark"><i class="fa-regular fa-cloud-arrow-up"></i>Image Upload</button>
-                            </div>        
-                            
-                            <div class="col-xl-2 col-lg-12" style="text-align:right;">
-                                <button id="closebutton" type="button" class="btn btn-relief-danger" data-dismiss="modal" onclick="refreshtbl1()">Close</button>
-                            </div> 
-                        </div>
-                    </div>
-        </div>
-    </div>
-    </div>
-</div>
+
+
+
 <div class="modal fade text-left" id="deleteitem" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -1535,220 +1759,6 @@
             $($(focustables+' tbody > tr')[gblIndex]).addClass('selected');  
         }
 
-        function showitemInformation(itemid,uom,category,maxicost,averagecost){
-            var localpriceupdate=$('#localitempriceupdate').val();
-            var importpriceupdate=$('#importitempriceupdate').val();
-            var costtype=$('#costtype').val();
-            var maximumqty=0;
-            $('.sideImage').html('');
-            $('#carouselExampleFade').html('');
-            $.ajax({
-                    type: "GET",
-                    url: "{{ url('showitem') }}/"+itemid,
-                    beforeSend: function () {
-                        pageSection.block({
-                                message:
-                                '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-50">Loading Please wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div></div>',
-                                css: {
-                                backgroundColor: 'transparent',
-                                color: '#fff',
-                                border: '0'
-                                },
-                                overlayCSS: {
-                                opacity: 0.5
-                                }
-                    });
-                    },
-                    complete: function () {
-                        pageSection.block({
-                            message:'',
-                                timeout: 1,
-                                css: {
-                                backgroundColor: '',
-                                color: '',
-                                border: ''
-                                },
-                            
-                    });
-                    $('#docInfoModal').modal('show');
-                    },
-                    success: function (response) {
-                        $.each(response.item, function (index, value) { 
-                            $('#ids').val(value.id);
-                            $('#itemtypeInfoLbl').text(value.Type);
-                            $('#itemgroupInfoLbl').text(value.itemGroup);
-                            $('#itemtype').val(value.itemGroup);
-                            $('#itemInfoLbl').text(value.Name);
-                            $('#itemcodeInfoLbl').text(value.Code);
-                            $('#itemCategoryInfoLbl').text(category);
-                            $('#uomInfoLbl').text(uom);
-                            $('#taxInfoLbl').text(value.TaxTypeId);
-                            $('#partnumberInfoLbl').text(value.PartNumber);
-                            $('#factorInfoLbl').text(value.standard_factor);
-                            
-                            $('#reorderInfoLbl').text(value.LowStock);
-                            $('#skuInfoLbl').text(value.SKUNumber);
-                            $('#barcodeinfocode').text(value.Code);
-                            var itemdescription = value.Description;
-                            var img='<img class="card-img-top" src="'+value.imageName+'" alt="barcode not found"  />';
-                            $("#barcodeinfoimages").html(img);
-                            $('#imagedescription').html(itemdescription);
-                            var bt = value.BarcodeType;
-                            var itemgrioup = value.itemGroup;
-                            var retailprice=value.RetailerPrice>0?value.RetailerPrice:'';
-                            var wholesaleprice=value.WholesellerPrice>0?value.WholesellerPrice:'';
-                            var wholesaleminamount=value.wholeSellerMinAmount>0?value.wholeSellerMinAmount:'';
-                            var maxcost=value.MaxCost>0?value.MaxCost:'';
-                            var avgcost=value.averageCost>0?value.averageCost:'';
-                            var mincost=value.minCost>0?value.minCost:'';
-                            var pendingqty=value.PendingQuantity||0;
-                            var balance=value.AvailableQuantity||0;
-                            var minstock=value.MinimumStock;
-                            var rpm=value.pmretail;
-                            var wspm=value.pmwholesale;
-                            var retailpricebv=parseFloat(retailprice/1.15).toFixed(2);
-                            var wholesalepricebv=parseFloat(wholesaleprice/1.15).toFixed(2);
-                            var maxcostbv=parseFloat(maxcost/1.15).toFixed(2);
-                            var avgcostbv=parseFloat(avgcost/1.15).toFixed(2);
-                            var mincostbv=parseFloat(mincost/1.15).toFixed(2);
-                            retailpricebv=retailpricebv>0?retailpricebv:'';
-                            wholesalepricebv=wholesalepricebv>0?wholesalepricebv:'';
-                            maxcostbv=maxcostbv>0?maxcostbv:'';
-                            avgcostbv=avgcostbv>0?avgcostbv:'';
-                            mincostbv=mincostbv>0?mincostbv:'';
-                            maximumqty=parseFloat(value.AvailableQuantity)-parseFloat(value.PendingQuantity)-parseFloat(value.MinimumStock);
-                            $('#wholesalemax').val(maximumqty);
-                            $('#pendingdata').val(value.PendingQuantity);
-                            setItemPrice(retailprice,wholesaleprice,retailpricebv,wholesalepricebv,maximumqty,pendingqty,minstock,balance,wholesaleminamount,maxcost);
-                            if (itemgrioup == "Local") {
-                                
-                                var localitemstoreminquantity=$('#localitemstoreminquantity').val();
-                                var localcostpermission=$('#localcost').val();
-                                var localitemeditpermission=$('#localitemeditpermission').val();
-                                $('#printbutton').show();
-                                switch (localitemstoreminquantity) {
-                                    case '1':
-                                        $('#costables').show();
-                                        break;
-                                    
-                                    default:
-                                        $('#costables').hide();
-                                        break;
-                                }
-                                switch (localitemeditpermission) {
-                                    case '1':
-                                        $('#itemeditbutton').show();
-                                        break;
-                                
-                                    default:
-                                        $('#itemeditbutton').hide();
-                                        break;
-                                }
-                                switch (localcostpermission) {
-                                    case '1':
-                                        setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
-                                        removeColorAccessDeniedinformation();
-                                        switch (costtype) {
-                                            case '1':
-                                                if(parseFloat(avgcost)>0){
-                                                    setAverageCostColor();
-                                                } else{
-                                                    removeAverageCostColor();
-                                                }
-                                                
-                                                break;
-                                            case '0':
-                                                if(parseFloat(maxcost)>0){
-                                                    setMaxCostColor();
-                                                } else{
-                                                    removeMaxCostColor();
-                                                }
-                                                
-                                            break;
-                                            default:
-                                                break;
-                                        }
-                                        break;                                
-                                    default:
-                                        setAccessDeniedinformation();
-                                        removeAverageCostColor();
-                                        removeMaxCostColor();
-                                        break;
-                                }
-                            }
-                            if (itemgrioup == "Imported") {
-                                var importcostpermission=$('#importcost').val();
-                                var importitemeditpermission=$('#importitemeditpermission').val();
-                                var importitemstoreminquantity=$('#importitemstoreminquantity').val();
-                                $('#printbutton').show();
-                                switch (importitemstoreminquantity) {
-                                    case '1':
-                                        $('#costables').show();
-                                        break;
-                                    default:
-                                        $('#costables').hide();
-                                        break;
-                                }
-                                switch (importitemeditpermission) {
-                                    case '1':
-                                        $('#itemeditbutton').show();
-                                        break;
-                                    default: 
-                                    $('#itemeditbutton').hide();
-                                        break;
-                                }
-                                switch (importcostpermission) {
-                                    case '1':
-                                        setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
-                                        removeColorAccessDeniedinformation();
-                                        switch (costtype) {
-                                            case '1':
-                                                if(parseFloat(avgcost)>0){
-                                                    setAverageCostColor();
-                                                    } else{
-                                                        removeAverageCostColor();
-                                                    }
-                                                
-                                                break;
-                                            case '0':
-                                                if(parseFloat(maxcost)>0){
-                                                    setMaxCostColor();
-                                                } else{
-                                                    removeMaxCostColor();
-                                                }
-                                            break;
-                                            default:
-                                                break;
-                                        }
-                                        break;
-                                    default:
-                                        setAccessDeniedinformation();
-                                        removeAverageCostColor();
-                                        removeMaxCostColor();
-                                        break;
-                                }
-                            }
-                            if (bt == "Generate") {
-                                $('#barcodeDiv').show();
-                            } else {
-                                $('#barcodeDiv').hide();
-                            }
-                        });
-                        // show ite images
-                        switch (response.success) {
-                            case 1:
-                                    $('#img-container').show();
-                                    setitemimages(response.itemimage);
-                                break;
-                            default:
-                                shownoimages();
-                                $('#img-container').hide();
-                                break;
-                        }
-                    }
-                });
-        }
-
         function checkforefresh(){
             $('.sideImage').html('');
             $('#carouselExampleFade').html('');
@@ -1787,26 +1797,27 @@
 
         function shownoimages() {
             $('#carouselExampleFade').append(
-            `<section id="alerts-closable"><div class="row">
-                        <div class="col-md-12">
+            `<section id="alerts-closable">
+                <div class="row">
+                    <div class="col-12">
                         <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            </p>
-                                                <div class="demo-spacing-0">
-                                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                                    <div class="alert-body">
-                                                        There is no image to show related to this item.
-                                                        </div>
-                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                                <div class="demo-spacing-0">
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <div class="alert-body">
+                                            There is no image to show related to this product.
+                                        </div>
                                     </div>
-                        </section>`);
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>`);
         }
 
         function setItemPrice(retailprice,wholesaleprice,retailpricebv,wholesalepricebv,maxreturn,pendingqty,minstock,balance,minamount,maxcost){
@@ -1908,7 +1919,6 @@
                     $('#wspmInfoLbl').text(wspm+' %');
                 }
             }
-            
         }
 
         function setAverageCostColor(){
@@ -2633,6 +2643,350 @@
             }
         }
 
+        function showitemInformation(itemid,uom,category,maxicost,averagecost){
+            createItemInfoFn(itemid,uom,category,maxicost,averagecost);
+            $('#docInfoModal').modal('show');
+        }
+
+        function createItemInfoFn(itemid,uom,category,maxicost,averagecost){
+            var localpriceupdate = $('#localitempriceupdate').val();
+            var importpriceupdate = $('#importitempriceupdate').val();
+            var costtype = $('#costtype').val();
+            var maximumqty = 0;
+            $('.sideImage').html('');
+            $('#carouselExampleFade').html('');
+
+            $.ajax({
+                type: "get",
+                url: "{{url('showitem')}}"+'/'+itemid,
+                dataType: "json",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching product data...');
+                },
+                success: async function(data) {
+                    
+                    await getItemDataFn(data);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+        }
+
+        function getItemDataFn(data){
+            $.each(data.item, function (index, value) { 
+                $('#ids').val(value.id);
+                $('#product_class_lbl').text(value.Type);
+                $('#itemcodeInfoLbl').text(value.Code);
+                $('#itemInfoLbl').text(value.Name);
+                $('#skuInfoLbl').text(value.SKUNumber);
+                $('#uomInfoLbl').text(value.uom_name);
+                $('#itemCategoryInfoLbl').text(value.category_name);
+                $('#taxInfoLbl').text(`${value.TaxTypeId} %`);
+                $('#product_type_lbl').text(value.product_type);
+                $('#imagedescription').html(value.Description);
+                $('#status_lbl').html(value.ActiveStatus == "Active" ? 
+                    `<span style='color:#1cc88a;font-weight:bold;text-shadow;1px 1px 10px #1cc88a;font-size:12px;'>${value.ActiveStatus}</span>` :
+                    `<span style='color:#e74a3b;font-weight:bold;text-shadow;1px 1px 10px #e74a3b;font-size:12px;'>${value.ActiveStatus}</span>`
+                );
+
+                $('#partnumberInfoLbl').text(value.PartNumber);
+                $('#reorderInfoLbl').text(value.LowStock);
+                $('#lot_description_lbl').text(value.lot_description);
+                $('#factorInfoLbl').text(value.standard_factor);
+                $('#cartoon_size_lbl').text(value.cartoon_size == null ? "" : value.cartoon_size);
+
+                $('#is_serial_no_req_lbl').html(value.RequireSerialNumber);
+                $('#is_batch_no_req_lbl').html(value.RequireExpireDate);
+                
+                $('#itemgroupInfoLbl').text(value.itemGroup);
+
+                $('#price_type_lbl').html(`Price Type: <b>${value.price_type}</b>`);
+
+                $('#min_bt_lbl').text(numformat(parseFloat(value.min_price_bt).toFixed(2)));
+                $('#min_at_lbl').text(numformat(parseFloat(value.min_price_at).toFixed(2)));
+
+                $('#default_bt_lbl').text(numformat(parseFloat(value.default_price_bt).toFixed(2)));
+                $('#default_at_lbl').text(numformat(parseFloat(value.default_price_at).toFixed(2)));
+
+                $('#max_bt_lbl').text(numformat(parseFloat(value.max_price_bt).toFixed(2)));
+                $('#max_at_lbl').text(numformat(parseFloat(value.max_price_at).toFixed(2)));
+               
+                $('#itemtype').val(value.itemGroup);
+                
+                $('#barcodeinfocode').text(value.Code);
+                var itemdescription = value.Description;
+                var img = '<img class="card-img-top" src="'+value.imageName+'" alt="barcode not found"/>';
+                $("#barcodeinfoimages").html(img);
+
+                $('#product_cost_lbl').html("");
+
+                productClassMgtFn(value.Type);
+                priceTypeMgtFn(value.price_type);
+                
+                var bt = value.BarcodeType;
+                var itemgrioup = value.itemGroup;
+                var retailprice=value.RetailerPrice>0?value.RetailerPrice:'';
+                var wholesaleprice=value.WholesellerPrice>0?value.WholesellerPrice:'';
+                var wholesaleminamount=value.wholeSellerMinAmount>0?value.wholeSellerMinAmount:'';
+                var maxcost=value.MaxCost>0?value.MaxCost:'';
+                var avgcost=value.averageCost>0?value.averageCost:'';
+                var mincost=value.minCost>0?value.minCost:'';
+                var pendingqty=value.PendingQuantity||0;
+                var balance=value.AvailableQuantity||0;
+                var minstock=value.MinimumStock;
+                var rpm=value.pmretail;
+                var wspm=value.pmwholesale;
+                var retailpricebv=parseFloat(retailprice/1.15).toFixed(2);
+                var wholesalepricebv=parseFloat(wholesaleprice/1.15).toFixed(2);
+                var maxcostbv=parseFloat(maxcost/1.15).toFixed(2);
+                var avgcostbv=parseFloat(avgcost/1.15).toFixed(2);
+                var mincostbv=parseFloat(mincost/1.15).toFixed(2);
+                retailpricebv=retailpricebv>0?retailpricebv:'';
+                wholesalepricebv=wholesalepricebv>0?wholesalepricebv:'';
+                maxcostbv=maxcostbv>0?maxcostbv:'';
+                avgcostbv=avgcostbv>0?avgcostbv:'';
+                mincostbv=mincostbv>0?mincostbv:'';
+                maximumqty=parseFloat(value.AvailableQuantity)-parseFloat(value.PendingQuantity)-parseFloat(value.MinimumStock);
+                $('#wholesalemax').val(maximumqty);
+                $('#pendingdata').val(value.PendingQuantity);
+                setItemPrice(retailprice,wholesaleprice,retailpricebv,wholesalepricebv,maximumqty,pendingqty,minstock,balance,wholesaleminamount,maxcost);
+                if (itemgrioup == "Local") {
+                                
+                    var localitemstoreminquantity=$('#localitemstoreminquantity').val();
+                    var localcostpermission=$('#localcost').val();
+                    var localitemeditpermission=$('#localitemeditpermission').val();
+                    $('#printbutton').show();
+                    switch (localitemstoreminquantity) {
+                        case '1':
+                            $('#costables').show();
+                            break;
+                        
+                        default:
+                            $('#costables').hide();
+                            break;
+                    }
+                    switch (localitemeditpermission) {
+                        case '1':
+                            $('#itemeditbutton').show();
+                            break;
+                    
+                        default:
+                            $('#itemeditbutton').hide();
+                            break;
+                    }
+                    switch (localcostpermission) {
+                        case '1':
+                            setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
+                            removeColorAccessDeniedinformation();
+                            switch (costtype) {
+                                case '1':
+                                    if(parseFloat(avgcost)>0){
+                                        setAverageCostColor();
+                                    } else{
+                                        removeAverageCostColor();
+                                    }
+                                    
+                                    break;
+                                case '0':
+                                    if(parseFloat(maxcost)>0){
+                                        setMaxCostColor();
+                                    } else{
+                                        removeMaxCostColor();
+                                    }
+                                    
+                                break;
+                                default:
+                                    break;
+                            }
+                            break;                                
+                        default:
+                            setAccessDeniedinformation();
+                            removeAverageCostColor();
+                            removeMaxCostColor();
+                            break;
+                    }
+                }
+                if (itemgrioup == "Imported") {
+                    var importcostpermission=$('#importcost').val();
+                    var importitemeditpermission=$('#importitemeditpermission').val();
+                    var importitemstoreminquantity=$('#importitemstoreminquantity').val();
+                    $('#printbutton').show();
+                    switch (importitemstoreminquantity) {
+                        case '1':
+                            $('#costables').show();
+                            break;
+                        default:
+                            $('#costables').hide();
+                            break;
+                    }
+                    switch (importitemeditpermission) {
+                        case '1':
+                            $('#itemeditbutton').show();
+                            break;
+                        default: 
+                        $('#itemeditbutton').hide();
+                            break;
+                    }
+                    switch (importcostpermission) {
+                        case '1':
+                            setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
+                            removeColorAccessDeniedinformation();
+                            switch (costtype) {
+                                case '1':
+                                    if(parseFloat(avgcost)>0){
+                                        setAverageCostColor();
+                                        } else{
+                                            removeAverageCostColor();
+                                        }
+                                    
+                                    break;
+                                case '0':
+                                    if(parseFloat(maxcost)>0){
+                                        setMaxCostColor();
+                                    } else{
+                                        removeMaxCostColor();
+                                    }
+                                break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            setAccessDeniedinformation();
+                            removeAverageCostColor();
+                            removeMaxCostColor();
+                            break;
+                    }
+                }
+                if (bt == "Generate") {
+                    $('#barcodeDiv').show();
+                } else {
+                    $('#barcodeDiv').hide();
+                }
+            });
+            // show ite images
+            switch (data.success) {
+                case 1:
+                        $('#img-container').show();
+                        setitemimages(data.itemimage);
+                    break;
+                default:
+                    shownoimages();
+                    $('#img-container').hide();
+                    break;
+            }
+
+            itemInfoTabMgtFn();
+            fetchItemDynamicDataFn(data.item_id);
+        }
+
+        function fetchItemDynamicDataFn(recordId){
+            $('#info-supplier-datatable').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: false,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                searching: true,
+                "order": [[ 0, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showSupplierData/' + recordId,
+                    type: 'POST',
+                },
+                columns: [{
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },
+                    {
+                        data: 'supplier',
+                        name: 'supplier',
+                        width:'40%',
+                    },
+                    {
+                        data: 'uom_name',
+                        name: 'uom_name',
+                        width:'10%',
+                    },
+                    {
+                        data: 'quantity',
+                        name: 'quantity',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.',0, '')
+                    },
+                    {
+                        data: 'price',
+                        name: 'price',
+                        width:'10%',
+                        render: $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        data: 'availability',
+                        name: 'availability',
+                        width:'10%',
+                    },
+                    {
+                        data: 'remark',
+                        name: 'remark',
+                        width:'17%',
+                    },
+                ],
+            });
+
+            $('#info-compatible-datatable').DataTable({
+                destroy:true,
+                processing: true,
+                serverSide: false,
+                paging: false,
+                info:false,
+                searchHighlight: true,
+                searching: true,
+                "order": [[ 0, "asc" ]],
+                language: { 
+                    search: '', 
+                    searchPlaceholder: "Search here"
+                },
+                autoWidth: false,
+                deferRender: true,
+                dom: "<'row'<'col-sm-6 col-md-6 col-6 ml-0'f><'col-sm-6 col-md-6 col-6 mt-2 d-flex justify-content-end'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4 col-md-4 col-4'l><'col-sm-4 col-md-4 col-4 d-flex justify-content-center'i><'col-sm-4 col-md-4 col-4 d-flex justify-content-end'p>>",
+                ajax: {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/showCompatibleData/' + recordId,
+                    type: 'POST',
+                },
+                columns: [{
+                        data:'DT_RowIndex',
+                        width:'3%',
+                    },
+                    {
+                        data: 'comp_items',
+                        name: 'comp_items',
+                        width:'97%',
+                    },
+                ],
+                "initComplete": function(settings, json) {
+                    unblockPage(cardSection);
+                },
+            });
+        }
+
         $('input[name="product_class"]').on('change', function() {
             var prd_class = $(this).val();
             $('#product_class_error').html("");
@@ -3121,6 +3475,17 @@
             $(".active-tab-view").addClass("active");
         }
 
+        function itemInfoTabMgtFn(){
+            $(".info-tab-title").removeClass("active");
+            $(".info-tab-view").removeClass("active");
+            
+            $("#item-info-basic-tab").addClass("active");
+            $("#item-info-basic-view").addClass("active");
+
+            $("#info-v-image-tab").addClass("active");
+            $("#info-v-image-view").addClass("active");
+        }
+
         function tabMgtBasicFn(){
             $(".tab-title").removeClass("active");
             $(".tab-view").removeClass("active");
@@ -3154,6 +3519,24 @@
             $(".tab-view").removeClass("active");
             $("#item-others-tab").addClass("active");
             $("#item-others-view").addClass("active");
+        }
+
+        function productClassMgtFn(type){
+            if(type == "Service"){
+                $(".non_service_info").hide();
+            }
+            else{
+                $(".non_service_info").show();
+            }
+        }
+
+        function priceTypeMgtFn(pr_type){
+            if(pr_type == "Fixed"){
+                $(".flexible_class_info").hide();
+            }
+            else{
+                $(".flexible_class_info").show();
+            }
         }
 
         function refreshtbl(){
@@ -3724,8 +4107,6 @@
                     break;
             }
         }
-
-
 
         function editransaction(transaction){
                 switch(transaction){

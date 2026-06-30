@@ -128,6 +128,9 @@ Route::get('dropzone/fetch/{id}', 'ItemController@fetch')->name('dropzone.fetch'
 Route::get('dropzone/delete', 'ItemController@destroy')->name('dropzone.delete');
 Route::get('checkitemimage/{id}','ItemController@fetch');
 
+Route::post('/showSupplierData/{id}','ItemController@showSupplierData');
+Route::post('/showCompatibleData/{id}','ItemController@showCompatibleData');
+
 //Customer Route Start
 Route::get('/customer','CustomerController@index');
 Route::delete('/getcustomer','CustomerController@showCustomerData');

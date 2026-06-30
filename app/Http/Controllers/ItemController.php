@@ -437,6 +437,7 @@ class ItemController extends Controller
       $type = $request->TypeId;
       $findid = $request->id;
       $old_code = $request->codeHidden;
+      $itemcode_mode = $request->ItemCodeMode;
       $supplier_data = [];
       $compatible_items = [];
 
@@ -455,7 +456,7 @@ class ItemController extends Controller
         'Category' => 'required',
         'TypeId' => 'required',
         'item_type' => 'required_if:product_class,Goods',
-        'item_group' => 'required',
+        'item_group' => 'required_if:product_class,Goods',
         'price_type' => 'required',
         'MinSellingPriceBeforeTax' => 'required_if:price_type,Flexible',
         'MinSellingPriceAfterTax' => 'required_if:price_type,Flexible',
@@ -565,8 +566,7 @@ class ItemController extends Controller
             'RequireSerialNumber' => $request->ReqSerialNumber,
             'RequireExpireDate' => $request->ReqExpireDate,
 
-            //'itemGroup' => $request->item_group ?? [],
-            'itemGroup' => is_array($request->item_group) ? implode(',', array_filter($request->item_group)) : $request->item_group,
+            'itemGroup' => is_array($request->item_group) ? implode(', ', array_filter($request->item_group)) : $request->item_group,
 
             'price_type' => $request->price_type,
             'min_price_bt' => $request->MinSellingPriceBeforeTax,
@@ -618,7 +618,7 @@ class ItemController extends Controller
           DB::table('compatible_items')->where('compatible_items.base_item_id',$item->id)->delete();
           DB::table('compatible_items')->insert($compatible_items);
 
-          if($old_code == null && $settings->ItemCodeType == 1){
+          if($old_code == null && $itemcode_mode == "Generate" && $settings->ItemCodeType == 1){
             DB::select('UPDATE settings SET ItemCodeNumber=ItemCodeNumber+1 WHERE id=1');
           }
 
@@ -643,26 +643,26 @@ class ItemController extends Controller
           return Response::json(['dberrors' =>  $e->getMessage()]);
         }
       }
-      if($validator->fails())
-      {
+      else if($validator->fails()){
         return Response::json(['errors' => $validator->errors()]);
       }
     }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function geteset()
-    {
+    public function geteset(){
       return "ok geseted";
     }
+
     public function getitemcodes(){
       $setings=setting::where('id',1)->get(['ItemCodePrefix','ItemCodeNumber','BarcodeRequire','ItemCodeType','wholesalefeature']);
       foreach($setings as $seting){
-      $itemprefix=$seting->ItemCodePrefix;
-      $itemcodenumber=$seting->ItemCodeNumber;
+        $itemprefix=$seting->ItemCodePrefix;
+        $itemcodenumber=$seting->ItemCodeNumber;
       }
       $docPrefix=$itemprefix;
       $docNum=$itemcodenumber;
@@ -671,26 +671,53 @@ class ItemController extends Controller
 
       return Response::json(['setings' =>$setings,'docNumber'=>$docNumber]);
     }
-    public function show($id)
-    {
-        $item=DB::select('SELECT regitems.id,standard_factor,regitems.Name,regitems.Code,uoms.Name as uom_name,categories.Name as category_name,regitems.MeasurementId,regitems.CategoryId,regitems.RetailerPrice,regitems.WholesellerPrice,regitems.wholeSellerMinAmount,regitems.pmretail,regitems.pmwholesale,regitems.wholeSellerMaxAmount,regitems.MinimumStock,regitems.TaxTypeId,regitems.RequireSerialNumber,regitems.RequireExpireDate,regitems.PartNumber,regitems.path,regitems.imageName,regitems.LowStock,regitems.itemGroup,regitems.Description,regitems.SKUNumber,regitems.oldSKUNumber,regitems.BarcodeType,regitems.oldBarcodeType,regitems.Type,regitems.ActiveStatus,regitems.MaxCost,regitems.minCost,regitems.averageCost,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId='.$id.') AS AvailableQuantity,(SELECT IFNULL(SUM(salesitems.Quantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id LEFT JOIN uoms on regitems.MeasurementId=uoms.id WHERE regitems.id='.$id);
-        $exist= $images=itemimage::where('regitem_id',$id)->exists();
-            switch ($exist) {
-              case True:
-                $itemimage=itemimage::where('regitem_id',$id)->orderby('id','DESC')->get(['imagename']);
-                $success=1;
-                break;
-              
-              default:
-              $success=0;
-              $itemimage='';
-                break;
-            }
-        return Response::json([
-        'success'=>$success,
-        'item'=>$item,
+
+    public function show($id){
+      $item_record = DB::table('regitems')->where('id', $id)->get(['item_type'])->first();
+      $product_type_ids = json_decode($item_record->item_type, true); 
+      $product_type_ids = array_map('intval', $product_type_ids ?? []);
+      $product_type = DB::table('item_types')
+        ->whereIn('id', $product_type_ids)
+        ->orderBy('type','ASC')
+        ->get(['type']);
+
+      $product_type_data = collect($product_type); // Convert to collection if not already
+      $product_type_refined = $product_type_data->pluck('type')->implode(', ');
+
+      $item = DB::select('SELECT regitems.*,uoms.Name AS uom_name,categories.Name AS category_name,"'.$product_type_refined.'" AS product_type,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId='.$id.') AS AvailableQuantity,(SELECT IFNULL(SUM(salesitems.Quantity),0) FROM salesitems WHERE salesitems.ItemId=regitems.id AND salesitems.HeaderId IN(SELECT sales.id FROM sales WHERE sales.Status IN("pending..","Checked"))) AS PendingQuantity FROM regitems LEFT JOIN categories on regitems.CategoryId=categories.id LEFT JOIN uoms on regitems.MeasurementId=uoms.id WHERE regitems.id='.$id);
+      $exist = $images=itemimage::where('regitem_id',$id)->exists();
+      switch ($exist) {
+        case True:
+          $itemimage=itemimage::where('regitem_id',$id)->orderby('id','DESC')->get(['imagename']);
+          $success=1;
+          break;
+        
+        default:
+        $success=0;
+        $itemimage='';
+          break;
+      }
+
+      return Response::json([
+        'success' => $success,
+        'item' => $item,
         'itemimage' => $itemimage,
+        'item_id' => $id
       ]);
+    }
+
+    public function showSupplierData($id){
+      $supplier_data = DB::select('SELECT item_suppliers.*,IFNULL(item_suppliers.remark,"") AS remark,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS supplier,uoms.Name AS uom_name FROM item_suppliers LEFT JOIN customers ON item_suppliers.supplier_id=customers.id LEFT JOIN uoms ON item_suppliers.uom_id=uoms.id WHERE item_suppliers.item_id='.$id.' ORDER BY item_suppliers.id ASC'); 
+      return datatables()->of($supplier_data)
+      ->addIndexColumn()
+      ->make(true);
+    }
+
+    public function showCompatibleData($id){
+      $supplier_data = DB::select('SELECT compatible_items.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS comp_items FROM compatible_items LEFT JOIN regitems ON compatible_items.compatible_item_id=regitems.id WHERE compatible_items.base_item_id='.$id.' ORDER BY compatible_items.id ASC'); 
+      return datatables()->of($supplier_data)
+      ->addIndexColumn()
+      ->make(true);
     }
 
     /**
