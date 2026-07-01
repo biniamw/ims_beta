@@ -165,7 +165,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1">
                                 <ul class="nav nav-tabs nav-fill" role="tablist">
                                     <li class="nav-item formnavitm note">
-                                        <a class="nav-link active item-info-tabs info-tab-title active-tab-title" id="item-info-basic-tab" data-toggle="tab" href="#item-info-basic-view" aria-controls="item-info-basic-tab" role="tab" aria-selected="true" title="Basic"><i class="fas fa-bars"></i><span class="tab-text">Basic</span></a>                                
+                                        <a class="nav-link active item-info-tabs info-tab-title" id="item-info-basic-tab" data-toggle="tab" href="#item-info-basic-view" aria-controls="item-info-basic-tab" role="tab" aria-selected="true" title="Basic"><i class="fas fa-bars"></i><span class="tab-text">Basic</span></a>                                
                                     </li>
                                     <li class="nav-item formnavitm note">
                                         <a class="nav-link item-info-tabs info-tab-title" id="item-info-inventory-tab" data-toggle="tab" href="#item-info-inventory-view" aria-controls="item-info-inventory-tab" role="tab" aria-selected="true" title="Inventory"><i class="fas fa-boxes"></i><span class="tab-text">Inventory</span></a>                                
@@ -181,7 +181,7 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content formtabcon item-content-view" style="border: 0.1px solid #d9d7ce;margin-top:-14px;">
-                                    <div class="tab-pane item-info-views active info-tab-view active-tab-view" id="item-info-basic-view" aria-labelledby="item-info-basic-view" role="tabpanel">
+                                    <div class="tab-pane item-info-views active info-tab-view" id="item-info-basic-view" aria-labelledby="item-info-basic-view" role="tabpanel">
                                         <div class="row m-1">
                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 pl-1 pr-1 section-path">
                                                 <div class="breadcrumb-path">
@@ -350,7 +350,7 @@
                                                             <table style="width: 100%;font-size:12px;" class="rtable text-center">
                                                                 <tr>
                                                                     <td colspan="3">
-                                                                        <label class="info_lbl" style="font-weight: bold;">Product Purchase Cost</label>
+                                                                        <label class="info_lbl" style="font-weight: bold;">Product Cost</label>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -360,18 +360,18 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td title="Minimum Cost"><label class="info_lbl">Min. Cost</label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="mincostInfoLblbv"></label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="mincostInfoLblav"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl min_cost_bt_lbl" id="mincostInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl min_cost_at_lbl" id="mincostInfoLblav"></label></td>
                                                                 </tr>
                                                                 <tr id="averagecosttr">
                                                                     <td title="Average Cost"><label class="info_lbl">Avg. Cost</label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="averageInfoLblbv"></label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="averageInfoLblav"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl avg_cost_bt_lbl" id="averageInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl avg_cost_at_lbl" id="averageInfoLblav"></label></td>
                                                                 </tr>
                                                                 <tr id="maxcosttr">
                                                                     <td title="Maximum Cost"><label class="info_lbl">Max. Cost</label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="maxcostInfoLblbv"></label></td>
-                                                                    <td><label class="info_lbl product_cost_lbl" id="maxcostInfoLblav"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl max_cost_bt_lbl" id="maxcostInfoLblbv"></label></td>
+                                                                    <td><label class="info_lbl product_cost_lbl max_cost_at_lbl" id="maxcostInfoLblav"></label></td>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -396,14 +396,14 @@
                                             <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 non_service_info">
                                                 <!-- Tab navs -->
                                                 <div class="nav flex-column nav-tabs text-left" id="v-tabs-modules" role="tablist" aria-orientation="vertical">
-                                                    <a class="nav-link mod-vertical-tab active verticalinfo info-tab-title active-tab-title ver-cus-tab" id="info-v-image-tab" data-toggle="tab" href="#info-v-image-view" role="tab" aria-controls="info-general-tab" aria-selected="true" title="Images"><i class="fas fa-images"></i><span class="tab-text">Images</span></a>
+                                                    <a class="nav-link mod-vertical-tab active verticalinfo info-tab-title ver-cus-tab" id="info-v-image-tab" data-toggle="tab" href="#info-v-image-view" role="tab" aria-controls="info-general-tab" aria-selected="true" title="Images"><i class="fas fa-images"></i><span class="tab-text">Images</span></a>
                                                     <a class="nav-link mod-vertical-tab verticalinfo mod info-tab-title ver-cus-tab" id="info-document-tab" data-mod="hr" data-toggle="tab" href="#info-document-view" role="tab" aria-controls="info-hr-tab" aria-selected="false" title="Documents"><i class="fas fa-books"></i><span class="tab-text">Documents</span></a>
                                                 </div>
                                                 <!-- Tab navs -->
                                             </div>
                                             <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 non_service_info" style="margin-right: -5rem;padding-right: -5rem !important;">
                                                 <div class="tab-content" id="v-tabs-tabContent" style="border: 0.1px solid #d9d7ce;">
-                                                    <div class="tab-pane active verticalviewinfo info-tab-view active-tab-view" id="info-v-image-view" role="tabpanel" aria-labelledby="info-v-image-view">
+                                                    <div class="tab-pane active verticalviewinfo info-tab-view" id="info-v-image-view" role="tabpanel" aria-labelledby="info-v-image-view">
                                                         <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-1 section-path">
                                                                 <div class="breadcrumb-path">
@@ -477,11 +477,12 @@
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:left">
-                                    <button type="button" id="itemeditbutton" class="btn btn-outline-dark"><i class="fa-sharp fa-solid fa-pen"></i>Edit</button>
-                                    @can("Item-Delete")
-                                    <button type="button" id="itemdeletebutton" class="btn btn-outline-danger"><i class="fa-solid fa-trash-xmark"></i>Delete</button>
-                                    @endcan
-                                    <button type="button" id="imageuploadbutton" class="btn btn-outline-dark"><i class="fa-regular fa-cloud-arrow-up"></i>Image Upload</button>
+                                    <div class="btn-group dropup">
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle hide-arrow action-btn form_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa-sharp fa-solid fa-caret-up fa-xl"></i><span class="btn-text">&nbsp Actions</span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="item_action_ul"></ul>
+                                    </div>
                                 </div>        
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="text-align:right">
                                     <input type="hidden" class="form-control" name="itemtype" id="itemtype" readonly="true">
@@ -638,7 +639,7 @@
                                     <div class="tab-pane active" id="generalinformationview" aria-labelledby="generalinformationview" role="tabpanel">
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-0 mb-1 pt-1">
-                                                <div class="demo-inline-spacing pl-1">
+                                                <div class="demo-inline-spacing pl-1 non_editable_containers">
                                                     <div class="custom-control custom-radio mt-0">
                                                         <input type="radio" id="product_class1" name="product_class" class="custom-control-input" value="Goods"/>
                                                         <label class="custom-control-label form_lbl" for="product_class1">Goods</label>
@@ -660,7 +661,7 @@
                                         <div class="row">
                                             <div class="col-xl-8 col-lg-8 col-md-9 col-sm-9 col-12">
                                                 <div class="row pl-1">
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="product_code_div">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_editable_containers" id="product_code_div">
                                                         <div class="row">
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
                                                                 <label class="form_lbl">Product Code<b style="color: red; font-size:16px;">*</b></label>
@@ -686,7 +687,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_editable_containers">
                                                         <label class="form_lbl">Product Name<b style="color: red; font-size:16px;">*</b></label>
                                                         <input type="text" name="name" id="name" placeholder="Enter product name here" class="form-control mainforminp" onkeyup="removeNameValidation()"/>
                                                         <span class="text-danger">
@@ -694,7 +695,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="skuNumberDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_editable_containers non_service_div" id="skuNumberDiv">
                                                         <div class="row">
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-8 mr-0 pr-0">
                                                                 <label class="form_lbl" title="Barcode Number">Barcode No.</label>
@@ -720,7 +721,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="uomDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_editable_containers" id="uomDiv">
                                                         <label class="form_lbl" title="Unit of Measurement">UOM<b style="color: red; font-size:16px;">*</b></label>
                                                         <select class="select2 form-control" name="Uom" id="Uom" onchange="uomValidation()">
                                                             @foreach ($uom as $um)
@@ -732,7 +733,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1" id="categoryDiv">
+                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_editable_containers" id="categoryDiv">
                                                         <label class="form_lbl">Category<b style="color: red; font-size:16px;">*</b></label>
                                                         <select class="select2 form-control" name="Category" id="Category" onchange="categoryValidation()">
                                                             @foreach ($category as $cat)
@@ -829,14 +830,14 @@
                                                     <div class="crumb active"><a>Basic</a></div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="partNumDiv">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl" title="Unique identifier assigned to this product for tracking and reference.">Part No.</label>
                                                 <input type="text" placeholder="Enter part number here" class="form-control mainforminp non_service_input" name="partNumber" id="partNumber" onkeypress="partNumberValidation()"/>
                                                 <span class="text-danger">
                                                     <strong id="partNumber-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="lowStockDiv">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl" title="The minimum stock level that triggers a replenishment order to avoid stockouts.">Reorder Point</label>
                                                 <input type="number" placeholder="Enter reorder point here" class="form-control mainforminp non_service_input" name="lowStock" id="lowStock" onkeyup="lowStockValidation()" onkeypress="return ValidateNum(event);" />
                                                 <span class="text-danger">
@@ -852,7 +853,7 @@
                                             </div>
                                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl" title="A multiplier used to convert or scale quantities in calculations. (For manufacturing)">Factor</label>
-                                                <input type="number" placeholder="Enter factor here" class="form-control mainforminp non_service_input" name="factor" id="factor" onkeyup="calculateCostsWithFactor()" onkeypress="return ValidateFactorNum(event,this);" />
+                                                <input type="number" placeholder="Enter factor here" class="form-control mainforminp non_service_input" name="factor" id="factor" onkeyup="factorFn()" onkeypress="return ValidateFactorNum(event,this);" />
                                                 <span class="text-danger">
                                                     <strong id="factor-error" class="errordatalabel basic_error non_service_error"></strong>
                                                 </span>
@@ -873,7 +874,7 @@
                                                     <div class="crumb active"><a>Inventory</a></div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="serialNumDiv">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl" title="Is Serial Number Requires">Is Serial No. Req.</label>
                                                 <select class="select2 form-control" name="ReqSerialNumber" id="ReqSerialNumber" onchange="reqSerialNumValidation()">
                                                     <option value="Not-Require">Not-Require</option>
@@ -883,7 +884,7 @@
                                                     <strong id="requireSerialNumber-error" class="errordatalabel inventory_error non_service_error"></strong>
                                                 </span>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div" id="expireDateDiv">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
                                                 <label class="form_lbl" title="Is Batch Number or/and Expiry Date Requires">Is Batch No. | Expiry Date Req.</label>
                                                 <select class="select2 form-control" name="ReqExpireDate" id="ReqExpireDate" onchange="reqExpDateValidation()">
                                                     <option value="Not-Require">Not-Require</option>
@@ -905,7 +906,7 @@
                                                     <div class="crumb active"><a>Purchase</a></div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div">
+                                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12 mb-1 non_service_div non_editable_containers">
                                                 <label class="form_lbl">Group</label>
                                                 <div class="row">
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -936,9 +937,9 @@
                                                                         <tr>
                                                                             <th class="form_lbl" style="width:3%;">#</th>
                                                                             <th class="form_lbl" style="width:25%;" title="Code, Name, TIN">Supplier<b style="color:red;">*</b></th>
-                                                                            <th class="form_lbl" style="width:10%;">UOM<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:10%;" title="Unit of Measurement">UOM<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:12%;">Quantity<b style="color:red;">*</b></th>
-                                                                            <th class="form_lbl" style="width:12%;">Price<b style="color:red;">*</b></th>
+                                                                            <th class="form_lbl" style="width:12%;">Price</th>
                                                                             <th class="form_lbl" style="width:15%;">Availability<b style="color:red;">*</b></th>
                                                                             <th class="form_lbl" style="width:20%;">Remark</th>
                                                                             <th class="form_lbl" style="width:3%;"></th>
@@ -1056,7 +1057,7 @@
                                                             <table style="width: 100%;font-size:12px;" class="rtable text-center">
                                                                 <tr>
                                                                     <td colspan="3">
-                                                                        <label class="info_lbl" style="font-weight: bold;">Product Purchase Cost</label>
+                                                                        <label class="info_lbl" style="font-weight: bold;">Product Cost</label>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -1066,18 +1067,18 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td title="Minimum Cost"><label class="info_lbl">Min. Cost</label></td>
-                                                                    <td><label class="info_lbl" id="mincostbvlbl"></label></td>
-                                                                    <td><label class="info_lbl" id="mincostlbl"></label></td>
+                                                                    <td><label class="info_lbl min_cost_bt_lbl" id="mincostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl min_cost_at_lbl" id="mincostlbl"></label></td>
                                                                 </tr>
                                                                 <tr id="averagecostabletr">
                                                                     <td title="Average Cost"><label class="info_lbl">Avg. Cost</label></td>
-                                                                    <td><label class="info_lbl" id="averagecostbvlbl"></label></td>
-                                                                    <td><label class="info_lbl" id="averagecostlbl"></label></td>
+                                                                    <td><label class="info_lbl avg_cost_bt_lbl" id="averagecostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl avg_cost_at_lbl" id="averagecostlbl"></label></td>
                                                                 </tr>
                                                                 <tr id="maxcostabletr">
                                                                     <td title="Maximum Cost"><label class="info_lbl">Max. Cost</label></td>
-                                                                    <td><label class="info_lbl" id="maxcostbvlbl"></label></td>
-                                                                    <td><label class="info_lbl" id="maxcostlbl"></label></td>
+                                                                    <td><label class="info_lbl max_cost_bt_lbl" id="maxcostbvlbl"></label></td>
+                                                                    <td><label class="info_lbl max_cost_at_lbl" id="maxcostlbl"></label></td>
                                                                 </tr>
                                                             </table>
                                                             
@@ -1131,20 +1132,14 @@
 
 
 
-
-
-
-
                         <section id="section-block" style="display:none;">
                             <div class="row">
                                 <div class="col-md-9" id="itemsdiv">
                                     <div class="row" id="headerblock">
                                         <div class="col-xl-2 col-md-6 col-sm-12 mb-2" id="withDiv" style="display: none;">
                                             <label strong style="font-size: 14px;">Type </label>
-                                            <input type="hidden" placeholder="Item ID" class="form-control" name="id" id="ids" />
-                                            <input type="hidden" class="form-control" name="notifiablemaxcostid" id="notifiablemaxcostid" />
-                                            <input type="hidden" class="form-control" name="notifiablereailerpriceid" id="notifiablereailerpriceid" />
-                                            <input type="hidden" class="form-control" name="notifiablewholesellerpriceid" id="notifiablewholesellerpriceid" />
+
+                                            
                                             
                                             <div class="" id='typeblock'>
                                                 <select class="select2 form-control" name="TypeId" id="TypeId">
@@ -1339,6 +1334,8 @@
                                 </div>
                         </section>
 
+
+
                     </div>
                     <div class="modal-footer">
                         <div style="display: none;">
@@ -1363,6 +1360,10 @@
                                 @endforeach
                             </select>
 
+                            <input type="hidden" class="form-control mainforminp" name="id" id="ids" value=""/>
+                            <input type="hidden" class="form-control" name="notifiablemaxcostid" id="notifiablemaxcostid" />
+                            <input type="hidden" class="form-control" name="notifiablereailerpriceid" id="notifiablereailerpriceid" />
+                            <input type="hidden" class="form-control" name="notifiablewholesellerpriceid" id="notifiablewholesellerpriceid" />
                             <input type="hidden" class="form-control" name="operationType" id="operationType" value="1"/>
                             <input type="hidden" class="form-control" name="IsNewItemCode" id="IsNewItemCode" value=""/>
                             <input type="hidden" class="form-control" name="OldItemCode" id="OldItemCode" value=""/>
@@ -1375,6 +1376,8 @@
                             <input type="hidden" class="form-control" name="lastbarcode" id="lastbarcode" value="" />
                             <input type="hidden" class="form-control" name="barcoderequire" id="barcoderequire" value="{{ $setings->BarcodeRequire }}" readonly/>
                             <input type="hidden" class="form-control" placeholder="max cost" name="maxcosti" id="maxcosti" />
+                            <input type="hidden" class="form-control" placeholder="max cost" name="averageCostInp" id="averageCostInp" />
+                            <input type="hidden" class="form-control" placeholder="max cost" name="minCostInp" id="minCostInp" />
                             <input type="hidden" class="form-control" name="pmwholesalehidden" id="pmwholesalehidden" readonly/>
                             <input type="hidden" class="form-control" name="pmretailhidden" id="pmretailhidden" readonly/>
                             <input type="hidden" class="form-control" name="retailPricehidden" id="retailPricehidden" readonly/>
@@ -1462,6 +1465,8 @@
         </div>
     <!--End upload image -->
 
+    @include('layout.universal-component')
+
     <script type="text/javascript">
         var gblIndex = 0;
         var itemtable = '';
@@ -1470,6 +1475,8 @@
         var j = 0;
         var i = 0;
         var m = 0;
+        var can_change_prd_class = true;
+        var product_class_global_var = "";
         var options1 = {
             width: 500,
             zoomWidth: 500,
@@ -1921,26 +1928,6 @@
             }
         }
 
-        function setAverageCostColor(){
-            $("#averagecosttr").addClass("table-success");
-            $("#averagecostabletr").addClass("table-success");
-        }
-
-        function setMaxCostColor(){
-            $("#maxcosttr").addClass("table-success");
-            $("#maxcostabletr").addClass("table-success");
-        }
-
-        function removeAverageCostColor(){
-            $("#averagecosttr").removeClass("table-success");
-            $("#averagecostabletr").removeClass("table-success");
-        }
-
-        function removeMaxCostColor(){
-            $("#maxcostabletr").removeClass("table-success");
-            $("#maxcosttr").removeClass("table-success");
-        }
-
         function setAccessDeniedinformation(){
             $('#mincostInfoLblbv').html('Access Denied!');
             $('#mincostInfoLblav').html('Access Denied!');
@@ -1981,6 +1968,7 @@
 
         function generatecode(){
             var itcodetype = null;
+            $("#generate_item_code").hide();
             $.get("getitemcodes",function (data, textStatus, jqXHR) {
                 $.each(data.setings, function (index, value) {
                     itcodetype = value.ItemCodeType;
@@ -1988,9 +1976,10 @@
 
                 if(parseInt(itcodetype) == 1){
                     $('#code').val(data.docNumber);
+                    $("#generate_item_code").show();
                 }
             });
-            $("#generate_item_code").hide();
+            
             $("#newcodegenerate").hide();
             $('#code-error').html('');
         }
@@ -2281,69 +2270,6 @@
             $('#savebutton').text('Save');
             $('#savebutton').prop("disabled",false);
             $("#addItemForm").modal('show');
-
-            // var itcodetype=null;
-            // var wholesalefeature=null;
-            
-            // var importcostpermission=$('#importcost').val();
-            // var localcostpermission=$('#localcost').val();
-            // removeAverageCostColor();
-            // removeMaxCostColor();
-            // $('#myModalLabel333').html("Add Item");
-            // var type=$('#TypeId').val();
-            // $('#pmretail').prop('readonly', true);
-            // $('#pmwholesale').prop('readonly', true);
-            // $('#purchasediv').removeClass('col-md-3');
-            // $('#purchasediv').removeClass('col-md-0');
-            // $('#itemsdiv').removeClass('col-md-9');
-            // $('#itemsdiv').removeClass('col-md-12');
-            // $('#purchasediv').addClass('col-md-3');
-            // $('#itemsdiv').addClass('col-md-9');
-            // $('#purchasediv').show();
-            // $('#minimumstockdiv').hide();
-            // $('#pmretail').show();
-            // $('#pmretaillbl').show();
-
-            
-
-            // $.get("getitemcodes",function (data, textStatus, jqXHR) {
-            //     $.each(data.setings, function (index, value) {
-            //         itcodetype=value.ItemCodeType;
-            //         $('#itmcodetype').val(itcodetype);
-            //     });
-            //     if(parseFloat(itcodetype)==1){
-            //         $('#code').val(data.docNumber);
-            //     }
-            //     else{
-            //         $('#code').prop('readonly', false);
-            //     }
-            // });
-               
-
-            // $('#ids').val('');
-            // $('#BarcodeTypesupdate').val('');
-            // $('#notifiablemaxcostid').val('');
-            // $('#notifiablereailerpriceid').val('');
-            // $('#notifiablewholesellerpriceid').val('');
-            // $("#RegisterItem")[0].reset();
-            // $('#lblretailprice').html('Retail Price');
-            // $("#addItemForm").modal('show');
-            // $("#savebutton").show();
-            // $('#closeGenBtn').hide();
-            // $("#itemupdatebutton").hide();
-            // $('#barcodeNumberss').show();
-            // $('#barcodeNumber').hide();
-            // $("#imageloads").hide();
-            // $("#barcodeDiv").hide();
-            // $("#imageresetbutton").hide();
-            // $("#wholeSellerMinAmount").prop("readonly", true);
-            // $('#skuNumber').val('');
-            // $("#checkboxVali").val('0');
-            // $('#igroup').select2('destroy');
-            // $('#igroup').val('').select2();
-            // $('#status').empty();
-            // $('#status').append('<option value="Active">Active</option><option value="Inactive">Inactive</option>');
-            // $('#status').select2();
         });
 
         function resetItemFormFn(){
@@ -2393,6 +2319,10 @@
             managePricingFn();
             manageCompatibleItemFn();
             itemTabMgtFn();
+            unlockContainerFn();
+
+            can_change_prd_class = true;
+            product_class_global_var = "";
 
             $('.mainforminp').val("");
             $('.errordatalabel').html("");
@@ -2439,7 +2369,7 @@
             else{
 
             }
-            $('#generate_item_code').hide();
+            //$('#generate_item_code').hide();
         }
 
         function getItemCodeFn(data){
@@ -2457,7 +2387,8 @@
             else{
                 $("#code").val(code_hidden);
             }
-            $('#generate_item_code').hide();
+            $('#code-error').html("");
+            //$('#generate_item_code').hide();
         }
 
         $('#savebutton').click(function(){
@@ -2636,22 +2567,26 @@
             }
             else if(data.success){
                 toastrMessage('success','Successful','Success');
-                $("#addItemForm").modal('hide');
+                
                 if(parseInt(optype) == 1){
                     refreshtbl();
                 }
+                else if(parseInt(optype) == 2){
+                    createItemInfoFn(data.latest,0,0);
+                    refreshMainDatatbleFn();
+                }
+                $("#addItemForm").modal('hide');
             }
         }
 
         function showitemInformation(itemid,uom,category,maxicost,averagecost){
-            createItemInfoFn(itemid,uom,category,maxicost,averagecost);
+            createItemInfoFn(itemid,maxicost,averagecost);
             $('#docInfoModal').modal('show');
         }
 
-        function createItemInfoFn(itemid,uom,category,maxicost,averagecost){
+        function createItemInfoFn(itemid,maxicost,averagecost){
             var localpriceupdate = $('#localitempriceupdate').val();
             var importpriceupdate = $('#importitempriceupdate').val();
-            var costtype = $('#costtype').val();
             var maximumqty = 0;
             $('.sideImage').html('');
             $('#carouselExampleFade').html('');
@@ -2664,7 +2599,6 @@
                     blockPage(cardSection, 'Fetching product data...');
                 },
                 success: async function(data) {
-                    
                     await getItemDataFn(data);
                 },
                 error: function () {
@@ -2674,9 +2608,17 @@
         }
 
         function getItemDataFn(data){
+            var recordId = data.item_id;
+            var costtype = $('#costtype').val();
+            var action_log = "";
+            var action_links = "";
+            var lidata = "";
+            var upload_image_link = "";
+            var upload_doc_link = "";
             $.each(data.item, function (index, value) { 
+                var product_class = value.Type;
                 $('#ids').val(value.id);
-                $('#product_class_lbl').text(value.Type);
+                $('#product_class_lbl').text(product_class);
                 $('#itemcodeInfoLbl').text(value.Code);
                 $('#itemInfoLbl').text(value.Name);
                 $('#skuInfoLbl').text(value.SKUNumber);
@@ -2721,151 +2663,196 @@
 
                 $('#product_cost_lbl').html("");
 
-                productClassMgtFn(value.Type);
+                productClassMgtFn(product_class);
                 priceTypeMgtFn(value.price_type);
+
+                if(product_class == "Goods" || product_class == "Commodity"){
+                    upload_image_link = `
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" id="imageuploadbutton" onclick="openImageUploadFn(${recordId})" title="Open image upload form">
+                            <span><i class="fa-regular fa-cloud-arrow-up"></i> Image Upload</span>
+                            </a>
+                        </li>`;
+
+                    upload_doc_link = `
+                        <li>
+                            <a class="dropdown-item" id="documentuploadbutton" onclick="openDocumentUploadFn(${recordId})" title="Open document upload form">
+                            <span><i class="fa-regular fa-cloud-arrow-up"></i> Document Upload</span>
+                            </a>
+                        </li>`;
+                }
+                else if(product_class == "Service"){
+                    upload_image_link = "";
+                    upload_doc_link = "";
+                }
+
                 
-                var bt = value.BarcodeType;
-                var itemgrioup = value.itemGroup;
-                var retailprice=value.RetailerPrice>0?value.RetailerPrice:'';
-                var wholesaleprice=value.WholesellerPrice>0?value.WholesellerPrice:'';
-                var wholesaleminamount=value.wholeSellerMinAmount>0?value.wholeSellerMinAmount:'';
-                var maxcost=value.MaxCost>0?value.MaxCost:'';
-                var avgcost=value.averageCost>0?value.averageCost:'';
-                var mincost=value.minCost>0?value.minCost:'';
-                var pendingqty=value.PendingQuantity||0;
-                var balance=value.AvailableQuantity||0;
-                var minstock=value.MinimumStock;
-                var rpm=value.pmretail;
-                var wspm=value.pmwholesale;
-                var retailpricebv=parseFloat(retailprice/1.15).toFixed(2);
-                var wholesalepricebv=parseFloat(wholesaleprice/1.15).toFixed(2);
-                var maxcostbv=parseFloat(maxcost/1.15).toFixed(2);
-                var avgcostbv=parseFloat(avgcost/1.15).toFixed(2);
-                var mincostbv=parseFloat(mincost/1.15).toFixed(2);
-                retailpricebv=retailpricebv>0?retailpricebv:'';
-                wholesalepricebv=wholesalepricebv>0?wholesalepricebv:'';
-                maxcostbv=maxcostbv>0?maxcostbv:'';
-                avgcostbv=avgcostbv>0?avgcostbv:'';
-                mincostbv=mincostbv>0?mincostbv:'';
-                maximumqty=parseFloat(value.AvailableQuantity)-parseFloat(value.PendingQuantity)-parseFloat(value.MinimumStock);
-                $('#wholesalemax').val(maximumqty);
-                $('#pendingdata').val(value.PendingQuantity);
-                setItemPrice(retailprice,wholesaleprice,retailpricebv,wholesalepricebv,maximumqty,pendingqty,minstock,balance,wholesaleminamount,maxcost);
-                if (itemgrioup == "Local") {
+                
+                
+                // var bt = value.BarcodeType;
+                // var itemgrioup = value.itemGroup;
+                // var retailprice=value.RetailerPrice>0?value.RetailerPrice:'';
+                // var wholesaleprice=value.WholesellerPrice>0?value.WholesellerPrice:'';
+                // var wholesaleminamount=value.wholeSellerMinAmount>0?value.wholeSellerMinAmount:'';
+                // var maxcost=value.MaxCost>0?value.MaxCost:'';
+                // var avgcost=value.averageCost>0?value.averageCost:'';
+                // var mincost=value.minCost>0?value.minCost:'';
+                // var pendingqty=value.PendingQuantity||0;
+                // var balance=value.AvailableQuantity||0;
+                // var minstock=value.MinimumStock;
+                // var rpm=value.pmretail;
+                // var wspm=value.pmwholesale;
+                // var retailpricebv=parseFloat(retailprice/1.15).toFixed(2);
+                // var wholesalepricebv=parseFloat(wholesaleprice/1.15).toFixed(2);
+                // var maxcostbv=parseFloat(maxcost/1.15).toFixed(2);
+                // var avgcostbv=parseFloat(avgcost/1.15).toFixed(2);
+                // var mincostbv=parseFloat(mincost/1.15).toFixed(2);
+                // retailpricebv=retailpricebv>0?retailpricebv:'';
+                // wholesalepricebv=wholesalepricebv>0?wholesalepricebv:'';
+                // maxcostbv=maxcostbv>0?maxcostbv:'';
+                // avgcostbv=avgcostbv>0?avgcostbv:'';
+                // mincostbv=mincostbv>0?mincostbv:'';
+                // maximumqty=parseFloat(value.AvailableQuantity)-parseFloat(value.PendingQuantity)-parseFloat(value.MinimumStock);
+                // $('#wholesalemax').val(maximumqty);
+                // $('#pendingdata').val(value.PendingQuantity);
+                // setItemPrice(retailprice,wholesaleprice,retailpricebv,wholesalepricebv,maximumqty,pendingqty,minstock,balance,wholesaleminamount,maxcost);
+                
+                // if (itemgrioup == "Local") {
                                 
-                    var localitemstoreminquantity=$('#localitemstoreminquantity').val();
-                    var localcostpermission=$('#localcost').val();
-                    var localitemeditpermission=$('#localitemeditpermission').val();
-                    $('#printbutton').show();
-                    switch (localitemstoreminquantity) {
-                        case '1':
-                            $('#costables').show();
-                            break;
+                //     var localitemstoreminquantity=$('#localitemstoreminquantity').val();
+                //     var localcostpermission=$('#localcost').val();
+                //     var localitemeditpermission=$('#localitemeditpermission').val();
+                //     $('#printbutton').show();
+                //     switch (localitemstoreminquantity) {
+                //         case '1':
+                //             $('#costables').show();
+                //             break;
                         
-                        default:
-                            $('#costables').hide();
-                            break;
-                    }
-                    switch (localitemeditpermission) {
-                        case '1':
-                            $('#itemeditbutton').show();
-                            break;
+                //         default:
+                //             $('#costables').hide();
+                //             break;
+                //     }
+                //     switch (localitemeditpermission) {
+                //         case '1':
+                //             $('#itemeditbutton').show();
+                //             break;
                     
-                        default:
-                            $('#itemeditbutton').hide();
-                            break;
-                    }
-                    switch (localcostpermission) {
-                        case '1':
-                            setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
-                            removeColorAccessDeniedinformation();
-                            switch (costtype) {
-                                case '1':
-                                    if(parseFloat(avgcost)>0){
-                                        setAverageCostColor();
-                                    } else{
-                                        removeAverageCostColor();
-                                    }
+                //         default:
+                //             $('#itemeditbutton').hide();
+                //             break;
+                //     }
+                //     switch (localcostpermission) {
+                //         case '1':
+                //             setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
+                //             removeColorAccessDeniedinformation();
+                //             switch (costtype) {
+                //                 case '1':
+                //                     if(parseFloat(avgcost)>0){
+                //                         setAverageCostColor();
+                //                     } else{
+                //                         removeAverageCostColor();
+                //                     }
                                     
-                                    break;
-                                case '0':
-                                    if(parseFloat(maxcost)>0){
-                                        setMaxCostColor();
-                                    } else{
-                                        removeMaxCostColor();
-                                    }
+                //                     break;
+                //                 case '0':
+                //                     if(parseFloat(maxcost)>0){
+                //                         setMaxCostColor();
+                //                     } else{
+                //                         removeMaxCostColor();
+                //                     }
                                     
-                                break;
-                                default:
-                                    break;
-                            }
-                            break;                                
-                        default:
-                            setAccessDeniedinformation();
-                            removeAverageCostColor();
-                            removeMaxCostColor();
-                            break;
-                    }
-                }
-                if (itemgrioup == "Imported") {
-                    var importcostpermission=$('#importcost').val();
-                    var importitemeditpermission=$('#importitemeditpermission').val();
-                    var importitemstoreminquantity=$('#importitemstoreminquantity').val();
-                    $('#printbutton').show();
-                    switch (importitemstoreminquantity) {
-                        case '1':
-                            $('#costables').show();
-                            break;
-                        default:
-                            $('#costables').hide();
-                            break;
-                    }
-                    switch (importitemeditpermission) {
-                        case '1':
-                            $('#itemeditbutton').show();
-                            break;
-                        default: 
-                        $('#itemeditbutton').hide();
-                            break;
-                    }
-                    switch (importcostpermission) {
-                        case '1':
-                            setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
-                            removeColorAccessDeniedinformation();
-                            switch (costtype) {
-                                case '1':
-                                    if(parseFloat(avgcost)>0){
-                                        setAverageCostColor();
-                                        } else{
-                                            removeAverageCostColor();
-                                        }
+                //                 break;
+                //                 default:
+                //                     break;
+                //             }
+                //             break;                                
+                //         default:
+                //             setAccessDeniedinformation();
+                //             removeAverageCostColor();
+                //             removeMaxCostColor();
+                //             break;
+                //     }
+                // }
+                // if (itemgrioup == "Imported") {
+                //     var importcostpermission=$('#importcost').val();
+                //     var importitemeditpermission=$('#importitemeditpermission').val();
+                //     var importitemstoreminquantity=$('#importitemstoreminquantity').val();
+                //     $('#printbutton').show();
+                //     switch (importitemstoreminquantity) {
+                //         case '1':
+                //             $('#costables').show();
+                //             break;
+                //         default:
+                //             $('#costables').hide();
+                //             break;
+                //     }
+                //     switch (importitemeditpermission) {
+                //         case '1':
+                //             $('#itemeditbutton').show();
+                //             break;
+                //         default: 
+                //         $('#itemeditbutton').hide();
+                //             break;
+                //     }
+                //     switch (importcostpermission) {
+                //         case '1':
+                //             setPriceInformation(mincostbv,mincost,avgcostbv,avgcost,maxcostbv,maxcost,rpm,wspm,retailprice,wholesaleprice);
+                //             removeColorAccessDeniedinformation();
+                //             switch (costtype) {
+                //                 case '1':
+                //                     if(parseFloat(avgcost)>0){
+                //                         setAverageCostColor();
+                //                         } else{
+                //                             removeAverageCostColor();
+                //                         }
                                     
-                                    break;
-                                case '0':
-                                    if(parseFloat(maxcost)>0){
-                                        setMaxCostColor();
-                                    } else{
-                                        removeMaxCostColor();
-                                    }
-                                break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        default:
-                            setAccessDeniedinformation();
-                            removeAverageCostColor();
-                            removeMaxCostColor();
-                            break;
-                    }
-                }
-                if (bt == "Generate") {
-                    $('#barcodeDiv').show();
-                } else {
-                    $('#barcodeDiv').hide();
-                }
+                //                     break;
+                //                 case '0':
+                //                     if(parseFloat(maxcost)>0){
+                //                         setMaxCostColor();
+                //                     } else{
+                //                         removeMaxCostColor();
+                //                     }
+                //                 break;
+                //                 default:
+                //                     break;
+                //             }
+                //             break;
+                //         default:
+                //             setAccessDeniedinformation();
+                //             removeAverageCostColor();
+                //             removeMaxCostColor();
+                //             break;
+                //     }
+                // }
+                // if (bt == "Generate") {
+                //     $('#barcodeDiv').show();
+                // } else {
+                //     $('#barcodeDiv').hide();
+                // }
+
+                costTablesetColor(costtype);
+                manageProductPurchaseCostTableFn(value.minCost,value.averageCost,value.MaxCost,value.TaxTypeId);
             });
             // show ite images
+
+            $.each(data.activitydata, function(key, value) {
+                var classes = "";
+                if(value.action == "Edited"){
+                    classes = "warning";
+                }
+                else if(value.action == "Created"){
+                    classes = "success";
+                }
+                else{
+                    classes = "secondary";
+                }
+                lidata += `<li class="timeline-item"><span class="timeline-point timeline-point-${classes} timeline-point-indicator"></span><div class="timeline-header mb-sm-0 mb-0"><h6 class="mb-0">${value.action}</h6><span class="text-muted"><i class="fa-regular fa-user"></i> ${value.FullName}</span></br><span class="text-muted"><i class="fa-regular fa-clock"></i> ${value.time}</span></div></li>`;
+            });
+
+            $("#universal-action-log-canvas").empty().append(lidata);
+
             switch (data.success) {
                 case 1:
                         $('#img-container').show();
@@ -2877,8 +2864,34 @@
                     break;
             }
 
+            action_links = `
+                <li>
+                    <a class="dropdown-item viewItemAction" onclick="viewItemFn(${recordId})" data-id="viewactionbtn${recordId}" id="viewactionbtn${recordId}" title="View user log">
+                    <span><i class="fa-solid fa-eye"></i> View User Log</span>  
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                @if(auth()->user()->can("Local-item-edit") || auth()->user()->can("Import-item-edit"))
+                <li>
+                    <a class="dropdown-item itemEdit" onclick="itemEditFn(${recordId})" data-id="itemeditbutton${recordId}" id="itemeditbutton" title="Open product edit page">
+                    <span><i class="fa-solid fa-pencil"></i> Edit</span>  
+                    </a>
+                </li>
+                @endif
+                @can("Item-Delete")
+                <li>
+                    <a class="dropdown-item itemDelete" onclick="itemDeleteFn(${recordId})" data-id="itemdeletebutton${recordId}" id="itemdeletebutton" title="Open product delete confirmation">
+                    <span><i class="fa-solid fa-xmark"></i> Delete</span>  
+                    </a>
+                </li>
+                @endcan
+                ${upload_image_link}
+                ${upload_doc_link}`;
+
+            $("#item_action_ul").empty().append(action_links);
+
             itemInfoTabMgtFn();
-            fetchItemDynamicDataFn(data.item_id);
+            fetchItemDynamicDataFn(recordId);
         }
 
         function fetchItemDynamicDataFn(recordId){
@@ -2987,11 +3000,552 @@
             });
         }
 
+        function viewItemFn(recordId){
+            $("#action-log-title").html("User Log Information");
+            $("#action-log-universal-modal").modal('show');
+        }
+
+        function itemEditFn(id){
+            resetItemFormFn();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('itemedit') }}/"+id,
+                data: "",
+                dataType: "",
+                beforeSend: function() {
+                    blockPage(cardSection, 'Fetching product data...');
+                },
+                success:async function (response) {
+                    await getItemEditDataFn(response);
+                    unblockPage(cardSection);
+                },
+                error: function () {
+                    unblockPage(cardSection);
+                }
+            });
+
+            $('#ids').val(id);
+            $('#operationType').val(2);
+            $("#item_form_title").html('Edit Product');
+            $('#savebutton').text('Update');
+            $('#savebutton').prop("disabled",false);
+            $('#printOrderReq').prop('checked', false);
+            $("#addItemForm").modal('show');
+        }
+
+        function getItemEditDataFn(response){
+            var wholesalefeaturetable = $('#wholesalefeaturetable').val();
+            var importcostpermission = $('#importcost').val();
+            var localcostpermission = $('#localcost').val();
+            var localpriceupdate = $('#localitempriceupdate').val();
+            var importpriceupdate = $('#importitempriceupdate').val();
+            var costtype = $('#costtype').val();
+            var ItemType = $('#itemtype').val();
+            var wsalemax = $('#wholesalemax').val()||0;
+            var pending = $('#pendingdata').val()||0;
+
+            var compatible_prd = "";
+
+            var transaction = response.transaction;
+            if(parseInt(transaction) == 0 || isNaN(parseInt(transaction))){
+                can_change_prd_class = true;
+                unlockContainerFn();
+            }
+            else if(parseInt(transaction) > 0){
+                can_change_prd_class = false;
+                lockContainerFn();
+            }
+
+            $.each(response.item, function (index, value) { 
+                var mxnc = value.MaxCost > 0 ? value.MaxCost : '';
+                var mnc = value.minCost > 0 ? value.minCost : '';
+                var avc = value.averageCost > 0 ? value.averageCost : '';
+                var max = value.MaxCost||0;
+                var avalableqty = value.AvailableQuantity||0;
+                var minstock = value.MinimumStock||0;
+                var wsmin = value.wholeSellerMinAmount||0;
+                var maxws = parseFloat(avalableqty) - parseFloat(minstock);
+                maxws = maxws > 0 ? maxws : 0;
+                var mresult = (parseFloat(max) / 1.15).toFixed(2);
+                var mincostbv = (parseFloat(value.minCost) / 1.15).toFixed(2);
+                var avresult = (parseFloat(value.averageCost) / 1.15).toFixed(2);
+                mresult = mresult > 0 ? mresult : '';
+                avresult = avresult > 0 ? avresult : '';
+                mresult = mresult > 0 ? mresult : '';
+                mincostbv = mincostbv > 0 ? mincostbv : '';
+                var itemdescription = value.Description;
+                var bt = value.BarcodeType;
+                var balance = parseFloat(value.AvailableQuantity) - parseFloat(pending);
+                var img = `<img class="card-img-top" src="${value.imageName}" alt="barcode  image not found"  />`;
+                var prd_class = value.Type;
+                product_class_global_var = value.Type;
+                var pr_type = value.price_type;
+                var product_group = value.itemGroup;
+                
+                // switch(minstock){
+                //     case 0:
+                //     wsalemax='';
+                //     break;
+                //     default:
+                //         if(parseFloat(wsalemax)>0){
+                //             wsalemax=wsalemax;
+                //         } else{
+                //             wsalemax=0;
+                //         }
+                //     break;
+                // }
+
+                $(`input[name="product_class"][value="${prd_class}"]`).prop('checked',true);
+                $('#code').val(value.Code);
+                $('#name').val(value.Name);
+                $('#skuNumber').val(value.SKUNumber);
+                $('#skuNumberupdate').val(value.oldSKUNumber);
+                $('#skuNumberupdatehidden').val(value.SKUNumber);
+
+                $('#minCostInp').val(value.minCost);
+                $('#averageCostInp').val(value.averageCost);
+                $('#maxcosti').val(value.MaxCost);
+
+                $('#Uom').val(value.MeasurementId).select2();
+                $('#Category').val(value.CategoryId).select2();
+                $('#TaxType').val(value.TaxTypeId).select2();
+
+                $.each(response.product_type_ids, function(index, prd_type_val) {
+                    $(`input[name="item_type[]"][value="${prd_type_val}"]`).prop('checked', true);
+                });
+
+                $('#description').val(value.Description);
+                $('#status').val(value.ActiveStatus).select2({minimumResultsForSearch: -1});
+
+                $('#partNumber').val(value.PartNumber);
+                $('#lowStock').val(value.LowStock);
+                $('#lotDescription').val(value.lot_description);
+                $('#factor').val(value.standard_factor);
+                $('#cartoonSize').val(value.cartoon_size);
+
+                $('#ReqSerialNumber').val(value.RequireSerialNumber).select2({minimumResultsForSearch: -1});
+                $('#ReqExpireDate').val(value.RequireExpireDate).select2({minimumResultsForSearch: -1});
+
+                if(prd_class == "Goods" || prd_class == "Commodity"){
+                    var productGroupArray = product_group.split(',').map(function(prd_grp) {
+                        return prd_grp.trim();
+                    });
+                }
+                
+                $.each(productGroupArray, function(idx, prd_grp_val) {
+                    $(`input[name="item_group[]"][value="${prd_grp_val}"]`).prop('checked', true);
+                });
+
+                $(`input[name="price_type"][value="${value.price_type}"]`).prop('checked',true);
+
+                $('#MinSellingPriceBeforeTax').val(value.min_price_bt);
+                $('#MinSellingPriceAfterTax').val(value.min_price_at);
+
+                $('#SellingPriceBeforeTax').val(value.default_price_bt);
+                $('#SellingPriceAfterTax').val(value.default_price_at);
+
+                $('#MaxSellingPriceBeforeTax').val(value.max_price_bt);
+                $('#MaxSellingPriceAfterTax').val(value.max_price_at);
+                
+                $('#maxcost').val(mxnc);
+                $('#mincost').val(mnc);
+                $('#averagecost').val(avc);
+
+                $('#maxcosti').val(value.MaxCost);
+                $('#notifiablemaxcostid').val(value.MaxCost);
+                $('#itemimageupdate').val(value.path);
+                $('#barcodeCode').html(value.Code);
+                $('#BarcodeTypes').val(value.BarcodeType);
+                $('#BarcodeTypesupdate').val(value.BarcodeType);
+                $('#lastbarcode').val(value.id);
+                
+                $('#pmwholesale').val(value.pmwholesale);
+                $('#pmretail').val(value.pmretail);
+                $('#balance').val(balance);
+                $('#wholeSellerMaxAmount').val(wsalemax);
+                $('#maxcostbv').val(mresult);
+                $('#averagecostbv').val(avresult);
+                $('#mincostbv').val(mincostbv);
+                $("#barcodeimagesupdate").html(img);
+                $('#BarcodeTypes').val(bt);
+
+                if(prd_class == "Goods" || prd_class == "Commodity"){
+                    $('.non_service_div').show();
+                    $('#generateBtn').show();
+                    $('#barcodeDiv').hide();
+                }
+                if(prd_class == "Service"){
+                    $('.non_service_div').hide();
+                    $('.non_service_input').val("");
+                    $('.non_service_error').html("");
+                    $('.non_service_checkbox').prop('checked', false);
+                }
+
+                if(pr_type == "Flexible"){
+                    $('.flexible_attribute').show();
+                }
+                if(pr_type == "Fixed"){
+                    $('.flexible_attribute').hide();
+                }
+
+                manageCompatibleItemFn();
+                manageProductPurchaseCostTableFn(value.minCost,value.averageCost,value.MaxCost,value.TaxTypeId);
+
+                $('#ItemCodeMode').val(value.item_code_mode);
+                $('#codeHidden').val(value.old_item_code);
+
+                // switch (costtype) {
+                //     case '1': // average cost vlaues
+                //         if(value.averageCost>0){
+                //             $('#pmretail').prop('readonly', false);
+                //             $('#pmwholesale').prop('readonly', false);
+                //         } else{
+                //             $('#pmretail').prop('readonly', true);
+                //             $('#pmwholesale').prop('readonly', true);
+                //         }
+                //         break;
+                //     case '0': // maximum cost value
+                //         if(value.MaxCost>0){
+                //             $('#pmretail').prop('readonly', false);
+                //             $('#pmwholesale').prop('readonly', false);
+                //         } else{
+                //             $('#pmretail').prop('readonly', true);
+                //             $('#pmwholesale').prop('readonly', true);
+                //         }
+                //         break;
+                //     default:
+                //         break;
+                // }
+                
+                // switch(value.RetailerPrice){
+                //     case 0:
+                //         $('#retailPrice').val('');
+                //         $('#retailPricehidden').val('');
+                //         $('#notifiablereailerpriceid').val('');
+                //         $('#retailPricebv').val('');
+                        
+                //     break;
+                //     default:
+                //         var retailPricebeforeVat = (parseFloat(value.RetailerPrice) / 1.15).toFixed(2);
+                //         $('#retailPrice').val(value.RetailerPrice);
+                //         $('#retailPricehidden').val(value.RetailerPrice);
+                //         $('#notifiablereailerpriceid').val(value.RetailerPrice);
+                //         $('#retailPricebv').val(retailPricebeforeVat);
+                // }
+
+                // switch(value.WholesellerPrice){
+                //     case 0:
+                //         $('#wholeSellerPrice').val('');
+                //         $('#wholeSellerPricehidden').val('');
+                //         $('#wholeSellerPricebv').val('');
+                //         $('#notifiablewholesellerpriceid').val('');
+                //         $("#wholeSellerMinAmount").prop("readonly", true);
+                        
+                //     break;
+                //     default:
+                //         var wholesalePricebeforeVat = (parseFloat(value.WholesellerPrice) / 1.15).toFixed(2);
+                //         $('#wholeSellerPrice').val(value.WholesellerPrice);
+                //         $('#wholeSellerPricehidden').val(value.WholesellerPrice);
+                //         $('#notifiablewholesellerpriceid').val(value.WholesellerPrice);
+                //         $('#wholeSellerPricebv').val(wholesalePricebeforeVat);
+                //         $("#wholeSellerMinAmount").prop("readonly", false);
+                // }
+
+                // switch(value.MinimumStock){
+                //     case 0:
+                //         $('#minimumstock').val('');
+                //     break;
+                //     default:
+                //         $('#minimumstock').val(value.MinimumStock);
+                // }
+
+                // switch(value.wholeSellerMinAmount){
+                //     case 0:
+                //     $('#wholeSellerMinAmount').val('');
+                //     break;
+                //     default:
+                //     $('#wholeSellerMinAmount').val(value.wholeSellerMinAmount);
+                // }
+                
+                // switch (value.itemGroup) {
+                //     case 'Imported':
+                //         switch (importpriceupdate) {
+                //             case '1':
+                //                     $('#retailPricebv').prop('readonly', false);
+                //                     $('#retailPrice').prop('readonly', false);
+                //                     $('#wholeSellerPricebv').prop('readonly', false);
+                //                     $('#wholeSellerPrice').prop('readonly', false);
+                //                     $('#wholeSellerMinAmount').prop('readonly', false);
+                //                     $('#pmwholesale').prop('readonly', false);
+                //                     $('#pmretail').prop('readonly', false);
+                //                 break;
+                //             default:
+                //                     $('#retailPricebv').prop('readonly', true);
+                //                     $('#retailPrice').prop('readonly', true);
+                //                     $('#wholeSellerPricebv').prop('readonly', true);
+                //                     $('#wholeSellerPrice').prop('readonly', true);
+                //                     $('#wholeSellerMinAmount').prop('readonly', true);
+                //                     $('#pmwholesale').prop('readonly', true);
+                //                     $('#pmretail').prop('readonly', true);
+                //                 break;
+                //         }
+                //         if(max!=0){
+                //             if(importcostpermission==1){
+                //             $('#mincostbvlbl').html(mincostbv);  
+                //             $('#averagecostbvlbl').html(avresult); 
+                //             $('#maxcostbvlbl').html(mresult);
+                //             $('#mincostlbl').html(mnc);
+                //             $('#averagecostlbl').html(avc);
+                //             $('#maxcostlbl').html(mxnc);
+                //             costTablesetColor(costtype);
+                //             removeclassfromcost();
+                //         }
+                //         else{
+                //             addclasstocost(value.pmwholesale,value.pmretail);
+                //             removeAverageCostColor();
+                //             removeMaxCostColor();
+                //         }
+                //         }else{
+                //             $('#mincostbvlbl').html(mincostbv);  
+                //             $('#averagecostbvlbl').html(avresult); 
+                //             $('#maxcostbvlbl').html(mresult);
+                //             $('#mincostlbl').html(mnc);
+                //             $('#averagecostlbl').html(avc);
+                //             $('#maxcostlbl').html(mxnc);
+                //             removeAverageCostColor();
+                //             removeMaxCostColor();
+                //         }
+                    
+                //         break;
+                //     default:
+                //         switch (localpriceupdate) {
+                //             case '1':
+                //                 $('#retailPricebv').prop('readonly', false);
+                //                 $('#retailPrice').prop('readonly', false);
+                //                 $('#wholeSellerPricebv').prop('readonly', false);
+                //                 $('#wholeSellerPrice').prop('readonly', false);
+                //                 $('#wholeSellerMinAmount').prop('readonly', false);
+                //                 $('#pmwholesale').prop('readonly', false);
+                //                 $('#pmretail').prop('readonly', false);
+                //                 break;
+                //             default:
+                //                 $('#retailPricebv').prop('readonly', true);
+                //                 $('#retailPrice').prop('readonly', true);
+                //                 $('#wholeSellerPricebv').prop('readonly', true);
+                //                 $('#wholeSellerPrice').prop('readonly', true);
+                //                 $('#wholeSellerMinAmount').prop('readonly', true);
+                //                 $('#pmwholesale').prop('readonly', true);
+                //                 $('#pmretail').prop('readonly', true);
+                //                 break;
+                //         }
+                //         if(max!=0){
+                //             if(localcostpermission==1){
+                //                 $('#mincostbvlbl').html(mincostbv);  
+                //                 $('#averagecostbvlbl').html(avresult); 
+                //                 $('#maxcostbvlbl').html(mresult);
+                //                 $('#mincostlbl').html(mnc);
+                //                 $('#averagecostlbl').html(avc);
+                //                 $('#maxcostlbl').html(mxnc);
+                //                 removeclassfromcost();
+                //                 costTablesetColor(costtype);
+                                
+                //                 switch (value.pmretail) {
+                //                     case 0:
+                //                         $('#pmretail').val('');
+                //                         break;
+                //                     default:
+                //                         $('#pmretail').val(value.pmretail);
+                //                         break;
+                //                 }
+                //                 switch (value.pmwholesale) {
+                //                     case 0:
+                //                         $('#pmwholesale').val('');
+                //                         break;
+                //                     default:
+                //                         $('#pmwholesale').val(value.pmwholesale);
+                //                         break;
+                //                 }
+                                
+                //                 }
+                //             else{
+                //                 addclasstocost(value.pmwholesale,value.pmretail);
+                //                 removeAverageCostColor();
+                //                 removeMaxCostColor();
+                //             }
+                //         }else{
+                //             removeAverageCostColor();
+                //             removeMaxCostColor();
+                //             $('#mincostbvlbl').html(mincostbv);  
+                //             $('#averagecostbvlbl').html(avresult); 
+                //             $('#maxcostbvlbl').html(mresult);
+                //             $('#mincostlbl').html(mnc);
+                //             $('#averagecostlbl').html(avc);
+                //             $('#maxcostlbl').html(mxnc);
+                //         }
+                //         break;
+                // }
+
+                somedivhideandshow(value.Type);
+                checkminstockpermission(value.itemGroup);
+                editransaction(transaction);
+            });
+
+            $.each(response.compatible_data, function (index, value) {
+                compatible_prd += `<option selected value='${value.compatible_item_id}'>${value.comp_items}</option>`;
+            });
+
+            $(`#CompatibleProducts option[value="${response.item_id}"]`).remove();
+            $('#CompatibleProducts').append(compatible_prd);
+
+            $.each(response.supplier_data, function (index, value) {
+                ++i;
+                ++m;
+                ++j;
+
+                $("#dynamicTable > tbody").append(`<tr id="rowind${m}">
+                    <td style="font-weight:bold;width:3%;text-align:center;">${j}</td>
+                    <td style="display:none;"><input type="hidden" name="row[${m}][vals]" id="vals${m}" class="vals form-control" readonly="true" style="font-weight:bold;" value="${m}"/></td>
+                    <td style="width:25%;"><select id="supplier${m}" class="select2 form-control supplier" onchange="supplierFn(this)" name="row[${m}][supplier]"></select></td>
+                    <td style="width:10%;"><select id="uom${m}" class="select2 form-control uom" onchange="uomFn(this)" name="row[${m}][uom]"></select></td>
+                    <td style="width:12%;"><input type="number" name="row[${m}][quantity]" placeholder="Enter quantity here" id="quantity${m}" class="quantity form-control numeral-mask" onkeyup="quantityFn(this)" onkeypress="return ValidateNum(event);" value="${value.quantity}"/></td>
+                    <td style="width:12%;"><input type="number" name="row[${m}][price]" placeholder="Enter price here" id="price${m}" class="price form-control numeral-mask" onkeyup="priceFn(this)" onkeypress="return ValidateNum(event);" value="${value.price}"/></td>
+                    <td style="width:15%;"><select id="availablity${m}" class="select2 form-control availablity" name="row[${m}][availablity]" onchange="availablityFn(this)"></select></td>
+                    <td style="width:20%;"><input type="text" name="row[${m}][remark]" placeholder="Enter remark here" id="remark${m}" class="remark form-control" onkeyup="remarkFn(this)" value="${value.remark}"/></td>
+                    <td style="width:3%;text-align:center;"><button type="button" id="removebtn${m}" class="btn btn-light btn-sm remove-tr" style="color:#ea5455;background-color:#FFFFFF;border-color:#FFFFFF"><i class="fa fa-times fa-lg" aria-hidden="true"></i></button></td>
+                </tr>`);
+
+                var default_supplier = `<option selected value='${value.supplier_id}'>${value.supplier}</option>`;
+                var default_uom = `<option selected value='${value.uom_id}'>${value.uom_name}</option>`;
+                var default_av_status = `<option selected value='${value.availability}'>${value.availability}</option>`;
+
+                $('#dynamicTable > tbody > tr').each(function(index, tr) {
+                    let supp_id = $(this).find('.supplier').val();
+                    $(`#supplier${m} option[value="${value.supplier_id}"]`).remove(); 
+                });
+                $(`#supplier${m} option[value="${value.supplier_id}"]`).remove();
+                $(`#supplier${m}`).append(default_supplier).select2();
+
+                $(`#uom${m} option[value="${value.uom_id}"]`).remove();
+                $(`#uom${m}`).append(default_uom).select2();
+
+                var availablity_status = '<option value="Available">Available</option><option value="Not-Available">Not-Available</option>';
+                $(`#availablity${m}`).append(availablity_status);
+                $(`#availablity${m} option[value="${value.availability}"]`).remove(); 
+                $(`#availablity${m}`).append(default_av_status).select2({minimumResultsForSearch: -1});
+
+                $(`#select2-supplier${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-uom${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+                $(`#select2-availablity${m}-container`).parent().css({"position":"relative","z-index":"2","display":"grid","table-layout":"fixed","width":"100%"});
+            });
+            renumberRows();
+        }
+
+        function lockContainerFn() {
+            $('.non_editable_containers').css({
+                'pointer-events': 'none',
+                'opacity': '0.7',
+                'background-color': '#f8f9fa',
+                'border': '1px solid #ffcdd2 ',
+                'user-select': 'none'
+            });
+
+            var $overlay = $('<div class="container_lock_overlay"></div>').css({
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'width': '100%',
+                'height': '100%',
+                'z-index': '10',
+                'pointer-events': 'auto',     // This allows events
+                'background': 'transparent'
+            });
+
+            $('.non_editable_containers').append($overlay);
+        }
+
+        function unlockContainerFn() {
+            $('.non_editable_containers').css({
+                'pointer-events': 'auto',
+                'opacity': '1',
+                'background-color': 'transparent',
+                'border': '1px solid transparent',
+                'user-select': 'auto'
+            });
+
+            $('.container_lock_overlay').remove();
+        }
+
+        $(document).on('dblclick', '.container_lock_overlay', function() {
+            var have_permission = $('#transactionEdit').val();
+            if(!have_permission){
+                unlockContainerFn();
+            }
+        });
+        
+        
+
+        function manageProductPurchaseCostTableFn(min_cost,avg_cost,max_cost,tax_type){
+            //var tax_type = $('#TaxType').val();
+            
+            tax_type = tax_type == '' ? 0 : tax_type;
+            var tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
+
+            min_cost = min_cost == '' ? 0 : min_cost;
+            avg_cost = avg_cost == '' ? 0 : avg_cost;
+            max_cost = max_cost == '' ? 0 : max_cost;
+
+            var min_cost_at = parseFloat(min_cost) * parseFloat(tax_quotient);
+            var avg_cost_at = parseFloat(avg_cost) * parseFloat(tax_quotient);
+            var max_cost_at = parseFloat(max_cost) * parseFloat(tax_quotient);
+
+            $('.min_cost_bt_lbl').text(numformat(parseFloat(min_cost).toFixed(2)));
+            $('.min_cost_at_lbl').text(numformat(parseFloat(min_cost_at).toFixed(2)));
+
+            $('.avg_cost_bt_lbl').text(numformat(parseFloat(avg_cost).toFixed(2)));
+            $('.avg_cost_at_lbl').text(numformat(parseFloat(avg_cost_at).toFixed(2)));
+
+            $('.max_cost_bt_lbl').text(numformat(parseFloat(max_cost).toFixed(2)));
+            $('.max_cost_at_lbl').text(numformat(parseFloat(max_cost_at).toFixed(2)));
+        }
+
+        function manageProductPurchaseCostFormFn(){
+            var tax_type = $('#TaxType').val();
+            var min_cost = $('#minCostInp').val();
+            var avg_cost = $('#averageCostInp').val();
+            var max_cost = $('#maxcosti').val();
+            
+            tax_type = tax_type == '' ? 0 : tax_type;
+            var tax_quotient = (parseFloat(tax_type) / 100) + parseInt(1);
+
+            min_cost = min_cost == '' ? 0 : min_cost;
+            avg_cost = avg_cost == '' ? 0 : avg_cost;
+            max_cost = max_cost == '' ? 0 : max_cost;
+
+            var min_cost_at = parseFloat(min_cost) * parseFloat(tax_quotient);
+            var avg_cost_at = parseFloat(avg_cost) * parseFloat(tax_quotient);
+            var max_cost_at = parseFloat(max_cost) * parseFloat(tax_quotient);
+
+            //$('#mincostbvlbl').text(numformat(parseFloat(min_cost).toFixed(2)));
+            $('#mincostlbl').text(numformat(parseFloat(min_cost_at).toFixed(2)));
+
+            //$('#averagecostbvlbl').text(numformat(parseFloat(avg_cost).toFixed(2)));
+            $('#averagecostlbl').text(numformat(parseFloat(avg_cost_at).toFixed(2)));
+
+            //$('#maxcostbvlbl').text(numformat(parseFloat(max_cost).toFixed(2)));
+            $('#maxcostlbl').text(numformat(parseFloat(max_cost_at).toFixed(2)));
+        }
+
         $('input[name="product_class"]').on('change', function() {
-            var prd_class = $(this).val();
-            $('#product_class_error').html("");
-            manageProductClassFn();
-            manageCompatibleItemFn();
+            if(can_change_prd_class){
+                var prd_class = $(this).val();
+                $('#product_class_error').html("");
+                manageProductClassFn();
+                manageCompatibleItemFn();
+            }
+            else{
+                $(`input[name="product_class"][value="${product_class_global_var}"]`).prop('checked', true);
+                toastrMessage('error',"You can not change product class, because there is a transaction linked with this product.","Error");
+            }
         });
 
         function manageProductClassFn(){
@@ -3168,6 +3722,7 @@
 
         function taxTypeValidation() {
             calculateTaxPricingFn();
+            manageProductPurchaseCostFormFn();
             $('#taxType-error').html("");
         }
 
@@ -3539,6 +4094,40 @@
             }
         }
 
+        function costTablesetColor(costtype){
+            switch (costtype) {
+                case '1':
+                    setAverageCostColor();
+                    break;
+                case '0':
+                    setMaxCostColor();
+                break;
+                default:
+                    break;
+            }
+        }
+
+        function setAverageCostColor(){
+            $("#averagecosttr").addClass("table-success");
+            $("#averagecostabletr").addClass("table-success");
+        }
+
+        function setMaxCostColor(){
+            $("#maxcosttr").addClass("table-success");
+            $("#maxcostabletr").addClass("table-success");
+        }
+
+        function removeAverageCostColor(){
+            $("#averagecosttr").removeClass("table-success");
+            $("#averagecostabletr").removeClass("table-success");
+        }
+
+        function removeMaxCostColor(){
+            $("#maxcostabletr").removeClass("table-success");
+            $("#maxcosttr").removeClass("table-success");
+        }
+
+
         function refreshtbl(){
             itemtable.ajax.reload(function() {
                 unblockPage(cardSection);
@@ -3648,346 +4237,7 @@
             $('#deleteitem').modal('show');
         });
 
-        $('#itemeditbutton').click(function(){
-            var id=$('#ids').val();
-            edititems(id);
-        });
-
-        function edititems(id){
-            var wholesalefeaturetable=$('#wholesalefeaturetable').val();
-            var importcostpermission=$('#importcost').val();
-            var localcostpermission=$('#localcost').val();
-            var localpriceupdate=$('#localitempriceupdate').val();
-            var importpriceupdate=$('#importitempriceupdate').val();
-            var costtype=$('#costtype').val();
-            var ItemType = $('#itemtype').val();
-            var wsalemax =$('#wholesalemax').val()||0;
-            var pending=$('#pendingdata').val()||0;
-            $.ajax({
-                type: "GET",
-                url: "{{ url('itemedit') }}/"+id,
-                data: "",
-                dataType: "",
-                beforeSend: function () {
-                        pageSection.block({
-                        message:
-                        '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mt-0">Loading Please wait...</p><div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-                        css: {
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        border: '0'
-                        },
-                        overlayCSS: {
-                        opacity: 0.5
-                        }
-                    });
-                    },
-                    complete: function () {
-                        pageSection.block({
-                            message:
-                            '',
-                            timeout: 1,
-                            css: {
-                            backgroundColor: '',
-                            color: '',
-                            border: ''
-                            },
-                        });
-                        $('#docInfoModal').modal('hide');
-                        $('#addItemForm').modal('show');
-                        $("#imagepreview").hide();
-                        $("#imageresetbutton").show();
-                        $('#closeGenBtn').hide();
-                        $("#imageload").show();
-                        $("#imageloads").show();
-                        $("#savebutton").show(); // hide save buttoon
-                        $('#itemupdatebutton').show();
-                        $('#barcodeNumberss').hide();
-                        $('#barcodeNumber').show();
-                        $("#checkboxVali").val('0');
-                        $('#barcodeDiv').show();
-                        $('#printbardiv').show();
-                        $('#barcodeimagesupdate').show();
-                        $("#barcodeimages").hide();
-                        $('#myModalLabel333').html("Update Item");
-                    },
-                success: function (response) {
-                    var transaction=response.transaction;
-                    $.each(response.item, function (index, value) { 
-                        var mxnc=value.MaxCost>0?value.MaxCost:'';
-                        var mnc=value.minCost>0?value.minCost:'';
-                        var avc=value.averageCost>0?value.averageCost:'';
-                        var max = value.MaxCost||0;
-                        var avalableqty=value.AvailableQuantity||0;
-                        var minstock=value.MinimumStock||0;
-                        var wsmin=value.wholeSellerMinAmount||0;
-                        var maxws=parseFloat(avalableqty)-parseFloat(minstock);
-                        maxws=maxws>0?maxws:0;
-                        var mresult = (parseFloat(max) / 1.15).toFixed(2);
-                        var mincostbv=(value.minCost/1.15).toFixed(2);
-                        var avresult=(parseFloat(value.averageCost)/1.15).toFixed(2);
-                        mresult=mresult>0?mresult:'';
-                        avresult=avresult>0?avresult:'';
-                        mresult=mresult>0?mresult:'';
-                        mincostbv=mincostbv>0?mincostbv:'';
-                        var itemdescription = value.Description;
-                        var bt = value.BarcodeType;
-                        var balance=parseFloat(value.AvailableQuantity)-parseFloat(pending);
-                        var img='<img class="card-img-top" src="'+value.imageName+'" alt="barcode  image not found"  />';
-                        switch(minstock){
-                            case 0:
-                            wsalemax='';
-                            break;
-                            default:
-                                if(parseFloat(wsalemax)>0){
-                                    wsalemax=wsalemax;
-                                } else{
-                                    wsalemax=0;
-                                }
-                            break;
-                        }
-                        $('#ids').val(value.id);
-                        $('#name').val(value.Name);
-                        $('#igroup').select2('destroy');
-                        $('#igroup').val(value.itemGroup).select2();
-                        $('#code').val(value.Code);
-                        $('#Category').val(value.CategoryId).trigger('change');
-                        $('#Uom').val(value.MeasurementId).trigger('change');
-                        $('#TaxType').val(value.TaxTypeId);
-                        $('#ReqSerialNumber').val(value.RequireSerialNumber);
-                        $('#ReqExpireDate').val(value.RequireExpireDate);
-                        $('#partNumber').val(value.PartNumber);
-                        $('#lowStock').val(value.LowStock);
-                        $('#skuNumber').val(value.SKUNumber);
-                        $('#skuNumberupdate').val(value.oldSKUNumber);
-                        $('#skuNumberupdatehidden').val(value.SKUNumber);
-                        $('#maxcost').val(mxnc);
-                        $('#mincost').val(mnc);
-                        $('#averagecost').val(avc);
-                         $('#factor').val(value.standard_factor);
-                        
-                        $('#maxcosti').val(value.MaxCost);
-                        $('#notifiablemaxcostid').val(value.MaxCost);
-                        $('#itemimageupdate').val(value.path);
-                        $('#barcodeCode').html(value.Code);
-                        $('#BarcodeTypes').val(value.BarcodeType);
-                        $('#BarcodeTypesupdate').val(value.BarcodeType);
-                        $('#lastbarcode').val(value.id);
-                        $('#description').val(value.Description);
-                        $('#pmwholesale').val(value.pmwholesale);
-                        $('#pmretail').val(value.pmretail);
-                        $('#balance').val(balance);
-                        $('#wholeSellerMaxAmount').val(wsalemax);
-                        $('#maxcostbv').val(mresult);
-                        $('#averagecostbv').val(avresult);
-                        $('#mincostbv').val(mincostbv);
-                        $("#barcodeimagesupdate").html(img);
-                        $('#BarcodeTypes').val(bt);
-                                switch (costtype) {
-                                case '1': // average cost vlaues
-                                    if(value.averageCost>0){
-                                        $('#pmretail').prop('readonly', false);
-                                        $('#pmwholesale').prop('readonly', false);
-                                    } else{
-                                        $('#pmretail').prop('readonly', true);
-                                        $('#pmwholesale').prop('readonly', true);
-                                    }
-                                    break;
-                                case '0': // maximum cost value
-                                    if(value.MaxCost>0){
-                                        $('#pmretail').prop('readonly', false);
-                                        $('#pmwholesale').prop('readonly', false);
-                                    } else{
-                                        $('#pmretail').prop('readonly', true);
-                                        $('#pmwholesale').prop('readonly', true);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                            switch(value.ActiveStatus){
-                            case "Active":
-                                $('#status').empty();
-                                $('#status').append('<option selected value="Active">Active</option>@can("Status-change")<option value="Inactive">Inactive</option>@endcan');
-                                $('#status').select2();
-                                break;
-                            default:
-                                $('#status').empty();
-                                $('#status').append('<option selected value="Inactive">Inactive</option>@can("Status-change")<option value="Active">Active</option>@endcan');
-                                $('#status').select2();
-                        }
-                        
-                        switch(value.RetailerPrice){
-                            case 0:
-                                $('#retailPrice').val('');
-                                $('#retailPricehidden').val('');
-                                $('#notifiablereailerpriceid').val('');
-                                $('#retailPricebv').val('');
-                                
-                            break;
-                            default:
-                                var retailPricebeforeVat = (parseFloat(value.RetailerPrice) / 1.15).toFixed(2);
-                                $('#retailPrice').val(value.RetailerPrice);
-                                $('#retailPricehidden').val(value.RetailerPrice);
-                                $('#notifiablereailerpriceid').val(value.RetailerPrice);
-                                $('#retailPricebv').val(retailPricebeforeVat);
-                        }
-                        switch(value.WholesellerPrice){
-                            case 0:
-                                $('#wholeSellerPrice').val('');
-                                $('#wholeSellerPricehidden').val('');
-                                $('#wholeSellerPricebv').val('');
-                                $('#notifiablewholesellerpriceid').val('');
-                                $("#wholeSellerMinAmount").prop("readonly", true);
-                                
-                            break;
-                            default:
-                                var wholesalePricebeforeVat = (parseFloat(value.WholesellerPrice) / 1.15).toFixed(2);
-                                $('#wholeSellerPrice').val(value.WholesellerPrice);
-                                $('#wholeSellerPricehidden').val(value.WholesellerPrice);
-                                $('#notifiablewholesellerpriceid').val(value.WholesellerPrice);
-                                $('#wholeSellerPricebv').val(wholesalePricebeforeVat);
-                                $("#wholeSellerMinAmount").prop("readonly", false);
-                        }
-                        switch(value.MinimumStock){
-                            case 0:
-                                $('#minimumstock').val('');
-                            break;
-                            default:
-                                $('#minimumstock').val(value.MinimumStock);
-                        }
-                        switch(value.wholeSellerMinAmount){
-                            case 0:
-                            $('#wholeSellerMinAmount').val('');
-                            break;
-                            default:
-                            $('#wholeSellerMinAmount').val(value.wholeSellerMinAmount);
-                        }
-                        
-                        switch (value.itemGroup) {
-                            case 'Imported':
-                                switch (importpriceupdate) {
-                                    case '1':
-                                            $('#retailPricebv').prop('readonly', false);
-                                            $('#retailPrice').prop('readonly', false);
-                                            $('#wholeSellerPricebv').prop('readonly', false);
-                                            $('#wholeSellerPrice').prop('readonly', false);
-                                            $('#wholeSellerMinAmount').prop('readonly', false);
-                                            $('#pmwholesale').prop('readonly', false);
-                                            $('#pmretail').prop('readonly', false);
-                                        break;
-                                    default:
-                                            $('#retailPricebv').prop('readonly', true);
-                                            $('#retailPrice').prop('readonly', true);
-                                            $('#wholeSellerPricebv').prop('readonly', true);
-                                            $('#wholeSellerPrice').prop('readonly', true);
-                                            $('#wholeSellerMinAmount').prop('readonly', true);
-                                            $('#pmwholesale').prop('readonly', true);
-                                            $('#pmretail').prop('readonly', true);
-                                        break;
-                                }
-                                if(max!=0){
-                                    if(importcostpermission==1){
-                                    $('#mincostbvlbl').html(mincostbv);  
-                                    $('#averagecostbvlbl').html(avresult); 
-                                    $('#maxcostbvlbl').html(mresult);
-                                    $('#mincostlbl').html(mnc);
-                                    $('#averagecostlbl').html(avc);
-                                    $('#maxcostlbl').html(mxnc);
-                                    costTablesetColor(costtype);
-                                    removeclassfromcost();
-                                }
-                                else{
-                                    addclasstocost(value.pmwholesale,value.pmretail);
-                                    removeAverageCostColor();
-                                    removeMaxCostColor();
-                                }
-                                }else{
-                                    $('#mincostbvlbl').html(mincostbv);  
-                                    $('#averagecostbvlbl').html(avresult); 
-                                    $('#maxcostbvlbl').html(mresult);
-                                    $('#mincostlbl').html(mnc);
-                                    $('#averagecostlbl').html(avc);
-                                    $('#maxcostlbl').html(mxnc);
-                                    removeAverageCostColor();
-                                    removeMaxCostColor();
-                                }
-                            
-                                break;
-                            default:
-                                switch (localpriceupdate) {
-                                    case '1':
-                                        $('#retailPricebv').prop('readonly', false);
-                                        $('#retailPrice').prop('readonly', false);
-                                        $('#wholeSellerPricebv').prop('readonly', false);
-                                        $('#wholeSellerPrice').prop('readonly', false);
-                                        $('#wholeSellerMinAmount').prop('readonly', false);
-                                        $('#pmwholesale').prop('readonly', false);
-                                        $('#pmretail').prop('readonly', false);
-                                        break;
-                                    default:
-                                        $('#retailPricebv').prop('readonly', true);
-                                        $('#retailPrice').prop('readonly', true);
-                                        $('#wholeSellerPricebv').prop('readonly', true);
-                                        $('#wholeSellerPrice').prop('readonly', true);
-                                        $('#wholeSellerMinAmount').prop('readonly', true);
-                                        $('#pmwholesale').prop('readonly', true);
-                                        $('#pmretail').prop('readonly', true);
-                                        break;
-                                }
-                                if(max!=0){
-                                    if(localcostpermission==1){
-                                        $('#mincostbvlbl').html(mincostbv);  
-                                        $('#averagecostbvlbl').html(avresult); 
-                                        $('#maxcostbvlbl').html(mresult);
-                                        $('#mincostlbl').html(mnc);
-                                        $('#averagecostlbl').html(avc);
-                                        $('#maxcostlbl').html(mxnc);
-                                        removeclassfromcost();
-                                        costTablesetColor(costtype);
-                                        
-                                        switch (value.pmretail) {
-                                            case 0:
-                                                $('#pmretail').val('');
-                                                break;
-                                            default:
-                                                $('#pmretail').val(value.pmretail);
-                                                break;
-                                        }
-                                        switch (value.pmwholesale) {
-                                            case 0:
-                                                $('#pmwholesale').val('');
-                                                break;
-                                            default:
-                                                $('#pmwholesale').val(value.pmwholesale);
-                                                break;
-                                        }
-                                        
-                                        }
-                                    else{
-                                        addclasstocost(value.pmwholesale,value.pmretail);
-                                        removeAverageCostColor();
-                                        removeMaxCostColor();
-                                    }
-                                }else{
-                                    removeAverageCostColor();
-                                    removeMaxCostColor();
-                                    $('#mincostbvlbl').html(mincostbv);  
-                                    $('#averagecostbvlbl').html(avresult); 
-                                    $('#maxcostbvlbl').html(mresult);
-                                    $('#mincostlbl').html(mnc);
-                                    $('#averagecostlbl').html(avc);
-                                    $('#maxcostlbl').html(mxnc);
-                                }
-                                break;
-                        }
-                            somedivhideandshow(value.Type);
-                            checkminstockpermission(value.itemGroup);
-                            editransaction(transaction);
-                    });
-                }
-            });
-        }
+        
 
         function checkminstockpermission(group) {
             switch (group) {
@@ -4247,19 +4497,6 @@
                             });
                             
                     }
-        }
-
-        function costTablesetColor(costtype){
-            switch (costtype) {
-                case '1':
-                    setAverageCostColor();
-                    break;
-                case '0':
-                    setMaxCostColor();
-                break;
-                default:
-                    break;
-            }
         }
 
         function addclasstocost(pmwholesale,pmretail){
@@ -4523,18 +4760,20 @@
             });
         });
         
-            function copyAverageCostBv(){
-                var averagcost=$('#averagecostbv').val();
-                var result=parseFloat(averagcost)*1.15;
-                $('#averagecost').val(result.toFixed(2));
-                $('#averagecostlbl').html(result.toFixed(2));
-            }
-            function copyAverageCost(){
-                var averagcost=$('#averagecost').val();
-                var result=parseFloat(averagcost)/1.15;
-                $('#averagecostbv').val(result.toFixed(2));
-                $('#averagecostbvlbl').html(result.toFixed(2));
-            }
+        function copyAverageCostBv(){
+            var averagcost=$('#averagecostbv').val();
+            var result=parseFloat(averagcost)*1.15;
+            $('#averagecost').val(result.toFixed(2));
+            $('#averagecostlbl').html(result.toFixed(2));
+        }
+
+        function copyAverageCost(){
+            var averagcost=$('#averagecost').val();
+            var result=parseFloat(averagcost)/1.15;
+            $('#averagecostbv').val(result.toFixed(2));
+            $('#averagecostbvlbl').html(result.toFixed(2));
+        }
+
         function copyMaxCost() {
             var mx = $('#maxcost').val();
             $('#maxcosti').val(mx);
@@ -4543,6 +4782,7 @@
             $('#maxcostbv').val(result.toFixed(2));
             $('#maxcostbvlbl').html(result.toFixed(2));
         }
+
         function copyMaxCostBv() {
             var maxc = $('#maxcostbv').val();
             var result = parseFloat(maxc) * 1.15;
@@ -4561,7 +4801,7 @@
                 var code_hidden = $('#codeHidden').val();
 
                 if(code == code_hidden){
-                    $('#generate_item_code').hide();
+                    $('#generate_item_code').show();
                     $("#ItemCodeMode").val("Generated");
                 }
                 else if(code != code_hidden){
@@ -4974,6 +5214,10 @@
 
         function lotDescriptionFn() {
             $('#lot_description-error').html("");
+        }
+
+        function factorFn() {
+            $('#factor-error').html("");
         }
 
         function cartoonSizeFn() {

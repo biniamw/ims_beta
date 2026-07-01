@@ -11,7 +11,7 @@ use App\Models\{
           Regitem,User,Sales,itemimage,Itemlog,setting,
           Category,Salesitem,companyinfo,transaction,
           beginingdetail,receivingdetail,item_type,
-          compatible_items,item_suppliers
+          compatible_items,item_suppliers,actions
         };
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -443,7 +443,10 @@ class ItemController extends Controller
 
       $regular_validation = [
         'product_class' => 'required',
-        'code' => 'required',
+        'code' => [
+          'required',
+          Rule::unique('regitems','Code')->ignore($findid)
+        ],
         'name' => [
           'required',
           Rule::unique('regitems','Name')->ignore($findid)
@@ -545,7 +548,7 @@ class ItemController extends Controller
            
         DB::beginTransaction();
         try{
-          $item = Regitem::updateOrCreate(['id' =>$request->id], [
+          $item = Regitem::updateOrCreate(['id' => $findid], [
             'Type' => $request->product_class,
             'Code' => $request->code,
             'Name' => $request->name,
@@ -698,10 +701,17 @@ class ItemController extends Controller
           break;
       }
 
+      $activitydata = actions::join('users','actions.user_id','users.id')
+        ->where('actions.pagename',"item")
+        ->where('pageid',$id)
+        ->orderBy('actions.id','DESC')
+        ->get(['actions.*','users.FullName','users.username']);
+
       return Response::json([
         'success' => $success,
         'item' => $item,
         'itemimage' => $itemimage,
+        'activitydata' => $activitydata,
         'item_id' => $id
       ]);
     }
@@ -714,8 +724,8 @@ class ItemController extends Controller
     }
 
     public function showCompatibleData($id){
-      $supplier_data = DB::select('SELECT compatible_items.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS comp_items FROM compatible_items LEFT JOIN regitems ON compatible_items.compatible_item_id=regitems.id WHERE compatible_items.base_item_id='.$id.' ORDER BY compatible_items.id ASC'); 
-      return datatables()->of($supplier_data)
+      $compatible_data = DB::select('SELECT compatible_items.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS comp_items FROM compatible_items LEFT JOIN regitems ON compatible_items.compatible_item_id=regitems.id WHERE compatible_items.base_item_id='.$id.' ORDER BY compatible_items.id ASC'); 
+      return datatables()->of($compatible_data)
       ->addIndexColumn()
       ->make(true);
     }
@@ -726,17 +736,28 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    
     public function edit($id){
-      $item=DB::select('SELECT id,Name,standard_factor,Code,MeasurementId,CategoryId, RetailerPrice,WholesellerPrice,wholeSellerMinAmount,pmretail,pmwholesale,wholeSellerMaxAmount,MinimumStock,TaxTypeId,RequireSerialNumber,RequireExpireDate,PartNumber,path,imageName,LowStock,itemGroup,Description,SKUNumber,oldSKUNumber,BarcodeType,oldBarcodeType,Type,ActiveStatus,MaxCost,minCost,averageCost,(SELECT (sum(COALESCE(StockIn,0))-sum(COALESCE(StockOut,0))) AS Balance from transactions where transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) and transactions.StoreId in(select id from stores where stores.ActiveStatus="Active") and transactions.ItemId='.$id.') AS AvailableQuantity FROM regitems WHERE id='.$id);
-      $transaction=transaction::where('ItemId',$id)->count();
+      $item = DB::select('SELECT regitems.*,(SELECT (SUM(COALESCE(StockIn,0))-SUM(COALESCE(StockOut,0))) AS Balance FROM transactions WHERE transactions.FiscalYear=(SELECT settings.FiscalYear FROM settings) AND transactions.StoreId IN(SELECT id FROM stores WHERE stores.ActiveStatus="Active") AND transactions.ItemId='.$id.') AS AvailableQuantity FROM regitems WHERE regitems.id='.$id);
+      $transaction = transaction::where('ItemId',$id)->count();
+      $item_record = DB::table('regitems')->where('id', $id)->get(['item_type'])->first();
+      $product_type_ids = json_decode($item_record->item_type, true); 
+      $product_type_ids = array_map('intval', $product_type_ids ?? []);
+
+      $compatible_data = DB::select('SELECT compatible_items.*,CONCAT_WS(", ", NULLIF(regitems.Code, ""), NULLIF(regitems.Name, ""), NULLIF(regitems.SKUNumber, "")) AS comp_items FROM compatible_items LEFT JOIN regitems ON compatible_items.compatible_item_id=regitems.id WHERE compatible_items.base_item_id='.$id.' ORDER BY compatible_items.id ASC'); 
+
+      $supplier_data = DB::select('SELECT item_suppliers.*,IFNULL(item_suppliers.remark,"") AS remark,CONCAT_WS(", ", NULLIF(customers.Code, ""), NULLIF(customers.Name, ""), NULLIF(customers.TinNumber, "")) AS supplier,uoms.Name AS uom_name FROM item_suppliers LEFT JOIN customers ON item_suppliers.supplier_id=customers.id LEFT JOIN uoms ON item_suppliers.uom_id=uoms.id WHERE item_suppliers.item_id='.$id.' ORDER BY item_suppliers.id ASC'); 
       
       return Response::json([
-        'transaction'=>$transaction,
+        'transaction' => $transaction,
         'item' => $item,
-        
+        'product_type_ids' => $product_type_ids,
+        'compatible_data' => $compatible_data,
+        'supplier_data' => $supplier_data,
+        'item_id' => $id,
       ]);
-      //return response()->json($item);
     }
+
     public function getsknumber()
     {
         $setings=DB::table('settings')->latest()->first();
